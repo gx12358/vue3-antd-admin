@@ -1,0 +1,73 @@
+@pro-card-prefix-cls: ~'@{gx-prefix-pro}-card';
+
+.@{pro-card-prefix-cls} {
+  &-tabs {
+    .@{ant-prefix}-tabs.@{ant-prefix}-tabs-card {
+      .@{ant-prefix}-tabs-card-bar {
+        .@{ant-prefix}-tabs-nav-container {
+          height: auto;
+        }
+      }
+    }
+
+    // 上
+    .@{ant-prefix}-tabs-top > .@{ant-prefix}-tabs-bar {
+      margin-bottom: 0;
+
+      .@{ant-prefix}-tabs-nav-wrap {
+        padding-left: @padding-md;
+        margin-top: @margin-xs;
+      }
+    }
+
+    // 下
+    .@{ant-prefix}-tabs-bottom > .@{ant-prefix}-tabs-bar {
+      margin-top: 0;
+
+      .@{ant-prefix}-tabs-nav-wrap {
+        padding-left: @padding-md;
+        margin-top: @margin-xs;
+      }
+    }
+
+    // 左
+    .@{ant-prefix}-tabs-left {
+      .@{ant-prefix}-tabs-content-holder {
+        .@{ant-prefix}-tabs-content {
+          .@{ant-prefix}-tabs-tabpane {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+
+    // 直接子元素才设置
+    .@{ant-prefix}-tabs-left > .@{ant-prefix}-tabs-bar {
+      margin-right: 0;
+
+      .@{ant-prefix}-tabs-nav-wrap {
+        padding-left: @padding-md;
+        margin-top: @margin-xs;
+      }
+    }
+
+    // 右
+    .@{ant-prefix}-tabs-right {
+      .@{ant-prefix}-tabs-content-holder {
+        .@{ant-prefix}-tabs-content {
+          .@{ant-prefix}-tabs-tabpane {
+            padding-right: 0;
+          }
+        }
+      }
+    }
+
+    // 直接子元素
+    .@{ant-prefix}-tabs-right > .@{ant-prefix}-tabs-bar {
+      .@{ant-prefix}-tabs-nav-wrap {
+        padding-left: @padding-md;
+        margin-top: @margin-xs;
+      }
+    }
+  }
+}

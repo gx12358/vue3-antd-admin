@@ -1,0 +1,66 @@
+/*一些less函数*/
+.scrollbar() {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(50, 50, 50, 0.3);
+    border-radius: 1em;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(50, 50, 50, 0.1);
+    border-radius: 1em;
+  }
+}
+
+.textOverflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
+.reset() {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  border: 0;
+  outline: 0;
+}
+
+.clearfix() {
+  &::before,
+  &::after {
+    display: table;
+    content: '';
+  }
+  &::after {
+    height: 0;
+    clear: both;
+    font-size: 0;
+    visibility: hidden;
+  }
+}
+
+.centerContent() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  transform: translate(-50%, -50%);
+}
+
+.relative() {
+  position: relative;
+}
+
+.overHidden() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

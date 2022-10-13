@@ -1,0 +1,232 @@
+.workplace {
+  :global {
+    .ant-page-header {
+      background: #ffffff;
+    }
+  }
+
+  .refresh {
+    font-size: 16px;
+    color: @text-color-secondary;
+    cursor: pointer;
+  }
+
+  .avatar {
+    flex: 0 1 72px;
+
+    :global {
+      .ant-avatar {
+        background: #ffffff;
+      }
+    }
+
+    & > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 72px;
+    }
+  }
+
+  .content {
+    position: relative;
+    top: 4px;
+    flex: 1 1 auto;
+    margin-left: 24px;
+    line-height: 22px;
+    color: @text-color-secondary;
+
+    .content-title {
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 28px;
+      color: @heading-color;
+    }
+  }
+
+  .extra-content {
+    float: right;
+    white-space: nowrap;
+    zoom: 1;
+
+    .stat-item {
+      position: relative;
+      display: inline-block;
+      padding: 0 32px;
+
+      > p:first-child {
+        margin-bottom: 4px;
+        font-size: @font-size-base;
+        line-height: 22px;
+        color: @text-color-secondary;
+      }
+
+      > p {
+        margin: 0;
+        font-size: 30px;
+        line-height: 38px;
+        color: @heading-color;
+
+        > span {
+          font-size: 20px;
+          color: @text-color-secondary;
+        }
+      }
+
+      &::after {
+        position: absolute;
+        top: 8px;
+        right: 0;
+        width: 1px;
+        height: 40px;
+        content: '';
+        background-color: @border-color-split;
+      }
+
+      &:last-child {
+        padding-right: 0;
+
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .project-list {
+    .card-title {
+      font-size: 0;
+
+      a {
+        display: inline-block;
+        height: 24px;
+        margin-left: 12px;
+        font-size: 14px;
+        line-height: 24px;
+        color: rgba(0, 0, 0, 0.85);
+        vertical-align: top;
+
+        &:hover {
+          color: var(--ant-primary-color);
+        }
+      }
+    }
+
+    .card-description {
+      height: 44px;
+      overflow: hidden;
+      line-height: 22px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+
+    .project-item {
+      display: flex;
+      height: 20px;
+      margin-top: 8px;
+      overflow: hidden;
+      font-size: 12px;
+      line-height: 20px;
+      .textOverflow();
+
+      a {
+        display: inline-block;
+        flex: 1 1 0;
+        color: @text-color-secondary;
+
+        &:hover {
+          color: var(--ant-primary-color);
+        }
+      }
+
+      .datetime {
+        flex: 0 0 auto;
+        float: right;
+        color: @disabled-color;
+      }
+    }
+
+    :global {
+      .ant-card-meta-description {
+        height: 44px;
+        overflow: hidden;
+        line-height: 22px;
+        color: rgba(0, 0, 0, 0.45);
+      }
+    }
+  }
+
+  .activities-list {
+    padding: 0 24px 8px 24px;
+
+    .userName {
+      color: @text-color;
+    }
+
+    .event {
+      font-weight: normal;
+    }
+  }
+
+  .item-group {
+    padding: 20px 0 8px 24px;
+    font-size: 0;
+
+    a {
+      display: inline-block;
+      width: 25%;
+      margin-bottom: 13px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  .members {
+    a {
+      display: block;
+      height: 24px;
+      margin: 12px 0;
+      line-height: 24px;
+
+      .member {
+        display: inline-block;
+        max-width: 100px;
+        margin-left: 12px;
+        font-size: 14px;
+        line-height: 24px;
+        color: rgba(0, 0, 0, 0.65);
+        vertical-align: top;
+        transition: all 0.3s;
+      }
+
+      &:hover {
+        span {
+          color: var(--ant-primary-color);
+        }
+      }
+    }
+  }
+
+  .datetime {
+    color: @disabled-color;
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .project-card-grid {
+    width: 100% !important;
+  }
+}
+@media screen and (max-width: @screen-md) {
+  .project-card-grid {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: @screen-sm) {
+  .project-card-grid {
+    width: 100% !important;
+  }
+}

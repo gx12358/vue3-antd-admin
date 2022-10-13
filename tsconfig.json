@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "strictFunctionTypes": false,
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "allowJs": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true,
+    "lib": ["dom", "esnext"],
+    "types": ["vite/client"],
+    "typeRoots": ["./node_modules/@types/", "./types"],
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "/types/*": ["types/*"],
+      "/config/*": ["config/*"],
+      "@gx-vuex": ["src/store/index.ts"],
+      "@gx-admin/hooks/*": ["src/hooks/*"],
+      "@gx-admin/utils": ["src/components/_util/index.ts"],
+      "@gx-design/*": ["src/components/GDesign/*"],
+    }
+  },
+  "include": [
+    "tests/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.less",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "types/**/*.ts",
+    "build/**/*.ts",
+    "build/**/*.d.ts",
+    "mock/**/*.ts",
+    "vite.config.ts"
+  ],
+  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js", ".history"]
+}

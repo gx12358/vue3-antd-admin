@@ -1,0 +1,168 @@
+@audio-prefix: ~'@{gx-prefix}-audio';
+
+.@{audio-prefix} {
+  background: #fff;
+  margin: 5px;
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 7%), 0 1px 5px 0 rgb(0 0 0 / 10%);
+  border-radius: 2px;
+  overflow: hidden;
+  user-select: none;
+  line-height: normal;
+  position: relative;
+
+  audio {
+    display: none;
+  }
+
+  &-body {
+    display: flex;
+  }
+
+  .@{audio-prefix}-pic {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    background: var(--ant-primary-color);
+    cursor: pointer;
+
+    .icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .@{audio-prefix}-button {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.8;
+      text-shadow: 0 1px 1 pxrgba(0, 0, 0, 0.2);
+      box-shadow: 0 1px 1 pxrgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.1s ease;
+
+      &.play {
+        width: 26px;
+        height: 26px;
+        border: 2px solid #fff;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .playerfont {
+          position: absolute;
+          top: 4px;
+          left: 6px;
+          color: #fff;
+          font-size: 12px;
+        }
+      }
+
+      &.pause {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #fff;
+        right: 4px;
+        bottom: 4px;
+
+        .playerfont {
+          position: absolute;
+          top: -0.2px;
+          left: 0;
+          color: #fff;
+          font-size: 12px;
+          transform: scale(0.6);
+        }
+      }
+    }
+  }
+
+  .@{audio-prefix}-info {
+    flex: 1;
+    padding: 14px 7px 0 10px;
+    height: 66px;
+    box-sizing: border-box;
+
+    .@{audio-prefix}-music {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin: 0 0 13px 5px;
+      user-select: text;
+      cursor: default;
+      padding-bottom: 2px;
+    }
+
+    .@{audio-prefix}-controls {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .@{audio-prefix}-bar {
+      margin: 0 0 0 5px;
+      padding: 4px 0;
+      cursor: pointer;
+      flex: 1;
+
+      &-wrapper {
+        position: relative;
+        height: 2px;
+        width: 100%;
+        background: #cdcdcd;
+      }
+
+      &-loaded {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: #aaa;
+        height: 2px;
+        transition: all 0.5s ease;
+      }
+
+      &-playered {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 2px;
+        background: var(--ant-primary-color);
+      }
+
+      &-thumb-drag {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background-color: var(--ant-primary-color);
+        border-radius: 6px;
+        opacity: 1;
+        transition: height 0.05s ease 0.15s;
+        transform: translateY(-50%) translateX(50%);
+
+        &::before {
+          position: absolute;
+          top: -2px;
+          left: -2px;
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          content: '';
+          background-color: rgba(255, 255, 255, 0.3);
+          border-radius: 7px;
+        }
+      }
+    }
+
+    .@{audio-prefix}-time {
+      color: #999;
+      font-size: 12px;
+    }
+  }
+}

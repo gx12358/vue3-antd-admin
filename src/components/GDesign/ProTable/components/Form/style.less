@@ -1,0 +1,32 @@
+@pro-table-form-prefix-cls: ~'@{gx-prefix-pro}-table-form';
+
+.@{pro-table-form-prefix-cls} {
+  .@{pro-table-form-prefix-cls}-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+
+  &-collapse-button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    vertical-align: top;
+    list-style: none;
+
+    .anticon {
+      margin-left: 2px;
+    }
+  }
+}

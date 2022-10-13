@@ -1,0 +1,51 @@
+{
+  "id": "2916350",
+  "name": "文稿素材",
+  "font_family": "material_font",
+  "css_prefix_text": "gx-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "779830",
+      "name": "水印",
+      "font_class": "shuiyin",
+      "unicode": "e6f0",
+      "unicode_decimal": 59120
+    },
+    {
+      "icon_id": "11445597",
+      "name": "图片编辑",
+      "font_class": "tupianbianji",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "146573",
+      "name": "音乐音频",
+      "font_class": "yinleyinpin",
+      "unicode": "e6e5",
+      "unicode_decimal": 59109
+    },
+    {
+      "icon_id": "7923633",
+      "name": "其他文件",
+      "font_class": "qitawenjian",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "8361833",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "11372711",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e8ba",
+      "unicode_decimal": 59578
+    }
+  ]
+}

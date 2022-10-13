@@ -1,0 +1,60 @@
+@root-entry-name: 'default';
+@pro-list-toolbar: ~'@{gx-prefix-pro}-table-list-toolbar';
+
+.@{pro-list-toolbar} {
+  line-height: 1;
+
+  &-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: @padding-md;
+
+    &-mobile {
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: flex-start;
+
+      .@{pro-list-toolbar}-left {
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .@{pro-list-toolbar}-right {
+        width: 100%;
+      }
+    }
+  }
+
+  &-title {
+    gap: 8px;
+    font-size: @font-size-lg;
+    font-weight: 500;
+    color: @heading-color;
+  }
+
+  &-setting-item {
+    margin: 0 4px;
+    font-size: @font-size-lg;
+    color: @icon-color-hover;
+    cursor: pointer;
+
+    &:hover {
+      .anticon {
+        color: var(--ant-primary-color);
+      }
+    }
+  }
+
+  &-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &-right {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

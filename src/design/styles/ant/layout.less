@@ -1,0 +1,29 @@
+/**
+ * @Author      gx12358
+ * @DateTime    2021/7/30
+ * @lastTime    2021/7/30
+ * @description 修改左侧菜单栏滚动条样式
+ */
+
+html {
+  body {
+    .ant-layout-sider {
+      .ant-layout-sider-children {
+        &::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.12);
+          border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: hsla(0, 0%, 100%, 0.15);
+          border-radius: 3px;
+        }
+      }
+    }
+  }
+}

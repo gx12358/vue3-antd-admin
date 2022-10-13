@@ -1,0 +1,24 @@
+@pro-card-prefix-cls: ~'@{gx-prefix-pro}-card';
+@card-padding-base-sm: (@card-padding-base / 2);
+
+.@{pro-card-prefix-cls} {
+  // 分隔线
+  &-divider {
+    width: @border-width-base;
+    margin: @card-padding-base @margin-xs;
+    background-color: @border-color-split;
+
+    &-horizontal {
+      width: initial;
+      height: @border-width-base;
+      margin: @margin-xs @card-padding-base;
+    }
+  }
+
+  &-size-small .@{pro-card-prefix-cls}-divider {
+    margin: @card-padding-base-sm @margin-xs;
+    &-horizontal {
+      margin: @margin-xs @card-padding-base-sm;
+    }
+  }
+}

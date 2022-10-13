@@ -1,0 +1,36 @@
+.tagSelect {
+  position: relative;
+  max-height: 32px;
+  margin-left: -8px;
+  overflow: hidden;
+  line-height: 32px;
+  user-select: none;
+  transition: all 0.3s;
+
+  :global {
+    .ant-tag {
+      padding: 0 8px;
+      margin-right: 24px;
+      font-size: @font-size-base;
+    }
+  }
+
+  &.expanded {
+    max-height: 200px;
+    transition: all 0.3s;
+  }
+
+  .trigger {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    span.anticon {
+      font-size: 12px;
+    }
+  }
+
+  &.hasExpandTag {
+    padding-right: 50px;
+  }
+}
