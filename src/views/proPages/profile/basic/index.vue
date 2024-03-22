@@ -1,194 +1,133 @@
-<template>
-  <g-pro-page-container>
-    <a-card :bordered="false">
-      <Descriptions title="退款申请" style="margin-bottom: 32px">
-        <DescriptionsItem label="取货单号"> 1000000000 </DescriptionsItem>
-        <DescriptionsItem label="状态"> 已取货 </DescriptionsItem>
-        <DescriptionsItem label="销售单号"> 1234123421 </DescriptionsItem>
-        <DescriptionsItem label="子订单"> 3214321432 </DescriptionsItem>
-      </Descriptions>
-      <a-divider style="margin-bottom: 32px" />
-      <Descriptions title="用户信息" style="margin-bottom: 32px">
-        <DescriptionsItem label="用户姓名"> 付小小 </DescriptionsItem>
-        <DescriptionsItem label="联系电话"> 18100000000 </DescriptionsItem>
-        <DescriptionsItem label="常用快递"> 菜鸟仓储 </DescriptionsItem>
-        <DescriptionsItem label="取货地址"> 浙江省杭州市西湖区万塘路18号 </DescriptionsItem>
-        <DescriptionsItem label="备注"> 无 </DescriptionsItem>
-      </Descriptions>
-      <a-divider style="margin-bottom: 32px" />
-      <div :class="$style.title">退货商品</div>
-      <g-pro-table
-        style="margin-bottom: 24px"
-        rowKey="id"
-        :bordered="false"
-        :showIndex="false"
-        :pagination="false"
-        :loading="loading"
-        :options="false"
-        :toolBarBtn="false"
-        :dataSource="goodsData"
-        :columns="goodsColumns"
-      />
-      <div :class="$style.title">退货进度</div>
-      <g-pro-table
-        style="margin-bottom: 16px"
-        rowKey="key"
-        :bordered="false"
-        :showIndex="false"
-        :pagination="false"
-        :loading="loading"
-        :options="false"
-        :toolBarBtn="false"
-        :dataSource="basicProgress"
-        :columns="progressColumns"
-      >
-        <template #bodyCell="{ column, text }">
-          <template v-if="column.dataIndex === 'status'">
-            <Badge
-              :status="text === 'success' ? 'success' : 'processing'"
-              :text="text === 'success' ? '成功' : '进行中'"
-            />
-          </template>
-        </template>
-      </g-pro-table>
-    </a-card>
-  </g-pro-page-container>
-</template>
+<script setup lang="ts">
+import type { ProTableProps, ProColumnType } from '@gx-design-vue/pro-table'
+import type { BasicDetails, CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
+import { getBasic, getBasicTable } from '@/services/profileCenter'
+import { useRequest } from '@gx-admin/hooks/core'
+import { descriptionsState, defaultSTableState, statusState } from './utils/config'
+import { goodsColumns, scheduleColumns } from './utils/columns'
+import dayjs from 'dayjs'
 
-<script lang="ts">
-import { computed, defineComponent, h, onActivated, reactive, toRefs } from 'vue'
-import { Badge, Descriptions } from 'ant-design-vue'
-import { queryBasicProfile } from '@/services/profile/basic'
-import { progressColumns } from './utils/columns'
+const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic, {
+  defaultData: {}
+})
 
-const DescriptionsItem = Descriptions.Item
+const commodityState = reactive<ProTableProps<Partial<CommodityRecord>>>({
+  ...defaultSTableState,
+  headerTitle: '退货商品',
+  loading: true,
+  dataSource: []
+})
 
-export default defineComponent({
-  component: { Badge },
-  setup() {
-    const state = reactive({
-      loading: false,
-      goodsData: [],
-      basicGoods: [],
-      basicProgress: []
-    })
-    onActivated(() => {
-      getListData()
-    })
-    const renderContent = ({ text, index }) => {
-      const obj: {
-        children: any
-        props: { colSpan?: number }
-      } = {
-        children: text,
-        props: {}
-      }
-      if (index === state.basicGoods.length) {
-        obj.props.colSpan = 0
-      }
-      return obj
-    }
-    const goodsColumns = computed(() => {
-      return [
-        {
-          title: '商品编号',
-          dataIndex: 'id',
-          key: 'id',
-          customRender: ({ text, index }) => {
-            if (index < state.basicGoods.length) {
-              return h('span', {}, text)
-            }
-            return {
-              children: h('span', { style: { fontWeight: 600 } }, text),
-              props: {
-                colSpan: 4
-              }
-            }
-          }
-        },
-        {
-          title: '商品名称',
-          dataIndex: 'name',
-          key: 'name',
-          customRender: renderContent
-        },
-        {
-          title: '商品条码',
-          dataIndex: 'barcode',
-          key: 'barcode',
-          customRender: renderContent
-        },
-        {
-          title: '单价',
-          dataIndex: 'price',
-          key: 'price',
-          align: 'right' as 'left' | 'right' | 'center',
-          customRender: renderContent
-        },
-        {
-          title: '数量（件）',
-          dataIndex: 'num',
-          key: 'num',
-          align: 'right' as 'left' | 'right' | 'center',
-          customRender: ({ text, index }) => {
-            if (index < state.basicGoods.length) {
-              return text
-            }
-            return h('span', { style: { fontWeight: 600 } }, text)
-          }
-        },
-        {
-          title: '金额',
-          dataIndex: 'amount',
-          key: 'amount',
-          align: 'right' as 'left' | 'right' | 'center',
-          customRender: ({ text, index }) => {
-            if (index < state.basicGoods.length) {
-              return text
-            }
-            return h('span', { style: { fontWeight: 600 } }, text)
-          }
-        }
-      ]
-    })
-    const getListData = async () => {
-      state.loading = true
-      const response: any = await queryBasicProfile()
-      if (response) {
-        const { basicGoods, basicProgress } = response.data || {
-          basicGoods: [],
-          basicProgress: []
-        }
-        let goodsData: typeof basicGoods = []
-        if (basicGoods.length) {
-          let num = 0
-          let amount = 0
-          basicGoods.forEach((item) => {
-            num += Number(item.num)
-            amount += Number(item.amount)
-          })
-          goodsData = basicGoods.concat({
-            id: '总计',
-            num,
-            amount
-          })
-        }
-        state.basicGoods = basicGoods
-        state.goodsData = goodsData
-        state.basicProgress = basicProgress
-      }
-      state.loading = false
-    }
-    return {
-      ...toRefs(state),
-      goodsColumns,
-      progressColumns,
-      getListData
+const scheduleState = reactive<ProTableProps<Partial<ScheduleRecord>>>({
+  ...defaultSTableState,
+  headerTitle: '退货进度',
+  dataSource: [],
+  loading: true,
+  columns: scheduleColumns
+})
+
+const { loading: tableLoading } = useRequest<{ schedule: ScheduleRecord[]; commodity: CommodityRecord[]; }>(getBasicTable, {
+  onSuccess: (data) => {
+    const { schedule, commodity } = data
+    scheduleState.loading = false
+    scheduleState.dataSource = schedule
+    commodityState.loading = false
+    commodityState.dataSource = commodity
+    
+    if (commodity.length) {
+      let num = 0
+      let amount = 0
+      commodityState.dataSource.forEach((item) => {
+        num += Number(item.num)
+        amount += Number(item.amount)
+      })
+      commodityState.dataSource = commodityState.dataSource.concat({
+        key: '总计',
+        num,
+        amount
+      } as Partial<CommodityRecord>)
     }
   }
 })
+
+const commodityColumns = computed(() => {
+  return [
+    {
+      title: '商品编号',
+      dataIndex: 'key',
+      key: 'key',
+      customCell: (_, rowIndex) => {
+        if (rowIndex >= scheduleState.dataSource.length) return { colSpan: 4 }
+      }
+    },
+    {
+      title: '商品名称',
+      dataIndex: 'name',
+      key: 'name',
+      customCell: renderContent
+    },
+    {
+      title: '商品条码',
+      dataIndex: 'barcode',
+      key: 'barcode',
+      customCell: renderContent
+    },
+    {
+      title: '单价',
+      dataIndex: 'price',
+      key: 'price',
+      align: 'right',
+      customCell: renderContent
+    },
+    ...goodsColumns
+  ] as ProColumnType[]
+})
+
+function renderContent(_, rowIndex) {
+  if (rowIndex === scheduleState.dataSource.length) {
+    return { colSpan: 0 }
+  }
+}
 </script>
 
-<style lang="less" module>
-@import './style';
+<template>
+  <g-pro-page-container :loading="loading && tableLoading">
+    <template v-for="item in descriptionsState" :key="item.name">
+      <a-descriptions :title="item.name" class="mb-32px">
+        <a-descriptions-item v-for="el in Object.keys(item.data)" :key="el" :label="item.data[el]">
+          <template v-if="el === 'status'">{{ statusState[basicData[el]] }}</template>
+          <template v-else>{{ basicData[el] }}</template>
+        </a-descriptions-item>
+      </a-descriptions>
+      <a-divider class="mb-32px" />
+    </template>
+    <g-pro-table v-bind="commodityState" :columns="commodityColumns" class="mb-32px">
+      <template #bodyCell="{ column, text, index }: { column: ProColumnType; text: string; index: number; }">
+        <template v-if="column.dataIndex === 'key' || column.dataIndex === 'num' || column.dataIndex === 'amount'">
+          <span :style="{ fontWeight: index < (commodityState.dataSource.length - 1) ? undefined : 600 }">
+            {{ text }}
+          </span>
+        </template>
+      </template>
+    </g-pro-table>
+    <g-pro-table v-bind="scheduleState">
+      <template #bodyCell="{ column, text, record }: { column: ProColumnType; text: string; record: ScheduleRecord; }">
+        <template v-if="column.dataIndex === 'status'">
+          <a-badge
+            :status="text === 'success' ? 'success' : 'processing'"
+            :text="text === 'success' ? '成功' : '进行中'"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'cost'">
+          {{ dayjs(record.time).fromNow() }}
+        </template>
+      </template>
+    </g-pro-table>
+  </g-pro-page-container>
+</template>
+
+<style lang="less" scoped>
+&:deep(.ant-descriptions-item-label) {
+  color: rgba(0, 0, 0, 0.45)
+}
 </style>

@@ -100,13 +100,13 @@ const bindModelHandlers = (props: IPropTypes, ctx: SetupContext, editor: TinyMCE
   const normalizedEvents = Array.isArray(modelEvents) ? modelEvents.join(' ') : modelEvents
 
   watch(modelValue, (val: string, prevVal: string) => {
-    if (editor && typeof val === 'string' && val !== prevVal && val !== editor.getContent({ format: props.outputFormat })) {
+    if (editor && typeof val === 'string' && val !== prevVal && val !== (editor as any).getContent({ format: props.outputFormat })) {
       editor.setContent(val)
     }
   })
 
   editor.on(normalizedEvents ? normalizedEvents : 'change input undo redo', () => {
-    ctx.emit('update:modelValue', editor.getContent({ format: props.outputFormat }))
+    ctx.emit('update:modelValue', (editor as any).getContent({ format: props.outputFormat }))
   })
 }
 
@@ -115,7 +115,7 @@ const initEditor = (
   props: IPropTypes,
   ctx: SetupContext,
   editor: TinyMCEEditor,
-  modelValue: Ref<any>,
+  modelValue: Ref,
   content: () => string
 ) => {
   editor.setContent(content())

@@ -1,218 +1,92 @@
-.standardList {
-  :global {
-    .ant-card-head {
-      border-bottom: none;
+.listContent {
+  --at-apply: flex flex-wrap items-center;
+  
+  .listContentItem {
+    display: inline-block;
+    margin-left: 48px;
+    color: rgba(0, 0, 0, 0.45);
+    
+    &:nth-child(2) {
+      margin-right: 48px;
     }
-
-    .ant-card-head-title {
-      padding: 24px 0;
-      line-height: 32px;
+    
+    > span {
+      line-height: 20px;
     }
-
-    .ant-card-extra {
-      padding: 24px 0;
-    }
-
-    .ant-list-pagination {
-      margin-top: 24px;
-      text-align: right;
-    }
-
-    .ant-avatar-lg {
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
-    }
-  }
-
-  .headerInfo {
-    position: relative;
-    text-align: center;
-
-    & > span {
-      display: inline-block;
-      margin-bottom: 4px;
-      font-size: @font-size-base;
+    
+    > p {
+      margin-top: 4px;
+      margin-bottom: 0;
       line-height: 22px;
-      color: @text-color-secondary;
-    }
-
-    & > p {
-      margin: 0;
-      font-size: 24px;
-      line-height: 32px;
-      color: @heading-color;
-    }
-
-    & > em {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 1px;
-      height: 56px;
-      background-color: @border-color-split;
     }
   }
-
-  .listContent {
-    font-size: 0;
-
-    .listContentItem {
-      display: inline-block;
-      margin-left: 40px;
-      font-size: @font-size-base;
-      color: @text-color-secondary;
-      vertical-align: middle;
-
-      > span {
-        line-height: 20px;
-      }
-
-      > p {
-        margin-top: 4px;
-        margin-bottom: 0;
-        line-height: 22px;
-      }
+  
+  .listContentProgress {
+    &:deep(.ant-progress) {
+      --at-apply: w-180px;
     }
-  }
-
-  .extraContentSearch {
-    width: auto;
-    margin-left: 16px;
   }
 }
 
-@media screen and (max-width: @screen-xs) {
-  .standardList {
-    :global {
-      .ant-list-item-content {
-        display: block;
-        flex: none;
-        width: 100%;
-      }
-
-      .ant-list-item-action {
-        margin-left: 0;
-      }
+@media screen and (max-width: 640px) {
+  &:deep(.gx-pro-card-header) {
+    flex-wrap: wrap;
+    
+    .gx-pro-card-extra {
+      --at-apply: w-full mt-16px;
     }
+  }
+}
 
+@media screen and (max-width: 1200px) {
+  &:deep(.ant-list-item) {
+    --at-apply: flex flex-col gap-10px;
+    
+    .ant-list-item-meta {
+      --at-apply: w-full;
+    }
+    
     .listContent {
-      margin-left: 0;
-
-      & > div {
-        margin-left: 0;
+      --at-apply: flex flex-wrap w-full pl-64px;
+      
+      .listContentItem {
+        width: 50%;
+        margin: 0;
       }
-    }
-
-    .listCard {
-      :global {
-        .ant-card-head-title {
-          overflow: visible;
+      
+      .listContentProgress {
+        --at-apply: w-full flex justify-end mt-10px;
+        
+        .ant-progress {
+          --at-apply: w-full;
         }
       }
     }
-  }
-}
-
-@media screen and (max-width: @screen-sm) {
-  .standardList {
-    .extraContentSearch {
-      width: 100%;
-      margin-left: 0;
-    }
-
-    .headerInfo {
-      margin-bottom: 16px;
-
-      & > em {
-        display: none;
-      }
+    
+    .ant-list-item-action {
+      --at-apply: flex-main m-0 w-full flex justify-end;
     }
   }
 }
 
-@media screen and (max-width: @screen-md) {
-  .standardList {
-    .listContent {
-      & > div {
-        display: block;
-      }
-
-      & > div:last-child {
-        top: 0;
-        width: 100%;
-      }
-    }
-  }
-
-  .listCard {
-    :global {
-      .ant-radio-group {
-        display: block;
-        margin-bottom: 8px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: @screen-lg) and (min-width: @screen-md) {
-  .standardList {
-    .listContent {
-      & > div {
-        display: block;
-      }
-
-      & > div:last-child {
-        top: 0;
-        width: 100%;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: @screen-xl) {
-  .standardList {
-    .listContent {
-      & > div {
-        margin-left: 24px;
-      }
-
-      & > div:last-child {
-        top: 0;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 1400px) {
-  .standardList {
-    .listContent {
-      text-align: right;
-
-      & > div:last-child {
-        top: 0;
-      }
-    }
-  }
-}
-
-.standardListForm {
-  :global {
-    .ant-form-item {
-      margin-bottom: 12px;
-
-      &:last-child {
-        padding-top: 4px;
-        margin-bottom: 32px;
-      }
-    }
-  }
-}
-
-.formResult {
+.footer-bar {
+  position: fixed;
+  inset-inline-end: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   width: 100%;
-
-  [class^='title'] {
-    margin-bottom: 8px;
-  }
+  padding-inline: 24px;
+  padding-block: 0;
+  box-sizing: border-box;
+  height: 49px;
+  line-height: 49px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-block-start: 1px solid rgba(5, 5, 5, 0.06);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: rgba(0, 0, 0, 0.88);
+  transition: all 0.2s ease 0s;
 }

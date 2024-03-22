@@ -1,4 +1,4 @@
-<div align="center"> <a href="https://gitee.com/gx12358/vue-antd-admin"> <img alt="VbenAdmin Logo" width="200" height="200" src="https://zbbf9-hw.ahtv.cn/ahtv-obs/20210811/d5b6f8d7-b759-243d-b8f3-906a6b8570bf.png"> </a> <br> <br>
+<div align="center"> <a href="https://gitee.com/gx12358/vite-admin-pro"> <img alt="VbenAdmin Logo" width="200" height="200" src="https://zbbf9-hw.ahtv.cn/ahtv-obs/20210811/d5b6f8d7-b759-243d-b8f3-906a6b8570bf.png"> </a> <br> <br>
 
 <h1>GX Pro Admin（Ant Design Vue）</h1>
 </div>
@@ -6,48 +6,6 @@
 ## 简介
 
 GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0+`,`vite2`,`TypeScript`, `Ant Design Vue3.0+`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
-
-- 后续会陆续更新相关业务性组件和修复bug等；
-- ProComponents组件比较庞大，代码不会很快更新，不过可以通过预览演示地址查看；
-- 更新文档会在下方展示每次更新的说明；
-
-## - [ProComponents](https://procomponents.ant.design/components)
-
-Ant Design 定义了基础的设计规范，对应也提供了大量的基础组件。但是对于中后台类应用，我们希望提供更高程度的抽象，提供更上层的设计规范，并且对应提供相应的组件使得开发者可以快速搭建出高质量的页面。
-
-在 ProComponents 中我们内置了一系列的设计规范，预设了常用的逻辑。在这个基础上我们同样提供了灵活的支持，比如对于 ProTable 来说你也可以把它完全当做 Ant Design 的 Table 来用，对于 ProForm 来说你也可以直接使用 Ant Design 的基础组件或者你的自定义组件。我们希望通过 Pro 系列组件提供快速高效大家高质量中后台应用的能力，进一步扩展 Ant Design 的能力，欢迎使用并提出宝贵的意见。
-
-- ProLayout - 高级布局
-- ProCard 高级卡片
-- WaterMark 水印组件
-- ProTable - 高级表格
-- ProSkeleton - 骨屏架
-- ProField - 原子组件
-- GUpload - 上传组件（自定义request、上传进度条回显等功能）
-- GImage - 图片组件（lazy懒加载等功能）
-- GProEditor - 富文本编辑器
-- ProForm 高级表单（待开发中）
-- [更多组件待开发-参考React版本](https://procomponents.ant.design/components)
-
-## 预览
-
-- [🚀 pro 版演示地址](http://42.192.13.221/)
-
-## 更新文档
-    文件 alias 指引去除开头'/'(重大更新)
-    GProPlyer - 视频
-    GProLayout
-      - 修复相关bug
-    GProTable
-      - 修复相关bug
-    GProModal
-      - 修复相关bug
-    hooks
-      - 🎉 新增oss-hooks上传方法
-    插件
-      - 🎉 vue、ant-design-vue 相关插件向上更新
-    环境变量
-      - 🎉 新增oss 相关变量
 
 ## 特性
 
@@ -57,6 +15,10 @@ Ant Design 定义了基础的设计规范，对应也提供了大量的基础组
 - **Mock 数据** 内置 Mock 数据方案
 - **权限** 内置完善的动态路由权限生成方案
 - **组件** 二次封装了多个常用的组件
+
+## 预览
+
+- [🚀 pro 版演示地址](http://121.36.16.172:9000/gx.pro.admin)
 
 测试账号: admin/123456
 
@@ -76,30 +38,28 @@ Ant Design 定义了基础的设计规范，对应也提供了大量的基础组
 - 获取项目代码
 
 ```bash
-git clone https://gitee.com/gx12358/vue-antd-admin.git
+git clone https://gitee.com/gx12358/vite-admin-pro
 ```
 
 - 安装依赖
 
 ```bash
-npm install -g pnpm
-
 cd gx-admin-pro
 
-pnpm i
+yarn install
 
 ```
 
 - 运行
 
 ```bash
-pnpm run serve
+yarn serve
 ```
 
 - 打包
 
 ```bash
-pnpm run build
+yarn build
 ```
 
 ## Git 贡献提交规范
@@ -126,18 +86,11 @@ pnpm run build
 
 支持现代浏览器, 不支持 IE
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :-: | :-: | :-: | :-: | :-: |
-| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
 ## 相关仓库
 
 如果这些插件对你有帮助，可以给一个 star 支持下
 
-- [vite-plugin-mock](https://github.com/anncwb/vite-plugin-mock) - 用于本地及开发环境数据 mock
 - [vite-plugin-html](https://github.com/anncwb/vite-plugin-html) - 用于 html 模版转换及压缩
-- [vite-plugin-style-import](https://github.com/anncwb/vite-plugin-style-import) - 用于组件库样式按需引入
-- [vite-plugin-imagemin](https://github.com/anncwb/vite-plugin-imagemin) - 用于打包压缩图片资源
 - [vite-plugin-compression](https://github.com/anncwb/vite-plugin-compression) - 用于打包输出.gz|.brotil 文件
 - [vite-plugin-svg-icons](https://github.com/anncwb/vite-plugin-svg-icons) - 用于快速生成 svg 雪碧图
 
@@ -147,7 +100,7 @@ pnpm run build
 
 ## 交流
 
-`GX Pro Admin` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发，同时也提供 QQ 交流群使用问题欢迎在群内提问。
+`GX-ADMIN-PRO` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发，同时也提供 QQ 交流群使用问题欢迎在群内提问。
 
 - QQ 群 `871430530`
 

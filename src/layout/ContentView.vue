@@ -1,50 +1,55 @@
 <template>
-  <RouterView>
+  <router-view>
     <template #default="{ Component }">
-      <page-transition
-        :disabled="animate.disabled"
-        :animate="animate.name"
-        :direction="animate.direction"
-      >
-        <component v-if="isRouterAlive" :is="Component" />
-      </page-transition>
+      <PageTranstion v-bind="animate">
+        <template v-if="reloadStatus">
+          <keep-alive :include="keepliveRouterNames">
+            <component :is="Component"  />
+          </keep-alive>
+        </template>
+      </PageTranstion>
     </template>
-  </RouterView>
-  <Iframe v-if="iframeSrc" :frameSrc="iframeSrc" />
+  </router-view>
+  <IframeView v-if="iframeSrc" :frameSrc="iframeSrc" />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
-import PageTransition from '@/components/PageTransition/index.vue'
-import Iframe from '../views/Iframe/index.vue'
+import { computed, ref } from 'vue'
+import type { BasicLayoutProps, Meta } from '@gx-design-vue/pro-layout'
+import { PageTranstion } from '@gx-design-vue/pro-layout'
+import IframeView from '../views/Iframe/index.vue'
 
-const props = defineProps({
-  isRouterAlive: {
-    type: Boolean,
-    required: false,
+defineProps({
+  reloadStatus: {
+    type: Boolean as VuePropType<boolean>,
     default: true
   },
-  contentStyle: {
-    type: Object,
-    required: false,
-    default: () => {
-      return {}
-    }
-  },
   animate: {
-    type: Object,
-    required: false,
+    type: Object as VuePropType<BasicLayoutProps['animate']>,
     default: () => {
       return {}
     }
   }
 })
 
+const store = useStore()
 const router = useRouter()
 
+const keepliveRouterNames = ref([])
+
 const iframeSrc = computed(() => {
-  const meta = router.currentRoute.value?.meta
-  return meta?.target && Number(meta?.targetStatus) === 0 ? meta?.target : ''
+  const meta = router.currentRoute.value?.meta as Meta
+  return meta?.target && Number(meta?.targetStatus) === 0 ? meta?.target || '' : ''
 })
+
+watch(
+  [
+    () => store.global.settings?.keepAlive
+  ],
+  () => {
+    keepliveRouterNames.value = router.getRoutes()
+      .filter(item => store.global.settings?.keepAlive || (item.meta as Meta)?.keepAlive)
+      .map(item => item.name)
+  }, { immediate: true }
+)
 </script>

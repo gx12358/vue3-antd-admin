@@ -10,7 +10,7 @@ export default defineComponent({
   name: 'Radar',
   props: {
     data: {
-      type: Array,
+      type: Array as VuePropType<any[]>,
       default: () => {
         return []
       }
@@ -22,7 +22,6 @@ export default defineComponent({
   },
   setup(props) {
     const initRadar = (indicator) => {
-      // radar-container
       var chartDom = document.getElementById('radar-container')
       var myChart = echarts.init(chartDom)
       var option

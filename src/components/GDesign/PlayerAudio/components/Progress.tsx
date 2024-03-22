@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useAudioContext } from '../context'
 import { drag, getMatchRangeTime } from '../utils/util'
 import useAudio from '../hooks/useAudio'
@@ -6,7 +6,7 @@ import audioEvent from '../utils/event'
 
 const Progress = defineComponent({
   props: {
-    prefixCls: String as PropType<string>
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const context = useAudioContext()

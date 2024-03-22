@@ -1,11 +1,15 @@
-import { getThemeVariables } from 'ant-design-vue/dist/theme'
 import { resolve } from 'path'
+import { theme } from 'ant-design-vue'
+
 
 export function generateModifyVars() {
-  const modifyVars = getThemeVariables()
+  const { defaultAlgorithm, defaultSeed } = theme
 
-  return {
-    ...modifyVars,
-    hack: `${modifyVars.hack} @import (reference) "${resolve('src/design/styles/config.less')}";`
+  const mapToken = defaultAlgorithm(defaultSeed)
+  const modifyVarsParams = {
+    ...mapToken,
+    hack: `true;  @import (reference) "${resolve('src/design/config.less')}";`
   }
+
+  return modifyVarsParams
 }

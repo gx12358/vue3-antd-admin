@@ -1,5 +1,6 @@
 import { reactive, toRefs } from 'vue'
 import { defineStore } from 'pinia'
+import type { DictRecord, DictType } from '@gx-mock/config/dict'
 
 /**
  * @Author      gx12358
@@ -8,13 +9,13 @@ import { defineStore } from 'pinia'
  * @description store-dict 数字字典
  */
 export interface DictState {
-  data: RecordType;
+  data: Partial<Record<DictType, DictRecord[]>>;
 }
 
 export const useStoreDict = defineStore('dict', () => {
-  const state = reactive({
+  const state = reactive<DictState>({
     data: {}
-  } as DictState)
+  })
 
   const setDictData = (type, value) => {
     state.data[type] = value

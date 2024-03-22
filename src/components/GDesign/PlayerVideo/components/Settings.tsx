@@ -1,4 +1,4 @@
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch, reactive, computed } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { onClickOutside } from '@vueuse/core'
 import { useVideoContext } from '../context'
@@ -7,7 +7,7 @@ import Volume from '../components/Volume'
 
 const Settings = defineComponent({
   props: {
-    prefixCls: String as PropType<string>
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const { player, loop, autoplay, fullScreen, toggleScreen } = useVideoContext()

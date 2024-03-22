@@ -18,10 +18,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Editor as TinyMCEEditor } from 'tinymce'
+import GProEditor from '@gx-design/ProEditor'
 import Localization from '@/assets/public_images/localization.png'
 
 const editors = ref()
-const vueEditor = ref(null)
 const content = ref('<p>hello world</p>')
 const plugins = ref([
   'directionality advlist autolink lists link image charmap print preview anchor',

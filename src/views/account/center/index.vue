@@ -1,143 +1,185 @@
-<template>
-  <g-pro-page-container>
-    <a-row :gutter="24">
-      <a-col :lg="7" :md="24">
-        <a-card
-          :class="$style.mainCard"
-          :bordered="false"
-          style="margin-bottom: 24px"
-          :loading="loading"
-        >
-          <div v-if="!loading && currentUser">
-            <div :class="$style.avatarHolder">
-              <img :src="currentUser.avatar" alt="" />
-              <div :class="$style.name">{{ currentUser.name }}</div>
-              <div>{{ currentUser?.signature }}</div>
-            </div>
-            <div :class="$style.detail">
-              <p>
-                <ContactsOutlined style="margin-right: 8px" />
-                {{ currentUser.title }}
-              </p>
-              <p>
-                <ClusterOutlined style="margin-right: 8px" />
-                {{ currentUser.group }}
-              </p>
-              <p>
-                <HomeOutlined style="margin-right: 8px" />
-                {{ (currentUser.geographic || { province: { label: '' } }).province.label }}
-                {{
-                  (
-                    currentUser.geographic || {
-                      city: {
-                        label: ''
-                      }
-                    }
-                  ).city.label
-                }}
-              </p>
-            </div>
-            <a-divider dashed />
-            <TagList :tags="currentUser.tags || []" />
-            <a-divider style="margin-top: 16px" dashed />
-            <div :class="$style.team">
-              <div :class="$style.teamTitle">团队</div>
-              <a-row :gutter="36">
-                <template v-if="currentUser.notice">
-                  <a-col :key="item.id" v-for="item in currentUser.notice" :lg="24" :xl="12">
-                    <router-link :to="item.href">
-                      <a-avatar size="small" :src="item.logo" />
-                      {{ item.member }}
-                    </router-link>
-                  </a-col>
-                </template>
-              </a-row>
-            </div>
-          </div>
-        </a-card>
-      </a-col>
-      <a-col :lg="17" :md="24">
-        <a-card
-          :class="[`${$style.tabsCard}`, `${$style.mainCard}`]"
-          :bordered="false"
-          :tab-list="operationTabList"
-          :activeTabKey="tabKey"
-          @tabChange="handleTabChange"
-        >
-          <template #customTab="item">
-            <span> {{ item.name }} <span style="font-size: 14px">(30)</span> </span>
-          </template>
-          <Projects v-if="tabKey === 'projects'" :datasource="listData" />
-          <Applications v-if="tabKey === 'applications'" :datasource="listData" />
-          <Articles v-if="tabKey === 'articles'" :datasource="listData" />
-        </a-card>
-      </a-col>
-    </a-row>
-  </g-pro-page-container>
-</template>
-<script lang="ts">
-import { defineComponent, reactive, onActivated, toRefs } from 'vue'
-import { ContactsOutlined, HomeOutlined, ClusterOutlined } from '@ant-design/icons-vue'
-import type { tabKeyType } from '@/services/account/typings'
-import { queryCurrent, queryFakeList } from '@/services/account/center'
+<script setup lang="ts" name="AccountCenter">
+import { GProCard } from '@gx-design-vue/pro-card'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { useMediaQuery } from '@gx-design-vue/pro-hooks'
+import type { GroupListItem } from '@gx-mock/datasSource/group'
+import type { TabsKey } from '@gx-mock/datasSource/user/account'
+import { useRequest } from '@gx-admin/hooks/core'
+import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
 import TagList from './components/TagList.vue'
-import Projects from './components/Projects.vue'
-import Articles from './components/Articles.vue'
-import Applications from './components/Applications.vue'
-import { operationTabList } from './utils/config'
+import { provideAccountCenterContext } from './context'
 
-export default defineComponent({
-  components: {
-    TagList,
-    Articles,
-    Projects,
-    Applications,
-    HomeOutlined,
-    ClusterOutlined,
-    ContactsOutlined
+const tabPaneState: { name: string; key: TabsKey }[] = [
+  {
+    name: '文章',
+    key: 'articles'
   },
-  setup() {
-    const state = reactive({
-      tabKey: 'articles' as tabKeyType,
-      loading: false,
-      listData: [],
-      currentUser: null
-    })
-
-    onActivated(() => {
-      getCurrentUser()
-      getFakeList()
-    })
-
-    const getCurrentUser = async () => {
-      const response: any = await queryCurrent()
-      if (response) {
-        state.currentUser = response.data || {}
-      }
-    }
-
-    const getFakeList = async () => {
-      const response: any = await queryFakeList({
-        count: 30
-      })
-      if (response) {
-        state.listData = response.data || []
-      }
-    }
-
-    const handleTabChange = (_tabKey: string) => {
-      state.tabKey = _tabKey as tabKeyType
-    }
-
-    return {
-      ...toRefs(state),
-      operationTabList,
-      handleTabChange
-    }
+  {
+    name: '应用',
+    key: 'applications'
+  },
+  {
+    name: '项目',
+    key: 'projects'
   }
+]
+
+const { global, user } = useStore()
+const route = useRoute()
+const router = useRouter()
+const { token } = useProConfigContext()
+const col = useMediaQuery()
+
+const ready = ref(false)
+
+const isMobile = computed(() => [ 'md', 'sm', 'xs' ].includes(col.value))
+
+const { data: groupData, loading } = useRequest<GroupListItem[]>(getAccountGroupList, {
+  defaultData: [],
+  manual: true,
+  ready
+})
+
+const { data: countData, loading: countLoading } = useRequest<Record<TabsKey, number>>(getAccountCount, {
+  defaultData: {
+    articles: 0,
+    applications: 0,
+    projects: 0
+  },
+  manual: true,
+  defaultLoading: true,
+  ready
+})
+
+const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
+
+const contentHeight = computed(() => {
+  const herderHeight = token.value.layout?.header?.heightLayoutHeader
+  const tabsHeight = global.settings?.showTabsBar ? '62px' : '0px'
+  const pageHeaderHieght = global.settings?.pageHeaderRender === false ? '0px' : '46px'
+  return isMobile.value ? undefined : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
+})
+
+const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
+
+onActivated(() => {
+  global.settings.disabledScrollTop = true
+  global.settings.showProgressBar = false
+  ready.value = true
+})
+
+const changeRouter = (value: TabsKey) => {
+  router.push({ path: `/account/center/${value}` })
+}
+
+onBeforeRouteLeave((to) => {
+  if (!to.fullPath.includes('/account/center/')) {
+    global.settings.showProgressBar = true
+    global.settings.disabledScrollTop = false
+  }
+})
+
+provideAccountCenterContext({
+  activeKey,
+  isMobile,
+  countLoading,
+  contentHeight,
 })
 </script>
 
-<style lang="less" module>
-@import './style';
+<template>
+  <g-pro-page-container :use-page-card="false">
+    <GProCard :gutter="[ 24, 24 ]" ghost wrap>
+      <GProCard
+        :col-span="{ lg: 7, xl: 7, xxl: 7, md: 24, sm: 24, xs: 24 }"
+        :body-style="{ padding: '16px 24px' }"
+        split="horizontal"
+        class="card-left"
+      >
+        <div class="flex flex-col justify-center items-center mb-24px">
+          <g-admin-image fit="cover" class="w-104px h-104px rd-50% mb-20px" :src="user.userDetails.avatar" />
+          <span class="mb-4px text-rgba-[0-0-0-0.88] font-500 text-20px leading-28px">{{ user.userDetails.userName }}</span>
+          <span>{{ user.userDetails.signature }}</span>
+        </div>
+        <div class="flex flex-col gap-8px">
+          <div class="pl-26px relative">
+            <contacts-outlined class="mr-8px" />
+            <span>{{ user.userDetails.levelName }}</span>
+          </div>
+          <div class="pl-26px relative">
+            <cluster-outlined class="mr-8px" />
+            <span>{{ user.userDetails.group?.title }}</span>
+          </div>
+          <div class="pl-26px relative">
+            <home-outlined class="mr-8px" />
+            <span>{{ user.userDetails.address }}</span>
+          </div>
+        </div>
+        <a-divider dashed />
+        <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">标签</div>
+        <TagList :tags="user.userDetails.tags?.split(',') || []" />
+        <a-divider dashed />
+        <GProCard :body-style="{ padding: 0 }" :loading="loading" class="group-card">
+          <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">团队</div>
+          <a-row :gutter="[ 36, 24 ]">
+            <a-col :key="item.id" v-for="item in groupData" :lg="24" :xl="12">
+              <div class="flex items-center gap-12px">
+                <g-admin-image class="flex-shrink-0 w-24px h-24px rd-50%" :src="item.icon">
+                  <template #placeholder>
+                    <div class="gx-image-slot rd-50%">
+                      <cluster-outlined class="!text-14px" />
+                    </div>
+                  </template>
+                </g-admin-image>
+                <span class="text-hidden-1 text-rgba-[0-0-0-0.88]">{{ item.title }}</span>
+              </div>
+            </a-col>
+          </a-row>
+        </GProCard>
+      </GProCard>
+      <GProCard
+        :col-span="{ lg: 17, xl: 17, xxl: 17, md: 24, sm: 24, xs: 24 }"
+        :loading="countLoading"
+        class="card-right"
+      >
+        <a-tabs :activeKey="activeKey" @change="changeRouter">
+          <a-tab-pane :tab-key="item.key" v-for="item in tabPaneState" :key="item.key">
+            <template #tab>
+              {{ item.name }} <span>（{{ countData[item.key] }}）</span>
+            </template>
+          </a-tab-pane>
+        </a-tabs>
+        <router-view>
+          <template #default="{ Component }">
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </template>
+        </router-view>
+        <div id="list-float-btn" />
+      </GProCard>
+    </GProCard>
+  </g-pro-page-container>
+</template>
+
+<style lang="less" scoped>
+.card-left {
+  position: sticky;
+  top: (48 + 24 + 62px);
+}
+.card-right {
+  &:deep(.ant-tabs-nav) {
+    margin-bottom: 0;
+    padding: 0 16px;
+  }
+  
+  &:deep(.gx-pro-card-body) {
+    padding: v-bind(cardRightBodyHeight);
+  }
+}
+.group-card {
+  &:deep(.gx-pro-card-loading-content) {
+    padding: 0 !important;
+  }
+}
 </style>

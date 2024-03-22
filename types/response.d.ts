@@ -1,15 +1,13 @@
-declare interface ResponseResult<T = any> extends TableResult<T> {
+declare type DefaultResult<T> = {
   code: number;
   msg?: string;
   message?: string;
   data?: T;
-  roles?: any;
-  user?: any;
-  permissions?: any;
 }
 
-declare interface TableResult<T = any> {
-  total?: number;
-  pageNum?: number;
-  rows?: T;
+declare type ResponseResult<T = any, R = undefined> = R extends undefined ? DefaultResult<T> : DefaultResult<T> & R
+
+declare interface PageResult<T> {
+  list: T[];
+  totalCount: number;
 }

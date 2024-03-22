@@ -3,12 +3,12 @@ import { PropTypes } from '@/utils'
 export const gMaterialViewProps = {
   type: PropTypes.string,
   url: {
-    type: [ String, Array ] as PropType<string | string[]>
+    type: [ String, Array ] as VuePropType<string | string[]>
   },
   visible: PropTypes.bool,
   playerStyle: PropTypes.style,
   config: PropTypes.object,
   onChange: {
-    type: Function as PropType<(visible: boolean) => void>
+    type: Function as VuePropType<(visible: boolean) => void>
   },
 }

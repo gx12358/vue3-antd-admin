@@ -1,6 +1,6 @@
 import type { App, Directive, DirectiveBinding } from 'vue'
 
-import { usePermissions } from '@gx-admin/hooks/web'
+import { usePermissions } from '@gx-admin/hooks/system'
 
 function isAuth(el: Element, binding: any) {
   const { permission, hasPermission } = usePermissions()

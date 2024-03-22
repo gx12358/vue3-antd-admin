@@ -2,17 +2,17 @@ import type { Ref } from 'vue'
 import {
   h,
   defineComponent,
-  onMounted,
   ref,
   toRefs,
   nextTick,
   watch,
   onBeforeUnmount,
-  onActivated,
   onDeactivated
 } from 'vue'
-import { Editor as TinyMCEEditor, EditorEvent, RawEditorSettings } from 'tinymce'
-import { getPrefixCls } from '@gx-admin/utils'
+import type { RawEditorSettings } from 'tinymce'
+import { Editor as TinyMCEEditor, EditorEvent } from 'tinymce'
+import { getPrefixCls } from '@gx-design-vue/pro-utils'
+import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { editorProps } from './props'
 import { isTextarea, mergePlugins, uuid, initEditor, getTinymce } from './utils/utils'
 
@@ -41,12 +41,12 @@ const Editor = defineComponent({
       suffixCls: 'editor',
       isPor: true
     })
-    let conf = props.init ? { ...props.init } : {}
+    let conf = props.init ? { ...(props.init || {}) as RawEditorSettings } : {}
     const { disabled, modelValue, tagName } = toRefs(props)
     const element: Ref<Element | null> = ref(null)
     let vueEditor: any = null
     const elementId: string = props.id || uuid('tiny-vue')
-    const inlineEditor: boolean = (props.init && props.init.inline) || props.inline
+    const inlineEditor: boolean = (props.init && (props.init as RawEditorSettings)?.inline) || props.inline
     const modelBind = !!ctx.attrs['onUpdate:modelValue']
     let mounting = true
     const initialValue: string = props.initialValue ? props.initialValue : ''
@@ -96,19 +96,16 @@ const Editor = defineComponent({
       getTinymce()?.remove(vueEditor)
       nextTick(() => initWrapper())
     })
-    onMounted(() => {
-      if (getTinymce() !== null) {
-        initWrapper()
-      }
-    })
     onBeforeUnmount(() => {
       if (getTinymce() !== null) {
         getTinymce().remove(vueEditor)
       }
     })
     if (!inlineEditor) {
-      onActivated(() => {
+      onMountedOrActivated(() => {
         if (!mounting) {
+          initWrapper()
+        } else if (getTinymce() !== null) {
           initWrapper()
         }
       })
@@ -125,6 +122,7 @@ const Editor = defineComponent({
       conf = { ...conf, ...init }
       nextTick(() => initWrapper())
     }
+
     ctx.expose({
       rerender
     })

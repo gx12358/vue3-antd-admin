@@ -1,12 +1,12 @@
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import { useVideoContext } from '../context'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'
 
 const Loading = defineComponent({
   props: {
-    prefixCls: String as PropType<string>,
-    muted: Boolean as PropType<boolean>
+    prefixCls: String as VuePropType<string>,
+    muted: Boolean as VuePropType<boolean>
   },
   setup(props, { expose }) {
     const { player, muted } = useVideoContext()

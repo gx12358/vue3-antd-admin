@@ -1,17 +1,13 @@
-/**
- * Plugin to minimize and use ejs template syntax in index.html.
- * https://github.com/anncwb/vite-plugin-html
- */
 import { PluginOption } from 'vite'
 
 import { createHtmlPlugin } from 'vite-plugin-html'
 
-import pkg from '../../../package.json'
+import cdnModules from '../cdn'
 import { GLOB_CONFIG_FILE_NAME } from '../../constant'
-import config from '../../../config/config'
-import { cdnConf } from '../cdn'
+import { defaultSettings } from '../../../config'
+import pkg from '../../../package.json'
 
-const { title, publicPath, useCdn } = config.defaultSettings
+const { title, publicPath, useCdn } = defaultSettings
 
 export function configHtmlPlugin(_: ViteEnv, isBuild: boolean) {
 
@@ -26,9 +22,9 @@ export function configHtmlPlugin(_: ViteEnv, isBuild: boolean) {
     inject: {
       // Inject data into ejs template
       data: {
-        VUE_APP_TITLE: title || 'GX Pro Admin',
-        injectScript: useCdn ? cdnConf.js : [],
-        injectLink: useCdn ? cdnConf.css : [],
+        VUE_APP_TITLE: title,
+        injectScript: useCdn ? cdnModules.map(e => e.js).filter(el => el) : [],
+        injectLink: useCdn ? cdnModules.map(e => e.css).filter(el => el) : [],
       },
       // Embed the generated app.config.js file
       tags: isBuild

@@ -1,65 +1,58 @@
-import { defineComponent, onMounted, reactive, watch } from 'vue'
-import { SearchOutlined } from '@ant-design/icons-vue'
+import { defineComponent, ref, watch } from 'vue'
+import { omit } from 'lodash-es'
+import inputProps from 'ant-design-vue/es/input/inputProps'
+import { InputSearch } from 'ant-design-vue'
+import { getSlotVNode } from '@gx-design-vue/pro-utils'
 
-const WInputSearch = defineComponent({
+const GInputSearch = defineComponent({
+  name: 'GInputSearch',
+  inheritAttrs: false,
   props: {
-    searchValue: {
-      type: [String, Number],
-      required: true
-    },
-    actionRef: {
-      type: Function,
-      required: false
-    }
+    value: String as VuePropType<string>,
+    onChange: Function as VuePropType<(value: any) => void>,
+    ...omit(inputProps(), [ 'onChange', 'value', 'onUpdate:value', 'onSearch' ])
   },
-  setup(props, { emit }) {
-    const state = reactive({
-      value: props.searchValue
-    })
-    onMounted(() => {
-      if (props.actionRef) getInputSearch()
-    })
+  emits: [ 'update:value', 'change' ],
+  setup(props, { emit, expose, slots }) {
+    const searchValue = ref(props.value)
+
     watch(
-      () => props,
+      () => props.value,
       (val) => {
-        state.value = val.searchValue
+        searchValue.value = val
       },
       {
         deep: true,
         immediate: true
       }
     )
-    /**
-     * @Author      gx12358
-     * @DateTime    2021/7/16
-     * @lastTime    2021/7/16
-     * @description 获取pro-table内部方法
-     */
-    const getInputSearch = () => {
-      props.actionRef({
-        changeValue: (value) => (state.value = value)
-      })
-    }
+
     const handleChange = (e) => {
-      state.value = e.target.value
+      searchValue.value = e.target.value
     }
     const handleSearch = (value) => {
-      state.value = value
-      emit('update:searchValue', value)
+      searchValue.value = value
+      emit('change', value)
+      emit('update:value', value)
     }
-    return () => (
-      <a-input-search
-        {...props}
-        value={state.value}
-        enterButton={
-          <a-button>
-            <SearchOutlined />
-          </a-button>
-        }
-        onChange={handleChange}
-        onSearch={handleSearch}
-      />
-    )
+
+    expose({
+      changeValue: (value: any) => searchValue.value = value
+    })
+
+    return () => {
+      const enterButtonRender = getSlotVNode(slots, props, 'enterButton')
+
+      return (
+        <InputSearch
+          {...omit(props, 'onChange', 'onSearch')}
+          value={searchValue.value}
+          enterButton={enterButtonRender}
+          onChange={handleChange}
+          onSearch={handleSearch}
+        />
+      )
+    }
   }
 })
-export default WInputSearch
+export default GInputSearch

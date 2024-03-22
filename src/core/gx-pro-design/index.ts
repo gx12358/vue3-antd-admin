@@ -1,34 +1,16 @@
-import ProLayout, { PageContainer } from '@gx-design/ProLayout'
-import ProTable from '@gx-design/ProTable'
-import ProModal from '@gx-design/ProModal'
-import ProEditor from '@gx-design/ProEditor'
-import ProWatermark from '@gx-design/ProWatermark'
-import ProSkeleton from '@gx-design/ProSkeleton'
-import ProCard, {
-  GProCardGroup,
-  GProCardDivider,
-  GProCardTabPane
-} from '@gx-design/ProCard'
+import type { App } from 'vue'
 
-const gxProDesign = (app) => {
-  // pro-layout
-  app.component('g-pro-layout', ProLayout)
+import { PageContainer } from '@gx-design-vue/pro-layout'
+import { GProTable } from '@gx-design-vue/pro-table'
+import { GProModal } from '@gx-design-vue/pro-modal'
+
+const gxProDesign = (app: App) => {
   // pro-wrapper
   app.component('g-pro-page-container', PageContainer)
-  // pro-card
-  app.component('g-pro-card', ProCard)
-  app.component('g-pro-card-group', GProCardGroup)
-  app.component('g-pro-card-divider', GProCardDivider)
-  app.component('g-pro-card-tab-pane', GProCardTabPane)
   // pro-table
-  app.component('g-pro-table', ProTable)
+  app.component('g-pro-table', GProTable)
   // pro-modal
-  app.component('g-pro-modal', ProModal)
-  // pro-skeleton
-  app.component('g-pro-skeleton', ProSkeleton)
-  // pro-watermark
-  app.component('g-pro-watermark', ProWatermark)
+  app.component('g-pro-modal', GProModal)
   // pro-editor
-  app.component('g-pro-editor', ProEditor)
 }
 export default gxProDesign

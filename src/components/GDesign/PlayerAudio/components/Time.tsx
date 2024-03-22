@@ -1,12 +1,12 @@
 import { defineComponent, onMounted, ref } from 'vue'
-import { formatDuraton } from '@/utils/util'
+import { formatDuraton } from '@gx-design-vue/pro-utils'
 import { useAudioContext } from '../context'
 import useAudio from '../hooks/useAudio'
 import audioEvent from '../utils/event'
 
 const Time = defineComponent({
   props: {
-    prefixCls: String as PropType<string>
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const { player } = useAudioContext()

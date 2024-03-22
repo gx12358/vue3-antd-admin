@@ -1,18 +1,19 @@
+import type { App } from 'vue'
 import { createPinia } from 'pinia'
+import { useStoreGlobal } from './modules/global'
 import { useStoreDict } from './modules/dict'
 import { useStoreUser } from './modules/user'
 import { useStoreRoutes } from './modules/routes'
-import { useStoreSettings } from './modules/settings'
 import { useStorePermission } from './modules/permission'
 import { useStoreTabsRouter } from './modules/tabsRouter'
 import { useStoreOss } from './modules/oss'
 
 export {
   useStoreOss,
+  useStoreGlobal,
   useStoreDict,
   useStoreUser,
   useStoreRoutes,
-  useStoreSettings,
   useStorePermission,
   useStoreTabsRouter
 }
@@ -22,11 +23,13 @@ export function useStore() {
     oss: useStoreOss(),
     user: useStoreUser(),
     dict: useStoreDict(),
+    global: useStoreGlobal(),
     routes: useStoreRoutes(),
-    settings: useStoreSettings(),
     permission: useStorePermission(),
-    tabsRouter: useStoreTabsRouter(),
+    tabsRouter: useStoreTabsRouter()
   }
 }
 
-export default createPinia()
+export function setupStore(app: App<Element>) {
+  app.use(createPinia())
+}

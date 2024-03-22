@@ -1,0 +1,180 @@
+body {
+  .SfxPopper-wrapper {
+    z-index: 2001;
+  }
+  
+  .FIE_topbar-reset-button {
+    display: none !important;
+  }
+  
+  .FIE_tools-bar-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .FIE_image-tool-options {
+    gap: unset !important;
+  }
+  
+  .FIE_text-tool-options svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  .FIE_text-font-family-option, .FIE_text-size-option {
+    height: 28px !important;
+  }
+  
+  .FIE_text-size-option {
+    padding: 6px 12px !important;
+  }
+  
+  .FIE_color-picker-triggerer {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .FIE_canvas-container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  .FIE_topbar {
+    padding: 0 !important;
+    border-bottom: unset !important;
+  }
+  
+  .FIE_canvas-node {
+    background: unset !important;
+  }
+  
+  .FIE_tabs {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    box-shadow: unset !important;
+  }
+  
+  .FIE_tools-bar {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  .FIE_text-tool-options {
+    margin-top: 0;
+    padding: 0;
+  }
+  
+  .FIE_image-tool-options .FIE_image-tool-add-option-wrapper {
+    margin-right: 8px;
+  }
+  
+  .FIE_topbar-buttons-wrapper, .FIE_topbar-save-wrapper, .FIE_rect-tool-button, .FIE_ellipse-tool-button, .FIE_polygon-tool-button, .FIE_pen-tool-button, .FIE_line-tool-button, .FIE_arrow-tool-button {
+    display: none !important;
+  }
+  
+  .FIE_tools-wrapper {
+    min-width: unset !important;
+  }
+  
+  .FIE_text-tool-button[aria-selected="true"], .FIE_text-tool-button:hover, .FIE_image-tool-button:hover, .FIE_tab:hover, .FIE_image-tool-button[aria-selected="true"], .FIE_tab[aria-selected="true"], .FIE_crop-tool[aria-selected="true"], .FIE_crop-tool:hover, .FIE_rotate-tool-button[aria-selected="true"], .FIE_rotate-tool-button:hover, .FIE_flip-x-tool-button[aria-selected="true"], .FIE_flip-x-tool-button:hover, .FIE_flip-y-tool-button[aria-selected="true"], .FIE_flip-y-tool-button:hover, .FIE_rotate_button_left:hover, .FIE_rotate_button_right:hover {
+    //background: var(--gx-primary-color) !important;
+    //opacity: .2;
+  }
+  
+  .FIE_crop-tool[aria-selected="true"] {
+    gap: unset !important;
+  }
+  
+  .FIE_crop-tool[aria-selected="true"] svg {
+    margin-right: 6px !important;
+  }
+  
+  .public_crop_poper_menu>div>div.SfxMenuItem-wrapper:nth-child(2) {
+    display: none !important;
+  }
+  .video_crop_poper_menu>div>div.SfxMenuItem-wrapper:nth-child(1) {
+    display: none !important;
+  }
+  .video_crop_poper_menu>div>div.SfxMenuItem-wrapper:nth-child(2) {
+    display: none !important;
+  }
+  
+  .FIE_crop-presets-menu div:nth-child(4) {
+    display: none !important;
+  }
+  .FIE_crop-presets-menu div:nth-child(5) {
+    display: none !important;
+  }
+  
+  .FIE_tab:hover *, .FIE_text-tool-button:hover *, .FIE_image-tool-button:hover *, .FIE_flip-y-tool-button:hover *, .FIE_crop-tool:hover *, .FIE_flip-x-tool-button:hover *, .FIE_rotate-tool-button:hover *, .FIE_rotate_button_left:hover *, .FIE_rotate_button_right:hover * {
+    color: var(--gx-primary-color) !important;
+  }
+  
+  .FIE_text-tool-button[aria-selected="true"] *, .FIE_image-tool-button[aria-selected="true"] *, .FIE_tab[aria-selected="true"] *, .FIE_crop-tool[aria-selected="true"] *, .FIE_flip-y-tool-button[aria-selected="true"] *, .FIE_flip-x-tool-button[aria-selected="true"] *, .FIE_rotate-tool-button[aria-selected="true"] * {
+    color: var(--gx-primary-color) !important;
+  }
+  
+  .FIE_image-tool-add-option-button {
+    color: var(--gx-primary-color) !important;
+    border-color: var(--gx-primary-color) !important;
+    
+    &:hover {
+      color: #fff !important;
+      border-color: #fff !important;
+      background: var(--gx-primary-color) !important;
+    }
+    
+    &:focus {
+      color: var(--gx-primary-color) !important;
+      border-color: var(--gx-primary-color) !important;
+      background: transparent !important;
+    }
+  }
+  
+  .SfxModal-Wrapper {
+    z-index: 2001 !important;
+    
+    .SfxButton-root:last-child {
+      background: var(--gx-primary-color) !important;
+    }
+  }
+  
+  .FIE_spin {
+    background: rgb(255, 255, 255);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 11111;
+    inset: 0px;
+    flex-direction: column;
+    user-select: none;
+  }
+  
+  .FIE_spin svg {
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-animation: antrotates 1.2s infinite linear;
+    animation: antrotates 1.2s infinite linear;
+  }
+}
+
+@-webkit-keyframes antrotates {
+  to {
+    -webkit-transform: rotate(405deg);
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes antrotates {
+  to {
+    -webkit-transform: rotate(405deg);
+    transform: rotate(405deg);
+  }
+}

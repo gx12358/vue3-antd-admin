@@ -1,14 +1,13 @@
 import type { ExtractPropTypes } from 'vue'
-import { computed, defineComponent, ref, Teleport, watch, onDeactivated, onUnmounted } from 'vue'
+import { computed, defineComponent, ref, watch, onDeactivated, onUnmounted } from 'vue'
 import { Empty } from 'ant-design-vue'
 import { default as ResizeObserver } from 'ant-design-vue/es/vc-resize-observer'
-import Nodata from '@/assets/public_images/nodata.png'
-import global from '@/common/global'
+import { ImageViewer } from '@gx-design-vue/image'
+import { GProModal } from '@gx-design-vue/pro-modal'
+import Nodata from '@/assets/public_images/nodata.svg'
 import GPlayerVideo from '@gx-design/PlayerVideo'
 import PlayerAudio from '@gx-design/PlayerAudio'
-import { getPrefixCls } from '@gx-admin/utils'
-import { getFileSuffix } from '@/utils/util'
-import { isString, isArray } from '@/utils/validate'
+import { getPrefixCls, isString, isArray, getFileSuffix, globalConfig } from '@gx-design-vue/pro-utils'
 import { gMaterialViewProps } from './props'
 
 import './style.less'
@@ -16,13 +15,15 @@ import './style.less'
 export type GMaterialViewProps = Partial<ExtractPropTypes<typeof gMaterialViewProps>>
 
 export default defineComponent({
+  name: 'GMaterialView',
   props: gMaterialViewProps,
-  emits: ['update:visible', 'change'],
+  emits: [ 'update:visible', 'change' ],
   setup(props, { attrs, emit }) {
     const baseClassName = getPrefixCls({
       suffixCls: 'material-view'
     })
 
+    const imageViewerRef = ref()
     const musicPlayer = ref()
     const videoPlayer = ref()
     const responsive = ref(false)
@@ -35,7 +36,7 @@ export default defineComponent({
 
     const getViewUrl = computed(() => {
       if (props.type === '1' && isString(props.url)) {
-        return [props.url]
+        return [ props.url ]
       }
       if ((props.type === '2' || props.type === '3') && isArray(props.url)) {
         return props.url[0]
@@ -49,9 +50,9 @@ export default defineComponent({
       }
       const fileSuffix = getFileSuffix(getViewUrl.value as string)
       if (props.type === '2') {
-        return global.audioAllowType.includes(fileSuffix.toLowerCase())
+        return globalConfig.audioAllowType.includes(fileSuffix.toLowerCase())
       }
-      return global.videoAllowType.includes(fileSuffix.toLowerCase())
+      return globalConfig.videoAllowType.includes(fileSuffix.toLowerCase())
     })
 
     const getClassName = computed(() => {
@@ -79,8 +80,8 @@ export default defineComponent({
       spinningTip.value = '正在加载中...'
       if (allowPlay.value) {
         videoPlayer.value &&
-          typeof videoPlayer.value?.destroy === 'function' &&
-          videoPlayer.value?.destroy()
+        typeof videoPlayer.value?.destroy === 'function' &&
+        videoPlayer.value?.destroy()
       }
       videoPlayer.value = null
       musicPlayer.value = null
@@ -98,6 +99,12 @@ export default defineComponent({
         }
       }
     )
+
+    watch([ () => showViewer.value, () => props.type, () => imageViewerRef.value ], ([ open, type, viewer ]) => {
+      if (open && type === '1' && viewer) {
+        viewer?.setOpen(true)
+      }
+    })
 
     onUnmounted(() => {
       showViewer.value = false
@@ -117,10 +124,10 @@ export default defineComponent({
           <div
             style={
               props.type === '2'
-                ? { height: '66px' }
+                ? { height: '66px', width: '500px' }
                 : props.type === '3'
-                ? { height: responsive.value ? '400px' : '590px' }
-                : undefined
+                  ? { height: responsive.value ? '400px' : '590px', width:'850px' }
+                  : undefined
             }
             class={`${baseClassName}-player`}
           >
@@ -138,7 +145,6 @@ export default defineComponent({
     )
 
     return () => {
-      const { type } = props
       return (
         <ResizeObserver
           key="resize-observer"
@@ -146,27 +152,25 @@ export default defineComponent({
             setResponsive(width < 1540)
           }}
         >
-          {type && getViewUrl.value && (
+          {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
-              <Teleport to="body">
-                {showViewer.value && type === '1' && (
-                  <g-image-viewer urlList={getViewUrl.value} onClose={() => closeViewer()} />
-                )}
-              </Teleport>
-              <g-pro-modal
+              {showViewer.value && props.type === '1' && (
+                <ImageViewer ref={imageViewerRef} urlList={getViewUrl.value as string[]} onClose={() => closeViewer()} />
+              )}
+              <GProModal
+                noStyle
                 class={baseClassName}
                 title={getModalTitle.value}
-                visible={showViewer.value && type !== '1'}
-                width={type === '3' ? 850 : 500}
+                open={showViewer.value && props.type !== '1'}
                 showDefaultFooter
-                type={type === '2' ? 'normal' : 'fixed'}
+                type={props.type === '2' ? 'normal' : 'scroll'}
                 skeletonLoading={skeletonLoading.value}
                 spinning={spinning.value}
                 spinningTip={spinningTip.value}
                 onCancel={() => closeViewer()}
               >
                 {renderModalContent()}
-              </g-pro-modal>
+              </GProModal>
             </div>
           )}
         </ResizeObserver>

@@ -5,10 +5,10 @@
 
 import { VitePWA } from 'vite-plugin-pwa'
 
-import config from '../../../config/config'
+import { defaultSettings } from '../../../config'
 
 export function configPwaConfig(env: ViteEnv) {
-  const { title, shortName } = config.defaultSettings
+  const { title, shortName } = defaultSettings
   const { VITE_USE_PWA } = env
 
   if (VITE_USE_PWA) {

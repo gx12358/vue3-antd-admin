@@ -1,0 +1,54 @@
+/**
+ * @Author      gx12358
+ * @DateTime    2021/7/30
+ * @lastTime    2021/7/30
+ * @description menu Icon图标
+ */
+html {
+  body {
+    .ant-menu-item .anticon,
+    .ant-menu-submenu-title .anticon {
+      margin-right: 10px !important;
+    }
+
+    .ant-menu-item .customimg,
+    .ant-menu-submenu-title .customimg {
+      width: 14px;
+      min-width: 14px;
+      margin-right: 8px !important;
+      transition: margin 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .ant-menu-submenu-title {
+      [class*='ri'] {
+        min-width: 16px;
+        margin-right: 8px !important;
+        font-size: 16px;
+        vertical-align: bottom;
+        transition: font-size 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
+          margin 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      }
+    }
+
+    .ant-menu-inline-collapsed {
+      .ant-menu-submenu-title {
+        [class*='ri'] {
+          margin-right: 16px !important;
+        }
+
+        [class*='iconfont'] {
+          margin-right: 18px !important;
+        }
+      }
+    }
+    
+    .ant-menu .ant-menu-item .ant-menu-item-icon.customicon {
+      vertical-align: unset;
+      min-width: 14px;
+      margin-right: 8px !important;
+      font-size: 14px;
+      transition: font-size 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
+      margin 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+  }
+}

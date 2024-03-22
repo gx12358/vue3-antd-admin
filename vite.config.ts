@@ -1,21 +1,18 @@
 import type { UserConfig, ConfigEnv } from 'vite'
 import { loadEnv } from 'vite'
-import { resolve } from 'path'
 import dayjs from 'dayjs'
-import externalGlobals from 'rollup-plugin-external-globals'
+import autoprefixer from 'autoprefixer'
+
 import { generateModifyVars } from './build/generate/generateModifyVars'
-import { wrapperEnv } from './build/utils'
+import { wrapperEnv, pathResolve } from './build/utils'
+import createRollupOptions from './build/rollupOptions'
 import { createVitePlugins } from './build/vite/plugin'
-import { configManualChunk } from './build/vite/optimizer'
-import config, { createProxy } from './config/config'
+
+import { createProxy, defaultSettings } from './config'
 
 import pkg from './package.json'
 
-function pathResolve(dir: string) {
-  return resolve(process.cwd(), '.', dir)
-}
-
-const { publicPath, outputDir, assetsDir, devPort, useCdn, useProxy } = config.defaultSettings
+const { publicPath, outputDir, assetsDir, devPort, useCdn, useProxy } = defaultSettings
 
 const { dependencies, devDependencies, name, version } = pkg
 
@@ -49,12 +46,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           replacement: pathResolve('src') + '/'
         },
         {
-          find: /\/types\//,
-          replacement: pathResolve('types') + '/'
+          find: '@gx-mock',
+          replacement: pathResolve('mock') + '/'
         },
         {
-          find: /\/config\//,
-          replacement: pathResolve('config') + '/'
+          find: '@gx-config',
+          replacement: pathResolve('config') + '/index.ts'
         },
         {
           find: '@gx-vuex',
@@ -65,14 +62,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           replacement: pathResolve('src/components/GDesign') + '/'
         },
         {
-          find: '@gx-admin/utils',
-          replacement: pathResolve('src/components/_util') + '/'
-        },
-        {
           find: '@gx-admin/hooks',
           replacement: pathResolve('src/hooks') + '/'
-        },
-        { find: /^~/, replacement: '' }
+        }
       ]
     },
     server: {
@@ -81,39 +73,27 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: devPort,
       proxy: useProxy ? createProxy(VITE_BASE_URL)[VITE_APP_ENV] : {}
     },
+    esbuild: {
+      drop: VITE_DROP_CONSOLE ? [ 'console', 'debugger' ] : []
+    },
     build: {
       outDir: outputDir,
       assetsDir,
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          keep_infinity: true,
-          drop_console: VITE_DROP_CONSOLE
-        }
-      },
-      chunkSizeWarningLimit: 2500,
-      rollupOptions: useCdn
-        ? {
-          output: {
-            manualChunks: configManualChunk
-          },
-          external: [ 'echarts' ],
-          plugins: [
-            externalGlobals({
-              echarts: 'echarts'
-            })
-          ]
-        } : {
-          output: {
-            manualChunks: configManualChunk
-          }
-        }
+      chunkSizeWarningLimit: 4000,
+      rollupOptions: createRollupOptions(useCdn) as any
     },
     define: {
       __INTLIFY_PROD_DEVTOOLS__: false,
       __APP_INFO__: JSON.stringify(__APP_INFO__)
     },
     css: {
+      postcss: {
+        plugins: [
+          autoprefixer({
+            grid: true
+          })
+        ]
+      },
       modules: {
         generateScopedName: 'gx-pro-[local]-[hash:base64:5]'
       },
@@ -129,10 +109,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
 
     optimizeDeps: {
       include: [
-        'ant-design-vue/es/locale/zh_CN',
-        'ant-design-vue/es/locale/en_US'
-      ],
-      exclude: [ 'vue-demi' ]
+        'qs',
+        'dayjs',
+        'axios',
+        'pinia',
+        'echarts',
+        '@vueuse/core'
+      ]
     }
   }
 }

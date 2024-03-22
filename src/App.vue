@@ -1,35 +1,36 @@
 <template>
-  <div id="gx-pro-admin">
-    <g-bars>
-      <config-provider :locale="locale">
-        <router-view />
-      </config-provider>
-    </g-bars>
-    <g-page-loading :loading="loading && routhPath === '/'" />
-  </div>
+  <ConfigProvider :locale="zhCN">
+    <template #renderEmpty>
+      <Empty :text="false" />
+    </template>
+    <GProApp :indicator="indicator" class="h-full">
+      <template #emptyText>
+        <Empty />
+      </template>
+      <div id="gx-pro-admin">
+        <g-scrollbars :bar-style="{ zIndex: 110 }">
+          <router-view />
+        </g-scrollbars>
+        <PageLoading :loading="loading && route.fullPath === '/'" />
+      </div>
+    </GProApp>
+  </ConfigProvider>
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@gx-vuex'
 import { ConfigProvider } from 'ant-design-vue'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import { GProApp } from '@gx-design-vue/pro-app'
+import PageLoading from '@/components/PageLoading'
+import Empty from '@/components/GlobalLayout/Empty/index.vue'
+
+const indicator = h('i', {
+  class: 'iconfont gx-jiazaizhong gx-admin-spin',
+  spin: true
+})
 
 const store = useStore()
 const route = useRoute()
 
-const locale = ref(zhCN)
-const routhPath = ref(route.fullPath)
-
 const loading = computed(() => store.routes.routerLoading)
-
-watch(
-  () => route.fullPath,
-  (value) => {
-    routhPath.value = value
-  },
-  {
-    deep: true,
-    immediate: true
-  }
-)
 </script>

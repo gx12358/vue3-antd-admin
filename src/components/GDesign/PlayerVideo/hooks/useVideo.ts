@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { onBeforeUnmount, reactive, onDeactivated } from 'vue'
-import { on, off } from '@/utils'
+import { on, off } from '@gx-design-vue/pro-utils'
 
 function useVideo(player: Ref<HTMLVideoElement>) {
   const eventRef = reactive({})

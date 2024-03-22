@@ -1,14 +1,13 @@
-import config from '/config/config'
+import { defaultSettings } from '@gx-config'
 import {
   setStorage,
   getStorage,
   removeStorage,
-  getCookie,
   setCookie,
   delCookie
 } from '@/utils/storage'
 
-const { storage, tokenTableName } = config.defaultSettings
+const { storage, tokenTableName } = defaultSettings
 
 /**
  * @Author      gx12358
@@ -17,19 +16,7 @@ const { storage, tokenTableName } = config.defaultSettings
  * @description 获取accessToken
  */
 export function getAccessToken() {
-  if (storage) {
-    if ('localStorage' === storage) {
-      return getStorage({ key: tokenTableName })
-    } else if ('sessionStorage' === storage) {
-      return getStorage({ key: tokenTableName, type: 'session' })
-    } else if ('cookie' === storage) {
-      return getCookie(tokenTableName)
-    } else {
-      return getStorage({ key: tokenTableName })
-    }
-  } else {
-    return getStorage({ key: tokenTableName })
-  }
+  return getStorage({ key: tokenTableName, type: storage || 'localStorage' })
 }
 
 /**

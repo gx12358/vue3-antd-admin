@@ -1,80 +1,73 @@
+<script setup lang="ts">
+import { cloneDeep } from 'lodash-es'
+import { getRandomNumber } from '@gx-design-vue/pro-utils'
+
+const props = withDefaults(defineProps<{ tags: string[] }>(), { tags: () => [] })
+
+type TagsList = {
+  id: string;
+  value: string;
+}
+
+const inputRef = ref()
+const tagsList = ref<TagsList[]>([])
+const inputValue = ref()
+const inputVisible = ref<boolean>(false)
+
+watch(
+  () => props.tags,
+  () => {
+    tagsList.value = cloneDeep(props.tags).map(item => ({ id: getRandomNumber().uuid(5), value: item }))
+  },
+  { deep: true, immediate: true }
+)
+
+const showInput = () => {
+  inputVisible.value = true
+  
+  nextTick(() => {
+    inputRef.value && inputRef.value.focus()
+  })
+}
+
+const handleInputConfirm = () => {
+  if (inputValue.value && tagsList.value.every(item => item.value.indexOf(inputValue.value) === -1)) {
+    tagsList.value = [ ...tagsList.value, { id: getRandomNumber().uuid(5), value: inputValue.value } ]
+  }
+  inputValue.value = ''
+  inputVisible.value = false
+}
+</script>
+
 <template>
-  <div :class="$style.tags">
-    <div :class="$style.tagsTitle">标签</div>
-    <Tag :key="item.key" v-for="item in (tags || []).concat(newTags)">
-      {{ item.label }}
-    </Tag>
+  <div class="flex flex-wrap gap-8px">
+    <template v-for="tag in tagsList" :key="tag.id">
+      <a-tooltip v-if="tag.value.length > 20" :title="tag.value">
+        <a-tag>
+          {{ `${tag.value.slice(0, 20)}...` }}
+        </a-tag>
+      </a-tooltip>
+      <a-tag v-else>
+        {{ tag.value }}
+      </a-tag>
+    </template>
     <a-input
-      v-show="inputVisible"
+      v-if="inputVisible"
       ref="inputRef"
+      v-model:value="inputValue"
       type="text"
       size="small"
-      style="width: 78px"
-      v-model:value="inputValue"
-      @change="handleInputChange"
+      :style="{ width: '78px' }"
       @blur="handleInputConfirm"
-      @pressEnter="handleInputConfirm"
+      @keyup.enter="handleInputConfirm"
     />
-    <Tag v-if="!inputVisible" style="border-style: dashed" @click="showInput">
-      <PlusOutlined />
-    </Tag>
+    <a-tag v-else style="background: #fff; border-style: dashed;" class="cursor-pointer" @click="showInput">
+      <plus-outlined />
+      New Tag
+    </a-tag>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from 'vue'
-import { Tag } from 'ant-design-vue'
-import { PlusOutlined } from '@ant-design/icons-vue'
-import type { CurrentUser, TagType } from '@/services/account/typings'
+<style scoped lang="less">
 
-export default defineComponent({
-  props: {
-    tags: Array as PropType<CurrentUser['tags']>
-  },
-  components: { PlusOutlined, Tag },
-  setup() {
-    const inputRef = ref(null)
-    const state = reactive({
-      inputValue: '',
-      inputVisible: false,
-      newTags: [] as TagType[]
-    })
-
-    const showInput = () => {
-      state.inputVisible = true
-      if (inputRef.value) {
-        inputRef.value?.focus()
-      }
-    }
-
-    const handleInputChange = (e) => {
-      state.inputValue = e.target.value
-    }
-
-    const handleInputConfirm = () => {
-      let tempsTags = [...state.newTags]
-      if (
-        state.inputValue &&
-        tempsTags.filter((tag) => tag.label === state.inputValue).length === 0
-      ) {
-        tempsTags = [...tempsTags, { key: `new-${tempsTags.length}`, label: state.inputValue }]
-      }
-      state.newTags = tempsTags
-      state.inputVisible = false
-      state.inputValue = ''
-    }
-
-    return {
-      ...toRefs(state),
-      inputRef,
-      showInput,
-      handleInputChange,
-      handleInputConfirm
-    }
-  }
-})
-</script>
-
-<style lang="less" module>
-@import '../style';
 </style>

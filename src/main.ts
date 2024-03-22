@@ -1,20 +1,35 @@
 import { createApp } from 'vue'
 
-import router from '@/router'
+import { router, setupRouter } from '@/router'
+
+import { setupRouterGuard } from '@/router/guard'
 
 import App from './App.vue'
-import store from './store'
-import components from './core'
+import { setupStore } from './store'
+import { setupGlobCommon } from './core'
 
-import 'virtual:windi-base.css'
-import 'virtual:windi-components.css'
-import 'virtual:windi-utilities.css'
-import 'animate.css/source/animate.css'
+import 'uno.css'
+import 'nprogress/nprogress.css'
+
 import './global.less'
 
-import('ant-design-vue/dist/antd.variable.min.css')
+import './plugins'
 
-import '@/design'
+function startApp() {
+  const app = createApp(App)
 
-createApp(App).use(store).use(router).use(components).mount('#app')
+  // 配置store
+  setupStore(app)
 
+  setupGlobCommon(app)
+
+  // 配置路由
+  setupRouter(app)
+
+  // 路由守卫
+  setupRouterGuard(router)
+
+  app.mount('#app')
+}
+
+startApp()

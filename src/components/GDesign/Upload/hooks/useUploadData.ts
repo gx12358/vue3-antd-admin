@@ -1,27 +1,25 @@
-import type { Ref, ComputedRef } from 'vue'
+import { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 import { cloneDeep, omit } from 'lodash-es'
-import { checkFileType, getMediaInfos, generateVidoePicture } from '@/utils/util'
-import { isArray, isString } from '@/utils/validate'
-import type { MaterialListItem, UploadList, UploadListRecord } from '../typings'
+import { checkFileType, generateVidoePicture, isString } from '@gx-design-vue/pro-utils'
+import type { MaterialListItem } from '../typings'
 import type { GUploadProps } from '../Upload'
 
-export function useUploadData(
-  listRef: Ref<GUploadProps['dataList']>,
-  propsRef: ComputedRef<GUploadProps>
-) {
+export function useUploadData(state: {
+  limit: Ref<GUploadProps['limit']>,
+  dataList: Ref<GUploadProps['dataList']>,
+  bindValue: Ref<GUploadProps['bindValue']>,
+  coverDataList: Ref<GUploadProps['coverDataList']>
+}) {
   const dataValue = ref<MaterialListItem[]>([])
   const getDataValueRef = computed(() => unref(dataValue))
   const getUrlValueRef = computed(() => unref(dataValue).filter(item => item.url)
     .map(item => item.url))
 
   watch(
-    () => listRef.value,
+    () => state.dataList.value,
     (data) => {
-      if (isArray(data))
-        getDataList(data)
-      else
-        console.warn('NOTE: dataList 不是数组类型')
+      getDataList(data)
     },
     {
       deep: true,
@@ -29,99 +27,41 @@ export function useUploadData(
     }
   )
 
-  async function getDataList(list: UploadList) {
-    const { coverDataList = [], limit, autoGetMediaParams, autoScreenshot } = unref(propsRef)
-    const newUploadList = list.filter(item => dataValue.value.every(el => {
+  async function getDataList(list) {
+    if (state.bindValue.value) dataValue.value = []
+    const newUploadList = list.filter(item => state.bindValue.value ? true : dataValue.value.every(el => {
       if (isString(item)) return el?.url !== item
-      return el?.url !== ((item as UploadListRecord)?.url || '')
-    }))
-      .filter(item => {
-        if (isString(item)) return item
-        return (item as UploadListRecord)?.url || ''
-      })
+      return el?.url !== (item?.url || '')
+    })).filter(item => {
+      if (state.bindValue.value) return true
+      if (isString(item)) return item
+      return item?.url || ''
+    })
     for (let i = 0; i < newUploadList.length; i += 1) {
-      if (dataValue.value.length > limit - 1) return
-      const uploadRecord = cloneDeep(newUploadList[i])
-      const baseParams = getMediaBaseParams(uploadRecord)
-      const initParams: MaterialListItem = {
-        id: baseParams.url,
-        url: baseParams.url,
-        type: baseParams.type,
+      if (dataValue.value.length > state.limit.value - 1) return
+      const url = isString(newUploadList[i]) ? newUploadList[i] : (newUploadList[i]?.url || '')
+      const type = newUploadList[i]?.type || checkFileType(url)
+      const coverImg = state.coverDataList.value[i] || ''
+      const otherParams = isString(newUploadList[i]) ? {} : omit(newUploadList[i], 'url')
+      dataValue.value.push({
+        id: url,
+        url,
+        previewUrl: isString(newUploadList[i]) ? url : (newUploadList[i]?.previewUrl || url),
+        localPreviewUrl: isString(newUploadList[i]) ? url : (newUploadList[i]?.previewUrl || url),
         progress: 100,
-        spinning: baseParams.type === '3'
-          ? autoGetMediaParams || autoScreenshot : autoGetMediaParams,
         uploadLoading: false,
         allowPlay: true,
+        coverImg,
         uploadStatus: 'success',
-        ...baseParams.otherParams
-      }
-      dataValue.value.push(initParams)
-      if (autoGetMediaParams) {
-        getMediaOtherParams(uploadRecord, {
-          url: baseParams.url,
-          type: baseParams.type,
-          autoScreenshot,
-          ...baseParams.otherParams,
-          coverImg: coverDataList[i] || (isString(uploadRecord)
-            ? ''
-            : (uploadRecord as UploadListRecord)?.coverImg)
-        }).then(res => {
-          changeDataValue({ value: baseParams.url }, { ...res })
-          if (res.spinning) {
-            getVideoScreenshots(baseParams.url, baseParams.url, false)
-          }
-        })
-      } else {
-        if (initParams.spinning) {
-          getVideoScreenshots(baseParams.url, baseParams.url, false)
-        }
-      }
-    }
-  }
-
-  function getMediaBaseParams(record: string | UploadListRecord) {
-    const url = isString(record)
-      ? record as string : ((record as UploadListRecord)?.url || '')
-    const type = isString(record) ? checkFileType(url) : ((record as UploadListRecord)?.type || '')
-    const otherParams = isString(record) ? {} : omit(record as UploadListRecord, 'url')
-    return {
-      url,
-      type,
-      otherParams
-    }
-  }
-
-  async function getMediaOtherParams(record: string | UploadListRecord, params: RecordType) {
-    const coverImg = isString(record)
-      ? params.coverImg || '' : ((record as UploadListRecord)?.coverImg || '')
-    const mediaInfo = await getMediaInfos({
-      url: params.url,
-      fileType: params.type
-    })
-    const width = isString(record)
-      ? mediaInfo.width || 0 : ((record as UploadListRecord)?.width) || mediaInfo.width
-    const height = isString(record)
-      ? mediaInfo.height || 0 : ((record as UploadListRecord)?.height) || mediaInfo.height
-    const duration = isString(record)
-      ? mediaInfo.duration || 0 : ((record as UploadListRecord)?.duration) || mediaInfo.duration
-    return {
-      width,
-      height,
-      duration,
-      spinning: params.type === '3' ? !!params.autoScreenshot : false,
-      coverImg,
-      allowPlay: mediaInfo.play
-    }
-  }
-
-  async function getVideoScreenshots(id: string, url: string, isYield: boolean) {
-    if (isYield) {
-      const cover = await generateVidoePicture(url)
-      changeDataValue({ value: id }, { coverImg: cover, spinning: false })
-    } else {
-      generateVidoePicture(url).then(cover => {
-        changeDataValue({ value: id }, { coverImg: cover, spinning: false })
+        ...otherParams,
+        type
       })
+
+      if (!coverImg && type === '3') {
+        generateVidoePicture(url).then(coverUrl => {
+          changeDataValue(url, { coverImg: coverUrl })
+        })
+      }
     }
   }
 
@@ -133,15 +73,9 @@ export function useUploadData(
     dataValue.value.push({ ...params })
   }
 
-  function changeDataValue({
-    type = 'id',
-    value
-  } : {
-    type?: 'id' | 'uid',
-    value: string
-  }, params: MaterialListItem) {
+  function changeDataValue(uid, params: MaterialListItem) {
     dataValue.value = dataValue.value.map(item => {
-      if ((type === 'id' ? item[type] : item.file.uid) === value) {
+      if (item.id === uid) {
         return {
           ...item,
           ...params

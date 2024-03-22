@@ -1,6 +1,6 @@
-import config from '/config/config'
+import { defaultSettings } from '@gx-config'
 
-const { title, titleReverse, titleSeparator } = config.defaultSettings
+const { title, titleReverse, titleSeparator } = defaultSettings
 
 /**
  * @author gx12358 2539306317@qq.com
@@ -9,7 +9,7 @@ const { title, titleReverse, titleSeparator } = config.defaultSettings
  * @returns {string}
  */
 export default function getPageTitle(pageTitle: string) {
-  let newTitles: any = []
+  let newTitles: string[] = []
   if (pageTitle) newTitles.push(pageTitle)
   if (title) newTitles.push(title)
   if (titleReverse) newTitles = newTitles.reverse()

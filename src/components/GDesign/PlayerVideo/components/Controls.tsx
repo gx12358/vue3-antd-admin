@@ -5,8 +5,8 @@ import Setting from '../components/Settings'
 
 export default defineComponent({
   props: {
-    open: Boolean as PropType<boolean>,
-    prefixCls: String as PropType<string>
+    open: Boolean as VuePropType<boolean>,
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const settingsLayer = ref()

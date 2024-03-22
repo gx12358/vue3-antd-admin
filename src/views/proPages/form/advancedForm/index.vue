@@ -1,13 +1,233 @@
+<script setup lang="ts">
+import { Teleport } from 'vue'
+import { cloneDeep, omit } from 'lodash-es'
+import dayjs from 'dayjs'
+import { message } from 'ant-design-vue'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { hanndleField, scrollTo } from '@gx-design-vue/pro-utils'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import type { ProTableRef, ProTableProps, RequsetFunction, ProColumnType } from '@gx-design-vue/pro-table'
+import { useTable } from '@gx-design-vue/pro-table'
+import type { TableRecord } from '@gx-mock/datasSource/form/advanced'
+import {
+  getAdvancedForm,
+  getAdvancedFormTable,
+  addAdvancedFormTable,
+  deleteAdvancedFormTable,
+  updateAdvancedFormTable
+} from '@/services/formCenter'
+import { defaultSettings } from '@gx-config'
+import { useRequest } from '@gx-admin/hooks/core'
+import { useForm } from '@gx-admin/hooks/system'
+import { handleOffsetTop } from '@/utils/util'
+import { columns } from './utils/columns'
+import { rules, fieldLabels } from './utils/config'
+
+const { viewScrollRoot } = defaultSettings
+
+interface ErrorField {
+  name: string
+  errors: string[]
+}
+
+type FormState = {
+  name: string;
+  url: string;
+  owner?: any;
+  approver?: any;
+  dateRange: any;
+  type?: any;
+  name2: string;
+  url2: string;
+  owner2?: any;
+  approver2?: any;
+  dateRange2?: any;
+  type2?: any;
+}
+
+const { user } = useStore()
+const { token } = useProConfigContext()
+
+const isMount = ref<boolean>(false)
+const tableRef = ref<ProTableRef>()
+
+const { dataSource, changeDataValue, reload, changeLoading } = useTable<TableRecord>(tableRef)
+
+const state = reactive({
+  editableData: {} as TableRecord,
+  errorFields: [] as ErrorField[]
+})
+const tableState = reactive<ProTableProps>({
+  bordered: false,
+  options: false,
+  showLoading: false,
+  rowKey: 'id',
+  showIndex: false,
+  pagination: false
+})
+const formState = reactive<FormState>({
+  name: '',
+  url: '',
+  owner: undefined,
+  approver: undefined,
+  dateRange: [],
+  type: undefined,
+  name2: '',
+  url2: '',
+  owner2: undefined,
+  approver2: undefined,
+  dateRange2: null,
+  type2: undefined
+})
+
+const rulesRef = reactive({ ...rules })
+
+const { validate, validateInfos, resetFields } = useForm<FormState>(formState, rulesRef)
+
+const { loading } = useRequest(getAdvancedForm, {
+  params: {
+    userId: user.userInfo.userId
+  },
+  onSuccess: (data) => {
+    tableState.showLoading = true
+    for (let i in formState) {
+      switch (i) {
+        case 'owner':
+          formState[i] = data[i] || undefined
+          break
+        case 'approver':
+          formState[i] = data[i] || undefined
+          break
+        case 'type':
+          formState[i] = data[i] || undefined
+          break
+        case 'dateRange':
+          formState[i] = data[i] || []
+          break
+        case 'owner2':
+          formState[i] = data[i] || undefined
+          break
+        case 'approver2':
+          formState[i] = data[i] || undefined
+          break
+        case 'dateRange2':
+          formState[i] = data[i] || null
+          break
+        case 'type2':
+          formState[i] = data[i] || undefined
+          break
+        default:
+          formState[i] = hanndleField(data[i], '').value
+          break
+      }
+    }
+  }
+})
+
+onMounted(() => {
+  isMount.value = true
+})
+
+const getTabelData: RequsetFunction<TableRecord> = async (params) => {
+  const response = await getAdvancedFormTable<PageResult<TableRecord>>(params)
+  return {
+    success: !!response,
+    total: response.data?.totalCount || 0,
+    data: response?.data?.list || []
+  }
+}
+
+const handelEdit = (key) => {
+  state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))
+}
+
+const handleSave = async (record: TableRecord) => {
+  const response = await record.isMock
+    ? addAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
+    : updateAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
+  if (response) {
+    message.success('操作成功')
+    await reload({ immediate: true })
+    delete state.editableData[record.id]
+  }
+}
+
+const handleCancel = (key: number) => {
+  delete state.editableData[key]
+}
+
+const handleDelete = async (key: number) => {
+  if (state.editableData[key]?.isMock) {
+    changeDataValue({ key: 'id', type: 'delete', params: { id: key } })
+    delete state.editableData[key]
+  } else {
+    changeLoading(true)
+    const response = await deleteAdvancedFormTable({ id: key })
+    if (response) {
+      message.success('操作成功')
+      await reload({ immediate: true })
+      delete state.editableData[key]
+    }
+    changeLoading(false)
+  }
+}
+
+const handelTableAdd = () => {
+  const key = dataSource.value.length + 1
+  changeDataValue({
+    key: 'id',
+    params: {
+      id: key,
+      workId: '',
+      name: '',
+      department: '',
+      isMock: true,
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
+    },
+    type: 'add'
+  })
+  nextTick(() => {
+    state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))
+  })
+}
+
+const scrollToField = (fieldKey: string) => {
+  const labelNode = document.documentElement.querySelector(
+    `label[title="${fieldLabels[fieldKey]}"]`
+  ) as HTMLInputElement
+  if (labelNode) {
+    scrollTo(handleOffsetTop(labelNode).top - 46 - 62, {
+      getContainer: () => document.querySelector(viewScrollRoot) as HTMLInputElement,
+      duration: 450
+    })
+  }
+}
+
+const submitForm = () => {
+  validate()
+    .then(() => {
+      const parames = {
+        ...formState,
+        member: cloneDeep(dataSource.value)
+      }
+      console.log(parames)
+    })
+    .catch(({ errorFields }) => {
+      state.errorFields = errorFields
+    })
+}
+
+const resetForm = () => {
+  resetFields()
+  state.errorFields = []
+}
+</script>
+
 <template>
-  <g-pro-page-container>
-    <div style="padding: 24px; background: #f0f2f5">
-      <a-form
-        :class="$style['advance-form-block']"
-        :model="formState"
-        layout="vertical"
-        :scrollToFirstError="true"
-      >
-        <a-card title="仓库管理" :class="$style.card" :bordered="false">
+  <g-pro-page-container :use-page-card="false" :loading="loading">
+    <a-form layout="vertical">
+      <div class="flex flex-col gap-24px">
+        <GProCard title="仓库管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
           <a-row :gutter="16">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :label="fieldLabels.name" v-bind="validateInfos.name">
@@ -91,8 +311,8 @@
               </a-form-item>
             </a-col>
           </a-row>
-        </a-card>
-        <a-card id="sdad" title="任务管理" :class="$style.card" :bordered="false">
+        </GProCard>
+        <GProCard title="任务管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
           <a-row :gutter="16">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :label="fieldLabels.name2" v-bind="validateInfos.name2">
@@ -173,28 +393,15 @@
               </a-form-item>
             </a-col>
           </a-row>
-        </a-card>
-        <a-card title="成员管理" :bordered="false">
-          <g-pro-table
-            :columns="columns"
-            :row-key="(record) => record.key"
-            :loading="tableLoading"
-            :dataSource="tableData"
-            :pagination="pageConfig"
-            @refresh="getTableData"
-          >
-            <template #bodyCell="{ column, record, text }">
-              <template
-                v-if="
-                  column.dataIndex === 'name' ||
-                  column.dataIndex === 'workId' ||
-                  column.dataIndex === 'department'
-                "
-              >
+        </GProCard>
+        <GProCard title="成员管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
+          <g-pro-table ref="tableRef" v-bind="tableState" :request="getTabelData" :columns="columns">
+            <template #bodyCell="{ column, record, text }: { column: ProColumnType, record: TableRecord, text: string }">
+              <template v-if="[ 'name', 'workId', 'department' ].includes(column.dataIndex as string)">
                 <div>
                   <a-input
-                    v-if="editableData[record.key]"
-                    v-model:value="editableData[record.key][column.dataIndex]"
+                    v-if="state.editableData[record.id]"
+                    v-model:value="state.editableData[record.id][column.dataIndex]"
                     style="margin: -5px 0"
                     placeholder="请输入"
                   />
@@ -204,283 +411,86 @@
                 </div>
               </template>
               <template v-if="column.dataIndex === 'action'">
-                <template v-if="editableData[record.key]">
+                <template v-if="state.editableData[record.id]">
                   <a-space align="center">
-                    <a @click="handleSave(record.key)">保存</a>
-                    <a-popconfirm title="确定要删除吗?" @confirm="handleDelete(record.key)">
+                    <a @click="handleSave(state.editableData[record.id])">保存</a>
+                    <a-popconfirm title="确定要删除吗?" @confirm="handleDelete(record.id)">
                       <a>删除</a>
                     </a-popconfirm>
-                    <a-popconfirm title="确定要取消吗?" @confirm="handleCancel(record.key)">
+                    <a-popconfirm title="确定要取消吗?" @confirm="handleCancel(record.id)">
                       <a>取消</a>
                     </a-popconfirm>
                   </a-space>
                 </template>
-                <a v-else @click="handelEdit(record.key)">编辑</a>
+                <a v-else @click="handelEdit(record.id)">编辑</a>
               </template>
             </template>
           </g-pro-table>
-          <a-button type="dashed" block @click="handelTableAdd">
+          <a-button type="dashed" block @click="handelTableAdd" class="mt-10px">
             <template #icon>
               <PlusOutlined />
             </template>
             添加一行数据
           </a-button>
-        </a-card>
-      </a-form>
-    </div>
-    <div :class="$style['footer-bar']" style="width: calc(100% - 208px)">
-      <div :class="$style['footer-bar-left']"></div>
-      <div :class="$style['footer-bar-right']">
-        <span
-          v-if="
-            errorFields.length > 0 &&
-            errorFields.filter((item) => item.errors.length > 0).length > 0
-          "
-          :class="$style.errorIcon"
-        >
-          <Popover
-            title="表单校验信息"
-            :overlayClassName="$style.errorPopover"
-            trigger="click"
-            :getPopupContainer="
-              (trigger) => {
-                if (trigger && trigger.parentNode) {
-                  return trigger.parentNode
-                }
-                return trigger
-              }
-            "
-          >
-            <template #content>
-              <li
-                v-for="err in errorFields"
-                :key="err.name"
-                :class="$style.errorListItem"
-                @click="scrollToField(err.name)"
-              >
-                <CloseCircleOutlined :class="$style.errorIcon" />
-                <div :class="$style.errorMessage">{{ err.errors[0] }}</div>
-                <div :class="$style.errorField">{{ fieldLabels[err.name] }}</div>
-              </li>
-            </template>
-            <CloseCircleOutlined />
-            {{ errorFields.filter((item) => item.errors.length > 0).length }}
-          </Popover>
-        </span>
-        <a-button @click="resetForm">重置</a-button>
-        <a-button type="primary" @click="submitForm">提交</a-button>
+        </GProCard>
       </div>
-    </div>
-    <g-back-top />
+    </a-form>
+    <Teleport to=".ant-layout-has-sider>.ant-layout" v-if="isMount">
+      <div class="mt-32px h-49px" />
+    </Teleport>
+    <Teleport to="body">
+      <div class="footer-bar">
+        <div class="flex items-center">
+          <span
+            v-if="
+              state.errorFields.length > 0 &&
+              state.errorFields.filter((item) => item.errors.length > 0).length > 0
+            "
+            class="errorIcon"
+          >
+            <a-popover
+              title="表单校验信息"
+              overlayClassName="errorPopover"
+              trigger="click"
+              :getPopupContainer="trigger => trigger?.parentNode as HTMLElement"
+            >
+              <template #content>
+                <li
+                  v-for="err in state.errorFields"
+                  :key="err.name"
+                  class="errorListItem"
+                  @click="scrollToField(err.name)"
+                >
+                  <close-circle-outlined class="errorIcon" :style="{ color: token.colorError }" />
+                  <div class="errorMessage">{{ err.errors[0] }}</div>
+                  <div class="errorField">{{ fieldLabels[err.name] }}</div>
+                </li>
+              </template>
+              <div :style="{ color: token.colorError }">
+                <close-circle-outlined />
+                {{ state.errorFields.filter((item) => item.errors.length > 0).length }}
+              </div>
+            </a-popover>
+          </span>
+          <a-button class="mr-8px" @click="resetForm">重置</a-button>
+          <a-button type="primary" @click="submitForm">提交</a-button>
+        </div>
+      </div>
+    </Teleport>
   </g-pro-page-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, onActivated, computed } from 'vue'
-import { useStore } from '@gx-vuex'
-import { cloneDeep } from 'lodash-es'
-import { Form, Popover } from 'ant-design-vue'
-import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons-vue'
-import config from '/config/config'
-import { getAdvancedForm, getAdvancedFormTable } from '@/services/form/advanced'
-import { scrollTo } from '@gx-design/utils'
-import { handleOffsetTop, hanndleField } from '@/utils/util'
-import type { TableFormDateType } from './typings'
-import columns from './utils/columns'
-import { fieldLabels, rules } from './utils/config'
-
-const { viewScrollRoot } = config.defaultSettings
-
-interface advanceState {
-  columns: any
-  errorFields: ErrorField[]
-  tableData: TableFormDateType[]
-  addTableData: TableFormDateType[]
-  editableData: TableFormDateType
-  tableLoading: boolean
-  errorVisible: boolean
-  pageConfig: any
-  fieldLabels: any
-  formState: any
-}
-
-interface ErrorField {
-  name: string
-  errors: string[]
-}
-
-const useForm = Form.useForm
-
-export default defineComponent({
-  components: { PlusOutlined, CloseCircleOutlined, Popover },
-  setup() {
-    const store = useStore()
-    const state: advanceState = reactive({
-      columns: columns.index,
-      tableData: [],
-      addTableData: [],
-      editableData: {},
-      tableLoading: false,
-      errorVisible: false,
-      pageConfig: {
-        current: 1,
-        pageSize: 10,
-        total: 0
-      },
-      fieldLabels,
-      errorFields: [],
-      formState: {
-        name: '',
-        url: '',
-        owner: undefined,
-        approver: undefined,
-        dateRange: [],
-        type: undefined,
-        name2: '',
-        url2: '',
-        owner2: undefined,
-        approver2: undefined,
-        dateRange2: null,
-        type2: undefined
-      }
-    })
-    const rulesRef = reactive({ ...rules })
-    const userInfo = computed(() => store.user.userInfo)
-    onActivated(async () => {
-      const response = await getAdvancedForm({
-        userId: userInfo.value.userId
-      })
-      if (response) {
-        const formState = cloneDeep(response.data || {})
-        for (let i in state.formState) {
-          switch (i) {
-            case 'owner':
-              state.formState[i] = formState[i] || undefined
-              break
-            case 'approver':
-              state.formState[i] = formState[i] || undefined
-              break
-            case 'type':
-              state.formState[i] = formState[i] || undefined
-              break
-            case 'dateRange':
-              state.formState[i] = formState[i] || []
-              break
-            case 'owner2':
-              state.formState[i] = formState[i] || undefined
-              break
-            case 'approver2':
-              state.formState[i] = formState[i] || undefined
-              break
-            case 'dateRange2':
-              state.formState[i] = formState[i] || null
-              break
-            case 'type2':
-              state.formState[i] = formState[i] || undefined
-              break
-            default:
-              state.formState[i] = hanndleField(formState[i], '').value
-              break
-          }
-        }
-      }
-      getTableData()
-    })
-    const getTableData = async () => {
-      state.tableLoading = true
-      const response: any = await getAdvancedFormTable({
-        userId: userInfo.value.userId,
-        pageNum: state.pageConfig.current,
-        pageSize: state.pageConfig.pageSize
-      })
-      if (response) {
-        state.tableData = cloneDeep(response?.data || [])
-        state.pageConfig.total = state.tableData.length
-      }
-      state.tableLoading = false
-    }
-    const { resetFields, validate, validateInfos } = useForm(state.formState, rulesRef)
-    const handelEdit = (key) => {
-      state.editableData[key] = cloneDeep(
-        state.tableData.filter((item: any) => key === item.key)[0]
-      )
-    }
-    const handelTableAdd = () => {
-      const key = String(state.tableData.length + 1)
-      const tableItem = {
-        key: key,
-        workId: '',
-        name: '',
-        department: ''
-      }
-      state.tableData.push(tableItem)
-      state.addTableData.push(tableItem)
-      state.editableData[key] = cloneDeep(
-        state.tableData.filter((item: any) => key === item.key)[0]
-      )
-    }
-    const handleSave = (key: string) => {
-      Object.assign(
-        state.tableData.filter((item: any) => key === item.key)[0],
-        state.editableData[key]
-      )
-      delete state.editableData[key]
-    }
-    const handleCancel = (key: string) => {
-      delete state.editableData[key]
-    }
-    const handleDelete = (key: string) => {
-      delete state.editableData[key]
-      state.tableData = state.tableData.filter((item: any) => key !== item.key)
-      if (state.addTableData.some((item) => item.key === key)) {
-        state.addTableData = state.addTableData.filter((item: any) => key !== item.key)
-      }
-    }
-    const scrollToField = (fieldKey: string) => {
-      const labelNode = document.documentElement.querySelector(
-        `label[title="${state.fieldLabels[fieldKey]}"]`
-      ) as HTMLInputElement
-      if (labelNode) {
-        scrollTo(handleOffsetTop(labelNode).top - 48 - 62, {
-          getContainer: () => document.querySelector(viewScrollRoot) as HTMLInputElement,
-          duration: 450
-        })
-      }
-    }
-    const submitForm = () => {
-      validate()
-        .then(() => {
-          const parames = {
-            ...state.formState,
-            member: cloneDeep(state.tableData)
-          }
-          console.log(parames)
-        })
-        .catch(({ errorFields }) => {
-          state.errorFields = errorFields
-        })
-    }
-    const resetForm = () => {
-      resetFields()
-      state.errorFields = []
-    }
-    return {
-      ...toRefs(state),
-      validateInfos,
-      resetForm,
-      handelEdit,
-      handleSave,
-      handleDelete,
-      handleCancel,
-      getTableData,
-      submitForm,
-      handelTableAdd,
-      scrollToField
-    }
+<style lang="less">
+.errorPopover {
+  .ant-popover-inner-content {
+    min-width: 256px;
+    max-height: 290px;
+    padding: 0;
+    overflow: auto;
   }
-})
-</script>
+}
+</style>
 
-<style lang="less" module>
-@import './style';
+<style lang="less" scoped>
+@import "./style";
 </style>

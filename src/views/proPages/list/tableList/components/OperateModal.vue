@@ -1,0 +1,227 @@
+<script setup lang="ts">
+import dayjs, { Dayjs } from 'dayjs'
+import { cloneDeep, omit } from 'lodash-es'
+import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
+import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import { addRules, updateRules } from '@/services/listCenter'
+import { defauleState } from '../utils/config'
+import { message } from 'ant-design-vue'
+
+type FormState = {
+  id?: number;
+  name: string;
+  desc: string;
+  target: '0' | '1'; // 监控对象 0 表一 1 表二
+  template: '0' | '1'; // 规则模版 0 规则模板一 1 规则模板二
+  type: '0' | '1'; // 规则类型 0 强 1 弱
+  createTime: string;
+  frequency: 'month' | 'week'; // month 月 week 周
+  createTimeDay?: Dayjs;
+}
+
+const steps = [ '基本信息', '配置规则属性', '设定调度周期' ]
+
+const emit = defineEmits<{
+  (e: 'ok'): void
+}>()
+
+const open = ref(false)
+const spinning = ref(false)
+const current = ref(0)
+const operateType = ref<'add' | 'update'>('add')
+
+const formState = reactive<FormState>(cloneDeep(defauleState))
+
+const ruleState = reactive<Partial<RulesState<FormState>>>({
+  name: [
+    {
+      required: true,
+      message: '请输入标题'
+    }
+  ],
+  desc: [
+    {
+      required: true,
+      message: '请选择起止日期'
+    }
+  ],
+  createTimeDay: [
+    {
+      required: true,
+      validator: (_, value: Dayjs) => {
+        if (value || current.value !== 2) return Promise.resolve()
+        
+        return Promise.reject('请选择开始时间')
+      }
+    }
+  ]
+})
+
+const { validateInfos, validate, resetFields, clearValidate } = useForm(formState, ruleState)
+
+const changeStep = (type: 'next' | 'back') => {
+  if (type === 'next') {
+    validate().then(_ => {
+      current.value += 1
+    }).catch(_ => {})
+  } else if (type === 'back') {
+    clearValidate(Object.keys(ruleState))
+    current.value -= 1
+  }
+}
+
+const handleOk = () => {
+  validate().then(async _ => {
+    spinning.value = true
+    if (operateType.value === 'update') formState.createTime = dayjs(formState.createTimeDay)
+      .format('YYYY-MM-DD HH:mm:ss')
+    const fetchFun = operateType.value === 'add' ? addRules : updateRules
+    const response = await fetchFun({ ...omit(formState, 'createTimeDay') })
+    
+    if (response) {
+      message.success('操作成功')
+      emit('ok')
+      handleCancel()
+    }
+    
+    spinning.value = false
+  }).catch(_ => {})
+}
+
+const handleCancel = () => {
+  open.value = false
+  spinning.value = false
+  current.value = 0
+  resetFields()
+}
+
+defineExpose({
+  open: (type: 'add' | 'update', record?: RulesListItem ) => {
+    operateType.value = type
+    
+    if (record) {
+      formState.id = record.id
+      formState.name = record.name
+      formState.desc = record.desc
+    }
+    
+    open.value = true
+  }
+})
+</script>
+
+<template>
+  <g-pro-modal
+    type="normal"
+    full-spin
+    :width="operateType === 'add' ? 400 : 640"
+    :open="open"
+    :spinning="spinning"
+    :title="operateType === 'add' ? '新建规则' : '规则配置'"
+    @ok="handleOk"
+    @cancel="handleCancel"
+  >
+    <a-steps v-model:current="current" size="small" v-if="operateType === 'update'">
+      <a-step v-for="item in steps" :key="item" :title="item" />
+    </a-steps>
+    <div :class="operateType === 'update' ? 'w-60% m-auto mt-24px' : ''">
+      <a-form layout="vertical" v-show="current === 0">
+        <a-form-item v-bind="validateInfos.name" label="规则名称">
+          <a-input v-model:value="formState.name" placeholder="请输入" allow-clear />
+        </a-form-item>
+        <a-form-item v-bind="validateInfos.desc" label="规则描述">
+          <a-textarea v-model:value="formState.desc" placeholder="请输入" allow-clear :auto-size="{ minRows: 4 }" />
+        </a-form-item>
+      </a-form>
+      <a-form layout="vertical" v-show="current === 1" v-if="operateType === 'update'">
+        <a-form-item v-bind="validateInfos.target" label="监控对象">
+          <a-select
+            style="width: 100%"
+            :options="[
+              {
+                value: '0',
+                label: '表一'
+              },
+              {
+                value: '1',
+                label: '表二'
+              }
+            ]"
+            placeholder="请选择"
+            v-model:value="formState.target"
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item v-bind="validateInfos.template" label="规则模板">
+          <a-select
+            style="width: 100%"
+            :options="[
+              {
+                value: '0',
+                label: '规则模板一'
+              },
+              {
+                value: '1',
+                label: '规则模板二'
+              }
+            ]"
+            placeholder="请选择"
+            v-model:value="formState.template"
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item v-bind="validateInfos.type" label="规则类型">
+          <a-radio-group
+            :options="[
+              {
+                value: '0',
+                label: '强'
+              },
+              {
+                value: '1',
+                label: '弱'
+              }
+            ]"
+            v-model:value="formState.type"
+          />
+        </a-form-item>
+      </a-form>
+      <a-form layout="vertical" v-show="current === 2" v-if="operateType === 'update'">
+        <a-form-item v-bind="validateInfos.createTimeDay" label="开始时间">
+          <a-date-picker
+            style="width: 100%"
+            showTime
+            v-model:value="formState.createTimeDay"
+          />
+        </a-form-item>
+        <a-form-item v-bind="validateInfos.frequency" label="监控对象">
+          <a-select
+            style="width: 100%"
+            :options="[
+              {
+                value: 'month',
+                label: '月'
+              },
+              {
+                value: 'week',
+                label: '周'
+              }
+            ]"
+            placeholder="请选择"
+            v-model:value="formState.frequency"
+            allow-clear
+          />
+        </a-form-item>
+      </a-form>
+    </div>
+    <template #footer v-if="operateType === 'update'">
+      <a-button v-if="current > 0" @click="changeStep('back')">上一步</a-button>
+      <a-button v-if="current < steps.length - 1" type="primary" @click="changeStep('next')">下一步</a-button>
+      <a-button v-if="current === steps.length - 1" type="primary" @click="handleOk">提交</a-button>
+    </template>
+  </g-pro-modal>
+</template>
+
+<style scoped lang="less">
+
+</style>

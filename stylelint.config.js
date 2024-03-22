@@ -4,10 +4,10 @@ module.exports = {
   extends: [ 'stylelint-config-standard', 'stylelint-config-prettier' ],
   customSyntax: 'postcss-html',
   rules: {
-    'number-leading-zero': false,
-    'alpha-value-notation': false,
-    'color-function-notation': false,
-    'no-eol-whitespace': false,
+    'number-leading-zero': null,
+    'alpha-value-notation': null,
+    'color-function-notation': null,
+    'no-eol-whitespace': null,
     'function-no-unknown': null,
     'selector-class-pattern': null,
     'selector-pseudo-class-no-unknown': [
@@ -40,7 +40,9 @@ module.exports = {
       }
     ],
     'no-empty-source': null,
-    'string-quotes': null,
+    'font-family-name-quotes': null,
+    'declaration-colon-newline-after': null,
+    'selector-pseudo-element-colon-notation': null,
     'string-quotes': null,
     'named-grid-areas-no-invalid': null,
     'unicode-bom': 'never',
@@ -48,7 +50,6 @@ module.exports = {
     'font-family-no-missing-generic-family-keyword': null,
     'declaration-colon-space-after': 'always-single-line',
     'declaration-colon-space-before': 'never',
-    // 'declaration-block-trailing-semicolon': 'always',
     'rule-empty-line-before': [
       'always',
       {

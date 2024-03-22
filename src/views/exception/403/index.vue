@@ -2,10 +2,8 @@
   <g-result status="403" />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({})
+<script setup lang="ts">
+import GResult from '@gx-design/Result'
 </script>
 
-<style scoped></style>
+<style lang="less" scoped></style>

@@ -1,10 +1,11 @@
 import dayjs from 'dayjs'
-import config from '/config/config'
-import { isPro } from '@/utils'
+import { defaultSettings } from '@gx-config'
+import { isPro, typeViteEnv } from '@/utils/env'
 import { Decrypt, Encrypt } from '@/utils/crypto'
-import { isJSONStr, isObject } from '@/utils/validate'
+import { isJSONStr } from '@/utils/validate'
+import { isObject } from '@gx-design-vue/pro-utils'
 
-const { shortName } = config.defaultSettings
+const { shortName } = defaultSettings
 
 function isEncryption(status: boolean) {
   return isPro() ? status : false
@@ -21,21 +22,28 @@ function handleStorageValue(value: string) {
  * @lastTime    2019/12/3
  * @description 设置Local-key的规则
  */
-export function getStorageKey(key: string) {
+export function getStorageKey(key: string, originKey?: boolean) {
   const { pkg } = __APP_INFO__
-  return `${shortName}_${pkg.version}_${isPro ? 'pro' : 'dev'}_${key}`
+  return originKey ? key : `${shortName}_${pkg.version}_${typeViteEnv('VITE_APP_ENV') === 'dev'
+    ? 'development'
+    : typeViteEnv('VITE_USE_MODE')}_${key}`
 }
 
 /**
  * @Author      gx12358
  * @DateTime    2019/12/3
  * @lastTime    2019/12/3
- * @description 存储SessionStorage
+ * @description 获取Storage
  */
-export function getStorage({ key, encryption = true, type = 'local' }: { key: string, encryption?: boolean, type?: string }) {
-  const storageValue = type === 'local' ?
-    localStorage.getItem(getStorageKey(key))
-    : sessionStorage.getItem(getStorageKey(key))
+export function getStorage({
+  key,
+  encryption = true,
+  type = 'localStorage',
+  originKey
+}: { key: string, encryption?: boolean, type?: SettingConfig['storage'], originKey?: boolean }) {
+  const storageValue = type === 'localStorage' ?
+    localStorage.getItem(getStorageKey(key, originKey))
+    : type === 'sessionStorage' ? sessionStorage.getItem(getStorageKey(key, originKey)) : getCookie(getStorageKey(key, originKey))
   const result: string | LocalResult = storageValue ?
     isEncryption(encryption) ? Decrypt(storageValue) : handleStorageValue(storageValue)
     : ''
@@ -55,40 +63,42 @@ export function getStorage({ key, encryption = true, type = 'local' }: { key: st
  * @Author      gx12358
  * @DateTime    2019/12/3
  * @lastTime    2019/12/3
- * @description 设置LocalStorage
+ * @description 设置Storage
  */
 export function setStorage({
   key,
   value,
   expired,
+  originKey,
   encryption = true,
   type = 'local'
 }: {
   key: string;
   value: any;
+  originKey?: boolean;
   expired?: number;
   encryption?: boolean;
   type?: string;
 }) {
-  const result: LocalResult = {
+  const result: LocalResult = originKey ? value : {
     value,
     time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     expired: expired || 0
   }
   const storageValue = isEncryption(encryption) ? Encrypt(JSON.stringify(result)) : JSON.stringify(result)
-  if (type === 'local') localStorage.setItem(getStorageKey(key), storageValue)
-  sessionStorage.setItem(getStorageKey(key), storageValue)
+  if (type === 'local') localStorage.setItem(getStorageKey(key, originKey), storageValue)
+  sessionStorage.setItem(getStorageKey(key, originKey), storageValue)
 }
 
 /**
  * @Author      gx12358
  * @DateTime    2019/12/3
  * @lastTime    2019/12/3
- * @description 删除LocalStorage
+ * @description 删除Storage
  */
-export function removeStorage(key: string, type = 'local') {
-  if (type === 'local') localStorage.removeItem(getStorageKey(key))
-  sessionStorage.removeItem(getStorageKey(key))
+export function removeStorage(key: string, type = 'local', originKey?: boolean) {
+  if (type === 'local') localStorage.removeItem(getStorageKey(key, originKey))
+  sessionStorage.removeItem(getStorageKey(key, originKey))
 }
 
 /**

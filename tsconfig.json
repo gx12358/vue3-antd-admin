@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "strictFunctionTypes": false,
@@ -15,19 +15,17 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "lib": ["dom", "esnext"],
+    "lib": ["DOM", "ESNext"],
     "types": ["vite/client"],
-    "typeRoots": ["./node_modules/@types/", "./types"],
     "noImplicitAny": false,
     "skipLibCheck": true,
     "paths": {
       "@/*": ["src/*"],
-      "/types/*": ["types/*"],
-      "/config/*": ["config/*"],
+      "@gx-mock/*": ["mock/*"],
+      "@gx-config": ["config/index.ts"],
       "@gx-vuex": ["src/store/index.ts"],
       "@gx-admin/hooks/*": ["src/hooks/*"],
-      "@gx-admin/utils": ["src/components/_util/index.ts"],
-      "@gx-design/*": ["src/components/GDesign/*"],
+      "@gx-design/*": ["src/components/GDesign/*"]
     }
   },
   "include": [
@@ -44,5 +42,5 @@
     "mock/**/*.ts",
     "vite.config.ts"
   ],
-  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js", ".history"]
+  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js", ".history", "unocss.config.ts"]
 }

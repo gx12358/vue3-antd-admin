@@ -1,0 +1,25 @@
+.gx-admin-spin.gx-jiazaizhong {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  line-height: 0;
+  color: inherit;
+  text-align: center;
+  text-transform: none;
+  vertical-align: -0.125em;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  animation: loadingCircle 1s infinite linear;
+  --at-apply: text-30px;
+}
+
+.ant-spin-spinning .ant-spin-text {
+  margin-top: 10px;
+}
+
+@keyframes loadingCircle {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

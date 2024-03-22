@@ -36,7 +36,8 @@ body,
   justify-content: center;
   padding: 98px;
 }
-.ant-spin {
+
+.ant-spins {
   position: absolute;
   display: none;
   -webkit-box-sizing: border-box;
@@ -44,7 +45,6 @@ body,
   margin: 0;
   padding: 0;
   color: rgba(0, 0, 0, 0.65);
-  color: #1890ff;
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5;
@@ -60,110 +60,57 @@ body,
   font-feature-settings: 'tnum';
 }
 
-.ant-spin-spinning {
+.ant-spin-spinnings {
   position: static;
   display: inline-block;
   opacity: 1;
 }
 
-.ant-spin-dot {
+.ant-spin-dots {
   position: relative;
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
+  width: 40px;
+  height: 40px;
 }
 
-.ant-spin-dot-item {
-  position: absolute;
-  display: block;
-  width: 9px;
-  height: 9px;
-  background-color: #1890ff;
-  border-radius: 100%;
+.ant-spin-dot-items {
   -webkit-transform: scale(0.75);
   -ms-transform: scale(0.75);
   transform: scale(0.75);
   -webkit-transform-origin: 50% 50%;
   -ms-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
-  opacity: 0.3;
-  -webkit-animation: antspinmove 1s infinite linear alternate;
-  animation: antSpinMove 1s infinite linear alternate;
+  opacity: 1 !important;
 }
 
-.ant-spin-dot-item:nth-child(1) {
-  top: 0;
-  left: 0;
-}
-
-.ant-spin-dot-item:nth-child(2) {
-  top: 0;
-  right: 0;
-  -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
-}
-
-.ant-spin-dot-item:nth-child(3) {
-  right: 0;
-  bottom: 0;
-  -webkit-animation-delay: 0.8s;
-  animation-delay: 0.8s;
-}
-
-.ant-spin-dot-item:nth-child(4) {
-  bottom: 0;
-  left: 0;
-  -webkit-animation-delay: 1.2s;
-  animation-delay: 1.2s;
-}
-
-.ant-spin-dot-spin {
+.ant-spin-dot-spins {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  -webkit-animation: antrotate 1.2s infinite linear;
-  animation: antRotate 1.2s infinite linear;
+  -webkit-animation: antrotates 1.2s infinite linear;
+  animation: antrotates 1.2s infinite linear;
 }
 
-.ant-spin-lg .ant-spin-dot {
-  width: 32px;
-  height: 32px;
-  font-size: 32px;
-}
-
-.ant-spin-lg .ant-spin-dot i {
-  width: 14px;
-  height: 14px;
-}
-
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .ant-spin-blur {
-    background: #fff;
-    opacity: 0.5;
-  }
-}
-
-@-webkit-keyframes antSpinMove {
+@-webkit-keyframes antSpinMoves {
   to {
     opacity: 1;
   }
 }
 
-@keyframes antSpinMove {
+@keyframes antSpinMoves {
   to {
     opacity: 1;
   }
 }
 
-@-webkit-keyframes antRotate {
+@-webkit-keyframes antrotates {
   to {
     -webkit-transform: rotate(405deg);
     transform: rotate(405deg);
   }
 }
 
-@keyframes antRotate {
+@keyframes antrotates {
   to {
     -webkit-transform: rotate(405deg);
     transform: rotate(405deg);

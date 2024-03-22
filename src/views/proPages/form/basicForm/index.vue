@@ -1,248 +1,137 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+import { omit } from 'lodash-es'
+import dayjs from 'dayjs'
+import { message } from 'ant-design-vue'
+import type { Dayjs } from 'dayjs'
+import type { RangePickerProps } from 'ant-design-vue/es/date-picker/dayjs'
+import type { BasicFormState } from '@gx-mock/datasSource/form'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import type { ProFormRef } from '@gx-design-vue/pro-form'
+import {
+  GProForm,
+  GProFormText,
+  GProFormDateRangePicker,
+  GProFormTextArea,
+  GProFormDigit,
+  GProFormRadioGroup
+} from '@gx-design-vue/pro-form'
+import { submitForm } from '@/services/formCenter'
+
+type FormState = BasicFormState & {
+  timeRange: Dayjs[]
+}
+
+const optionList = [
+  {
+    value: 1,
+    label: '公开'
+  },
+  {
+    value: 2,
+    label: '部分公开'
+  },
+  {
+    value: 3,
+    label: '不公开'
+  }
+]
+
+const { token } = useProConfigContext()
+
+const proFormRef = ref<ProFormRef>()
+
+const formState = reactive<FormState>({
+  title: '',
+  timeRange: [],
+  startTime: '',
+  endTime: '',
+  target: 1,
+  clientName: '',
+  summary: '',
+  metrics: '',
+  inviter: '',
+  weight: 0
+})
+
+const rules = reactive({
+  title: [ { required: true, message: '请输入标题' } ],
+  timeRange: [ { required: true, message: '请输入起止日期' } ],
+  summary: [ { required: true, message: '请输入目标描述' } ],
+  metrics: [ { required: true, message: '请输入衡量标准' } ]
+})
+
+const handleFinish = async (params: FormState) => {
+  const response = await submitForm({
+    startTime: params.timeRange?.[0] ? dayjs(params.timeRange?.[0]).format('YYYY-MM-DD') : '',
+    endTime: params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : '',
+    ...omit(params, 'timeRange')
+  } as BasicFormState)
+  
+  if (response) {
+    message.success('操作成功')
+    
+    nextTick(() => proFormRef.value?.formRef()?.resetFields())
+  }
+}
+</script>
+
 <template>
   <g-pro-page-container>
-    <a-form style="max-width: 600px; margin: 8px auto auto" :model="formState" layout="vertical">
-      <a-form-item label="标题" v-bind="validateInfos.title">
-        <a-input
-          style="width: 328px"
-          v-model:value="formState.title"
-          placeholder="给目标起个名字"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item label="起止日期" v-bind="validateInfos.date">
-        <a-range-picker show-time style="width: 328px" v-model:value="formState.date" />
-      </a-form-item>
-      <a-form-item label="目标描述" v-bind="validateInfos.goal">
-        <a-textarea
-          v-model:value="formState.goal"
-          :auto-size="{ minRows: 3 }"
-          placeholder="请输入你的阶段性工作目标"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item label="衡量标准" v-bind="validateInfos.standard">
-        <a-textarea
-          v-model:value="formState.standard"
-          :auto-size="{ minRows: 3 }"
-          placeholder="请输入衡量标准"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item>
-        <template #label>
-          <span>
-            客户
-            <em :class="$style.optional">（选填）</em>
-            <a-tooltip title="目标的服务对象">
-              <QuestionCircleOutlined :class="$style['gx-form-item-tooltip']" />
-            </a-tooltip>
-          </span>
-        </template>
-        <a-input
-          style="width: 328px"
-          v-model:value="formState.client"
-          placeholder="请描述你服务的客户，内部客户直接 @姓名／工号"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item>
-        <template #label>
-          <span>
-            邀评人
-            <em :class="$style.optional">（选填）</em>
-          </span>
-        </template>
-        <a-input
-          style="width: 328px"
-          v-model:value="formState.invites"
-          placeholder="请直接 @姓名／工号，最多可邀请 5 人"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item>
-        <template #label>
-          <span>
-            权重
-            <em :class="$style.optional">（选填）</em>
-          </span>
-        </template>
-        <a-input-number
-          v-model:value="formState.weight"
-          placeholder="请输入"
+    <div class="flex items-center justify-center">
+      <GProForm ref="proFormRef" :model="formState" :rules="rules" @submit="handleFinish">
+        <GProFormText width="md" label="标题" name="title" :field-props="{ placeholder: '给目标起个名字' }" />
+        <GProFormDateRangePicker width="md" label="起止日期" name="timeRange" :field-props="{ allowClear: true } as RangePickerProps" />
+        <GProFormTextArea width="lg" label="目标描述" name="summary" :field-props="{ placeholder: '请输入你的阶段性工作目标' }" />
+        <GProFormTextArea width="lg" label="衡量标准" name="metrics" :field-props="{ placeholder: '请输入衡量标准' }" />
+        <GProFormText width="md" name="clientName" :field-props="{ placeholder: '请描述你服务的客户，内部客户直接 @姓名／工号' }">
+          <template #label>
+            <div class="flex items-center gap-2px">
+              <span>客户</span>
+              <span :style="{ color: token.colorTextTertiary }">
+                （选填）
+                <a-tooltip title="目标的服务对象">
+                  <question-circle-outlined class="ml-4px" />
+                </a-tooltip>
+              </span>
+            </div>
+          </template>
+        </GProFormText>
+        <GProFormText width="md" name="inviter" :field-props="{ placeholder: '请直接 @姓名／工号，最多可邀请 5 人' }">
+          <template #label>
+            <div class="flex items-center gap-2px">
+              <span>邀评人</span>
+              <span :style="{ color: token.colorTextTertiary }">
+                （选填）
+              </span>
+            </div>
+          </template>
+        </GProFormText>
+        <GProFormDigit
+          name="weight"
           :min="0"
           :max="100"
-          :formatter="(value) => `${value}%`"
-          :parser="(value) => value.replace('%', '')"
+          :field-props="{ formatter: (value) => `${value}%`, parser: (value) => value.replace('%', '') }"
+        >
+          <template #label>
+            <div class="flex items-center gap-2px">
+              <span>权重</span>
+              <span :style="{ color: token.colorTextTertiary }">
+                （选填）
+              </span>
+            </div>
+          </template>
+        </GProFormDigit>
+        <GProFormRadioGroup
+          name="target"
+          label="目标公开"
+          :options="optionList"
         />
-      </a-form-item>
-      <a-form-item label="目标公开">
-        <template #extra> 客户、邀评人默认被分享 </template>
-        <a-radio-group
-          :options="[
-            {
-              value: '1',
-              label: '公开'
-            },
-            {
-              value: '2',
-              label: '部分公开'
-            },
-            {
-              value: '3',
-              label: '不公开'
-            }
-          ]"
-          v-model:value="formState.publicType"
-        />
-      </a-form-item>
-      <a-form-item v-if="formState.publicType === '2'">
-        <a-select
-          style="width: 328px"
-          :options="[
-            {
-              value: '1',
-              label: '同事甲'
-            },
-            {
-              value: '2',
-              label: '同事乙'
-            },
-            {
-              value: '3',
-              label: '同事丙'
-            }
-          ]"
-          placeholder="请选择"
-          v-model:value="formState.publicUsers"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item>
-        <a-button type="primary" @click="onSubmit">提交</a-button>
-        <a-button style="margin-left: 10px" @click="resetFields">重置</a-button>
-      </a-form-item>
-    </a-form>
+      </GProForm>
+    </div>
   </g-pro-page-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs, toRaw } from 'vue'
-import type { Dayjs } from 'dayjs'
-import dayjs from 'dayjs'
-import { Form } from 'ant-design-vue'
-import { QuestionCircleOutlined } from '@ant-design/icons-vue'
-import { onMountedOrActivated } from '@gx-admin/hooks/core'
-import { getBasicForm } from '@/services/form/basic'
-import { hanndleField } from '@/utils/util'
+<style lang="less" scoped>
 
-const useForm = Form.useForm
-
-interface basicFormModel {
-  title: string
-  date: Dayjs[]
-  goal: string
-  standard: string
-  client: string
-  weight: number
-  publicType: string
-  publicUsers: string | undefined
-}
-
-export default defineComponent({
-  components: { QuestionCircleOutlined },
-  setup() {
-    const state = reactive({
-      formState: {
-        title: '',
-        date: [],
-        goal: '',
-        standard: '',
-        client: '',
-        weight: 0,
-        publicType: '',
-        publicUsers: undefined
-      } as basicFormModel
-    })
-    const rulesRef = reactive({
-      title: [
-        {
-          required: true,
-          message: '请输入标题'
-        }
-      ],
-      date: [
-        {
-          required: true,
-          message: '请选择起止日期'
-        }
-      ],
-      goal: [
-        {
-          required: true,
-          message: '请输入目标描述'
-        }
-      ],
-      standard: [
-        {
-          required: true,
-          message: '请输入衡量标准'
-        }
-      ]
-    })
-    onMountedOrActivated(async () => {
-      const response: any = await getBasicForm()
-      if (response) {
-        for (let i in response.data) {
-          switch (i) {
-            case 'weight':
-              state.formState[i] = response.data[i] || 0
-              break
-            case 'publicUsers':
-              state.formState[i] = response.data[i] || undefined
-              break
-            default:
-              state.formState[i] = hanndleField(response.data[i], '').value
-              break
-          }
-        }
-        state.formState.date = response.data.startTime
-          ? [
-              dayjs(response.data.startTime, 'YYYY-MM-DD HH:mm:ss'),
-              dayjs(response.data.endTime, 'YYYY-MM-DD HH:mm:ss')
-            ]
-          : []
-      }
-    })
-    const { resetFields, validate, validateInfos } = useForm(state.formState, rulesRef)
-    const onSubmit = () => {
-      validate()
-        .then(() => {
-          console.log(toRaw(state.formState))
-        })
-        .catch((err) => {
-          console.log('error', err)
-        })
-    }
-    return {
-      ...toRefs(state),
-      resetFields,
-      validateInfos,
-      onSubmit
-    }
-  }
-})
-</script>
-
-<style lang="less" module>
-.optional {
-  font-style: normal;
-  color: @text-color-secondary;
-}
-
-.gx-form-item-tooltip {
-  margin-inline-start: 4px;
-  color: #00000073;
-  cursor: help;
-  writing-mode: horizontal-tb;
-}
 </style>

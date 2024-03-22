@@ -1,5 +1,3 @@
-import useMediaQuery from './useMediaQuery'
+import useClipboard from './useClipboard'
 
-export {
-  useMediaQuery
-}
+export { useClipboard }

@@ -1,54 +1,42 @@
 import { reactive, toRefs } from 'vue'
 import { defineStore } from 'pinia'
-import { message, notification } from 'ant-design-vue'
-import config from '/config/config'
-import { getUserInfo, login, logout } from '@/services/controller/user'
+import { notification } from 'ant-design-vue'
+import { defaultSettings } from '@gx-config'
+import type { UserInfo, UserDetails } from '@gx-mock/config/user'
+import { defaultUser } from '@gx-mock/config/user'
+import { getUserInfo, login, logout } from '@/services/userCenter'
 import { getAccessToken, removeAccessToken, setAccessToken } from '@/utils/accessToken'
 import { timeFix } from '@/utils/util'
 import { useStoreRoutes } from './routes'
 import { useStorePermission } from './permission'
 import { useStoreTabsRouter } from './tabsRouter'
+import { isObject } from '@gx-design-vue/pro-utils'
+import { cloneDeep } from 'lodash-es'
 
-const { tokenName } = config.defaultSettings
-
-interface RolesInfo {
-  roleId: number;
-  roleKey: string;
-  roleName: string;
-  status: string;
-}
-
-export interface UserInfo {
-  admin?: boolean;
-  userId?: number;
-  roles?: RolesInfo[];
-  roleIds?: number[];
-  userName?: string;
-  nickName?: string;
-  avatar?: string;
-  loginDate?: string;
-}
+const { tokenName, loginInterception } = defaultSettings
 
 export interface UserState {
   accessToken: string;
-  userInfo: UserInfo;
-  userName: string;
-  loginName: string;
-  avatar: string;
+  userInfo: UserDetails;
 }
+
+type UserStateKey = keyof UserState
 
 export const useStoreUser = defineStore('user', () => {
   const routes = useStoreRoutes()
   const auth = useStorePermission()
   const tabsRouter = useStoreTabsRouter()
 
-  const state = reactive({
+  const state = reactive<UserState>({
     accessToken: getAccessToken(),
-    userInfo: {},
-    userName: '',
-    loginName: '',
-    avatar: ''
-  } as UserState)
+    userInfo: {} as UserDetails
+  })
+
+  const userDetails = computed<UserDetails>(() => state.userInfo)
+
+  const setState: (params: Partial<Record<UserStateKey, UserState[UserStateKey]>>) => void = (params) => {
+    Object.assign(state, params)
+  }
 
   /**
    * @Author      gx12358
@@ -56,11 +44,13 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/1/11
    * @description 登录拦截放行时，设置虚拟角色
    */
-  const setVirtualRoles = () => {
+  const setVirtualUserInfo = () => {
     auth.changeValue('admin', true)
-    state.avatar = 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif'
-    state.userName = 'admin(未开启登录拦截)'
-    return true
+    auth.changeValue('role', defaultUser.roles)
+    auth.changeValue('ability', defaultUser.permissions)
+    setState({
+      userInfo: defaultUser.user as UserDetails
+    })
   }
 
   /**
@@ -69,16 +59,35 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/1/11
    * @description 登录
    */
-  const userLogin = async (params) => {
-    const response: any = await login(params)
+  const userLogin = async (params): Promise<boolean> => {
+    const response: ResponseResult<{ expiresIn: number; }> = await login(params)
     const accessToken = response?.data?.[tokenName]
     if (accessToken) {
-      const expires_in = response?.data?.expires_in
+      const expiresIn = response?.data?.expiresIn
       state.accessToken = accessToken
-      setAccessToken(accessToken, expires_in ? expires_in * 60 * 1000 : 0)
+      setAccessToken(accessToken, expiresIn ? expiresIn * 60 * 1000 : 0)
       return true
     }
     return false
+  }
+
+  const updateUserInfo = async () => {
+    const response: ResponseResult<UserInfo> = await getUserInfo()
+    const { user, roles, permissions } = response?.data || {} as UserInfo
+    if (response && user && isObject(user)) {
+      if (user.userName && roles && Array.isArray(roles)) {
+        auth.changeValue('role', roles)
+        auth.changeValue('ability', permissions)
+
+        setState({
+          userInfo: cloneDeep(user)
+        })
+        notification.success({
+          message: `欢迎登录${state.userInfo?.userName}`,
+          description: `${timeFix()}！`
+        })
+      }
+    }
   }
 
   /**
@@ -87,34 +96,10 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/1/11
    * @description 获取用户信息
    */
-  const queryUserInfo = async () => {
-    const response: any = await getUserInfo()
-    const { roles, user, permissions } = response
-    if (!user || Object.keys(user).length === 0) {
-      message.error(`验证失败，请重新登录...`)
-      return false
-    }
-    const { userName, avatar, nickName } = user as UserInfo
-    if (userName && roles && Array.isArray(roles)) {
-      auth.changeValue('role', roles)
-      auth.changeValue('ability', permissions)
-      state.userName = userName
-      state.loginName = nickName
-      state.avatar = avatar
-      state.userInfo = user
-      notification.success({
-        message: `欢迎登录${userName}`,
-        description: `${timeFix()}！`
-      })
-    } else {
-      message.error('用户信息接口异常')
-      return false
-    }
-    return true
-  }
-
-  const updateUserInfo = (params: UserInfo) => {
-    Object.assign(state.userInfo, { ...params })
+  const checkUserPremission = async () => {
+    if (loginInterception) await updateUserInfo()
+    else setVirtualUserInfo()
+    return Object.keys(state.userInfo).length
   }
 
   /**
@@ -124,30 +109,27 @@ export const useStoreUser = defineStore('user', () => {
    * @description 用户退出登录
    */
   const userLogut = async () => {
-    await logout({
-      userName: state.userName
-    })
+    await logout()
     resetPermissions()
   }
 
   const resetPermissions = () => {
     state.accessToken = ''
-    setAccessToken('')
+    removeAccessToken()
     auth.changeValue('admin', false)
     auth.changeValue('role', [])
     auth.changeValue('ability', [])
     routes.resetRoute()
     tabsRouter.blankingTabs()
-    removeAccessToken()
   }
 
   return {
     ...toRefs(state),
+    userDetails,
     userLogin,
     userLogut,
-    queryUserInfo,
-    updateUserInfo,
-    setVirtualRoles,
-    resetPermissions
+    setState,
+    resetPermissions,
+    checkUserPremission,
   }
 })

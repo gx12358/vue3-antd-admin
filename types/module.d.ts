@@ -1,13 +1,24 @@
-declare module '*.vue' {
-  import { DefineComponent } from 'vue';
-  const Component: DefineComponent<{}, {}, any>;
-  export default Component;
+import type { ComponentPublicInstance, FunctionalComponent } from 'vue'
+
+declare module '*.svg'
+declare module '*.png'
+declare module '*.jpg'
+declare module '*.jpeg'
+declare module '*.gif'
+declare module '*.bmp'
+declare module '*.tiff'
+
+declare module 'vue' {
+  export type JSXComponent<Props = any> =
+    | { new (): ComponentPublicInstance<Props> }
+    | FunctionalComponent<Props>;
 }
 
-declare module 'ant-design-vue/es/locale/*' {
-  import { Locale } from 'ant-design-vue/types/locale-provider';
-  const locale: Locale & ReadonlyRecordable;
-  export default locale as Locale & ReadonlyRecordable;
+/// <reference types="vite/client" />
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue';
+  const Component: DefineComponent<{}, {}, any>;
+  export default Component;
 }
 
 declare module 'virtual:*' {

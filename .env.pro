@@ -1,31 +1,32 @@
+# 实际执行环境 production
 VITE_NODE_ENV= production
 
 # environment 代码环境
-VITE_USE_MODE = production
+VITE_USE_MODE = pro
 
-# Whether to open mock
+# 是否开启mock
 VITE_USE_MOCK = true
 
-# Delete console
-VITE_DROP_CONSOLE = true
+# 是否删除console
+VITE_DROP_CONSOLE = false
 
 # Whether to enable gzip or brotli compression
 # Optional: gzip | brotli | none
 # If you need multiple forms, you can use `,` to separate
 VITE_BUILD_COMPRESS = 'none'
 
-# Whether to delete origin files when using compress, default false
+# 使用压缩时是否删除源文件，默认为false
 VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE = false
 
-# use pwa
+# 是否使用pwa
 VITE_USE_PWA = false
 
-# Is it compatible with older browsers
+# 是否为打包后的文件提供传统浏览器兼容性支持
 VITE_LEGACY = false
 
-# Basic interface address SPA
+# api前缀
 VITE_BASE_URL=/mock-server
 
 # oss信息
-VITE_OSS_BUCKET = *
-VITE_OSS_ORIGIN = *
+VITE_OSS_BUCKET = oss-*
+VITE_OSS_ORIGIN = oss-cn-*

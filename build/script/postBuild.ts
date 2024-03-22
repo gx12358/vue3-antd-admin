@@ -1,9 +1,14 @@
 // #!/usr/bin/env node
-
-import { runBuildConfig } from './buildConf'
 import chalk from 'chalk'
 
+import { runBuildConfig } from './buildConf'
+import { getPackageSize, getRootPath } from '../utils'
+
+import { defaultSettings } from '../../config'
+
 import pkg from '../../package.json'
+
+const { outputDir } = defaultSettings
 
 export const runBuild = async () => {
   try {
@@ -14,9 +19,14 @@ export const runBuild = async () => {
       await runBuildConfig()
     }
 
-    console.log(`✨ ${chalk.cyan(`[${pkg.name}]`)}` + ' - build successfully!')
+    getPackageSize({
+      folder: getRootPath(outputDir),
+      callBack: (size: string) => {
+        console.log(chalk.bold(chalk.green(`✨ ${chalk.blue(`[${pkg.name}]`)}` + ' - all build successfully!' + `(size: ${size})`)))
+      }
+    })
   } catch (error) {
-    console.log(chalk.red('vite build error:\n' + error))
+    console.log(chalk.bold(chalk.red('vite build error:\n' + error)))
     process.exit(1)
   }
 }

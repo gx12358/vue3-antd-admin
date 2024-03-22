@@ -1,10 +1,11 @@
 import { reactive, toRefs } from 'vue'
 import { defineStore } from 'pinia'
-import { asyncRoutes, constantRoutes, basicRoutes } from '@/router'
-import { getRouterList } from '@/services/controller/router'
-import { generator, getRootMenu } from '@/utils/routes'
-import { getFirstLastChild } from '@/utils/routeConvert'
-import { getLevelData } from '@/utils/util'
+import type { AppRouteModule, MenuDataItem } from '@gx-design-vue/pro-layout'
+import { asyncRoutes, localRoutes } from '@/router/routes'
+import { getMenuList } from '@/services/systemCenter'
+import { generator, getRootMenu } from '@/router/helper/routeHelper'
+import { getFirstLastChild } from '@/router/helper/utils'
+import { getLevelData } from '@gx-design-vue/pro-utils'
 
 /**
  * @Author      gx12358
@@ -19,13 +20,15 @@ export interface RoutesState {
   routerLoading: boolean;
 }
 
+type RouteStateKey = keyof RoutesState
+
 export const useStoreRoutes = defineStore('routes', () => {
-  const state = reactive({
+  const state = reactive<RoutesState>({
     routes: [],
     routerLoadList: [],
     meunLoading: false,
     routerLoading: false
-  } as RoutesState)
+  })
 
   /**
    * @Author      gx12358
@@ -34,23 +37,20 @@ export const useStoreRoutes = defineStore('routes', () => {
    * @description intelligence（前端静态路由）模式设置路由
    */
   const setRoutes = () => {
-    state.meunLoading = true
-    const finallyRoutes = [ ...constantRoutes, ...asyncRoutes ]
-    state.routes = finallyRoutes
-    state.meunLoading = false
-    return [ ...finallyRoutes ]
+    state.routes = localRoutes
+    return [ ...localRoutes ]
   }
 
   /**
    * @Author      gx12358
    * @DateTime    2022/1/11
    * @lastTime    2022/1/11
-   * @description all（后端动态路由）模式设置路由
+   * @description all（后端动态路由）
    */
   const setAllRoutes = async () => {
     let routes: AppRouteModule[] = []
     state.meunLoading = true
-    const response: ResponseResult<MenuDataItem[]> = await getRouterList()
+    const response: ResponseResult<MenuDataItem[]> = await getMenuList()
     if (response && (response?.data)?.length) {
       const notFoundRouter: AppRouteModule = {
         path: '/:path(.*)*',
@@ -58,13 +58,13 @@ export const useStoreRoutes = defineStore('routes', () => {
         hidden: true
       }
       const rootMenu = getRootMenu(response?.data || [])
-      const asyncRoutes = generator(rootMenu)
-      asyncRoutes[0].children = [ ...(asyncRoutes[0]?.children || []), ...basicRoutes ]
-      const haveHomePage = getLevelData(asyncRoutes[0].children)
+      const asyncRouteList = generator(rootMenu)
+      asyncRouteList[0].children = [ ...(asyncRouteList[0]?.children || []), ...asyncRoutes ]
+      const haveHomePage = getLevelData(asyncRouteList[0].children)
         .find(item => item.meta ? item.meta.homePage === 1 : false)
-      asyncRoutes[0].redirect = haveHomePage ? haveHomePage.path : getFirstLastChild(asyncRoutes[0].children)
-      asyncRoutes.push(notFoundRouter)
-      routes = [ ...asyncRoutes ]
+      asyncRouteList[0].redirect = haveHomePage ? haveHomePage.path : getFirstLastChild(asyncRouteList[0].children)
+      asyncRouteList.push(notFoundRouter)
+      routes = [ ...asyncRouteList ]
     }
     state.routes = routes
     state.meunLoading = false
@@ -98,8 +98,8 @@ export const useStoreRoutes = defineStore('routes', () => {
    * @lastTime    2022/1/11
    * @description 修改state状态
    */
-  const changeValue = (type, value) => {
-    state[type] = value
+  const setRouteState: (params: Partial<Record<RouteStateKey, RoutesState[RouteStateKey]>>) => void = (params) => {
+    Object.assign(state, params)
   }
 
   return {
@@ -108,6 +108,6 @@ export const useStoreRoutes = defineStore('routes', () => {
     setAllRoutes,
     resetRoute,
     addRouterLoadList,
-    changeValue
+    setRouteState
   }
 })

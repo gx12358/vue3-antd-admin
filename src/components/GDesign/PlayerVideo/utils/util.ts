@@ -26,7 +26,8 @@ export function drag (e, el, coor) {
 }
 
 export function getMatchRangeTime (time, ranges) {
-  if (ranges.length === 0) {
+  if (!ranges) return time
+  if (ranges?.length === 0) {
     return 0
   }
   for (let i = 0; i < ranges.length; i++) {
@@ -56,6 +57,7 @@ export function _isSupportPIP() {
   if ('pictureInPictureEnabled' in document) {
     return true
   }
+  // @ts-ignore
   const el = document.createElement('video')
   if (el.requestPictureInPicture && typeof el.requestPictureInPicture === 'function') {
     return true

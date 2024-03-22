@@ -3,6 +3,12 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    width: 100%;
+    height: 100%;
+    
+    &-more {
+      gap: 8px;
+    }
   }
 
   &-upload {
@@ -14,13 +20,18 @@
     align-items: center;
     justify-content: center;
     padding: 8px;
-    margin-right: 8px;
-    margin-bottom: 8px;
     cursor: pointer;
     background-color: #fafafa;
     border: 1px dashed #d9d9d9;
     border-radius: 2px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
     transition: border-color 0.3s ease;
+    
+    &-disabled {
+      cursor: not-allowed;
+    }
 
     &-circle {
       overflow: hidden;
@@ -28,12 +39,13 @@
     }
 
     &:hover {
-      border-color: var(--ant-primary-color);
+      border-color: var(--gx-primary-color);
     }
   }
 
   &-word-extra {
     line-height: 1.5;
+    margin-top: 14px;
   }
 
   .@{gx-prefix}-upload-card-item {
@@ -41,9 +53,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 104px;
-    height: 104px;
-    margin: 0 8px 8px 0;
+    width: 100%;
+    height: 100%;
     font-size: 14px;
     color: #c0c4cc;
     background: #fafafa;
@@ -59,6 +70,10 @@
       align-items: center;
       justify-content: center;
       width: 100%;
+      
+      .gx-admin-spin.gx-jiazaizhong {
+        font-size: 20px;
+      }
     }
 
     &-wrapper {

@@ -1,12 +1,12 @@
 import { defineComponent, onMounted, ref } from 'vue'
-import { formatDuraton } from '@/utils/util'
+import { formatDuraton } from '@gx-design-vue/pro-utils'
 import { useVideoContext } from '../context'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'
 
 const Loading = defineComponent({
   props: {
-    prefixCls: String as PropType<string>
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const { player, isPlaying, play, pause } = useVideoContext()

@@ -1,45 +1,41 @@
-export const rules = {
-  title: [
-    {
-      required: true,
-      message: '请输入任务名称'
-    }
-  ],
-  createdAt: [
-    {
-      required: true,
-      message: '请选择开始时间',
-    },
-  ],
-  owner: [
-    {
-      required: true,
-      message: '请选择任务负责人',
-    },
-  ],
-  subDescription: [
-    {
-      required: true,
-      message: '请输入至少五个字符的产品描述！',
-      min: 5
-    },
-  ]
-}
+import type { ProTableProps } from '@gx-design-vue/pro-table'
+import type { BasicDetails } from '@gx-mock/datasSource/profile/basic'
 
-export const user = [
-  '付小小',
-  '曲丽丽',
-  '林东东',
-  '周星星',
-  '吴加好',
-  '朱偏右',
-  '鱼酱',
-  '乐哥',
-  '谭小仪',
-  '仲尼'
+export const descriptionsState: {
+  name: string;
+  data: Partial<Record<keyof BasicDetails, string>>
+}[] = [
+  {
+    name: '退款申请',
+    data: {
+      pickNum: '取货单号',
+      status: '状态',
+      saleNum: '销售单号',
+      orderNum: '子订单',
+    }
+  },
+  {
+    name: '用户信息',
+    data: {
+      userName: '用户姓名',
+      phone: '联系电话',
+      express: '常用快递',
+      adress: '取货地址',
+      remark: '备注'
+    }
+  },
 ]
 
-export const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 },
+export const statusState: Record<BasicDetails['status'], string> = {
+  success: '已取货',
+  dispatch: '已派件',
+}
+
+export const defaultSTableState: ProTableProps = {
+  options: false,
+  bordered: false,
+  pagination: false,
+  showIndex: false,
+  rowKey: 'id',
+  showLoading: false
 }

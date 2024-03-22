@@ -1,227 +1,179 @@
-<template>
-  <g-pro-page-container>
-    <div :class="$style.standardList">
-      <a-card :bordered="false">
-        <a-row>
-          <a-col :sm="8" :xs="24">
-            <div :class="$style.headerInfo">
-              <span>我的待办</span>
-              <p>8个任务</p>
-              <em></em>
-            </div>
-          </a-col>
-          <a-col :sm="8" :xs="24">
-            <div :class="$style.headerInfo">
-              <span>本周任务平均处理时间</span>
-              <p>32分钟</p>
-              <em></em>
-            </div>
-          </a-col>
-          <a-col :sm="8" :xs="24">
-            <div :class="$style.headerInfo">
-              <span>本周完成任务数</span>
-              <p>24个任务</p>
-            </div>
-          </a-col>
-        </a-row>
-      </a-card>
+<script setup lang="ts">
+import { Teleport } from 'vue'
+import { message } from 'ant-design-vue'
+import { useMounted } from '@vueuse/core'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { useTable } from '@gx-design-vue/pro-table'
+import type { ProTableRef, ProTableProps, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { BasicCountState, BasicSearchParmas, BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
+import { useRequest } from '@gx-admin/hooks/core'
+import { getBasicCount, getBasicList, deleteBasicList } from '@/services/listCenter'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import OperateModal from './components/OperateModal.vue'
+import type { CountState } from './utils/config'
+import { defaultCountState } from './utils/config'
 
-      <a-card
-        style="margin-top: 24px"
-        title="基本列表"
-        :bodyStyle="{ padding: '0 32px 40px 32px' }"
-        :class="$style.listCard"
-        :bordered="false"
-      >
-        <template #extra>
-          <a-space :size="16">
-            <a-radio-group v-model:value="listParams.status" @change="changeSearch">
+const isMount = useMounted()
+
+const operate = ref()
+const tableRef = ref<ProTableRef>()
+
+const countState = reactive<CountState>({ ...defaultCountState })
+const tableState = reactive<Omit<ProTableProps, 'params'> & { params: BasicSearchParmas }>({
+  params: {
+    status: 'all',
+    title: ''
+  },
+  pagination: {
+    pageSize: 5
+  },
+  columns: [],
+  options: false,
+  showLoading: false
+})
+
+const { reload, changeLoading } = useTable(tableRef)
+
+const { loading } = useRequest<BasicCountState>(getBasicCount, {
+  onSuccess: (data) => {
+    for (const key in data) {
+      if (countState[key]) countState[key as keyof BasicCountState].count = data[key]
+    }
+    
+    tableState.showLoading = true
+  }
+})
+
+const getList: RequsetFunction<BasicListItemDataType, BasicSearchParmas> = async (params) => {
+  const response = await getBasicList<PageResult<BasicListItemDataType>>(params)
+  
+  return {
+    data: response?.data?.list || [],
+    total: response?.data?.totalCount || 0,
+    success: !!response
+  }
+}
+
+const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => {
+  switch (key) {
+    case 'delete':
+      globalConfirm({
+        content: '是否确认删除？',
+        async onOk() {
+          changeLoading(false)
+          const response = await deleteBasicList({ id: record.id })
+          if (response) {
+            message.success('操作成功')
+            await reload({ immediate: true, removeKeys: [ record.id ] })
+          }
+          changeLoading(false)
+        },
+      })
+      break
+    case 'update':
+      operate.value?.open(record.id)
+      break
+  }
+}
+</script>
+
+<template>
+  <g-pro-page-container :use-page-card="false" :loading="loading">
+    <g-pro-card>
+      <a-row>
+        <a-col v-for="item in Object.keys(countState) as (keyof BasicCountState)[]" :sm="8" :xs="24" :key="item">
+          <div class="flex-center flex-col gap-4px relative">
+            <span class="leading-22px text-rgba-[0-0-0-0.65]">{{ countState[item].name }}</span>
+            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">{{ countState[item].count + countState[item].unit }}</span>
+            <em v-if="item !== 'done'" class="lt-sm:relative lt-sm-h-0 lt-sm:my-10px absolute right-0 top-0 w-1px h-56px bg-rgba-[5-5-5-0.06]" />
+          </div>
+        </a-col>
+      </a-row>
+    </g-pro-card>
+    <g-pro-card class="mt-24px" title="基本列表">
+      <template #extra>
+        <div class="flex gap-16px lt-sm:flex-wrap">
+          <div class="flex-shrink-0 flex lt-sm:justify-end lt-sm:w-full">
+            <a-radio-group v-model:value="tableState.params.status">
               <a-radio-button value="all">全部</a-radio-button>
               <a-radio-button value="normal">等待中</a-radio-button>
               <a-radio-button value="active">进行中</a-radio-button>
-              <a-radio-button value="exception">失败</a-radio-button>
-              <a-radio-button value="success">成功</a-radio-button>
             </a-radio-group>
-            <a-input-search
-              v-model:value="listParams.title"
-              placeholder="请输入"
-              allow-clear
-              enter-button
-              @search="changeSearch"
-            />
-            <RedoOutlined
-              @click="getListData"
-              style="font-size: 18px; color: #8c8c8c; cursor: pointer"
-            />
-          </a-space>
-        </template>
-        <a-list
-          size="large"
-          rowKey="id"
-          :loading="loading"
-          :dataSource="list"
-          :pagination="paginationProps"
-        >
-          <template #renderItem="{ item }">
-            <a-list-item>
-              <template #actions>
-                <a key="edit" @click="$refs.operation.edit(item.id, item)">编辑</a>
-                <a-dropdown>
-                  <template #overlay>
-                    <a-menu @click="({ key }) => editAndDelete(key, item)">
-                      <a-menu-item key="edit">编辑</a-menu-item>
-                      <a-menu-item key="delete">删除</a-menu-item>
-                    </a-menu>
+          </div>
+          <g-input-search
+            v-model:value="tableState.params.title"
+            placeholder="请输入"
+            allow-clear
+          />
+        </div>
+      </template>
+      <g-pro-table ref="tableRef" v-bind="tableState" :request="getList">
+        <template #customRender="dataSource">
+          <a-list
+            size="large"
+            rowKey="id"
+            :loading="loading"
+            :dataSource="dataSource"
+          >
+            <template #renderItem="{ item }: { item: BasicListItemDataType }">
+              <a-list-item>
+                <template #actions>
+                  <a key="update" @click="operateBtn('update', item)">编辑</a>
+                  <a key="delete" @click="operateBtn('delete', item)">删除</a>
+                </template>
+                <a-list-item-meta>
+                  <template #title>
+                    <a :href="item.href" class="text-hidden-1">{{ item.title }}</a>
                   </template>
-                  <a>
-                    更多
-                    <DownOutlined />
-                  </a>
-                </a-dropdown>
-              </template>
-              <a-list-item-meta :description="item.subDescription">
-                <template #title>
-                  <a :href="item.href">{{ item.title }}</a>
-                </template>
-                <template #avatar>
-                  <a-avatar :src="item.logo" shape="square" size="large" />
-                </template>
-              </a-list-item-meta>
-              <div :class="$style.listContent">
-                <div :class="$style.listContentItem">
-                  <span>Owner</span>
-                  <p>{{ item.owner }}</p>
+                  <template #avatar>
+                    <g-admin-image :src="item.logo" :width="48" :height="48" class="rd-4px" />
+                  </template>
+                  <template #description>
+                    <a-tooltip :title="item.subDescription">
+                      <div class="text-hidden-1">{{ item.subDescription }}</div>
+                    </a-tooltip>
+                  </template>
+                </a-list-item-meta>
+                <div class="listContent">
+                  <div class="listContentItem">
+                    <span>Owner</span>
+                    <p>{{ item.owner }}</p>
+                  </div>
+                  <div class="listContentItem">
+                    <span>开始时间</span>
+                    <p>{{ item.createTime }}</p>
+                  </div>
+                  <div class="listContentProgress">
+                    <a-progress
+                      :strokeWidth="6"
+                      :percent="item.percent"
+                      :status="item.status"
+                    />
+                  </div>
                 </div>
-                <div :class="$style.listContentItem">
-                  <span>开始时间</span>
-                  <p>{{ item.createdAt }}</p>
-                </div>
-                <div :class="$style.listContentItem">
-                  <Progress
-                    style="width: 180px"
-                    :strokeWidth="6"
-                    :percent="item.percent"
-                    :status="item.status"
-                  />
-                </div>
-              </div>
-            </a-list-item>
+              </a-list-item>
+            </template>
+          </a-list>
+        </template>
+      </g-pro-table>
+    </g-pro-card>
+    <Teleport to=".ant-layout-has-sider>.ant-layout" v-if="isMount">
+      <div class="mt-32px h-49px" />
+    </Teleport>
+    <Teleport to="body">
+      <div class="footer-bar">
+        <a-button @click="operate?.open()">
+          <template #icon>
+            <plus-outlined />
           </template>
-        </a-list>
-      </a-card>
-    </div>
-    <a-button type="dashed" style="width: 100%; margin-bottom: 8px" @click="$refs.operation.open()">
-      <PlusOutlined />
-      添加
-    </a-button>
-    <OperationModal ref="operation" @handleOk="getListData" />
+          添加
+        </a-button>
+      </div>
+    </Teleport>
+    <OperateModal ref="operate" @ok="reload" />
   </g-pro-page-container>
 </template>
 
-<script lang="ts">
-import { computed, createVNode, defineComponent, onActivated, reactive, ref, toRefs } from 'vue'
-import { message, Modal, Progress } from 'ant-design-vue'
-import {
-  PlusOutlined,
-  DownOutlined,
-  ExclamationCircleOutlined,
-  RedoOutlined
-} from '@ant-design/icons-vue'
-import type { BasicListItemDataType } from '@/services/list/basic'
-import { getBasicList, removeBasicList } from '@/services/list/basic'
-import OperationModal from './components/OperationModal.vue'
-
-export default defineComponent({
-  components: {
-    Progress,
-    RedoOutlined,
-    PlusOutlined,
-    DownOutlined,
-    OperationModal
-  },
-  setup() {
-    const operation = ref()
-    const state = reactive({
-      loading: false,
-      list: [] as BasicListItemDataType[],
-      listParams: {
-        title: '',
-        status: 'all'
-      } as Partial<BasicListItemDataType>,
-      pageConfig: {
-        pageNum: 1,
-        pageSize: 5,
-        total: 0
-      }
-    })
-    const paginationProps = computed(() => {
-      return {
-        showSizeChanger: true,
-        showQuickJumper: true,
-        pageSize: state.pageConfig.pageSize,
-        pageSizeOptions: ['5', '10', '30', '50', '100'],
-        total: state.pageConfig.total,
-        onChange: (page: number, pageSize: number) => {
-          state.pageConfig.pageNum = page
-          state.pageConfig.pageSize = pageSize
-          getListData()
-        }
-      }
-    })
-    onActivated(() => {
-      getListData()
-    })
-    const getListData = async () => {
-      state.loading = true
-      const response = await getBasicList({
-        ...state.pageConfig,
-        ...state.listParams
-      })
-      if (response) {
-        state.list = response.data?.list || []
-        state.pageConfig.total = response.data?.total || 0
-      }
-      state.loading = false
-    }
-    const changeSearch = () => {
-      getListData()
-    }
-    const editAndDelete = (key: string | number, currentItem: BasicListItemDataType) => {
-      if (key === 'edit') operation.value?.edit(currentItem.id, currentItem)
-      else if (key === 'delete') {
-        Modal.confirm({
-          title: '确定要删除吗?',
-          icon: createVNode(ExclamationCircleOutlined),
-          okText: '确定',
-          cancelText: '取消',
-          class: 'gx-pro-confirm-delete',
-          onOk() {
-            deleteItem(currentItem.id)
-          }
-        })
-      }
-    }
-    const deleteItem = async (id: string) => {
-      state.loading = true
-      const response: any = await removeBasicList({ id })
-      if (response) {
-        message.success('操作成功！')
-        await getListData()
-      }
-      state.loading = false
-    }
-    return {
-      ...toRefs(state),
-      operation,
-      paginationProps,
-      changeSearch,
-      getListData,
-      editAndDelete
-    }
-  }
-})
-</script>
-
-<style lang="less" module>
-@import './style';
+<style lang="less" scoped>
+@import "./style";
 </style>

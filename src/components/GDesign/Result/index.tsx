@@ -1,23 +1,22 @@
 import { defineComponent, onMounted, reactive, watch, onBeforeUnmount, computed } from 'vue'
-import { useStore } from '@gx-vuex'
 import { useRouter } from 'vue-router'
 import Result403 from '@/assets/error_images/403.png'
 import Result404 from '@/assets/error_images/404.png'
 import ResultCloud from '@/assets/error_images/cloud.png'
 import './style.less'
 
-export interface subInfo {
+export interface SubInfo {
   headline: string
   info: string
   exceptionImage: string
 }
 
-interface resultSubInfo {
-  404: subInfo
-  403: subInfo
+interface ResultSubInfo {
+  404: SubInfo
+  403: SubInfo
 }
 
-interface resultState {
+interface ResultState {
   jumpTime: number
   oops: string
   headline: string
@@ -27,7 +26,7 @@ interface resultState {
   exceptionImage: any
 }
 
-const resultSubInfo: resultSubInfo = {
+const resultSubInfo: ResultSubInfo = {
   '404': {
     headline: '当前页面不存在...',
     info: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
@@ -56,7 +55,7 @@ export default defineComponent({
 
     const backRouter = computed(() => (routers.value?.length ? '/' : '/user/login'))
 
-    const state = reactive<resultState>({
+    const state = reactive<ResultState>({
       jumpTime: 5,
       oops: '抱歉!',
       headline: '您没有操作角色...',

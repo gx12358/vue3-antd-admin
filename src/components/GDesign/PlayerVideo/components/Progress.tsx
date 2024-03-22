@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useVideoContext } from '../context'
 import { drag, getMatchRangeTime, getElementOffsets } from '../utils/util'
 import useVideo from '../hooks/useVideo'
@@ -6,8 +6,8 @@ import videoEvent from '../utils/event'
 
 const Progress = defineComponent({
   props: {
-    prefixCls: String as PropType<string>,
-    visible: Boolean as PropType<boolean>
+    prefixCls: String as VuePropType<string>,
+    visible: Boolean as VuePropType<boolean>
   },
   setup(props, { expose }) {
     const context = useVideoContext()

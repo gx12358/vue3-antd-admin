@@ -1,10 +1,9 @@
 import type { Method } from 'axios'
 import { message } from 'ant-design-vue'
-import config from '/config/config'
-import { useStoreUser } from '@gx-vuex'
+import { defaultSettings } from '@gx-config'
 import { tansParams } from '@/utils/util'
 
-const { tokenName } = config.defaultSettings
+const { tokenName } = defaultSettings
 
 export type DownLoadRequestConfig<D = any> = {
   url: string;

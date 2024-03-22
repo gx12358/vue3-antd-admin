@@ -1,7 +1,40 @@
+<script setup lang="ts">
+const bindingViewData = [
+  {
+    title: '绑定淘宝',
+    description: '当前未绑定淘宝账号',
+    actions: {
+      key: 'Bind',
+      text: '绑定'
+    },
+    avatar: 'taobao'
+  },
+  {
+    title: '绑定支付宝',
+    description: '当前未绑定支付宝账号',
+    actions: {
+      key: 'Bind',
+      text: '绑定'
+    },
+    avatar: 'alipay'
+  },
+  {
+    title: '绑定钉钉',
+    description: '当前未绑定钉钉账号',
+    actions: {
+      key: 'Bind',
+      text: '绑定'
+    },
+    avatar: 'dingding'
+  }
+]
+</script>
+
 <template>
-  <a-list itemLayout="horizontal" :data-source="data">
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">账号绑定</div>
+  <a-list itemLayout="horizontal" :data-source="bindingViewData">
     <template #renderItem="{ item }">
-      <a-list-item>
+      <a-list-item class="!px-0">
         <template #actions>
           <a :key="item.actions.key">{{ item.actions.text }}</a>
         </template>
@@ -17,25 +50,6 @@
   </a-list>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
-import { TaobaoOutlined, AlipayOutlined, DingdingOutlined } from '@ant-design/icons-vue'
-import { bindingViewData } from '../utils/config'
+<style scoped lang="less">
 
-export default defineComponent({
-  components: {
-    TaobaoOutlined,
-    AlipayOutlined,
-    DingdingOutlined
-  },
-  setup() {
-    const state = reactive({
-      data: bindingViewData
-    })
-
-    return {
-      ...toRefs(state)
-    }
-  }
-})
-</script>
+</style>

@@ -6,7 +6,9 @@ import legacy from '@vitejs/plugin-legacy'
 
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 
-import windiCSS from 'vite-plugin-windicss'
+import Unocss from 'unocss/vite'
+
+import viteBuildInfo from './viteBuildInfo'
 
 import { configHtmlPlugin } from './html'
 import { configPwaConfig } from './pwa'
@@ -14,15 +16,17 @@ import { configMockPlugin } from './mock'
 import { createAutoImport } from './autoImport'
 import { configCompressPlugin } from './compress'
 import { configVisualizerConfig } from './visualizer'
-import { configHmrPlugin } from './hmr'
 
 export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const {
+    VITE_APP_ENV,
     VITE_USE_MOCK,
     VITE_LEGACY,
     VITE_BUILD_COMPRESS,
     VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE
   } = viteEnv
+
+  const isDev = VITE_APP_ENV === 'dev'
 
   const vitePlugins: (Plugin | PluginOption[])[] = [
     // have to
@@ -32,12 +36,10 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   ]
 
   // vite-plugin-windicss
-  vitePlugins.push(windiCSS())
+  vitePlugins.push(Unocss())
 
   // vite-plugin-vue-setup-extend
   vitePlugins.push(vueSetupExtend())
-
-  !isBuild && vitePlugins.push(configHmrPlugin())
 
   // @vitejs/plugin-legacy
   VITE_LEGACY && isBuild && vitePlugins.push(legacy())
@@ -45,8 +47,12 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   // vite-plugin-html
   vitePlugins.push(configHtmlPlugin(viteEnv, isBuild))
 
+  // vite-plugin-build-info
+  vitePlugins.push(viteBuildInfo())
+
   // vite-plugin-mock
-  VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild))
+  const useMock = isDev || VITE_USE_MOCK
+  useMock && vitePlugins.push(configMockPlugin(isBuild))
 
   // rollup-plugin-visualizer
   vitePlugins.push(configVisualizerConfig())

@@ -1,13 +1,13 @@
-import { createProdMockServer } from 'vite-plugin-mock/es/createProdMockServer'
+import { createProdMockServer } from '../build/vite/plugin/viteMock/createProdMockServer'
 
-const modules = import.meta.globEager('./**/*.ts')
+const modules = import.meta.glob('./datasSource/**/*.ts', { eager: true })
 
 const mockModules: any[] = []
 Object.keys(modules).forEach((key) => {
   if (key.includes('/_')) {
     return
   }
-  if (modules[key] && modules[key].default) mockModules.push(...modules[key].default)
+  if (modules[key] && modules[key]['default']) mockModules.push(...modules[key]['default'])
   return
 })
 

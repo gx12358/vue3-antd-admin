@@ -1,13 +1,3 @@
-const toString = Object.prototype.toString
-
-export function is(val: unknown, type: string) {
-  return toString.call(val) === `[object ${type}]`
-}
-
-export const isClient = typeof window !== 'undefined'
-
-export const noop = () => {}
-
 /**
  * @author gx12358 2539306317@qq.com
  * @description 判读是否为外链
@@ -16,26 +6,6 @@ export const noop = () => {}
  */
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
-}
-
-/**
- * @author gx12358 2539306317@qq.com
- * @description 校验密码是否小于6位
- * @param value
- * @returns {boolean}
- */
-export function isPassword(value) {
-  return value.length >= 6
-}
-
-/**
- * @author gx12358 2539306317@qq.com
- * @description 判断是否为数字
- * @param value
- * @returns {boolean}
- */
-export function isNumber(val: unknown) {
-  return typeof val === 'number'
 }
 
 /**
@@ -106,47 +76,6 @@ export function isAlphabets(value) {
 
 /**
  * @author gx12358 2539306317@qq.com
- * @description 判断是否是字符串
- * @param value
- * @returns {boolean}
- */
-export function isString(value) {
-  return typeof value === 'string' || value instanceof String
-}
-
-export function isBoolean(val: unknown): val is boolean {
-  return is(val, 'Boolean')
-}
-
-export function isFunction(func: any) {
-  return (typeof func === 'function' || Object.prototype.toString.call(func) === '[object Function]')
-}
-
-/**
- * @author gx12358 2539306317@qq.com
- * @description 判断是否是数组
- * @param arg
- * @returns {arg is any[]|boolean}
- */
-export function isArray(arg) {
-  if (typeof Array.isArray === 'undefined') {
-    return Object.prototype.toString.call(arg) === '[object Array]'
-  }
-  return Array.isArray(arg)
-}
-
-/**
- * @Author      gaoxiang
- * @DateTime    2019/11/29
- * @lastTime    2019/11/29
- * @description 是否是对象
- */
-export function isObject(val: any): val is Record<any, any> {
-  return val !== null && is(val, 'Object')
-}
-
-/**
- * @author gx12358 2539306317@qq.com
  * @description 判断是否是端口号
  * @param value
  * @returns {boolean}
@@ -162,9 +91,9 @@ export function isPort(value) {
  * @param value
  * @returns {boolean}
  */
-export function isPhone(value) {
+export function isPhone(value = '', backReg?: boolean) {
   const reg = /^1\d{10}$/
-  return reg.test(value)
+  return backReg ? reg : reg.test(value)
 }
 
 /**
@@ -184,9 +113,9 @@ export function isIdCard(value) {
  * @param value
  * @returns {boolean}
  */
-export function isEmail(value) {
+export function isEmail(value = '', backReg?: boolean) {
   const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-  return reg.test(value)
+  return backReg ? reg : reg.test(value)
 }
 
 /**

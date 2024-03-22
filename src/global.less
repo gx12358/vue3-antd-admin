@@ -1,74 +1,15 @@
-@import './design/styles/index.less';
+@import './design/index.less';
+@import './assets/public_icon/index.less';
 @import './assets/menu_font/index.less';
 @import './assets/material_font/index.less';
 @import './assets/video_play_font/index.less';
-
-body {
-  #filerobot-image-editor-root .eVaEBX label {
-    &:first-child {
-      display: none !important;
-    }
-  }
-}
-
-.gx-pro-full-screen {
-  scrollbar-color: var(--ant-primary-color) var(--ant-primary-2);
-  scrollbar-width: thin;
-  -ms-overflow-style: none;
-  position: relative;
-  padding: 24px;
-
-  &::-webkit-scrollbar {
-    width: 3px;
-    height: 1px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--ant-primary-color);
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: @primary-3;
-    border-radius: 3px;
-    -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
-  }
-}
 
 #gx-pro-admin {
   height: 100%;
 }
 
-.@{gx-prefix}-code-block {
-  position: relative;
-
-  .ant-typography-expand,
-  .ant-typography-edit,
-  .ant-typography-copy {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-  }
-
-  .@{gx-prefix}-code {
-    padding: 0.2em 0.4em 0.1em;
-    margin: 0 0.2em;
-    font-size: 85%;
-    background: rgba(150, 150, 150, 0.1);
-    border: 1px solid rgba(100, 100, 100, 0.2);
-    border-radius: 3px;
-  }
-}
-
-.@{gx-prefix}-markdown-demo {
-  padding: 40px 24px;
-  background-color: rgb(240, 242, 245);
-}
-
-.@{gx-prefix}-markdown-code {
-  padding: 2px 5px;
-  color: #d56161;
-  background: #f6f7f9;
+#nprogress .bar {
+  --at-apply: bg-hex-main;
 }
 
 .@{gx-prefix-pro}-iframe-page-main {
@@ -80,7 +21,12 @@ body {
   border: 0;
 }
 
-.image-slot {
+.@{gx-prefix-pro}-scroll {
+  overflow: auto;
+  .scrollbar()
+}
+
+.gx-image-slot {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,15 +44,11 @@ body {
   }
 }
 
-body .@{gx-prefix-pro}-confirm-delete .ant-modal-confirm-body .anticon {
-  color: @color_ff4d4f;
-}
-
-.customicon {
-  font-style: normal;
-  color: inherit;
-  text-align: center;
-  text-transform: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+.gx-admin-a {
+  &:hover {
+    --at-apply: text-hex-main;
+  }
+  
+  cursor: pointer;
+  transition: color .3s;
 }

@@ -1,5 +1,5 @@
 import type { FunctionalComponent as FC } from 'vue'
-import { isFunction } from '@/utils/validate'
+import { isFunction } from '@gx-design-vue/pro-utils'
 
 export type ErrorPlayer = {
   open: boolean

@@ -2,9 +2,9 @@
  * Get the configuration file variable name
  * @param env
  */
-import config from '../config/config'
+import { defaultSettings } from '../config'
 
-const { shortName } = config.defaultSettings
+const { shortName } = defaultSettings
 
 export const getConfigFileName = (_: RecordType) => {
   return `__PRODUCTION__${shortName || '__APP'}__CONF__`

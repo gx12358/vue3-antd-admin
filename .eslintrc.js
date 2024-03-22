@@ -3,7 +3,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es6: true,
+    es6: true
   },
   parser: 'vue-eslint-parser',
   parserOptions: {
@@ -12,15 +12,23 @@ module.exports = {
     sourceType: 'module',
     jsxPragma: 'React',
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
+    createDefaultProgram: false,
+    extraFileExtensions: [ '.vue' ]
   },
+  plugins: [ 'vue', '@typescript-eslint', 'import' ],
   extends: [
-    'plugin:vue/vue3-recommended',
-    'plugin:@typescript-eslint/recommended'
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended'
   ],
   rules: {
+    'no-extra-boolean-cast': 0,
+    'no-case-declarations': 0,
+    'no-undef': 0,
+    'no-prototype-builtins': 0,
     'vue/script-setup-uses-vars': 'error',
+    '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -35,17 +43,11 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      },
+      { varsIgnorePattern: '.*', args: 'none' }
     ],
     'no-unused-vars': [
       'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      },
+      { varsIgnorePattern: '.*', args: 'none' }
     ],
     'space-before-function-paren': 'off',
 
@@ -59,6 +61,6 @@ module.exports = {
     'vue/require-default-prop': 'off',
     'vue/require-explicit-emits': 'off',
     'vue/html-self-closing': 0,
-    'vue/multi-word-component-names': 'off',
-  },
-};
+    'vue/multi-word-component-names': 'off'
+  }
+}

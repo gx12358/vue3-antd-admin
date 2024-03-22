@@ -1,9 +1,8 @@
-import { Documentation, PageLoading } from '@/components'
+import Spin from '@/components/GlobalLayout/Spin'
+import Image from '@/components/GlobalLayout/Image'
 
 const gxAdminDesign = (app) => {
-  // doc
-  app.component('g-doc', Documentation)
-  // pro-loading
-  app.component('g-page-loading', PageLoading)
+  app.component('g-spin', Spin)
+  app.component('g-admin-image', Image)
 }
 export default gxAdminDesign

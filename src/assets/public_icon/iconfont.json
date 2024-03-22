@@ -1,0 +1,37 @@
+{
+  "id": "4439814",
+  "name": "gx-admin-pro-public",
+  "font_family": "iconfont",
+  "css_prefix_text": "gx-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1121657",
+      "name": "简介",
+      "font_class": "jianjie",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "15460366",
+      "name": "产品文档",
+      "font_class": "chanpinwendang",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "36540337",
+      "name": "快速开始-未选中@3x 1",
+      "font_class": "a-kuaisukaishi-weixuanzhong3x1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "26775155",
+      "name": "加载中",
+      "font_class": "jiazaizhong",
+      "unicode": "e73f",
+      "unicode_decimal": 59199
+    }
+  ]
+}

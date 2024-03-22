@@ -1,8 +1,7 @@
 import { ComputedRef, onMounted } from 'vue'
 import { computed, defineComponent, ref } from 'vue'
+import { getPrefixCls, isArray } from '@gx-design-vue/pro-utils'
 import { audioProps } from './props'
-import { getPrefixCls } from '@gx-admin/utils'
-import { isArray } from '@/utils/validate'
 import useAudio from './hooks/useAudio'
 import audioEvent from './utils/event'
 import type { AudioSource } from './typings'
@@ -86,16 +85,22 @@ const GPlayerAudio = defineComponent({
         <div class={prefixCls}>
           <audio ref={player} src={audioSource.value} controls />
           <div class={`${prefixCls}-body`}>
-            <div class={`${prefixCls}-pic`} onClick={changePlayOrPause}>
+            <div
+              style={{
+                backgroundImage: audioInfo.value?.cover ? `url('${audioInfo.value?.cover}')` : ''
+              }}
+              class={`${prefixCls}-pic`}
+              onClick={changePlayOrPause}
+            >
               <div class={`${prefixCls}-button ${isPlaying.value ? 'pause' : 'play'}`}>
                 <i class={`playerfont ${isPlaying.value ? 'player-Pause' : 'player-Play'}`} />
               </div>
             </div>
             <div class={`${prefixCls}-info`}>
               <div class={`${prefixCls}-music`}>
-                <div class={`${prefixCls}-title`}>{audioInfo.value?.name || '默认'}</div>
+                <span class={`${prefixCls}-title`}>{audioInfo.value?.name || '歌曲'}</span>
                 {!!audioInfo.value?.author && (
-                  <div class={`${prefixCls}-author`}>{audioInfo.value?.author}</div>
+                  <span class={`${prefixCls}-author`}> - {audioInfo.value?.author}</span>
                 )}
               </div>
               <div class={`${prefixCls}-controls`}>

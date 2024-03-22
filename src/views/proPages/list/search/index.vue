@@ -1,143 +1,81 @@
-<template>
-  <g-pro-page-container>
-    <div :class="$style['search-header-row']">
-      <div :class="$style['search-header-content']">
-        <a-input-search
-          style="max-width: 550px"
-          allow-clear
-          v-model:value="searchValue"
-          placeholder="请输入"
-          size="large"
-          @search="changeSearch"
-        >
-          <template #enterButton>
-            <a-button type="primary">搜索</a-button>
-          </template>
-        </a-input-search>
-      </div>
-    </div>
-    <div :class="$style['search-content-warp']">
-      <Tabs v-model:activeKey="tabActiveKey" @change="handleTabChange">
-        <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">
-          <a-card :bordered="false">
-            <Articles ref="articles" v-if="item.key === 'articles'" />
-            <Projects ref="projects" v-if="item.key === 'projects'" />
-            <Applications ref="applications" v-if="item.key === 'applications'" />
-          </a-card>
-        </TabPane>
-        <template #rightExtra>
-          <RedoOutlined
-            @click="refreshData(tabActiveKey)"
-            style="font-size: 18px; color: #8c8c8c; cursor: pointer"
-          />
-        </template>
-      </Tabs>
-    </div>
-    <g-back-top />
-  </g-pro-page-container>
-</template>
+<script setup lang="ts" name="SearchList">
+import type { ComputedRef } from 'vue'
+import { useDict } from '@gx-admin/hooks/system'
+import { provideSearchListContext } from './context'
+import type { TagsListItem } from './components/typings'
 
-<script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from 'vue'
-import { Tabs } from 'ant-design-vue'
-import { RedoOutlined } from '@ant-design/icons-vue'
-import Articles from './articles/index.vue'
-import Projects from './projects/index.vue'
-import Applications from './applications/index.vue'
+type ListType = 'articles' | 'projects' | 'applications'
 
-const TabPane = Tabs.TabPane
+const route = useRoute()
+const router = useRouter()
+const { dictState } = useDict('sys_common_category')
 
-const tabList = [
-  {
-    key: 'articles',
-    tab: '文章'
-  },
-  {
-    key: 'projects',
-    tab: '项目'
-  },
-  {
-    key: 'applications',
-    tab: '应用'
-  }
-]
+const state = reactive({
+  keyword: '',
+  keywordStr: ''
+})
+const loading = ref(false)
+const listType: ComputedRef<ListType> = computed(() => route.path.split('/').reverse()?.[0] as ListType || 'articles')
 
-export default defineComponent({
-  components: {
-    Tabs,
-    TabPane,
-    Projects,
-    Articles,
-    Applications,
-    RedoOutlined
-  },
-  setup() {
-    const articles = ref()
-    const projects = ref()
-    const applications = ref()
-    const searchValue = ref('')
-    const tabActiveKey: Ref<string> = ref('')
-    onMounted(() => {
-      setTimeout(() => {
-        tabActiveKey.value = 'articles'
-      }, 200)
-    })
-    const getDefaultResults = (key: string, title?: string) => {
-      switch (key) {
-        case 'articles':
-          articles.value?.onActiveLoad(title)
-          break
-        case 'projects':
-          projects.value?.onActiveLoad(title)
-          break
-        case 'applications':
-          applications.value?.onActiveLoad(title)
-          break
-      }
-    }
-    const refreshData = (key: string, title?: string) => {
-      switch (key) {
-        case 'articles':
-          articles.value?.refresh(title)
-          break
-        case 'projects':
-          projects.value?.refresh(title)
-          break
-        case 'applications':
-          applications.value?.refresh(title)
-          break
-      }
-    }
-    const changeSearch = () => {
-      getDefaultResults(tabActiveKey.value, searchValue.value)
-    }
-    const handleTabChange = (key: string) => {
-      getDefaultResults(key)
-    }
-    return {
-      articles,
-      projects,
-      applications,
-      tabActiveKey,
-      tabList,
-      searchValue,
-      changeSearch,
-      refreshData,
-      handleTabChange
-    }
-  }
+const changeListType = (value: ListType) => {
+  router.push({ path: '/proPage/list/search/' + value })
+}
+
+const classData: ComputedRef<TagsListItem[]> = computed(() => dictState.sys_common_category?.data?.map(item => ({
+  label: item.dictLabel,
+  value: item.dictValue as string
+})) || [])
+
+provideSearchListContext({
+  classData,
+  keyword: computed(() => state.keyword),
+  loading
 })
 </script>
 
-<style lang="less" module>
-.search-header-row {
-  display: flex;
-  width: 100%;
+<template>
+  <g-pro-page-container :page-header-style="{ paddingBottom: 0 }" :use-page-card="false">
+    <template #contentRender>
+      <div class="flex-center my-16px">
+        <a-input-search
+          placeholder="请输入关键字"
+          enter-button="搜索"
+          class="max-w-552px"
+          size="large"
+          allow-clear
+          v-model:value="state.keywordStr"
+          :loading="loading"
+          @search="value => state.keyword = value"
+        />
+      </div>
+      <a-tabs class="search-list-tabs" :active-key="listType" @change="changeListType">
+        <a-tab-pane class="!hidden" key="articles" tab="文章" />
+        <a-tab-pane class="!hidden" key="projects" tab="项目" />
+        <a-tab-pane class="!hidden" key="applications" tab="应用" />
+      </a-tabs>
+    </template>
+    <router-view>
+      <template #default="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </template>
+    </router-view>
+  </g-pro-page-container>
+</template>
 
-  .search-header-content {
-    flex: auto;
-    width: 100%;
-    text-align: center;
+<style lang="less" scoped>
+.search-list-tabs {
+  &:deep(.ant-tabs-nav) {
+    --at-apply: mb-0;
+    
+    &::before {
+      --at-apply: border-bottom-0;
+    }
+    
+    .ant-tabs-tab {
+      --at-apply: text-16px;
+    }
   }
 }
 </style>

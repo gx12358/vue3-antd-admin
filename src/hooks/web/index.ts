@@ -1,9 +1,7 @@
-import { useDict } from './useDict'
-import { useUpload } from './useUpload'
-import { usePermissions } from './usePermissions'
+import useThemeStyle from './useThemeStyle'
+import useScrollPageList from './useScrollPageList'
 
 export {
-  useDict,
-  useUpload,
-  usePermissions
+  useThemeStyle,
+  useScrollPageList
 }

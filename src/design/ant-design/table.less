@@ -1,0 +1,67 @@
+/**
+ * @Author      gx12358
+ * @DateTime    2021/7/30
+ * @lastTime    2021/7/30
+ * @description ant-modal
+ */
+
+html {
+  body {
+    .ant-table-thead {
+      & > tr > th {
+        position: relative;
+        font-weight: 700;
+        color: #262626;
+        background: #fafafa;
+
+        .ant-table-header-column {
+          font-weight: 700;
+          background: #fafafa;
+        }
+      }
+    }
+
+    .ant-table-column-title {
+      position: relative;
+      z-index: 1;
+      flex: 1 1;
+    }
+
+    .ant-table-resize-handle {
+      position: absolute;
+      top: 0;
+      height: 100% !important;
+      bottom: 0;
+      left: auto !important;
+      right: -8px;
+      cursor: col-resize;
+      touch-action: none;
+      -webkit-user-select: auto;
+      -moz-user-select: auto;
+      user-select: auto;
+      width: 16px;
+      z-index: 1;
+    }
+
+    .ant-table-resize-handle:hover .ant-table-resize-handle-line,
+    .dragging .ant-table-resize-handle-line {
+      opacity: 1;
+    }
+
+    .ant-table-resize-handle-line {
+      display: block;
+      width: 1px;
+      margin-left: 7px;
+      height: 100% !important;
+      background-color: var(--gx-primary-color);
+      opacity: 0;
+    }
+
+    .ant-table-column-sorters {
+      display: flex;
+      flex: auto;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}

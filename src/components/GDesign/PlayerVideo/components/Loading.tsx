@@ -6,7 +6,7 @@ import videoEvent from '../utils/event'
 const Loading = defineComponent({
   name: 'Loading',
   props: {
-    prefixCls: String as PropType<string>
+    prefixCls: String as VuePropType<string>
   },
   setup(props, { expose }) {
     const { player, loading, changeLoading } = useVideoContext()

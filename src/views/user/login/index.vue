@@ -1,48 +1,47 @@
 <template>
   <div :class="$style['login-container']">
     <div :class="$style.content">
-      <g-pro-form-login
+      <GProFormLogin
         style="margin-top: 40px"
         :model="userForm"
-        :formRef="(e) => (formRef = e)"
         :rules="userRules"
         :logo="Logo"
         title="GX Pro Admin"
-        @finish="(values) => handleSubmit(values)"
+        @submit="handleSubmit"
       >
         <template #subTitle>
           <p>GX Pro Admin 是一套基于</p>
           vue（{{ state.dependencies['vue'] }}） + ant-design-vue（{{
             state.dependencies['ant-design-vue']
-          }}） 开发的一套后台系统
+          }}） 开发的一套后台系统1111
         </template>
-        <g-pro-form-text
+        <GProFormText
           name="userName"
           :fieldProps="{ size: 'large', prefix: userOutlined }"
           placeholder="用户名: admin"
         />
-        <g-pro-form-password
+        <GProFormPassword
           name="password"
           :fieldProps="{ size: 'large', prefix: lockOutlined }"
           placeholder="密码: gx.design"
         />
-        <div class="mb-24px">
-          <g-pro-form-checkbox noStyle name="autoLogin">自动登录</g-pro-form-checkbox>
-          <a style="float: right">忘记密码</a>
+        <div class="mb-[24px]">
+          <GProFormCheckbox noStyle name="autoLogin">自动登录</GProFormCheckbox>
+          <a class="float-right">忘记密码</a>
         </div>
-      </g-pro-form-login>
+      </GProFormLogin>
     </div>
     <GlobalFooter />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@gx-vuex'
+import { reactive, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { GlobalFooter } from '@gx-design/ProLayout'
+import { GProFormText, GProFormPassword, GProFormCheckbox, GProFormLogin } from '@gx-design-vue/pro-form'
+import { GlobalFooter } from '@gx-design-vue/pro-layout'
 import Logo from '@/assets/logo.png'
-import { reactive } from 'vue'
 
 interface UserState {
   userName: string
@@ -51,8 +50,8 @@ interface UserState {
 
 interface loginState {
   redirect: string
-  dependencies: RecordType
-  devDependencies: RecordType
+  dependencies: Record<string, any>
+  devDependencies: Record<string, any>
 }
 
 const { pkg } = __APP_INFO__
@@ -64,11 +63,9 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-const formRef = ref()
-
 const userForm = reactive({
-  userName: '',
-  password: '',
+  userName: 'admin',
+  password: 'gx.design',
   autoLogin: true
 } as UserState)
 
@@ -78,7 +75,7 @@ const userRules = reactive({
 })
 
 const state: loginState = reactive({
-  redirect: undefined,
+  redirect: '/',
   dependencies: pkg.dependencies,
   devDependencies: pkg.devDependencies
 })
@@ -102,7 +99,7 @@ const handleRoute = () => {
 const handleSubmit = async (value) => {
   const response: any = await store.user.userLogin({ ...value })
   if (response) {
-    await router.push(handleRoute())
+    router.push({ path: handleRoute() })
   }
 }
 </script>

@@ -6,5 +6,5 @@ export const videoProps = {
   muted: PropTypes.bool.def(false),
   autoplay: PropTypes.bool.def(true),
   playsinline: PropTypes.bool.def(false),
-  src: [ Array, String ] as PropType<string | VideoSource[]>,
+  src: [ Array, String ] as VuePropType<string | VideoSource[]>,
 }

@@ -1,7 +1,28 @@
+<script setup lang="ts">
+const notificationViewData = [
+  {
+    title: '账户密码',
+    description: '其他用户的消息将以站内信的形式通知',
+    checkedValue: true
+  },
+  {
+    title: '系统消息',
+    description: '系统消息将以站内信的形式通知',
+    checkedValue: true
+  },
+  {
+    title: '待办任务',
+    description: '待办任务将以站内信的形式通知',
+    checkedValue: true
+  }
+]
+</script>
+
 <template>
-  <a-list itemLayout="horizontal" :data-source="data">
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">新消息通知</div>
+  <a-list itemLayout="horizontal" :data-source="notificationViewData">
     <template #renderItem="{ item }">
-      <a-list-item>
+      <a-list-item class="!px-0">
         <template #actions>
           <a-switch
             checkedChildren="开"
@@ -15,19 +36,6 @@
   </a-list>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue'
-import { notificationViewData } from '../utils/config'
+<style scoped lang="less">
 
-export default defineComponent({
-  setup() {
-    const state = reactive({
-      data: notificationViewData
-    })
-
-    return {
-      ...toRefs(state)
-    }
-  }
-})
-</script>
+</style>

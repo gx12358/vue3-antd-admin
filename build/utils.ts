@@ -1,13 +1,9 @@
 import fs from 'fs'
-import path from 'path'
+import path, { resolve } from 'path'
 import dotenv from 'dotenv'
 
-export function isDevFn(mode: string): boolean {
-  return mode === 'development'
-}
-
-export function isProdFn(mode: string): boolean {
-  return mode === 'production'
+export function pathResolve(dir: string) {
+  return resolve(process.cwd(), '.', dir)
 }
 
 /**
@@ -25,14 +21,6 @@ export function wrapperEnv(envConf: Recordable): ViteEnv {
     let realName = envConf[envName].replace(/\\n/g, '\n')
     realName = realName === 'true' ? true : realName === 'false' ? false : realName
 
-    if (envName === 'VITE_PORT') {
-      realName = Number(realName)
-    }
-    if (envName === 'VITE_PROXY') {
-      try {
-        realName = JSON.parse(realName)
-      } catch (error) {}
-    }
     ret[envName] = realName
     process.env[envName] = realName
   }
@@ -58,20 +46,14 @@ function getConfFiles() {
  * @param match prefix
  * @param confFiles ext
  */
-export function getEnvConfig(match = 'VITE_GLOB_', confFiles = getConfFiles()) {
-  let envConfig = {}
+export function getEnvConfig(confFiles = getConfFiles()): Partial<ViteEnv> {
+  let envConfig: Partial<ViteEnv> = {}
   confFiles.forEach((item) => {
     try {
       const env = dotenv.parse(fs.readFileSync(path.resolve(process.cwd(), item)))
       envConfig = { ...envConfig, ...env }
     } catch (e) {
       console.error(`Error in parsing ${item}`, e)
-    }
-  })
-  const reg = new RegExp(`^(${match})`)
-  Object.keys(envConfig).forEach((key) => {
-    if (!reg.test(key)) {
-      Reflect.deleteProperty(envConfig, key)
     }
   })
   return envConfig
@@ -83,4 +65,57 @@ export function getEnvConfig(match = 'VITE_GLOB_', confFiles = getConfFiles()) {
  */
 export function getRootPath(...dir: string[]) {
   return path.resolve(process.cwd(), ...dir)
+}
+
+export function getDefaultPath(supportTs = true) {
+  return path.resolve(process.cwd(), `src/main.${supportTs ? 'ts' : 'js'}`)
+}
+
+export function fileExists(f: string) {
+  try {
+    fs.accessSync(f, fs.constants.W_OK)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+function q(t) {
+  return t.reduce((n, e) => n + e)
+}
+
+function Gt(t, n?: number) {
+  if (t == 0) return '0 Bytes'
+  const e = 1024,
+    r = n || 2,
+    o = [ 'Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ],
+    s = Math.floor(Math.log(t) / Math.log(e))
+  return parseFloat((t / Math.pow(e, s)).toFixed(r)) + ' ' + o[s]
+}
+
+const ot = []
+
+export function getPackageSize({ folder, callBack, format = !0 }) {
+  fs.readdir(folder, (err, files) => {
+    if (err) throw err
+
+    let index = 0
+    const callBacks = () => {
+      if (++index == files.length) {
+        callBack(format ? Gt(q(ot)) : q(ot))
+      }
+    }
+
+    files.forEach(p => {
+      fs.stat(`${folder}/${p}`, (err, stat) => {
+        if (err) throw err
+        stat.isFile() ? (ot.push(stat.size), callBacks()) : stat.isDirectory() && getPackageSize({
+          folder: `${folder}/${p}`,
+          callBack: callBacks
+        })
+      })
+    })
+
+    files.length === 0 && callBack(0)
+  })
 }

@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2678601",
+      "name": "工具箱",
+      "font_class": "gongjuxiang",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "6899227",
+      "name": "服务请求",
+      "font_class": "fuwuqingqiu",
+      "unicode": "e68d",
+      "unicode_decimal": 59021
+    },
+    {
+      "icon_id": "8534575",
+      "name": "更多-通用",
+      "font_class": "gengduo-tongyong",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "12676645",
+      "name": "万能表单1",
+      "font_class": "wannengbiaodan",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
       "icon_id": "653959",
       "name": "个人中心2",
       "font_class": "gerenzhongxin2",
@@ -32,13 +60,6 @@
       "font_class": "waibushuju",
       "unicode": "e60b",
       "unicode_decimal": 58891
-    },
-    {
-      "icon_id": "11124973",
-      "name": "表单",
-      "font_class": "17",
-      "unicode": "e616",
-      "unicode_decimal": 58902
     },
     {
       "icon_id": "7418193",
@@ -74,13 +95,6 @@
       "font_class": "biaoge",
       "unicode": "e63e",
       "unicode_decimal": 58942
-    },
-    {
-      "icon_id": "2471334",
-      "name": "表单",
-      "font_class": "biaodan",
-      "unicode": "e665",
-      "unicode_decimal": 58981
     },
     {
       "icon_id": "554388",
@@ -123,13 +137,6 @@
       "font_class": "xitongpeizhi",
       "unicode": "e6a9",
       "unicode_decimal": 59049
-    },
-    {
-      "icon_id": "20889194",
-      "name": "通用功能",
-      "font_class": "tongyonggongneng",
-      "unicode": "e654",
-      "unicode_decimal": 58964
     }
   ]
 }

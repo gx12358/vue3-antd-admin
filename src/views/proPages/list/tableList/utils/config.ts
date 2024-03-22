@@ -1,28 +1,24 @@
-export const rules = {
-  name: [
-    {
-      required: true,
-      message: '请输入标题'
-    }
-  ],
-  desc: [
-    {
-      required: true,
-      message: '请选择起止日期',
-    },
-  ],
+import type { Dayjs } from 'dayjs'
+
+export type FormState = {
+  name: string;
+  desc: string;
+  target: '0' | '1'; // 监控对象 0 表一 1 表二
+  template: '0' | '1'; // 规则模版 0 规则模板一 1 规则模板二
+  type: '0' | '1'; // 规则类型 0 强 1 弱
+  createTime: string;
+  frequency: 'month' | 'week'; // month 月 week 周
+  createTimeDay?: Dayjs;
 }
 
-export const dispatchRules = {
-  time: [
-    {
-      required: true,
-      message: '请选择开始时间'
-    }
-  ]
-}
 
-export const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 },
+export const defauleState: FormState = {
+  name: '',
+  desc: '',
+  target: '0',
+  template: '0',
+  type: '0',
+  createTime: '',
+  frequency: 'month',
+  createTimeDay: null,
 }

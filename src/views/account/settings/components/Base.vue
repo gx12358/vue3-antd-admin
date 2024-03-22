@@ -1,467 +1,130 @@
-<template>
-  <div :class="$style.baseView">
-    <template v-if="loading">
-      <div :class="$style.skeletonContent">
-        <Skeleton avatar :paragraph="{ rows: 6 }" />
-      </div>
-    </template>
-    <template v-else>
-      <div :class="$style.left">
-        <a-form layout="vertical">
-          <a-form-item label="邮箱" v-bind="validateInfos.email">
-            <a-input
-              :style="{ width: isMobile ? '100%' : '328px' }"
-              v-model:value="formState.email"
-              placeholder="请输入您的邮箱"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item label="昵称" v-bind="validateInfos.name">
-            <a-input
-              :style="{ width: isMobile ? '100%' : '328px' }"
-              v-model:value="formState.name"
-              placeholder="请输入您的昵称"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item label="个人简介" v-bind="validateInfos.profile">
-            <a-textarea
-              :style="{ width: isMobile ? '100%' : '440px' }"
-              v-model:value="formState.profile"
-              :auto-size="{ minRows: 4 }"
-              placeholder="请输入个人简介"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item label="国家/地区" v-bind="validateInfos.country">
-            <a-select
-              :style="{ width: isMobile ? '100%' : '216px' }"
-              show-search
-              optionFilterProp="text"
-              placeholder="请输入您的国家或地区"
-              v-model:value="formState.country"
-              allow-clear
-            >
-              <a-select-option value="China" text="中国">中国</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="所在省市">
-            <a-space
-              :class="{
-                [`${$style.formGroupContainer}`]: true,
-                [`${$style.mobile}`]: isMobile
-              }"
-            >
-              <a-form-item v-bind="validateInfos.province">
-                <a-select
-                  :style="{ width: isMobile ? '100%' : '216px' }"
-                  show-search
-                  allow-clear
-                  placeholder="请输入您的所在省"
-                  option-filter-prop="text"
-                  v-model:value="formState.province"
-                  :class="$style.item"
-                  :getPopupContainer="
-                    (trigger) => {
-                      if (trigger && trigger.parentNode) {
-                        return trigger.parentNode
-                      }
-                      return trigger
-                    }
-                  "
-                  :not-found-content="provinceFetching ? undefined : null"
-                  @change="handleChangeProvince"
-                >
-                  <template v-if="provinceFetching" #notFoundContent>
-                    <a-spin size="small" />
-                  </template>
-                  <a-select-option
-                    v-for="item in provinceData"
-                    :key="item.value"
-                    :value="item.value"
-                    :text="item.label"
-                  >
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item v-bind="validateInfos.city">
-                <a-select
-                  :style="{ width: isMobile ? '100%' : '216px' }"
-                  show-search
-                  allow-clear
-                  placeholder="请输入您的所在城市"
-                  option-filter-prop="text"
-                  v-model:value="formState.city"
-                  :getPopupContainer="
-                    (trigger) => {
-                      if (trigger && trigger.parentNode) {
-                        return trigger.parentNode
-                      }
-                      return trigger
-                    }
-                  "
-                  :class="$style.item"
-                  :disabled="!formState.province"
-                  :not-found-content="cityFetching ? undefined : null"
-                >
-                  <template v-if="cityFetching" #notFoundContent>
-                    <a-spin size="small" />
-                  </template>
-                  <a-select-option
-                    v-for="item in cityData"
-                    :key="item.value"
-                    :value="item.value"
-                    :text="item.label"
-                  >
-                    {{ item.label }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-space>
-          </a-form-item>
-          <a-form-item label="街道地址" v-bind="validateInfos.address">
-            <a-input
-              :style="{ width: isMobile ? '100%' : '328px' }"
-              v-model:value="formState.address"
-              placeholder="请输入您的街道地址"
-              allow-clear
-            />
-          </a-form-item>
-          <a-form-item label="街道地址" v-bind="validateInfos.phone">
-            <a-input-group>
-              <a-space>
-                <a-input
-                  :style="{ width: isMobile ? '100%' : '80px' }"
-                  placeholder="请输入"
-                  v-model:value="formState.phoneCode"
-                  @change="(e) => handleChangePhone(e, 0)"
-                />
-                <a-input
-                  :style="{ width: isMobile ? '100%' : '214px' }"
-                  placeholder="请输入电话号码"
-                  v-model:value="formState.phoneNumber"
-                  @change="(e) => handleChangePhone(e, 1)"
-                />
-              </a-space>
-            </a-input-group>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="onSubmit">提交</a-button>
-            <a-button style="margin-left: 10px" @click="onResetFields">重置</a-button>
-          </a-form-item>
-        </a-form>
-      </div>
-      <div :class="$style.right">
-        <div :class="$style.avatar_title">头像</div>
-        <div :class="$style.avatar">
-          <g-image :src="formState.avatar" fit="cover" />
-        </div>
-        <g-upload listType="text" :limit="1" @change="handleChange">
-          <div :class="$style.button_view">
-            <a-button>
-              <UploadOutlined />
-              更换头像
-            </a-button>
-          </div>
-        </g-upload>
-      </div>
-    </template>
-  </div>
-</template>
+<script setup lang="ts">
+import { reactive } from 'vue'
+import { message } from 'ant-design-vue'
+import type { UserDetails } from '@gx-mock/config/user'
+import { GUpload } from '@gx-design/Upload'
+import cityOptions from '@/assets/json/china.json'
+import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import { useRequest } from '@gx-admin/hooks/core'
+import { updateUserDetails } from '@/services/userCenter'
+import { isEmail, isPhone } from '@/utils/validate'
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, reactive, toRefs, toRaw } from 'vue'
-import { Form, message, Skeleton } from 'ant-design-vue'
-import { UploadOutlined } from '@ant-design/icons-vue'
-import type { CurrentUser } from '@/services/account/typings'
-import { queryCurrent, queryProvince, queryCity } from '@/services/account/settings'
-import useMediaQuery from '@/hooks/event/useMediaQuery'
-import { hanndleField } from '@/utils/util'
-import { rules } from '../utils/config'
+type UserFormState = UserDetails & { adressCode?: string[] }
 
-const useForm = Form.useForm
-
-export default defineComponent({
-  components: { UploadOutlined, Skeleton },
-  setup() {
-    const colSize = useMediaQuery()
-
-    const state = reactive({
-      loading: false,
-      cityData: [] as { label: string; value: string }[],
-      provinceData: [] as { label: string; value: string }[],
-      cityFetching: false,
-      provinceFetching: false,
-      currentUser: {} as CurrentUser,
-      formState: {
-        email: '',
-        name: '',
-        profile: '',
-        country: undefined,
-        province: undefined as string | undefined,
-        city: undefined as string | undefined,
-        address: '',
-        phone: '',
-        phoneCode: '',
-        phoneNumber: '',
-        avatar: ''
-      }
-    })
-
-    const rulesRef = reactive({ ...rules })
-
-    const isMobile = computed(() => colSize.value === 'sm' || colSize.value === 'xs')
-
-    onMounted(async () => {
-      state.loading = true
-      provinceData()
-      const response: any = await queryCurrent()
-      if (response) {
-        state.currentUser = response.data || {}
-        for (let i in response.data) {
-          switch (i) {
-            case 'country':
-              state.formState[i] = response.data[i] || undefined
-              break
-            case 'province':
-              state.formState[i] = response.data[i] || undefined
-              break
-            case 'city':
-              state.formState[i] = response.data[i] || undefined
-              break
-            case 'geographic':
-              if (response.data[i] && response.data[i]?.province?.key)
-                handleChangeProvince(
-                  response.data[i]?.province?.key || '',
-                  response.data[i]?.city?.key || ''
-                )
-              state.formState[i] = response.data[i]
-              break
-            case 'phone':
-              state.formState.phoneCode = response.data[i] ? response.data[i].split('-')[0] : ''
-              state.formState.phoneNumber = response.data[i] ? response.data[i].split('-')[1] : ''
-              state.formState[i] = response.data[i] || ''
-              break
-            default:
-              state.formState[i] = hanndleField(response.data[i], '').value
-              break
-          }
-        }
-      }
-      state.loading = false
-    })
-
-    const { resetFields, validate, validateInfos } = useForm(state.formState, rulesRef)
-
-    const provinceData = async () => {
-      state.provinceFetching = true
-      const response = await queryProvince()
-      if (response) {
-        state.provinceData = (response.data || []).map((item) => {
-          return {
-            label: item.name,
-            value: item.id
-          }
-        })
-        state.formState.province = state.currentUser.geographic?.province?.key || undefined
-      }
-      state.provinceFetching = false
-    }
-
-    const handleChangeProvince = async (value: string, cityCode?: any) => {
-      state.cityFetching = true
-      const response = await queryCity(value)
-      if (response) {
-        state.cityData = (response.data || []).map((item) => {
-          return {
-            label: item.name,
-            value: item.id
-          }
-        })
-        if (cityCode) state.formState.city = cityCode
-      }
-      state.cityFetching = false
-    }
-
-    const handleChangePhone = (e, type) => {
-      if (type === 0) {
-        state.formState.phone = `${e.target.value}-${state.formState.phone.split('-')[1]}`
-      } else {
-        state.formState.phone = `${state.formState.phone.split('-')[0]}-${e.target.value}`
-      }
-    }
-
-    const onResetFields = () => {
-      const newValues: any = {}
-      for (let i in state.currentUser) {
-        switch (i) {
-          case 'country':
-            newValues[i] = state.currentUser[i] || undefined
-            break
-          case 'province':
-            newValues[i] = state.currentUser[i] || undefined
-            break
-          case 'city':
-            newValues[i] = state.currentUser[i] || undefined
-            break
-          case 'phone':
-            newValues.phoneCode = state.currentUser[i] ? state.currentUser[i].split('-')[0] : ''
-            newValues.phoneNumber = state.currentUser[i] ? state.currentUser[i].split('-')[1] : ''
-            newValues[i] = state.currentUser[i] || ''
-            break
-          default:
-            newValues[i] = hanndleField(state.currentUser[i], '').value
-            break
-        }
-      }
-      resetFields(newValues)
-    }
-
-    const handleChange = (urls: string[]) => {
-      state.formState.avatar = urls.join()
-    }
-
-    const onSubmit = () => {
-      validate()
-        .then(() => {
-          console.log(toRaw(state.formState))
-        })
-        .catch((_) => {})
-    }
-
-    const handleFinish = async () => {
-      message.success('更新基本信息成功')
-    }
-
-    return {
-      ...toRefs(state),
-      isMobile,
-      handleChange,
-      resetFields,
-      validateInfos,
-      onSubmit,
-      onResetFields,
-      handleFinish,
-      handleChangePhone,
-      handleChangeProvince
-    }
-  }
+const { user } = useStore()
+const { run, loading } = useRequest(updateUserDetails, {
+  manual: true,
+  onSuccess: () => message.success('操作成功！')
 })
+
+const formState = reactive<UserFormState>({
+  ...user.userInfo,
+  adressCode: user.userInfo.provinceCode && user.userInfo.cityCode
+    ? [ user.userInfo.provinceCode, user.userInfo.cityCode, user.userInfo.districtCode ]
+    : []
+})
+
+const ruleState = reactive<RulesState<UserFormState>>({
+  nickName: [
+    {
+      required: true,
+      message: '请输入昵称！'
+    }
+  ],
+  email: [
+    {
+      required: true,
+      pattern: isEmail('', true),
+      message: '请输入正确的邮箱地址！'
+    }
+  ],
+  adressCode: [
+    {
+      required: true,
+      message: '请选择国家/地区！'
+    }
+  ],
+  introduction: [
+    {
+      required: true,
+      message: '请输入个人简介！'
+    }
+  ],
+  phone: [
+    {
+      required: true,
+      pattern: isPhone('', true),
+      message: '请输入正确的联系电话！'
+    }
+  ],
+})
+
+const { resetFields, validateInfos, validate } = useForm<UserFormState>(formState, ruleState)
+
+watch(() => user.userInfo, (state) => Object.assign(formState, { ...state }), { deep: true })
+
+const filter = (inputValue, path) => path.some((option) => option.label?.toLowerCase()
+  .indexOf(inputValue.toLowerCase()) > -1)
+
+const submitInfos = () => {
+  validate().then(_ => {
+    run(unref(formState))
+  }).catch(_ => {})
+}
 </script>
 
-<style lang="less" module>
-.baseView {
-  display: flex;
-  padding-top: 12px;
+<template>
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">基本设置</div>
+  <g-spin :spinning="loading">
+    <a-form :colon="false" layout="vertical">
+      <div class="flex gap-100px">
+        <div class="flex-main-448">
+          <a-form-item v-bind="validateInfos.nickName" label="昵称">
+            <a-input v-model:value="formState.nickName" allow-clear placeholder="请输入昵称" />
+          </a-form-item>
+          <a-form-item v-bind="validateInfos.introduction" label="个人简介">
+            <a-textarea :auto-size="{ minRows: 5 }" v-model:value="formState.introduction" allow-clear placeholder="请输入个人简介" />
+          </a-form-item>
+          <a-form-item v-bind="validateInfos.adressCode" label="国家/地区">
+            <a-cascader
+              v-model:value="formState.adressCode"
+              style="width: 100%"
+              allow-clear
+              :dropdownStyle="{ minWidth: '400px' }"
+              :options="cityOptions"
+              :show-search="{ filter }"
+              placeholder="请选择国家/地区"
+              :getPopupContainer="(trigger) => trigger.parentNode"
+            />
+          </a-form-item>
+          <a-form-item v-bind="validateInfos.email" label="邮箱">
+            <a-input v-model:value="formState.email" type="email" allow-clear placeholder="请输入邮箱" />
+          </a-form-item>
+          <a-form-item v-bind="validateInfos.phone" label="联系电话">
+            <a-input :maxlength="11" show-count type="number" v-model:value="formState.phone" allow-clear placeholder="请输入联系电话" />
+          </a-form-item>
+        </div>
+        <div class="flex-main">
+          <a-form-item v-bind="validateInfos.avatar" label="头像">
+            <GUpload
+              :limit="1"
+              :data-list="[ formState.avatar ]"
+              :progress="false"
+              :card-style="{ width: '144px', height: '144px' }"
+              show-editor
+              shape="circle"
+              @change="list => formState.avatar = list.join()"
+            />
+          </a-form-item>
+        </div>
+      </div>
+      
+      <a-button @click="resetFields">重置基本信息</a-button>
+      <a-button @click="submitInfos" type="primary" class="ml-10px">更新基本信息</a-button>
+    </a-form>
+  </g-spin>
+</template>
 
-  :global {
-    .ant-legacy-form-item .ant-legacy-form-item-control-wrapper {
-      width: 100%;
-    }
-  }
+<style scoped lang="less">
 
-  .skeletonContent {
-    flex: 1;
-  }
-
-  .left {
-    min-width: 224px;
-    max-width: 448px;
-  }
-
-  .right {
-    flex: 1;
-    padding-left: 104px;
-
-    .avatar_title {
-      height: 22px;
-      margin-bottom: 8px;
-      font-size: @font-size-base;
-      line-height: 22px;
-      color: @heading-color;
-    }
-
-    .avatar {
-      width: 144px;
-      height: 144px;
-      margin-bottom: 12px;
-      overflow: hidden;
-      border-radius: 50%;
-
-      :global {
-        .gx-image {
-          width: 144px;
-          height: 144px;
-        }
-      }
-
-      img {
-        width: 100%;
-      }
-    }
-
-    .button_view {
-      width: 144px;
-      text-align: center;
-    }
-  }
-}
-
-.area_code {
-  width: 72px;
-}
-
-.phone_number {
-  width: 214px;
-}
-
-.formGroupContainer {
-  flex-wrap: wrap;
-  max-width: 100%;
-
-  &.mobile {
-    flex: 1;
-    width: 100%;
-
-    :global {
-      div.ant-space-item {
-        flex: 1;
-      }
-    }
-  }
-
-  :global {
-    div.ant-space-item {
-      max-width: 100%;
-
-      .ant-form-item {
-        margin-bottom: 0;
-
-        .ant-form-item-explain,
-        .ant-form-item-extra {
-          display: none;
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: @screen-xl) {
-  .baseView {
-    flex-direction: column-reverse;
-
-    .right {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 448px;
-      padding: 20px;
-
-      .avatar_title {
-        display: none;
-      }
-    }
-  }
-}
 </style>
