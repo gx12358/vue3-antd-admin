@@ -5,7 +5,8 @@
 
 ## 简介
 
-GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0+`,`vite2`,`TypeScript`, `Ant Design Vue3.0+`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
+GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0+`,`vite5`,`TypeScript`, `Ant Design Vue4.0+`， `Unocss`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
+如果大家喜欢的话，给个start！
 
 ## 特性
 
@@ -96,11 +97,11 @@ yarn build
 
 ## 维护者
 
-[@gx12358](https://gitee.com/gx12358)
+[@gx12358](https://github.com/gx12358/vue3-antd-admin)
 
 ## 交流
 
-`GX-ADMIN-PRO` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发，同时也提供 QQ 交流群使用问题欢迎在群内提问。
+`Vue3-Antd-Admin` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发，同时也提供 QQ 交流群使用问题欢迎在群内提问。
 
 - QQ 群 `871430530`
 
