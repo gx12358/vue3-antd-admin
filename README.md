@@ -50,20 +50,20 @@ git clone https://gitee.com/gx12358/vite-admin-pro
 ```bash
 cd gx-admin-pro
 
-yarn install
+pnpm install
 
 ```
 
 - 运行
 
 ```bash
-yarn serve
+pnpm serve
 ```
 
 - 打包
 
 ```bash
-yarn build
+pnpm build
 ```
 
 ## Git 贡献提交规范
