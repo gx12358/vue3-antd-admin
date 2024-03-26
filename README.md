@@ -68,8 +68,7 @@ yarn build
 
 ## Git 贡献提交规范
 
-- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))
-
+- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 
   - `feat` 增加新功能
   - `fix` 修复问题/BUG
   - `style` 代码风格相关无影响运行结果的
