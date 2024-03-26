@@ -23,7 +23,7 @@ GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0
 测试账号: admin/123456
 
 - [🚀 系统文档地址](http://47.120.73.101/doc/)
-- [🚀 pro 组件文档地址](https://47.120.73.101/procomponents/)
+- [🚀 pro 组件文档地址](http://47.120.73.101/procomponents/)
 
 
 ## 准备
