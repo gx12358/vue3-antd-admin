@@ -66,7 +66,7 @@ export function createScrollGuard(router: Router) {
   const global = useStoreGlobal()
 
   router.afterEach((_) => {
-    !global.settings.disabledScrollTop && scrollToContainer(0)
+    !global.settings.disabledScrollTop && scrollToContainer({ count: 0 })
   })
 }
 
