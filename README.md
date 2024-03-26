@@ -57,13 +57,13 @@ pnpm install
 - 运行
 
 ```bash
-pnpm serve
+pnpm run serve
 ```
 
 - 打包
 
 ```bash
-pnpm build
+pnpm run build
 ```
 
 ## Git 贡献提交规范
