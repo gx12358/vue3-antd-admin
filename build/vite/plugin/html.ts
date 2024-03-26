@@ -23,8 +23,8 @@ export function configHtmlPlugin(_: ViteEnv, isBuild: boolean) {
       // Inject data into ejs template
       data: {
         VUE_APP_TITLE: title,
-        injectScript: useCdn ? cdnModules.map(e => e.js).filter(el => el) : [],
-        injectLink: useCdn ? cdnModules.map(e => e.css).filter(el => el) : [],
+        injectScript: useCdn && isBuild ? cdnModules.map(e => e.js).filter(el => el) : [],
+        injectLink: useCdn && isBuild ? cdnModules.map(e => e.css).filter(el => el) : [],
       },
       // Embed the generated app.config.js file
       tags: isBuild

@@ -12,8 +12,8 @@ dependencies:
     specifier: ^0.1.0-beta.10
     version: 0.1.0-beta.10(typescript@5.4.3)
   '@gx-design-vue/pro-card':
-    specifier: ^0.2.0-beta.21
-    version: 0.2.0-beta.21(typescript@5.4.3)
+    specifier: ^0.2.0-beta.23
+    version: 0.2.0-beta.23(typescript@5.4.3)
   '@gx-design-vue/pro-form':
     specifier: ^0.2.0-beta.18
     version: 0.2.0-beta.18(typescript@5.4.3)
@@ -2099,8 +2099,8 @@ packages:
       - typescript
     dev: false
 
-  /@gx-design-vue/pro-card@0.2.0-beta.21(typescript@5.4.3):
-    resolution: {integrity: sha512-HyUV121VRDW7zNu/b+JrW8r0RLUSaSecfyIA43Onpr9vx4s6pjn3hCvgGj0SfOaXjr+UhK1SZ9JpaRA3xbV0XQ==}
+  /@gx-design-vue/pro-card@0.2.0-beta.23(typescript@5.4.3):
+    resolution: {integrity: sha512-pnI+M6LSpdD5Qs46CGobXQ/uDZBI0X4jcvanOAjtyneURK+OyPQV+ym35IEDzjZshmgv0hhKXSxTixIlm+CN3g==}
     dependencies:
       '@gx-design-vue/pro-hooks': 0.2.0-beta.19(vue@3.4.21)
       '@gx-design-vue/pro-provider': 0.1.0-beta.49(typescript@5.4.3)
@@ -2140,7 +2140,7 @@ packages:
     resolution: {integrity: sha512-Tt2Ikf5k75BSeriU9rNgJuuU12AAFKkHQtq+OvzxbCiZG+aCfDdKWvN63O98WFx630gLHbbJN8qBRePKtLw50A==}
     dependencies:
       '@gx-design-vue/color-picker': 0.2.0-beta.17(typescript@5.4.3)
-      '@gx-design-vue/pro-card': 0.2.0-beta.21(typescript@5.4.3)
+      '@gx-design-vue/pro-card': 0.2.0-beta.23(typescript@5.4.3)
       '@gx-design-vue/pro-field': 0.2.0-beta.19(typescript@5.4.3)
       '@gx-design-vue/pro-hooks': 0.2.0-beta.19(vue@3.4.21)
       '@gx-design-vue/pro-modal': 0.2.0-beta.14(typescript@5.4.3)
