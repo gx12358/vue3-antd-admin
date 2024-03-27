@@ -52,7 +52,7 @@ const getTableRequest: RequsetFunction<ListItemDataType> = async (params) => {
 }
 
 watchEffect(() => {
-  spinning.value = loading.value
+  spinning.value = loading?.value
 })
 </script>
 

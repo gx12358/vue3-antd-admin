@@ -47,7 +47,7 @@ const filterOption = (input: string, option: { label: string; value: string; }) 
 }
 
 watchEffect(() => {
-  spinning.value = loading.value
+  spinning.value = loading?.value
 })
 </script>
 

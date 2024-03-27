@@ -34,7 +34,7 @@
     "@gx-design-vue/scrollbar": "^0.2.0-beta.12",
     "@gx-design-vue/pro-modal": "^0.2.0-beta.14",
     "@gx-design-vue/pro-watermark": "^0.2.0-beta.6",
-    "@gx-design-vue/pro-layout": "^0.1.0-beta.48",
+    "@gx-design-vue/pro-layout": "^0.1.0-beta.50",
     "@gx-design-vue/pro-form": "^0.2.0-beta.18",
     "@vueuse/core": "^10.7.2",
     "@vueuse/shared": "^10.7.2",

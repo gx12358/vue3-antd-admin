@@ -21,8 +21,8 @@ dependencies:
     specifier: ^0.2.0-beta.19
     version: 0.2.0-beta.19(vue@3.4.21)
   '@gx-design-vue/pro-layout':
-    specifier: ^0.1.0-beta.48
-    version: 0.1.0-beta.49(typescript@5.4.3)
+    specifier: ^0.1.0-beta.50
+    version: 0.1.0-beta.50(typescript@5.4.3)
   '@gx-design-vue/pro-modal':
     specifier: ^0.2.0-beta.14
     version: 0.2.0-beta.14(typescript@5.4.3)
@@ -2167,8 +2167,8 @@ packages:
       vue: 3.4.21(typescript@5.4.3)
     dev: false
 
-  /@gx-design-vue/pro-layout@0.1.0-beta.49(typescript@5.4.3):
-    resolution: {integrity: sha512-kBufyCna7W1FLBhhNzPAELsLYGg64H+sOssEcgFV4vpUhaR9p2VMear7slPo0hgWfarSZ4S8iViN3OCo4AUONA==}
+  /@gx-design-vue/pro-layout@0.1.0-beta.50(typescript@5.4.3):
+    resolution: {integrity: sha512-/uzrm7u12dr7wh/6R6dfHHAwzhV99ExY1/7oIgdKFsxZqO9a+j4arktrtCtJlV8ppw2ckXtVM2YbUCcQ5LM9bw==}
     dependencies:
       '@gx-design-vue/color-picker': 0.2.0-beta.17(typescript@5.4.3)
       '@gx-design-vue/pro-app': 0.1.0-beta.10(typescript@5.4.3)
