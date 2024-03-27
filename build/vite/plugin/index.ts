@@ -2,6 +2,7 @@ import type { Plugin, PluginOption } from 'vite'
 
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import VueDevTools from 'vite-plugin-vue-devtools'
 import legacy from '@vitejs/plugin-legacy'
 
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
@@ -32,9 +33,10 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
     // have to
     vue(),
     // have to
-    vueJsx()
+    vueJsx(),
   ]
 
+  vitePlugins.push(VueDevTools() as any)
   // vite-plugin-windicss
   vitePlugins.push(Unocss())
 
