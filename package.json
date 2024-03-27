@@ -48,7 +48,6 @@
     "nprogress": "^0.2.0",
     "pinia": "2.1.7",
     "tinymce": "^5.10.3",
-    "vite-plugin-vue-devtools": "^7.0.24",
     "vue": "^3.3.7",
     "vue-router": "^4.2.5",
     "vue-types": "^5.1.1"
@@ -69,6 +68,7 @@
     "@vitejs/plugin-legacy": "^5.3.1",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "vite-plugin-vue-devtools": "^7.0.24",
     "@vue/compiler-sfc": "3.2.37",
     "autoprefixer": "^10.4.5",
     "body-parser": "^1.19.0",
