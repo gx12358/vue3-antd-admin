@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import { initContent, handlePageList } from '@gx-mock/util/table'
 import { otherAccountList } from '@gx-mock/config/user'
+
+const { Random } = mockjs
 
 export type AdvancedDetails = {
   createId: number;

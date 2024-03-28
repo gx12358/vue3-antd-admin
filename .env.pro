@@ -26,7 +26,3 @@ VITE_LEGACY = false
 
 # api前缀
 VITE_BASE_URL=/mock-server
-
-# oss信息
-VITE_OSS_BUCKET = oss-*
-VITE_OSS_ORIGIN = oss-cn-*

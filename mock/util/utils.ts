@@ -1,9 +1,11 @@
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { defaultSettings } from '@gx-config'
 import type { UserDetails } from '@gx-mock/config/user'
 import { userList, tokenAccount } from '@gx-mock/config/user'
 import { Encrypt, Decrypt } from '@gx-mock/util/crypto'
 import { checkBackDataFun, getRequestToken } from '@gx-mock/_util'
+
+const { Random } = mockjs
 
 const { mockPrefixUrl, checkMockToken } = defaultSettings
 
@@ -21,7 +23,7 @@ export function getTokeUserInfo(token): UserDetails {
 }
 
 export function handleRandomImage(width = 50, height = 50) {
-  return `https://picsum.photos/${width}/${height}?random=${Random.guid()}`
+  return `https://picsum.photos/${width}/${height}?random=${Random?.guid()}`
 }
 
 export function checkToken(token) {

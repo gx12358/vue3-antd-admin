@@ -1,10 +1,12 @@
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import dayjs from 'dayjs'
 import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import { initContent } from '@gx-mock/util/table'
 import { otherAccountList } from '@gx-mock/config/user'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, postDataSource } from '@gx-mock/util/table'
+
+const { Random } = mockjs
 
 export type BasicCountState = {
   needDone: number;

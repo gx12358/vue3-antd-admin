@@ -1,8 +1,3 @@
-/**
- * Zero-config PWA for Vite
- * https://github.com/antfu/vite-plugin-pwa
- */
-
 import { VitePWA } from 'vite-plugin-pwa'
 
 import { defaultSettings } from '../../../config'
@@ -12,7 +7,6 @@ export function configPwaConfig(env: ViteEnv) {
   const { VITE_USE_PWA } = env
 
   if (VITE_USE_PWA) {
-    // vite-plugin-pwa
     const pwaPlugin = VitePWA({
       manifest: {
         name: title || 'GX Pro Admin',

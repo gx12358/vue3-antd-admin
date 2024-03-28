@@ -1,8 +1,10 @@
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import { initContent } from '@gx-mock/util/table'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, postDataSource } from '@gx-mock/util/table'
+
+const { Random } = mockjs
 
 export type CardSearchParmas = {
   title: string;

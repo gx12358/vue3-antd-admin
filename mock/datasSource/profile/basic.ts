@@ -1,8 +1,10 @@
+import mockjs from 'mockjs'
+import dayjs from 'dayjs'
 import { getMockRequest } from '@gx-mock/util/utils'
 import { otherAccountList } from '@gx-mock/config/user'
 import { initContent } from '@gx-mock/util/table'
-import { Random } from 'mockjs'
-import dayjs from 'dayjs'
+
+const { Random } = mockjs
 
 export type BasicDetails = {
   pickNum: number;

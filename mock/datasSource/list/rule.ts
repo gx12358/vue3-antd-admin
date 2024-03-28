@@ -1,11 +1,8 @@
 import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
 import { cloneDeep } from 'lodash-es'
 import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListSearchParams, ListItem } from '@gx-mock/util/table'
 import { initContent } from '@gx-mock/util/table'
-
-dayjs.extend(isBetween)
 
 export type RulesListItem = {
   disabled?: boolean;
@@ -88,7 +85,7 @@ function getRule(params: RulesListSearchParams) {
   }
 
   if (params.startTime && params.endTime) {
-    tableList = tableList.filter((data) => dayjs(data.createTime).isBetween(params.startTime, dayjs(params.endTime)))
+    // tableList = tableList.filter((data) => dayjs(data.createTime).isBetween(params.startTime, dayjs(params.endTime)))
   }
 
   return {

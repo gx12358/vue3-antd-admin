@@ -1,8 +1,5 @@
-/**
- * Package file volume analysis
- */
 import visualizer from 'rollup-plugin-visualizer'
-import { isReportMode } from '../../utils'
+import { isReportMode } from '../../util'
 
 export function configVisualizerConfig() {
   if (isReportMode()) {

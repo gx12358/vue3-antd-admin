@@ -1,5 +1,7 @@
 import type { Dayjs } from 'dayjs'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
+
+const { Random } = mockjs
 
 export interface PublicFormState {
   id?: string;
@@ -18,7 +20,7 @@ export interface PublicFormState {
 }
 
 export const formState: Partial<PublicFormState> = {
-  id: Random.guid(),
+  id: Random?.guid(),
   name: Random.cname(),
   company: Random.cname(),
   contract: Random.cname(),

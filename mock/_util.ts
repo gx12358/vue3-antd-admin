@@ -1,7 +1,7 @@
+import { omit } from 'lodash-es'
 import { defaultSettings } from '@gx-config'
 import { checkToken } from '@gx-mock/util/utils'
 import { isFunction, isObject } from '@gx-design-vue/pro-utils'
-import { omit } from 'lodash-es'
 
 const { tokenName } = defaultSettings
 

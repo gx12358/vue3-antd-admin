@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { toChinesNum } from '@/utils/util'
+
+const { Random } = mockjs
 
 export type DictType =  'sys_common_status' | 'sys_common_category' | 'sys_common_author'
 

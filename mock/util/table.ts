@@ -1,6 +1,8 @@
-import { mock, Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { cloneDeep } from 'lodash-es'
 import dayjs from 'dayjs'
+
+const { Random, mock } = mockjs
 
 export type ListItem = { createTime: string; id: number; }
 

@@ -1,6 +1,6 @@
 import type { RollupOptions } from 'rollup'
 import externalGlobals from 'rollup-plugin-external-globals'
-import { pathResolve } from '../utils'
+import { pathResolve } from '../util'
 import { configManualChunk } from '../vite/optimizer'
 import { getExternalMap } from '../vite/cdn'
 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { groupList } from '@gx-mock/config/group'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
@@ -7,6 +7,8 @@ import { getMockRequest, getArraryList } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, initContent, compareToMaxTime } from '@gx-mock/util/table'
 import { fakeList } from '@gx-mock/config/article'
+
+const { Random } = mockjs
 
 export interface ProjectHomeCount {
   projectNum: number;

@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import autoprefixer from 'autoprefixer'
 
 import { generateModifyVars } from './build/generate/generateModifyVars'
-import { wrapperEnv, pathResolve } from './build/utils'
+import { wrapperEnv, pathResolve } from './build/util'
 import createRollupOptions from './build/rollupOptions'
 import { createVitePlugins } from './build/vite/plugin'
 
@@ -23,7 +23,7 @@ const __APP_INFO__ = {
 
 process.env.VUE_APP_VERSION = version
 
-export default ({ command, mode }: ConfigEnv): UserConfig => {
+export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
 
   const root = process.cwd()
 
@@ -68,7 +68,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       ]
     },
     server: {
-      open: true,
+      open: false,
       host: true,
       port: devPort,
       proxy: useProxy ? createProxy(VITE_BASE_URL)[VITE_APP_ENV] : {}
@@ -105,7 +105,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }
     },
 
-    plugins: createVitePlugins(viteEnv, isBuild),
+    plugins: await createVitePlugins(viteEnv, isBuild),
 
     optimizeDeps: {
       include: [

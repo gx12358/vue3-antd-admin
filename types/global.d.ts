@@ -49,8 +49,6 @@ declare global {
     VITE_APP_ENV: 'dev';
     VUE_APP_VERSION: string;
     VUE_APP_AUTHOR: any;
-    VITE_OSS_BUCKET: string;
-    VITE_OSS_ORIGIN: string;
     VITE_PROXY: [ string, string ][];
     VITE_DROP_CONSOLE: boolean;
     VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none';

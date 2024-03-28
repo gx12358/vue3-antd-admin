@@ -2,14 +2,13 @@
   display: inline-block;
   width: auto;
   height: auto;
-  line-height: 0;
+  animation: loading-circle 1s infinite linear;
   color: inherit;
+  line-height: 0;
   text-align: center;
+  text-rendering: optimizelegibility;
   text-transform: none;
   vertical-align: -0.125em;
-  text-rendering: optimizelegibility;
-  -webkit-font-smoothing: antialiased;
-  animation: loadingCircle 1s infinite linear;
   --at-apply: text-30px;
 }
 
@@ -17,9 +16,8 @@
   margin-top: 10px;
 }
 
-@keyframes loadingCircle {
+@keyframes loading-circle {
   100% {
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }

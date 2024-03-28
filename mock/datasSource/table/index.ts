@@ -1,7 +1,9 @@
+import mockjs from 'mockjs'
 import { getMockRandowList, getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import { initContent, handlePageList } from '@gx-mock/util/table'
-import { Random } from 'mockjs'
+
+const { Random } = mockjs
 
 export type TableRecord = {
   name: string;

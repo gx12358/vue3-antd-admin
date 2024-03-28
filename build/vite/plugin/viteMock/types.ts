@@ -1,20 +1,18 @@
-import type { IncomingMessage, ServerResponse } from 'http'
+import { IncomingMessage, ServerResponse } from 'http'
 
 export interface ViteMockOptions {
-  mockPath?: string
-  configPath?: string
-  ignore?: RegExp | ((fileName: string) => boolean)
-  watchFiles?: boolean
-  localEnabled?: boolean
-  prodEnabled?: boolean
-  injectFile?: string
-  injectCode?: string
+  mockPath?: string;
+  configPath?: string;
+  ignore?: RegExp | ((fileName: string) => boolean);
+  watchFiles?: boolean;
+  enable?: boolean;
+  cors?: boolean;
   /**
    * Automatic recognition, no need to configure again
    * @deprecated Deprecated after 2.8.0
    */
-  supportTs?: boolean
-  logger?: boolean
+  supportTs?: boolean;
+  logger?: boolean;
 }
 
 export interface RespThisType {
@@ -23,8 +21,26 @@ export interface RespThisType {
   parseJson: () => any
 }
 
+export type MethodType = 'get' | 'post' | 'put' | 'delete' | 'patch'
+
 export type Recordable<T = any> = Record<string, T>
 
-export interface NodeModuleWithCompile extends NodeModule {
-  _compile(code: string, filename: string): any
+export declare interface MockMethod {
+  url: string
+  method?: MethodType
+  timeout?: number
+  statusCode?: number
+  response?:
+    | ((
+    this: RespThisType,
+    opt: { url: Recordable; body: Recordable; query: Recordable; headers: Recordable },
+  ) => any)
+    | any
+  rawResponse?: (this: RespThisType, req: IncomingMessage, res: ServerResponse) => void
+}
+
+export interface MockConfig {
+  env: Record<string, any>
+  mode: string
+  command: 'build' | 'serve'
 }

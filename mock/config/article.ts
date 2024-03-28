@@ -1,7 +1,9 @@
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import type { ListItemDataType } from '../datasSource/list'
 import { authorList } from '../config/dict'
 import { handleRandomImage } from '../util/utils'
+
+const { Random } = mockjs
 
 export function fakeList<T = undefined>(count: number, extraFun?: (key: number) => T): ListItemDataType<T>[] {
   const list: ListItemDataType<T>[] = []

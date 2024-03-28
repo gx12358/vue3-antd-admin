@@ -1,7 +1,9 @@
-import { mock, Random } from 'mockjs'
+import mockjs from 'mockjs'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
 import { groupList } from './group'
 import { permissions } from './permissions'
+
+const { Random, mock } = mockjs
 
 const admin = [ 1, 2 ]
 

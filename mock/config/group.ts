@@ -1,7 +1,9 @@
 import dayjs from 'dayjs'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
 import { handleRandomImage } from '@gx-mock/util/utils'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
+
+const { Random } = mockjs
 
 export const groupList: GroupListItem[] = Array.from({ length: 20 }).map((_, key) => {
   return {

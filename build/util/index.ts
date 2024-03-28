@@ -2,6 +2,8 @@ import fs from 'fs'
 import path, { resolve } from 'path'
 import dotenv from 'dotenv'
 
+export const rootPath = process.cwd()
+
 export function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir)
 }

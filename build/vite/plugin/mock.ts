@@ -1,16 +1,9 @@
 import { viteMockServe } from './viteMock'
 
-export function configMockPlugin(isBuild: boolean) {
+export function configMockPlugin() {
   return viteMockServe({
-    ignore: /^\_/,
+    ignore: /^_/,
     mockPath: 'mock',
-    watchFiles: true,
-    localEnabled: !isBuild,
-    prodEnabled: isBuild,
-    injectCode: `
-      import { setupProdMockServer } from '../mock/_createProductionServer';
-
-      setupProdMockServer();
-      `
+    enable: true
   })
 }
