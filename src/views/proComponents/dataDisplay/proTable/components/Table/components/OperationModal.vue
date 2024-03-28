@@ -1,47 +1,6 @@
-<template>
-  <g-pro-modal
-    title="ModalTable"
-    type="normal"
-    :width="900"
-    :isFail="isFail"
-    :open="visible"
-    :spinning="spinning"
-    :skeletonLoading="skeletonLoading"
-    @ok="handleSubmit"
-    @cancel="handleCancel"
-  >
-    <g-pro-table
-      ref="tableRef"
-      align="center"
-      :options="false"
-      modalScroll
-      :searchMap="searchMap as ProTableProps['searchMap']"
-      :waitRequest="waitRequest"
-      :columns="columns.operationModal"
-      :request="getTableData"
-      @reset="onReset"
-    >
-      <template #headerCell="{ column }">
-        <template v-if="column.dataIndex === 'name'"> FullName</template>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'name'">
-          这是高级列表的FullName的字段（测试溢出展示）：{{ record.title }}
-        </template>
-        <template v-if="column.dataIndex === 'action'">
-          <div class="flex gap-20px items-center justify-center">
-            <a>编辑</a>
-            <a>删除</a>
-          </div>
-        </template>
-      </template>
-    </g-pro-table>
-  </g-pro-modal>
-</template>
-
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import type { RequsetFunction, ProTableProps, ProTableRef } from '@gx-design-vue/pro-table'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
 import { getTableList } from '@/services/tableCenter'
 import { deepCopy } from '@gx-design-vue/pro-utils'
@@ -127,4 +86,43 @@ defineExpose({
 })
 </script>
 
-<style lang="less" module></style>
+<template>
+  <g-pro-modal
+    title="ModalTable"
+    type="normal"
+    :width="900"
+    :isFail="isFail"
+    :open="visible"
+    :spinning="spinning"
+    :skeletonLoading="skeletonLoading"
+    @ok="handleSubmit"
+    @cancel="handleCancel"
+  >
+    <g-pro-table
+      ref="tableRef"
+      align="center"
+      :options="false"
+      modalScroll
+      :searchMap="searchMap as ProTableProps['searchMap']"
+      :waitRequest="waitRequest"
+      :columns="columns.operationModal"
+      :request="getTableData"
+      @reset="onReset"
+    >
+      <template #headerCell="{ column }">
+        <template v-if="column.dataIndex === 'name'"> FullName</template>
+      </template>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'name'">
+          这是高级列表的FullName的字段（测试溢出展示）：{{ record.title }}
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <div class="flex gap-20px items-center justify-center">
+            <a>编辑</a>
+            <a>删除</a>
+          </div>
+        </template>
+      </template>
+    </g-pro-table>
+  </g-pro-modal>
+</template>

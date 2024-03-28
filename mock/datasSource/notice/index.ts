@@ -4,7 +4,7 @@ import { getMockRequest } from '@gx-mock/util/utils'
 
 const { Random } = mockjs
 
-export type MailNoticeListItem = {
+export interface MailNoticeListItem {
   id: string;
   updatedAt: number;
   user: {

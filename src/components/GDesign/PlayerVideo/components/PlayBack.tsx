@@ -16,11 +16,6 @@ const Loading = defineComponent({
     const duration = ref(0)
     const currentTime = ref(0)
 
-    onMounted(() => {
-      onEvent(player.value, [videoEvent.TIMEUPDATE], timeChange)
-      onEvent(player.value, [videoEvent.DURATIONCHANGE], durationChange)
-    })
-
     const timeChange = () => {
       const time = player.value?.currentTime || 0
       if (!time) {
@@ -36,6 +31,11 @@ const Loading = defineComponent({
     const durationChange = () => {
       duration.value = player.value.duration || 0
     }
+
+    onMounted(() => {
+      onEvent(player.value, [ videoEvent.TIMEUPDATE ], timeChange)
+      onEvent(player.value, [ videoEvent.DURATIONCHANGE ], durationChange)
+    })
 
     expose({
       remove: removeAllEvent

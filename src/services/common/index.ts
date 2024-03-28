@@ -1,5 +1,5 @@
-import type { DownLoadRequestConfig }  from '@/utils/fetchFile'
-import fetchFile  from '@/utils/fetchFile'
+import type { DownLoadRequestConfig } from '@/utils/fetchFile'
+import fetchFile from '@/utils/fetchFile'
 
 export function download(params: DownLoadRequestConfig) {
   const { showTip = true, method = 'get' } = params

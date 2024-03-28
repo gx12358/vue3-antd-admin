@@ -15,9 +15,6 @@
   </g-pro-page-container>
 </template>
 
-<script setup lang="ts">
-</script>
-
 <style lang="less" scoped>
 .carousel-img {
   width: 100%;

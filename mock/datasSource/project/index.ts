@@ -3,9 +3,9 @@ import mockjs from 'mockjs'
 import { groupList } from '@gx-mock/config/group'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
-import { getMockRequest, getArraryList } from '@gx-mock/util/utils'
+import { getArraryList, getMockRequest } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
-import { handlePageList, initContent, compareToMaxTime } from '@gx-mock/util/table'
+import { compareToMaxTime, handlePageList, initContent } from '@gx-mock/util/table'
 import { fakeList } from '@gx-mock/config/article'
 
 const { Random } = mockjs
@@ -26,7 +26,7 @@ export type ProjectListItem = ListItem & {
   group: GroupListItem;
 }
 
-type ExtraAccountListRecorrd = { tags: string }
+interface ExtraAccountListRecorrd { tags: string }
 
 export type AccountListRecord = ListItemDataType<ExtraAccountListRecorrd>
 
@@ -39,15 +39,15 @@ const pagelist = initContent<ProjectListItem>(100, () => ({
 
 const articlesData: AccountListRecord[] = fakeList<ExtraAccountListRecorrd>(
   50,
-  () => ({ tags: getArraryList<string>(3, (_) => Random.cword(2, 4)).join() })
+  () => ({ tags: getArraryList<string>(3, _ => Random.cword(2, 4)).join() })
 )
 const projectsData: AccountListRecord[] = fakeList<ExtraAccountListRecorrd>(
   60,
-  () => ({ tags: getArraryList<string>(3, (_) => Random.cword(2, 4)).join() })
+  () => ({ tags: getArraryList<string>(3, _ => Random.cword(2, 4)).join() })
 )
 const applicationsData: AccountListRecord[] = fakeList<ExtraAccountListRecorrd>(
   40,
-  () => ({ tags: getArraryList<string>(3, (_) => Random.cword(2, 4)).join() })
+  () => ({ tags: getArraryList<string>(3, _ => Random.cword(2, 4)).join() })
 )
 
 export default [

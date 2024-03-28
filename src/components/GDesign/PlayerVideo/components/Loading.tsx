@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useVideoContext } from '../context'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'
@@ -15,26 +15,6 @@ const Loading = defineComponent({
 
     const { onEvent, removeAllEvent } = useVideo(player)
 
-    onMounted(() => {
-      onEvent(
-        player.value,
-        [
-          videoEvent.ERROR,
-          videoEvent.SEEKED,
-          videoEvent.CANPLAY,
-          videoEvent.PLAYING,
-          videoEvent.CANPLAYTHROUGH,
-          videoEvent.LOADEDMETADATA
-        ],
-        hideLoading
-      )
-      onEvent(
-        player.value,
-        [videoEvent.STALLED, videoEvent.SEEKING, videoEvent.LOADSTART],
-        showLoading
-      )
-    })
-
     const showLoading = (isForce?: boolean) => {
       if (isForce) {
         changeLoading(true)
@@ -50,6 +30,26 @@ const Loading = defineComponent({
       window.clearTimeout(_timeout.value)
       changeLoading(false)
     }
+
+    onMounted(() => {
+      onEvent(
+        player.value,
+        [
+          videoEvent.ERROR,
+          videoEvent.SEEKED,
+          videoEvent.CANPLAY,
+          videoEvent.PLAYING,
+          videoEvent.CANPLAYTHROUGH,
+          videoEvent.LOADEDMETADATA
+        ],
+        hideLoading
+      )
+      onEvent(
+        player.value,
+        [ videoEvent.STALLED, videoEvent.SEEKING, videoEvent.LOADSTART ],
+        showLoading
+      )
+    })
 
     expose({
       remove: removeAllEvent

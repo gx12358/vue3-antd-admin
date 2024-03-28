@@ -1,28 +1,29 @@
-import type { InjectionKey, ComputedRef, Ref } from 'vue'
+import type { ComputedRef, InjectionKey, Ref } from 'vue'
 import { inject, provide } from 'vue'
 import type { TabsKey } from '@gx-mock/datasSource/user/account'
 
 export interface AccountCenterContextProps {
   /* 附加属性 */
-  activeKey: ComputedRef<TabsKey>;
-  countLoading: Ref<boolean>;
-  isMobile: ComputedRef<boolean>;
-  contentHeight: ComputedRef<string>;
-  [key: string]: any;
+  activeKey: ComputedRef<TabsKey>
+  countLoading: Ref<boolean>
+  isMobile: ComputedRef<boolean>
+  contentHeight: ComputedRef<string>
+  [key: string]: any
 }
 
 const contextInjectKey: InjectionKey<AccountCenterContextProps> = Symbol('account-center-context')
 
-export const useContext = <T>(
-  contextInjectKey: string | InjectionKey<T> = Symbol(),
+export function useContext<T>(
+  injectKey: string | InjectionKey<T> = contextInjectKey,
   defaultValue?: T
-): T => {
-  return inject(contextInjectKey, defaultValue || ({} as T))
+) {
+  return inject(injectKey, defaultValue || ({} as T))
 }
 
-export const provideAccountCenterContext = (value: AccountCenterContextProps) => {
+export function provideAccountCenterContext(value: AccountCenterContextProps) {
   provide(contextInjectKey, value)
 }
 
-export const useAccountCenterContext = (defaultValue?: Required<AccountCenterContextProps>) =>
-  useContext<Required<AccountCenterContextProps>>(contextInjectKey, defaultValue)
+export function useAccountCenterContext(defaultValue?: Required<AccountCenterContextProps>) {
+  return useContext<Required<AccountCenterContextProps>>(contextInjectKey, defaultValue)
+}

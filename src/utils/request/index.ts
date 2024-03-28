@@ -1,14 +1,13 @@
 import { message } from 'ant-design-vue'
 import { defaultSettings, network } from '@gx-config'
 import { useStoreUser } from '@/store'
-import { isDev } from '@/utils/env'
+import { isDev, typeViteEnv } from '@/utils/env'
 import { tansParams } from '@/utils/util'
 import { checkURL } from '@/utils/validate'
 import { isBoolean } from '@gx-design-vue/pro-utils'
 import { GAxios } from './XHR'
-import type { XhtInstance } from './typings'
+import type { GAxiosOptions, XhtInstance } from './typings'
 import { RequestEnum } from './typings'
-import type { GAxiosOptions } from './typings'
 import { handleCode } from './checkStatus'
 
 const { tokenName, requestPrefix, mockPrefixUrl } = defaultSettings
@@ -68,7 +67,7 @@ const xhtInstance: XhtInstance = {
       if (config.isMock) {
         config.url = `${mockPrefixUrl}${config.url}`
       } else {
-        config.url = `${import.meta.env.VITE_BASE_URL}${isDev ? requestPrefix || '' : ''}${config.url}`
+        config.url = `${typeViteEnv('VITE_BASE_URL')}${isDev ? requestPrefix || '' : ''}${config.url}`
       }
     }
 
@@ -124,7 +123,7 @@ const xhtInstance: XhtInstance = {
   requestCatchHook: () => false
 }
 
-function createXhr(opt ?: Partial<GAxiosOptions>) {
+function createXhr(opt?: Partial<GAxiosOptions>) {
   return new GAxios({
     method: 'get',
     timeout: requestTimeout,
@@ -140,6 +139,6 @@ function createXhr(opt ?: Partial<GAxiosOptions>) {
   })
 }
 
-const request: <T = any, R = undefined>(opt?: GAxiosOptions) => Promise<ResponseResult<T, R>> = (opt) => createXhr().request(opt)
+const request: <T = any, R = undefined>(opt?: GAxiosOptions) => Promise<ResponseResult<T, R>> = opt => createXhr().request(opt)
 
 export default request

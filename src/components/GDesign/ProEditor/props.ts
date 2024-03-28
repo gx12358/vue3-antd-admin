@@ -22,4 +22,4 @@ export const editorProps = {
   }
 }
 
-export type IPropTypes = Partial<ExtractPropTypes<typeof editorProps>>;
+export type IPropTypes = Partial<ExtractPropTypes<typeof editorProps>>

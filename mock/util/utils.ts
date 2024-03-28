@@ -1,8 +1,9 @@
 import mockjs from 'mockjs'
 import { defaultSettings } from '@gx-config'
 import type { UserDetails } from '@gx-mock/config/user'
-import { userList, tokenAccount } from '@gx-mock/config/user'
-import { Encrypt, Decrypt } from '@gx-mock/util/crypto'
+import { tokenAccount, userList } from '@gx-mock/config/user'
+import { Decrypt, Encrypt } from '@gx-mock/util/crypto'
+import { getRandomNumber } from '@gx-design-vue/pro-utils'
 import { checkBackDataFun, getRequestToken } from '@gx-mock/_util'
 
 const { Random } = mockjs
@@ -23,13 +24,13 @@ export function getTokeUserInfo(token): UserDetails {
 }
 
 export function handleRandomImage(width = 50, height = 50) {
-  return `https://picsum.photos/${width}/${height}?random=${Random?.guid()}`
+  return `https://picsum.photos/${width}/${height}?random=${getRandomNumber().uuid(10)}`
 }
 
 export function checkToken(token) {
   if (token) {
     const useInfo: UserDetails = getTokeUserInfo(token)
-    if (useInfo && useInfo?.userId && userList.some(item => useInfo?.userId === item.user.userId)) return true
+    return useInfo ? useInfo?.userId && userList.some(item => useInfo?.userId === item.user.userId) : false
   }
 
   return !checkMockToken

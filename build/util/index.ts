@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path, { resolve } from 'path'
+import fs from 'node:fs'
+import path, { resolve } from 'node:path'
 import dotenv from 'dotenv'
 
 export const rootPath = process.cwd()
@@ -87,34 +87,42 @@ function q(t) {
 }
 
 function Gt(t, n?: number) {
-  if (t == 0) return '0 Bytes'
-  const e = 1024,
-    r = n || 2,
-    o = [ 'Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ],
-    s = Math.floor(Math.log(t) / Math.log(e))
-  return parseFloat((t / Math.pow(e, s)).toFixed(r)) + ' ' + o[s]
+  if (t === 0)
+    return '0 Bytes'
+  const e = 1024
+  const r = n || 2
+  const o = [ 'Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ]
+  const s = Math.floor(Math.log(t) / Math.log(e))
+  return `${Number.parseFloat((t / e ** s).toFixed(r))} ${o[s]}`
 }
 
 const ot = []
 
 export function getPackageSize({ folder, callBack, format = !0 }) {
   fs.readdir(folder, (err, files) => {
-    if (err) throw err
+    if (err)
+      throw err
 
     let index = 0
     const callBacks = () => {
-      if (++index == files.length) {
+      if (++index === files.length) {
         callBack(format ? Gt(q(ot)) : q(ot))
       }
     }
 
-    files.forEach(p => {
+    files.forEach((p) => {
       fs.stat(`${folder}/${p}`, (err, stat) => {
-        if (err) throw err
-        stat.isFile() ? (ot.push(stat.size), callBacks()) : stat.isDirectory() && getPackageSize({
-          folder: `${folder}/${p}`,
-          callBack: callBacks
-        })
+        if (err)
+          throw err
+        if (stat.isFile()) {
+          ot.push(stat.size)
+          callBacks()
+        } else {
+          getPackageSize({
+            folder: `${folder}/${p}`,
+            callBack: callBacks
+          })
+        }
       })
     })
 

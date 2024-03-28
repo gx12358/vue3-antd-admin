@@ -6,7 +6,7 @@ import { useDict } from '@gx-admin/hooks/system'
 import { useScrollPageList } from '@gx-admin/hooks/web'
 import { getArticleList } from '@/services/listCenter'
 import Empty from '@/components/GlobalLayout/Empty/index.vue'
-import { SearchState } from './typings'
+import type { SearchState } from './typings'
 import useSearchForm from './hooks/useSearchForm'
 import CommonSearch from './components/CommonSearch.vue'
 import { owners } from '../utils/config'
@@ -43,7 +43,7 @@ const authorFetchLoading = computed(() => dictState.sys_common_author?.loading =
   : dictState.sys_common_author?.loading)
 
 const filterOption = (input: string, option: { label: string; value: string; }) => {
-  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+  return option.label.toLowerCase().includes(input.toLowerCase())
 }
 
 watchEffect(() => {
@@ -79,7 +79,7 @@ watchEffect(() => {
   </GProCard>
   <GProCard class="mt-24px">
     <g-spin :spinning="initLoading">
-      <div class="min-h-100px" :class="hasEmpty? 'flex-center py-20px' : ''">
+      <div class="min-h-100px" :class="hasEmpty ? 'flex-center py-20px' : ''">
         <Empty v-if="hasEmpty" />
         <template v-else>
           <div

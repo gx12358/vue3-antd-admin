@@ -1,6 +1,5 @@
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import { theme } from 'ant-design-vue'
-
 
 export function generateModifyVars() {
   const { defaultAlgorithm, defaultSeed } = theme

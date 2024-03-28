@@ -1,4 +1,4 @@
-export type MaterialListItem = {
+export interface MaterialListItem {
   id?: string;
   url?: string;
   previewUrl?: string;

@@ -1,8 +1,7 @@
-import type { Ref, ComputedRef } from 'vue'
-import { inject, InjectionKey, provide } from 'vue'
+import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import { inject, provide } from 'vue'
 
-export type ContextType = any;
-
+export type ContextType = any
 
 export interface VideoContextProps {
   /* 附加属性 */
@@ -17,13 +16,14 @@ export interface VideoContextProps {
   pause?: () => void;
   toggleScreen?: () => Promise<void>;
   changeLoading?: (val: boolean) => void;
+
   [key: string]: any;
 }
 
 const videoContextInjectKey: InjectionKey<VideoContextProps> = Symbol('video-context')
 
 export const useContext = <T>(
-  contextInjectKey: string | InjectionKey<ContextType> = Symbol(),
+  contextInjectKey: string | InjectionKey<ContextType> = videoContextInjectKey,
   defaultValue?: ContextType
 ): T => {
   return inject(contextInjectKey, defaultValue || ({} as T))

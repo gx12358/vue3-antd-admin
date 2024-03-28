@@ -1,4 +1,4 @@
-import { defineComponent, ref, onMounted, computed } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useAudioContext } from '../context'
 import { drag, getMatchRangeTime } from '../utils/util'
 import useAudio from '../hooks/useAudio'
@@ -29,13 +29,7 @@ const Progress = defineComponent({
       } else return `calc(${progress.value}% - 6px)`
     })
 
-    onMounted(() => {
-      onEvent(context.player.value, [audioEvent.TIMEUPDATE], timeUpdate)
-      onEvent(context.player.value, [audioEvent.PROGRESS], downLoad)
-      onEvent(context.player.value, [audioEvent.LOADSTART], loadstart)
-    })
-
-    const timeUpdate = () => {
+    function timeUpdate() {
       if (_dragEl.value) {
         return
       }
@@ -44,23 +38,31 @@ const Progress = defineComponent({
       progress.value = Number(((time / duration) * 100).toFixed(2))
     }
 
-    const downLoad = () => {
+    function downLoad() {
       const currentTime = context.player.value?.currentTime || 0
       const bufferTime = getMatchRangeTime(currentTime, context.player.value?.buffered)
       const duration = context.player.value?.duration || 0
       if (bufferTime > 0 && duration > 0) {
         const bufferNumber = Number(((bufferTime / duration) * 100).toFixed(2))
-        if (bufferNumber > bufferProgress.value) bufferProgress.value = bufferNumber
+        if (bufferNumber > bufferProgress.value)
+          bufferProgress.value = bufferNumber
       }
     }
 
-    const loadstart = () => {
+    function loadstart() {
       const currentTime = context.player.value.currentTime || 0
       const bufferTime = getMatchRangeTime(currentTime, context.player.value.buffered)
       const duration = context.player.value.duration || 0
       const bufferNumber = Number(((bufferTime / duration) * 100).toFixed(2))
-      if (bufferNumber > bufferProgress.value) bufferProgress.value = bufferNumber
+      if (bufferNumber > bufferProgress.value)
+        bufferProgress.value = bufferNumber
     }
+
+    onMounted(() => {
+      onEvent(context.player.value, [ audioEvent.TIMEUPDATE ], timeUpdate)
+      onEvent(context.player.value, [ audioEvent.PROGRESS ], downLoad)
+      onEvent(context.player.value, [ audioEvent.LOADSTART ], loadstart)
+    })
 
     const seek = (e) => {
       if (currentMoveType.value) {
@@ -87,7 +89,7 @@ const Progress = defineComponent({
         ? Number(getComputedStyle(_dragEl.value, null).marginLeft.split('px')[0])
         : Number(getComputedStyle(_dragEl.value, null).marginLeft)
       if (marginLeft) {
-        marginLeft = parseFloat(marginLeft)
+        marginLeft = Number.parseFloat(`${marginLeft}`)
       }
 
       const coor = {
@@ -122,7 +124,7 @@ const Progress = defineComponent({
       document.addEventListener('mouseup', stopMove, false)
     }
 
-    const handleMouseDown = (e) => initDrag(e)
+    const handleMouseDown = e => initDrag(e)
 
     expose({
       remove: removeAllEvent

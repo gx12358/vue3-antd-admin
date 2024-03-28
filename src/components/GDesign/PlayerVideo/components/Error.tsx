@@ -1,7 +1,7 @@
 import type { FunctionalComponent as FC } from 'vue'
 import { isFunction } from '@gx-design-vue/pro-utils'
 
-export type ErrorPlayer = {
+export interface ErrorPlayer {
   open: boolean
   prefixCls: string
   refresh: () => void
@@ -11,7 +11,11 @@ export type ErrorPlayer = {
 
 const DefaultError = (refresh: ErrorPlayer['refresh']) => (
   <>
-    请&nbsp;<a onClick={refresh}>刷新</a>&nbsp;试试
+    请
+    &nbsp;
+    <a onClick={refresh}>刷新</a>
+    &nbsp;
+    试试
   </>
 )
 

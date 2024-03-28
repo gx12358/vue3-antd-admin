@@ -1,3 +1,33 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import dayjs from 'dayjs'
+import { GProField, type ProFieldFCMode } from '@gx-design-vue/pro-field'
+
+const state = ref<ProFieldFCMode>('read')
+const plain = ref(false)
+const dateTime = ref(dayjs('2019-11-16 12:50:26').valueOf())
+const code = ref(`yarn run v1.22.0
+$ eslint --format=pretty ./packages
+Done in 9.70s.`)
+const jsonCode = ref(`{
+  "compilerOptions": {
+    "target": "esnext",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/src", "**/docs", "scripts", "**/demo", ".eslintrc.js"]
+}
+`)
+</script>
+
 <template>
   <g-pro-page-container>
     <a-typography>
@@ -68,16 +98,16 @@
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
-                status: 'Error'
+                status: 'Error',
               },
               closed: {
                 text: '已解决',
-                status: 'Success'
+                status: 'Success',
               },
               processing: {
                 text: '解决中',
-                status: 'Processing'
-              }
+                status: 'Processing',
+              },
             }"
           />
         </a-descriptions-item>
@@ -90,16 +120,16 @@
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
-                status: 'Error'
+                status: 'Error',
               },
               closed: {
                 text: '已解决',
-                status: 'Success'
+                status: 'Success',
               },
               processing: {
                 text: '解决中',
-                status: 'Processing'
-              }
+                status: 'Processing',
+              },
             }"
           />
         </a-descriptions-item>
@@ -108,12 +138,12 @@
             :text="[
               {
                 value: 'open1',
-                label: '打开'
+                label: '打开',
               },
               {
                 value: 'closed2',
-                label: '关闭'
-              }
+                label: '关闭',
+              },
             ]"
             :mode="state"
             valueType="checkbox"
@@ -121,16 +151,16 @@
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
-                status: 'Error'
+                status: 'Error',
               },
               closed: {
                 text: '已解决',
-                status: 'Success'
+                status: 'Success',
               },
               processing: {
                 text: '解决中',
-                status: 'Processing'
-              }
+                status: 'Processing',
+              },
             }"
           />
         </a-descriptions-item>
@@ -143,16 +173,16 @@
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
-                status: 'Error'
+                status: 'Error',
               },
               closed: {
                 text: '已解决',
-                status: 'Success'
+                status: 'Success',
               },
               processing: {
                 text: '解决中',
-                status: 'Processing'
-              }
+                status: 'Processing',
+              },
             }"
           />
         </a-descriptions-item>
@@ -165,16 +195,16 @@
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
-                status: 'Error'
+                status: 'Error',
               },
               closed: {
                 text: '已解决',
-                status: 'Success'
+                status: 'Success',
               },
               processing: {
                 text: '解决中',
-                status: 'Processing'
-              }
+                status: 'Processing',
+              },
             }"
           />
         </a-descriptions-item>
@@ -194,9 +224,9 @@
                 optionType: 'optGroup',
                 options: [
                   { label: '不解决', value: 'no' },
-                  { label: '已废弃', value: 'clear' }
-                ]
-              }
+                  { label: '已废弃', value: 'clear' },
+                ],
+              },
             ]"
           />
         </a-descriptions-item>
@@ -216,11 +246,11 @@
                     children: [
                       {
                         value: 'xihu',
-                        label: 'West Lake'
-                      }
-                    ]
-                  }
-                ]
+                        label: 'West Lake',
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 value: 'jiangsu',
@@ -232,12 +262,12 @@
                     children: [
                       {
                         value: 'zhonghuamen',
-                        label: 'Zhong Hua Men'
-                      }
-                    ]
-                  }
-                ]
-              }
+                        label: 'Zhong Hua Men',
+                      },
+                    ],
+                  },
+                ],
+              },
             ]"
           />
         </a-descriptions-item>
@@ -251,7 +281,7 @@
               :valueType="{
                 type: 'percent',
                 showSymbol: true,
-                showColor: true
+                showColor: true,
               }"
               mode="read"
             />
@@ -260,7 +290,7 @@
               :valueType="{
                 type: 'percent',
                 showSymbol: true,
-                showColor: true
+                showColor: true,
               }"
               mode="read"
             />
@@ -269,7 +299,7 @@
               :valueType="{
                 type: 'percent',
                 showSymbol: true,
-                showColor: true
+                showColor: true,
               }"
               mode="read"
             />
@@ -313,7 +343,7 @@
           <GProField
             :text="[
               dayjs('2019-11-16 12:50:26').add(-1, 'd').valueOf(),
-              dayjs('2019-11-16 12:50:26').valueOf()
+              dayjs('2019-11-16 12:50:26').valueOf(),
             ]"
             valueType="dateRange"
             :mode="state"
@@ -324,7 +354,7 @@
           <GProField
             :text="[
               dayjs('2019-11-16 12:50:26').add(-1, 'd').valueOf(),
-              dayjs('2019-11-16 12:50:26').valueOf()
+              dayjs('2019-11-16 12:50:26').valueOf(),
             ]"
             valueType="dateTimeRange"
             :mode="state"
@@ -365,36 +395,6 @@
     </a-typography>
   </g-pro-page-container>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import dayjs from 'dayjs'
-import { GProField, type ProFieldFCMode } from '@gx-design-vue/pro-field'
-
-const state = ref<ProFieldFCMode>('read')
-const plain = ref(false)
-const dateTime = ref(dayjs('2019-11-16 12:50:26').valueOf())
-const code = ref(`yarn run v1.22.0
-$ eslint --format=pretty ./packages
-Done in 9.70s.`)
-const jsonCode = ref(`{
-  "compilerOptions": {
-    "target": "esnext",
-    "moduleResolution": "node",
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "declaration": true,
-    "skipLibCheck": true
-  },
-  "include": ["**/src", "**/docs", "scripts", "**/demo", ".eslintrc.js"]
-}
-`)
-</script>
 
 <style lang="less" scoped>
 &:deep(pre) {

@@ -55,7 +55,6 @@ export function useDict(type: DictType | DictType[]) {
           dictState[dictType].loading = false
         }
       }
-      return
     }
   }
 

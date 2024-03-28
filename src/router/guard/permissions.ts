@@ -1,4 +1,4 @@
-import type { Router, RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, Router } from 'vue-router'
 import { defaultSettings } from '@gx-config'
 
 const { authentication, loginInterception, recordRoute, routesWhiteList } = defaultSettings

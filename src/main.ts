@@ -1,13 +1,12 @@
 import { createApp } from 'vue'
-
-import { router, setupRouter } from '@/router'
-import { setupRouterGuard } from '@/router/guard'
-import { isBuild, typeViteEnv } from '@/utils/env'
+import { setupProdMockServer } from '@gx-mock/_createProductionServer'
 
 import App from './App.vue'
 import { setupStore } from './store'
 import { setupGlobCommon } from './core'
-import { setupProdMockServer } from '@gx-mock/_createProductionServer'
+import { router, setupRouter } from './router'
+import { setupRouterGuard } from './router/guard'
+import { isBuild, typeViteEnv } from './utils/env'
 
 import 'uno.css'
 import 'nprogress/nprogress.css'

@@ -13,15 +13,11 @@ export function paramObj(url) {
   if (!search) {
     return {}
   }
-  return JSON.parse(
-    '{"' +
-    decodeURIComponent(search)
-      .replace(/"/g, '\\"')
-      .replace(/&/g, '","')
-      .replace(/=/g, '":"')
-      .replace(/\+/g, ' ') +
-    '"}'
-  )
+  return JSON.parse(`{"${decodeURIComponent(search)
+    .replace(/"/g, '\\"')
+    .replace(/&/g, '","')
+    .replace(/=/g, '":"')
+    .replace(/\+/g, ' ')}"}`)
 }
 
 /**
@@ -32,10 +28,10 @@ export function paramObj(url) {
  */
 export function translateDataToTree(data) {
   const parent = data.filter(
-    (value) => value.parentId === 'undefined' || value.parentId == null
+    value => value.parentId === 'undefined' || value.parentId == null
   )
   const children = data.filter(
-    (value) => value.parentId !== 'undefined' && value.parentId != null
+    value => value.parentId !== 'undefined' && value.parentId != null
   )
   const translator = (parent, children) => {
     parent.forEach((parent) => {
@@ -101,7 +97,7 @@ export function tenBitTimestamp(time) {
   let second: any = date.getSeconds()
   minute = minute < 10 ? '0' + minute : minute
   second = second < 10 ? '0' + second : second
-  return y + '年' + m + '月' + d + '日 ' + h + ':' + minute + ':' + second //组合
+  return y + '年' + m + '月' + d + '日 ' + h + ':' + minute + ':' + second // 组合
 }
 
 /**
@@ -123,5 +119,5 @@ export function thirteenBitTimestamp(time) {
   let second: any = date.getSeconds()
   minute = minute < 10 ? '0' + minute : minute
   second = second < 10 ? '0' + second : second
-  return y + '年' + m + '月' + d + '日 ' + h + ':' + minute + ':' + second //组合
+  return y + '年' + m + '月' + d + '日 ' + h + ':' + minute + ':' + second // 组合
 }

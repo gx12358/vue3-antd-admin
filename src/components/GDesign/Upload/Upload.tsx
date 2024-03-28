@@ -1,34 +1,34 @@
-import type { ExtractPropTypes, CSSProperties, SlotsType } from 'vue'
-import type { WithFalse, CustomRender } from '@gx-design-vue/pro-utils'
+import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
+import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import {
   computed,
   defineComponent,
   onDeactivated,
   onUnmounted,
-  ref,
-  unref,
   reactive,
-  toRefs
+  ref,
+  toRefs,
+  unref
 } from 'vue'
 import { cloneDeep, pick } from 'lodash-es'
-import { message, Upload } from 'ant-design-vue'
+import { Upload, message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import global from '@/common/global'
 import { download } from '@/services/common'
 import { createFileName } from '@/utils/uploadFile'
 import {
-  getPrefixCls,
-  getSlotVNode,
   checkFileType,
-  getFileSuffix,
-  getMediaInfos,
-  getVideoCoverPicture,
+  dataURLtoBlob,
   dataURLtoFile,
   getBase64,
-  dataURLtoBlob,
   getBlobUrl,
+  getFileSuffix,
+  getMediaInfos,
+  getPrefixCls,
   getRandomNumber,
-  getSlot
+  getSlot,
+  getSlotVNode,
+  getVideoCoverPicture
 } from '@gx-design-vue/pro-utils'
 import { proUploadProps } from './props'
 import { provideUploadContext } from './UploadContext'
@@ -114,7 +114,7 @@ const GUpload = defineComponent({
       let isFileSize = true
       let isFileDuration = true
       if (props.fileType.length > 0) {
-        if (props.fileType.length === 1 && props.fileType[0] == '*') {
+        if (props.fileType.length === 1 && props.fileType[0] === '*') {
           isFileType = true
         } else {
           isFileType = props.fileType.includes(fileSuffix.toLowerCase())
@@ -141,8 +141,8 @@ const GUpload = defineComponent({
             loadingText: '正在准备中...'
           })
         } else {
-          const idName = getDataValueRef.value[0].id
-          changeDataValue(idName, {
+          const uuid = getDataValueRef.value[0].id
+          changeDataValue(uuid, {
             name: file.name,
             size: file.size,
             uploadLoading: true,
@@ -154,7 +154,8 @@ const GUpload = defineComponent({
           url: file,
           fileType
         })
-        if (play) fileDuration = duration || 0
+        if (play)
+          fileDuration = duration || 0
         isFileDuration = props.fileDuration ? fileDuration < props.fileDuration : true
         if ((fileType === '2' || fileType === '3') && !isFileDuration) {
           message.error(`请上传${props.fileDuration}s以内的文件!`)
@@ -168,6 +169,110 @@ const GUpload = defineComponent({
           deleteFileDataValue(file)
         }
       })
+    }
+
+    const mediaCropper = async (uid, state?: { file: File; url: string }) => {
+      const fileUrl = state?.url || unref(getDataValueRef).find(item => item.id === uid)?.url || ''
+      const fileSuffix = getFileSuffix(fileUrl)
+      imageEditor.value?.openModal(fileUrl, {
+        suffix: fileSuffix,
+        uid
+      })
+    }
+
+    const uploadCoverImgHttp = async (file, uuid) => {
+      if (props.request) {
+        const response = await props.request(file, uuid)
+        if (response.code === 0) {
+          return response.previewUrl
+        } else {
+          emit('errorRequest', response)
+        }
+      }
+      return ''
+    }
+
+    const handleChange = async (res: Partial<MaterialListItem>, uid) => {
+      if (unref(getDataValueRef).find(item => item.id === uid)) {
+        changeDataValue(uid, {
+          uploadStatus: 'active',
+          uploadLoading: true,
+          spinning: true,
+          loadingText: '获取信息中...'
+        })
+        const fileItem = unref(getDataValueRef).find(item => item.id === uid) as MaterialListItem
+        const { name = '' } = fileItem
+        let { coverImg = '' } = fileItem
+        const { allowFormat, allowPlay } = fileItem
+        if (coverImg) {
+          const coverFile = dataURLtoFile(coverImg, `${name.split('.')[0]}_cover.png`)
+          coverImg = await uploadCoverImgHttp(coverFile, uid)
+        }
+        changeDataValue(uid, {
+          loadingText: '',
+          uploadStatus: 'success',
+          allowPlay,
+          progress: 100,
+          loadStatusMsg: allowFormat ? (allowPlay ? '' : '加载失败') : '无法在线预览',
+          uploadLoading: false,
+          ...res,
+          coverImg
+        })
+        emit(
+          'change',
+          cloneDeep(unref(getUrlValueRef)),
+          cloneDeep(unref(getDataValueRef))
+        )
+      } else {
+        changeDataValue(uid, {
+          loadingText: '',
+          uploadStatus: 'exception',
+          uploadLoading: false
+        })
+      }
+    }
+
+    const deleteFile = async (uuid) => {
+      const fileUrl = unref(getDataValueRef).find(item => item.id === uuid)
+      if (props.deleteBefore)
+        await props.deleteBefore(fileUrl)
+      deleteDataValue(uuid)
+      emit(
+        'change',
+        cloneDeep(unref(getUrlValueRef)),
+        cloneDeep(unref(getDataValueRef))
+      )
+    }
+
+    const requestUpload = async (file, uid) => {
+      const base64: string | ArrayBuffer | null = await getBase64(file)
+      if (props.request) {
+        const response = await props.request(
+          file,
+          uid,
+          unref(getDataValueRef).find(item => item.id === uid)
+        )
+        if (response && response.code === 0) {
+          handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, uid)
+        } else {
+          emit('errorRequest', response)
+          if (props.errorClean) {
+            deleteFile(uid)
+          } else {
+            changeDataValue(uid, {
+              loadingText: '',
+              uploadStatus: 'exception',
+              uploadLoading: false
+            })
+          }
+        }
+      } else {
+        handleChange({
+          url: getBlobUrl(dataURLtoBlob(base64)),
+          previewUrl: getBlobUrl(dataURLtoBlob(base64)),
+          localPreviewUrl: getBlobUrl(dataURLtoBlob(base64))
+        }, uid)
+      }
     }
 
     const uploadHttp = async ({ file }) => {
@@ -296,99 +401,6 @@ const GUpload = defineComponent({
       }
     }
 
-    const requestUpload = async (file, uid) => {
-      const base64: string | ArrayBuffer | null = await getBase64(file)
-      if (props.request) {
-        const response = await props.request(file, uid, unref(getDataValueRef).find(
-          (item) => item.id === uid
-        ))
-        if (response && response.code === 0) {
-          handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, uid)
-        } else {
-          emit('errorRequest', response)
-          if (props.errorClean) {
-            deleteFile(uid)
-          } else {
-            changeDataValue(uid, {
-              loadingText: '',
-              uploadStatus: 'exception',
-              uploadLoading: false
-            })
-          }
-        }
-      } else {
-        handleChange({
-          url: getBlobUrl(dataURLtoBlob(base64)),
-          previewUrl: getBlobUrl(dataURLtoBlob(base64)),
-          localPreviewUrl: getBlobUrl(dataURLtoBlob(base64))
-        }, uid)
-      }
-    }
-
-    const uploadCoverImgHttp = async (file, idName) => {
-      if (props.request) {
-        const response = await props.request(file, idName)
-        if (response.code === 0) {
-          return response.previewUrl
-        } else {
-          emit('errorRequest', response)
-        }
-      }
-      return ''
-    }
-
-    const handleChange = async (res: Partial<MaterialListItem>, uid) => {
-      if (unref(getDataValueRef).find((item) => item.id === uid)) {
-        changeDataValue(uid, {
-          uploadStatus: 'active',
-          uploadLoading: true,
-          spinning: true,
-          loadingText: '获取信息中...'
-        })
-        const fileItem = unref(getDataValueRef).find(
-          (item) => item.id === uid
-        ) as MaterialListItem
-        const { name = '' } = fileItem
-        let { coverImg = '' } = fileItem
-        const { allowFormat, allowPlay } = fileItem
-        if (coverImg) {
-          const coverFile = dataURLtoFile(coverImg, `${name.split('.')[0]}_cover.png`)
-          coverImg = await uploadCoverImgHttp(coverFile, uid)
-        }
-        changeDataValue(uid, {
-          loadingText: '',
-          uploadStatus: 'success',
-          allowPlay,
-          progress: 100,
-          loadStatusMsg: allowFormat ? (allowPlay ? '' : '加载失败') : '无法在线预览',
-          uploadLoading: false,
-          ...res,
-          coverImg
-        })
-        emit(
-          'change',
-          cloneDeep(unref(getUrlValueRef)),
-          cloneDeep(unref(getDataValueRef))
-        )
-      } else {
-        changeDataValue(uid, {
-          loadingText: '',
-          uploadStatus: 'exception',
-          uploadLoading: false
-        })
-      }
-    }
-
-    const mediaCropper = async (uid, state?: { file: File; url: string }) => {
-      const fileUrl = state?.url ||
-        unref(getDataValueRef).find((item) => item.id === uid)?.url || ''
-      const fileSuffix = getFileSuffix(fileUrl)
-      imageEditor.value?.openModal(fileUrl, {
-        suffix: fileSuffix,
-        uid
-      })
-    }
-
     const handleEditOk = async (base64Url: string, params: { suffix: string; uid: string }) => {
       changeDataValue(
         params.uid,
@@ -433,16 +445,16 @@ const GUpload = defineComponent({
     const downLoad = async (url) => {
       emit('downLoad', true)
       await download({
-        url: url,
+        url,
         direct: true
       })
       emit('downLoad', false)
     }
 
-    const watermark = async (idName, type) => {
-      const fileUrl = unref(getDataValueRef).find((item) => item.id === idName)?.url || ''
+    const watermark = async (uuid, type) => {
+      const fileUrl = unref(getDataValueRef).find(item => item.id === uuid)?.url || ''
       if (props.waterChange && fileUrl) {
-        changeDataValue(idName, {
+        changeDataValue(uuid, {
           progress: 0,
           uploadStatus: 'active',
           uploadLoading: true,
@@ -451,7 +463,7 @@ const GUpload = defineComponent({
         })
         const response = await props.waterChange(fileUrl, type)
         if (response && response.code === 0) {
-          changeDataValue(idName, {
+          changeDataValue(uuid, {
             progress: 100,
             uploadStatus: 'success',
             uploadLoading: false,
@@ -466,7 +478,7 @@ const GUpload = defineComponent({
           )
         } else {
           emit('errorRequest', response)
-          changeDataValue(idName, {
+          changeDataValue(uuid, {
             progress: 100,
             uploadStatus: 'success',
             uploadLoading: false,
@@ -477,22 +489,11 @@ const GUpload = defineComponent({
       }
     }
 
-    const deleteFile = async (idName) => {
-      const fileUrl = unref(getDataValueRef).find((item) => item.id === idName)
-      if (props.deleteBefore) await props.deleteBefore(fileUrl)
-      deleteDataValue(idName)
-      emit(
-        'change',
-        cloneDeep(unref(getUrlValueRef)),
-        cloneDeep(unref(getDataValueRef))
-      )
-    }
-
     const uploadRender = (children: any) => (
       <Upload
         class={`${baseClassName}-upload`}
-        beforeUpload={(e) => beforeUpload(e)}
-        customRequest={(e) => uploadHttp(e)}
+        beforeUpload={e => beforeUpload(e)}
+        customRequest={e => uploadHttp(e)}
         disabled={props.disabled}
         maxCount={1}
         accept={props.accept}
@@ -505,7 +506,8 @@ const GUpload = defineComponent({
     )
 
     const renderUploadButton = () => {
-      if (!showUpload.value) return null
+      if (!showUpload.value)
+        return null
       const triggerIconRender = getSlot<WithFalse<() => CustomRender>>(
         slots,
         props,
@@ -574,9 +576,9 @@ const GUpload = defineComponent({
                   customOperationRender={customOperationRender}
                   root={uploadCard.value}
                   onView={(type, url) => view(type, url)}
-                  onDelete={(idName) => deleteFile(idName)}
-                  onDownload={(url) => downLoad(url)}
-                  onWaterMark={(idName, type) => watermark(idName, type)}
+                  onDelete={uuid => deleteFile(uuid)}
+                  onDownload={url => downLoad(url)}
+                  onWaterMark={(uuid, type) => watermark(uuid, type)}
                   onMediaCropper={mediaCropper}
                 />
               )}
@@ -587,7 +589,7 @@ const GUpload = defineComponent({
           <ImageEditorModal ref={imageEditor} onOk={handleEditOk} />
           <MaterialView
             {...previewConfig}
-            onChange={(visible) => (previewConfig.visible = visible)}
+            onChange={visible => (previewConfig.visible = visible)}
           />
         </>
       )

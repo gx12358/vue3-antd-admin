@@ -1,17 +1,23 @@
 import type { Ref } from 'vue'
-import { ref, createVNode, onMounted } from 'vue'
+import { createVNode, onMounted, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { generateVidoePicture, getFileSuffix, getMediaInfos, getRandomNumber, checkFileType } from '@gx-design-vue/pro-utils'
+import {
+  checkFileType,
+  generateVidoePicture,
+  getFileSuffix,
+  getMediaInfos,
+  getRandomNumber
+} from '@gx-design-vue/pro-utils'
 import { useOss } from './useOss'
 
-export type UploadItem = {
+export interface UploadItem {
   id: string;
   name: string;
   fileName: string;
-  title?:string;
+  title?: string;
   suffix?: string;
   size: number;
   file?: File;
@@ -29,7 +35,7 @@ export type UploadItem = {
   checkpoint?: string;
 }
 
-export type UploadConfig = {
+export interface UploadConfig {
   uid?: string;
   client?: any;
   name?: string;
@@ -75,6 +81,13 @@ export function useListUpload(limit?: Ref<number>) {
 
   const dataList = ref<Partial<UploadItem[]>>([])
 
+  const clearData = () => {
+    dataList.value.forEach((item) => {
+      item.ossClient && item.ossClient?.cancel()
+    })
+    dataList.value = []
+  }
+
   onMounted(() => {
     clearData()
     window.addEventListener('beforeunload', (e) => {
@@ -84,15 +97,7 @@ export function useListUpload(limit?: Ref<number>) {
     })
   })
 
-  const clearData = () => {
-    dataList.value.forEach((item) => {
-      item.ossClient && item.ossClient?.cancel()
-    })
-    dataList.value = []
-  }
-
-  // @ts-ignore
-  onBeforeRouteLeave((to, form, next) => {
+  onBeforeRouteLeave((_to, _form, next) => {
     if (dataList.value.some(item => (item.status === 'uploading' || item.status === 'success'))) {
       const status = dataList.value.find(item => (item.status === 'uploading' || item.status === 'success')).status
       Modal.confirm({
@@ -113,6 +118,15 @@ export function useListUpload(limit?: Ref<number>) {
     }
   })
 
+  const changeListItem = (key: string, params: Partial<UploadItem>) => {
+    dataList.value = dataList.value.map((item) => {
+      if (item.id === key) {
+        Object.assign(item, params)
+      }
+      return item
+    })
+  }
+
   const getFileConfig = async (file: File, key: string) => {
     getMediaInfos({ url: file, fileType: checkFileType(file.name) }).then(({
       play, width = 0, height = 0, duration = 0
@@ -122,12 +136,12 @@ export function useListUpload(limit?: Ref<number>) {
         height,
         duration
       })
-      console.log(play)
-      if (play) generateVidoePicture(URL.createObjectURL(file)).then(coverImage => {
-        changeListItem(key, {
-          coverImage
+      if (play)
+        generateVidoePicture(URL.createObjectURL(file)).then((coverImage) => {
+          changeListItem(key, {
+            coverImage
+          })
         })
-      })
     })
   }
 
@@ -137,7 +151,8 @@ export function useListUpload(limit?: Ref<number>) {
   }
 
   const addListItem = (file: File, name, ossClient) => {
-    if (dataList.value.length >= (limit.value || 5)) return
+    if (dataList.value.length >= (limit.value || 5))
+      return
     const id = getRandomNumber().uuid(15)
     const fileName = file.name.substring(0, file.name.lastIndexOf('.'))
     dataList.value.push({
@@ -153,18 +168,10 @@ export function useListUpload(limit?: Ref<number>) {
     return id
   }
 
-  const changeListItem = (key: string, params: Partial<UploadItem>) => {
-    dataList.value = dataList.value.map(item => {
-      if (item.id === key) {
-        Object.assign(item, params)
-      }
-      return item
-    })
-  }
-
   const clearItems = (keys: string[]) => {
-    dataList.value = dataList.value.map(item => {
-      if (keys.includes(item.id)) item.ossClient && item.ossClient?.cancel()
+    dataList.value = dataList.value.map((item) => {
+      if (keys.includes(item.id))
+        item.ossClient && item.ossClient?.cancel()
       return item
     }).filter(el => !keys.includes(el.id))
   }
@@ -183,7 +190,6 @@ export function useListUpload(limit?: Ref<number>) {
           finalCallBck && finalCallBck?.()
         }
       })
-      return
     } else {
       callback()
     }
@@ -237,7 +243,7 @@ export function useListUpload(limit?: Ref<number>) {
           progressCallback && progressCallback(progressNum, cpt)
         }
       })
-      .then(async res => {
+      .then(async (res) => {
         const originInfo = handleOssResponse(res?.res || {})
         if (originInfo.url) {
           const ossUrl = await getSignUrl({
@@ -259,7 +265,8 @@ export function useListUpload(limit?: Ref<number>) {
             const { success, params } = await successCallback?.(getListItem(uid))
             warehousingParams.status = success ? 'success' : 'failed'
             if (success) {
-              if (params) changeListItem(uid, params)
+              if (params)
+                changeListItem(uid, params)
             } else {
               warehousingParams.failedCode = 1
               warehousingParams.failedMsg = '入库失败，请重新上传！'
@@ -268,7 +275,8 @@ export function useListUpload(limit?: Ref<number>) {
 
           changeListItem(uid, warehousingParams)
 
-          if (finalCallBack) finalCallBack?.(uid)
+          if (finalCallBack)
+            finalCallBack?.(uid)
         } else {
           changeListItem(uid, {
             failedCode: 0,
@@ -277,7 +285,7 @@ export function useListUpload(limit?: Ref<number>) {
           })
         }
       })
-      .catch(e => {
+      .catch((e) => {
         changeListItem(uid, {
           failedCode: 0,
           status: 'failed',
@@ -309,7 +317,7 @@ export function useListUpload(limit?: Ref<number>) {
           progressCallback && progressCallback(progressNum, cpt)
         }
       })
-      .then(async res => {
+      .then(async (res) => {
         const originInfo = handleOssResponse(res?.res || {})
         if (originInfo.url) {
           const ossUrl = await getSignUrl({
@@ -331,7 +339,8 @@ export function useListUpload(limit?: Ref<number>) {
             const { success, params } = await successCallback?.(getListItem(uid))
             warehousingParams.status = success ? 'success' : 'failed'
             if (success) {
-              if (params) changeListItem(uid, params)
+              if (params)
+                changeListItem(uid, params)
             } else {
               warehousingParams.failedCode = 1
               warehousingParams.failedMsg = '入库失败，请重新上传！'
@@ -347,7 +356,7 @@ export function useListUpload(limit?: Ref<number>) {
           })
         }
       })
-      .catch(e => {
+      .catch((e) => {
         changeListItem(uid, {
           failedCode: 0,
           status: 'failed',

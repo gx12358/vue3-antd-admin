@@ -1,8 +1,8 @@
 import type { ComputedRef, InjectionKey } from 'vue'
 import { inject, provide } from 'vue'
-import { MaterialListItem } from './typings'
+import type { MaterialListItem } from './typings'
 
-export type ContextType = any;
+export type ContextType = any
 
 export interface UploadContextProps {
   uploadList: ComputedRef<MaterialListItem[]>,
@@ -14,7 +14,7 @@ export interface UploadContextProps {
 const uploadContextInjectKey: InjectionKey<UploadContextProps> = Symbol('upload-context')
 
 export const useContext = <T>(
-  contextInjectKey: string | InjectionKey<ContextType> = Symbol(),
+  contextInjectKey: string | InjectionKey<ContextType> = uploadContextInjectKey,
   defaultValue?: ContextType
 ): T => {
   return inject(contextInjectKey, defaultValue || ({} as T))
@@ -24,6 +24,7 @@ export const provideUploadContext = (value: UploadContextProps) => {
   provide(uploadContextInjectKey, value)
 }
 
-export const useUploadContext = () =>
-  useContext<Required<UploadContextProps>>(uploadContextInjectKey, [])
-
+export const useUploadContext = () => useContext<Required<UploadContextProps>>(
+  uploadContextInjectKey,
+  []
+)

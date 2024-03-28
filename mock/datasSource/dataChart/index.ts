@@ -1,6 +1,6 @@
 import { getMockRequest } from '@gx-mock/util/utils'
 
-export type RadarRecord = {
+export interface RadarRecord {
   name: string;
   label: string;
   value: number;

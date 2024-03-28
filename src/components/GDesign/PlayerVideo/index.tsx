@@ -1,6 +1,6 @@
-import { defineComponent, computed, ref, onMounted, toRef } from 'vue'
+import { computed, defineComponent, onMounted, ref, toRef } from 'vue'
 import { useFullscreen } from '@vueuse/core'
-import { getPrefixCls, isArray, getRandomNumber } from '@gx-design-vue/pro-utils'
+import { getPrefixCls, getRandomNumber, isArray } from '@gx-design-vue/pro-utils'
 import { videoProps } from './props'
 import useVideo from './hooks/useVideo'
 import { provideVideoContext } from './context'
@@ -37,23 +37,24 @@ const GPlayerVideo = defineComponent({
     const { toggle, isFullscreen } = useFullscreen(playerRef)
 
     const videoSource = computed(() => {
-      if (isArray(props.src)) return (props.src as VideoSource[])?.[0].src || ''
+      if (isArray(props.src))
+        return (props.src as VideoSource[])?.[0].src || ''
       return props.src as string
     })
 
-    onMounted(() => {
-      initPlayer()
-    })
+    const removeAllEvents = () => {
+      loadingLayer.value?.remove()
+    }
 
     const initPlayer = () => {
       if (videoSource.value) {
-        onEvent(player.value, [videoEvent.PLAY], () => {
+        onEvent(player.value, [ videoEvent.PLAY ], () => {
           isPlaying.value = true
         })
-        onEvent(player.value, [videoEvent.PAUSE], () => {
+        onEvent(player.value, [ videoEvent.PAUSE ], () => {
           isPlaying.value = false
         })
-        onEvent(player.value, [videoEvent.ERROR], () => {
+        onEvent(player.value, [ videoEvent.ERROR ], () => {
           isError.value = true
           removeAllEvents()
         })
@@ -61,6 +62,10 @@ const GPlayerVideo = defineComponent({
         isError.value = true
       }
     }
+
+    onMounted(() => {
+      initPlayer()
+    })
 
     const refreshVideo = () => {
       removeAllEvents()
@@ -74,11 +79,13 @@ const GPlayerVideo = defineComponent({
     }
 
     const play = () => {
-      if (!loading.value) player.value.play()
+      if (!loading.value)
+        player.value.play()
     }
 
     const pause = () => {
-      if (!loading.value) player.value.pause()
+      if (!loading.value)
+        player.value.pause()
     }
 
     const changeLoading = (val: boolean) => (loading.value = val)
@@ -96,10 +103,6 @@ const GPlayerVideo = defineComponent({
       toggleScreen: toggle,
       changeLoading
     })
-
-    const removeAllEvents = () => {
-      loadingLayer.value?.remove()
-    }
 
     expose({
       destroy: () => removeAllEvents()
@@ -122,7 +125,7 @@ const GPlayerVideo = defineComponent({
                 class={`${className}-play-pause`}
               />
               <Error open={isError.value} prefixCls={className} refresh={() => refreshVideo()} />
-              <Loading ref={(e) => (loadingLayer.value = e)} prefixCls={`${className}`} />
+              <Loading ref={e => (loadingLayer.value = e)} prefixCls={`${className}`} />
             </div>
             <Controls ref={controlsLayer} open={!isError.value} prefixCls={className} />
           </div>

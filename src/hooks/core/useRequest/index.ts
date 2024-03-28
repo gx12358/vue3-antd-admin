@@ -1,13 +1,13 @@
-import type { Ref, WatchSource, UnwrapRef, MaybeRef } from 'vue'
-import { ref, watch, computed, isRef, isReactive, reactive } from 'vue'
+import type { MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
+import { computed, isReactive, isRef, reactive, ref, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { useThrottleFn } from '@vueuse/core'
 import { useState } from '@gx-design-vue/pro-hooks'
-import type { GAxiosOptions, CancelOptions } from '@/utils/request/typings'
+import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
 
-type DefaultToT<T, R> = R extends undefined ? T : R;
+type DefaultToT<T, R> = R extends undefined ? T : R
 
-function useRequest<T,  P = any, R = undefined,>(
+function useRequest<T, P = any, R = undefined, >(
   service: (opt: P, config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T>>,
   options: {
     params?: MaybeRef<P>;
@@ -46,7 +46,11 @@ function useRequest<T,  P = any, R = undefined,>(
 
   const mergeParams = (opt?: P) => Object.assign(
     state.params,
-    { ...(opt || {}), ...((isRef(options.params) ? options.params?.value as P : options.params) || {}) }
+    {
+      ...(opt || {}), ...((isRef(options.params)
+        ? options.params?.value as P
+        : options.params) || {})
+    }
   ) as UnwrapRef<P>
 
   const query = async (opt?: P) => {
@@ -76,11 +80,16 @@ function useRequest<T,  P = any, R = undefined,>(
 
   const refresh = () => run()
 
-  if (!options.manual) run()
+  if (!options.manual)
+    run()
 
   if (options.refreshDeps?.length) {
     watch(options.refreshDeps, () => {
-      if (options.refreshDepsAction) { options?.refreshDepsAction() } else { run() }
+      if (options.refreshDepsAction) {
+        options?.refreshDepsAction()
+      } else {
+        run()
+      }
     }, {
       deep: true
     })
@@ -88,11 +97,12 @@ function useRequest<T,  P = any, R = undefined,>(
 
   if ((isReactive(options.params) || isRef(options.params))) {
     watch(() => isRef(options.params) ? options.params?.value : options.params, () => {
-      if (!stopWatchParams.value) query()
+      if (!stopWatchParams.value)
+        query()
     }, { deep: true })
   }
 
-  watch(() => ready.value, (val) => val && run())
+  watch(() => ready.value, val => val && run())
 
   return {
     run,

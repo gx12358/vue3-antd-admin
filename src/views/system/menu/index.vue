@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-import type { RequsetFunction, ProColumnType } from '@gx-design-vue/pro-table'
+import type { RequsetFunction } from '@gx-design-vue/pro-table'
 import { getMenuList } from '@/services/systemCenter'
 import { treeData } from '@gx-design-vue/pro-utils'
 import { columns } from './utils/columns'
@@ -22,7 +22,6 @@ const getTableData: RequsetFunction<AppRouteModule, { title: string }> = async (
     total: response?.total || 0
   }
 }
-
 </script>
 
 <template>

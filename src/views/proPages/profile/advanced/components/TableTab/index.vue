@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, getCurrentInstance } from 'vue'
+import { getCurrentInstance, reactive } from 'vue'
 import type { ProCardProps } from '@gx-design-vue/pro-card'
 import { GProCard, GProCardTabPane } from '@gx-design-vue/pro-card'
 import type { TabsStateActiveKey } from './utile/config'

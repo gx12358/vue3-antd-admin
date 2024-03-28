@@ -2,9 +2,10 @@
 import { hanndleField } from '@gx-design-vue/pro-utils'
 import { getStepForm } from '@/services/formCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { type RulesState, useForm } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-admin/hooks/system'
+import { useForm } from '@gx-admin/hooks/system'
 
-type FormState = {
+interface FormState {
   payAccount: string;
   receiverAccount: string;
   receiverName: string;
@@ -63,7 +64,7 @@ const { loading } = useRequest<FormState, { userId: number; }>(getStepForm, {
     userId: user.userInfo.userId
   },
   onSuccess: (data) => {
-    for (let i in formState) {
+    for (const i in formState) {
       switch (i) {
         case 'payAccount':
           formState[i] = data[i] || undefined
@@ -105,8 +106,8 @@ const onFinish = () => {
                 :options="[
                   {
                     value: 'ant-design@alipay.com',
-                    label: 'ant-design@alipay.com'
-                  }
+                    label: 'ant-design@alipay.com',
+                  },
                 ]"
                 placeholder="请选择付款账户"
                 v-model:value="formState.payAccount"
@@ -121,12 +122,12 @@ const onFinish = () => {
                   :options="[
                     {
                       value: 'alipay',
-                      label: '支付宝'
+                      label: '支付宝',
                     },
                     {
                       value: 'bank',
-                      label: '银行账户'
-                    }
+                      label: '银行账户',
+                    },
                   ]"
                   placeholder="请选择付款账户"
                   v-model:value="formState.receiverMode"

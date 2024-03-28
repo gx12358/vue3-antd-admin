@@ -1,25 +1,24 @@
 import type { Ref } from 'vue'
 import {
-  h,
   defineComponent,
+  h,
+  nextTick,
+  onBeforeUnmount,
+  onDeactivated,
   ref,
   toRefs,
-  nextTick,
-  watch,
-  onBeforeUnmount,
-  onDeactivated
+  watch
 } from 'vue'
-import type { RawEditorSettings } from 'tinymce'
-import { Editor as TinyMCEEditor, EditorEvent } from 'tinymce'
+import type { EditorEvent, RawEditorSettings, Editor as TinyMCEEditor } from 'tinymce'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { editorProps } from './props'
-import { isTextarea, mergePlugins, uuid, initEditor, getTinymce } from './utils/utils'
+import { getTinymce, initEditor, isTextarea, mergePlugins, uuid } from './utils/utils'
 
 import './style.less'
 
 const renderInline = (ce: any, id: string, elementRef: Ref<Element | null>, tagName?: string) =>
-  ce(tagName ? tagName : 'div', {
+  ce(tagName || 'div', {
     id,
     ref: elementRef
   })

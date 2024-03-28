@@ -1,7 +1,7 @@
 import type { CSSObject } from 'ant-design-vue'
 import type { GenerateStyle } from 'ant-design-vue/es/theme/internal'
 import type { ProAliasToken } from '@gx-design-vue/pro-provider'
-import { useStyle as useProStyle, mergeToken, setAlpha } from '@gx-design-vue/pro-provider'
+import { mergeToken, setAlpha, useStyle as useProStyle } from '@gx-design-vue/pro-provider'
 
 const genStyle: GenerateStyle<ProAliasToken> = (token): CSSObject => {
   return {
@@ -58,7 +58,7 @@ const genStyle: GenerateStyle<ProAliasToken> = (token): CSSObject => {
 }
 
 export function useStyle(componentCls: string) {
-  return useProStyle('RightContent', token => {
+  return useProStyle('RightContent', (token) => {
     const formTable = mergeToken<ProAliasToken>(token)
     return [ genStyle(formTable) ]
   }, componentCls)

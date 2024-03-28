@@ -1,10 +1,9 @@
 import { reactive, toRefs } from 'vue'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
-import { getUplaodInfos, getOssClient } from '@/services/systemCenter'
-import { typeViteEnv } from '@/utils/env'
+import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
 
-export type ClientDetails = {
+export interface ClientDetails {
   bucket?: string;
   region?: string;
   accessKeyId?: string;
@@ -14,7 +13,7 @@ export type ClientDetails = {
   securityToken?: string;
 }
 
-type OssState = {
+interface OssState {
   bucket: string,
   region: string,
 }
@@ -38,17 +37,23 @@ export const useStoreOss = defineStore('oss', () => {
       region: ''
     },
     ossClient: {},
-    clientDetails: {},
+    clientDetails: {}
   })
 
+  const initClient = () => {
+    state.ossClient = {
+      ...state.clientDetails,
+      ...state.ossInfos
+    }
+  }
   const queryOssToken = async () => {
     if (!state.ossInfos.bucket && !state.ossInfos.region) {
       const ossBucket: ResponseResult<{
         bucket: string;
         region: string;
       }> = await getUplaodInfos()
-      state.ossInfos.bucket = ossBucket.data?.bucket || typeViteEnv('VITE_OSS_BUCKET')
-      state.ossInfos.region = ossBucket.data?.region || typeViteEnv('VITE_OSS_ORIGIN')
+      state.ossInfos.bucket = ossBucket.data?.bucket
+      state.ossInfos.region = ossBucket.data?.region
     }
     const response: ResponseResult<ClientDetails> = await getOssClient()
     if (response) {
@@ -66,14 +71,10 @@ export const useStoreOss = defineStore('oss', () => {
       }
     }
   }
-
-  const initClient = () => {
-    state.ossClient = {
-      ...state.clientDetails,
-      ...state.ossInfos
-    }
+  const handleExpired = (date: string) => {
+    const endTime = dayjs(date).subtract(2, 'minute')
+    return dayjs().isBefore(endTime)
   }
-
   const getOssToken = async (params?: ClientDetails) => {
     if (state.clientDetails.stsToken && handleExpired(state.clientDetails.expiration)) {
       return { ...state.clientDetails, ...(params || {}) }
@@ -81,12 +82,6 @@ export const useStoreOss = defineStore('oss', () => {
     await queryOssToken()
     return { ...state.clientDetails, ...(params || {}) }
   }
-
-  const handleExpired = (date: string) => {
-    const endTime = dayjs(date).subtract(2, 'minute')
-    return dayjs().isBefore(endTime)
-  }
-
   const clearOss = () => {
     state.ossClient = {}
     state.clientDetails = {}

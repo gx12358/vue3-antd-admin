@@ -1,6 +1,6 @@
 import type { SlotsType } from 'vue'
 import { defineComponent } from 'vue'
-import type { WithFalse, CustomRender } from '@gx-design-vue/pro-utils'
+import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
 import { GImage, gImagePorps } from '@gx-design-vue/image'
 

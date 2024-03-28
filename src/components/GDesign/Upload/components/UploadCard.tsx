@@ -1,6 +1,6 @@
-import type { Ref, FunctionalComponent as FC } from 'vue'
+import type { FunctionalComponent as FC, Ref } from 'vue'
 import { computed, unref } from 'vue'
-import { Progress, Dropdown, Menu, MenuItem } from 'ant-design-vue'
+import { Dropdown, Menu, MenuItem, Progress } from 'ant-design-vue'
 import { CloudDownloadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import { isDev } from '@/utils/env'
 import Spin from '@/components/GlobalLayout/Spin'
@@ -48,28 +48,26 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
         )
         break
       case '2':
-        show =
-          record.allowPlay && record.url ? (
-            <div class="gx-image-slot">
-              <i class="material_font gx-yinleyinpin" />
-            </div>
-          ) : (
-            fallback || <div class="image-slot">{record.loadStatusMsg || '加载失败'}</div>
-          )
+        show = record.allowPlay && record.url ? (
+          <div class="gx-image-slot">
+            <i class="material_font gx-yinleyinpin" />
+          </div>
+        ) : (
+          fallback || <div class="image-slot">{record.loadStatusMsg || '加载失败'}</div>
+        )
         break
       case '3':
-        show =
-          record.allowPlay && record.url ? (
-            <Image
-              fit="cover"
-              style={{ ...imageStyle }}
-              src={record.coverImg}
-              fallback={fallback}
-              placeholder={placeholder}
-            />
-          ) : (
-            fallback || <div class="image-slot">{record.loadStatusMsg || '加载失败'}</div>
-          )
+        show = record.allowPlay && record.url ? (
+          <Image
+            fit="cover"
+            style={{ ...imageStyle }}
+            src={record.coverImg}
+            fallback={fallback}
+            placeholder={placeholder}
+          />
+        ) : (
+          fallback || <div class="image-slot">{record.loadStatusMsg || '加载失败'}</div>
+        )
         break
       case '4':
         show = (
@@ -93,7 +91,7 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
     return show
   }
 
-  const renderExtraMenu = (record) =>
+  const renderExtraMenu = record =>
     !props.disabled && (
       <Menu>
         {handleQuickEdit(record) && (
@@ -113,77 +111,77 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
 
   return (
     <>
-      {unref(context.uploadList) &&
-        unref(context.uploadList).length > 0 &&
-        unref(context.uploadList).map((item, index) => {
-          return (
-            <Dropdown
-              key={index}
-              get-popup-container={() => rootRef.value}
-              trigger={[ 'contextmenu' ]}
-              overlay={renderExtraMenu(item)}
+      {unref(context.uploadList)?.map((item, index) => {
+        return (
+          <Dropdown
+            key={index}
+            get-popup-container={() => rootRef.value}
+            trigger={[ 'contextmenu' ]}
+            overlay={renderExtraMenu(item)}
+          >
+            <div
+              style={props.cardStyle}
+              class={{
+                [`${baseClassName}-card-item`]: true,
+                [`${baseClassName}-card-item-circle`]: props.shape === 'circle'
+              }}
             >
-              <div
-                style={props.cardStyle}
-                class={{
-                  [`${baseClassName}-card-item`]: true,
-                  [`${baseClassName}-card-item-circle`]: props.shape === 'circle'
-                }}
-              >
-                {item.uploadLoading ? (
-                  <div class={`${baseClassName}-card-item-loading`}>
-                    {item.spinning || !props.progress ? (
-                      <Spin />
-                    ) : (
-                      props.progress && (
-                        <Progress
-                          size={70}
-                          percent={item.progress}
-                          status={item.uploadStatus}
-                          type="circle"
-                        />
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <div
-                    class={{
-                      [`${baseClassName}-card-item-wrapper`]: true,
-                      [`${props.cardWrapperClass}`]: !!props.cardWrapperClass,
-                      [`${baseClassName}-card-item-wrapper-disabled`]:
-                        !!props.customOperationRender ? true : props.disabled && unref(context.uploadList)
-                          .every((item) => !item.url)
-                    }}
-                  >
-                    {renderMaterial(item)}
-                    {
-                      (props.customOperationRender as any)?.(
-                        item,
-                        () => onView(item.type, item.previewUrl),
-                        () => onDownload(item.previewUrl),
-                        () => onDelete(item.id)
-                      ) || (
-                        <div class={`${baseClassName}-card-item-wrapper-icons`}>
-                          <>
-                            {item.allowPlay && item.url && item.type !== '4' && props.showPreview && (
-                              <EyeOutlined onClick={() => onView(item.type, item.previewUrl)} />
-                            )}
-                            {item.allowPlay && item.url && props.showDownload && (
-                              <CloudDownloadOutlined onClick={() => onDownload(item.previewUrl)} />
-                            )}
-                            {props.showDelete && !props.disabled && (
-                              <DeleteOutlined onClick={() => onDelete(item.id)} />
-                            )}
-                          </>
-                        </div>
-                      )
-                    }
-                  </div>
-                )}
-              </div>
-            </Dropdown>
-          )
-        })}
+              {item.uploadLoading ? (
+                <div class={`${baseClassName}-card-item-loading`}>
+                  {item.spinning || !props.progress ? (
+                    <Spin />
+                  ) : (
+                    props.progress && (
+                      <Progress
+                        size={70}
+                        percent={item.progress}
+                        status={item.uploadStatus}
+                        type="circle"
+                      />
+                    )
+                  )}
+                </div>
+              ) : (
+                <div
+                  class={{
+                    [`${baseClassName}-card-item-wrapper`]: true,
+                    [`${props.cardWrapperClass}`]: !!props.cardWrapperClass,
+                    [`${baseClassName}-card-item-wrapper-disabled`]:
+                      props.customOperationRender
+                        ? true
+                        : props.disabled && unref(context.uploadList)
+                        .every(item => !item.url)
+                  }}
+                >
+                  {renderMaterial(item)}
+                  {
+                    (props.customOperationRender as any)?.(
+                      item,
+                      () => onView(item.type, item.previewUrl),
+                      () => onDownload(item.previewUrl),
+                      () => onDelete(item.id)
+                    ) || (
+                      <div class={`${baseClassName}-card-item-wrapper-icons`}>
+                        <>
+                          {item.allowPlay && item.url && item.type !== '4' && props.showPreview && (
+                            <EyeOutlined onClick={() => onView(item.type, item.previewUrl)} />
+                          )}
+                          {item.allowPlay && item.url && props.showDownload && (
+                            <CloudDownloadOutlined onClick={() => onDownload(item.previewUrl)} />
+                          )}
+                          {props.showDelete && !props.disabled && (
+                            <DeleteOutlined onClick={() => onDelete(item.id)} />
+                          )}
+                        </>
+                      </div>
+                    )
+                  }
+                </div>
+              )}
+            </div>
+          </Dropdown>
+        )
+      })}
     </>
   )
 }

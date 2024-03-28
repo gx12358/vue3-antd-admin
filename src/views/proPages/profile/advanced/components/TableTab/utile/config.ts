@@ -1,11 +1,11 @@
-import type { ProTableProps, ProColumnsType } from '@gx-design-vue/pro-table'
+import type { ProColumnsType, ProTableProps } from '@gx-design-vue/pro-table'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
 import { getAdvancedTable1, getAdvancedTable2, getAdvancedTable3 } from '@/services/profileCenter'
 
 export type TabsStateActiveKey = 'table1' | 'table2' | 'table3'
 
-export type TabPaneStateRecord = {
+export interface TabPaneStateRecord {
   name: string;
   key: TabsStateActiveKey;
   request: <T, D = undefined>(params: Partial<ListSearchParams>) => Promise<ResponseResult<T, D>>;
@@ -82,4 +82,3 @@ export const statusState: Record<AdvancedTableRecord['status'], {
     text: '驳回'
   },
 }
-

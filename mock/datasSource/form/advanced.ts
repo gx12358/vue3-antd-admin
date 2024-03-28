@@ -1,6 +1,6 @@
 import mockjs from 'mockjs'
 import { getMockRequest } from '@gx-mock/util/utils'
-import type { ListSearchParams, ListItem } from '@gx-mock/util/table'
+import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, initContent } from '@gx-mock/util/table'
 
 const { Random } = mockjs
@@ -53,8 +53,9 @@ export default [
     method: 'post',
     timeout: 200,
     callback: ({ body }) => {
-      dataSource = dataSource.map(item => {
-        if (item.id === body.id) return { ...item, ...body }
+      dataSource = dataSource.map((item) => {
+        if (item.id === body.id)
+          return { ...item, ...body }
         return item
       })
       return null

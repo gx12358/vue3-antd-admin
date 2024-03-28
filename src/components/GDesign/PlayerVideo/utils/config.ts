@@ -1,5 +1,3 @@
-import { _isSupportPIP } from './util'
-
 export const settingsBackDrop = [
   {
     type: 'speed',

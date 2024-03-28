@@ -50,7 +50,6 @@ const clearTouchState = () => {
 
 const ease = (distance: number) => {
   const pullDistance = +(touchState.maxValue || touchState.loadingHeight)
-  
   if (distance > pullDistance) {
     if (distance < pullDistance * 2) {
       distance = pullDistance + (distance - pullDistance) / 2
@@ -58,7 +57,6 @@ const ease = (distance: number) => {
       distance = pullDistance * 1.5 + (distance - pullDistance * 2) / 4
     }
   }
-  
   return Math.round(distance)
 }
 
@@ -77,20 +75,13 @@ useEventListener(document, 'mousemove', (e) => {
     const deltaY = e.clientY - touchState.startYValue
     const offsetX = Math.abs(deltaX)
     const offsetY = Math.abs(deltaY)
-    
     const LOCK_DIRECTION_DISTANCE = 10
     if (
-      !touchState.direction ||
-      (offsetX < LOCK_DIRECTION_DISTANCE &&
-        offsetY < LOCK_DIRECTION_DISTANCE)
+      !touchState.direction || (offsetX < LOCK_DIRECTION_DISTANCE && offsetY < LOCK_DIRECTION_DISTANCE)
     ) {
       touchState.direction = getDirection(offsetX, offsetY)
     }
-    
-    if (
-      touchState.isTap &&
-      (offsetX > 5 || offsetY > 5)
-    ) {
+    if (touchState.isTap && (offsetX > 5 || offsetY > 5)) {
       touchState.isTap = false
     }
     if (deltaY >= 0 && touchState.direction === 'vertical') {
@@ -103,7 +94,7 @@ useEventListener(document, 'mousemove', (e) => {
   }
 })
 
-useEventListener(document, 'mouseup',() => {
+useEventListener(document, 'mouseup', () => {
   if ([ 'pulling', 'loosing' ].includes(touchState.status)) {
     if (touchState.status === 'pulling') {
       clearTouchState()

@@ -1,5 +1,5 @@
 export default class Base64 {
-  _keyStr: string;
+  _keyStr: string
 
   constructor() {
     this._keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
@@ -23,6 +23,7 @@ export default class Base64 {
     }
     return utftext
   }
+
   _utf8_decode(utftext: string) {
     let string = ''
     let i = 0
@@ -61,14 +62,13 @@ export default class Base64 {
       enc2 = ((chr1 & 3) << 4) | (chr2 >> 4)
       enc3 = ((chr2 & 15) << 2) | (chr3 >> 6)
       enc4 = chr3 & 63
-      if (isNaN(chr2)) {
+      if (Number.isNaN(chr2)) {
         enc3 = enc4 = 64
-      } else if (isNaN(chr3)) {
+      } else if (Number.isNaN(chr3)) {
         enc4 = 64
       }
-      output = output +
-        this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
-        this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4)
+      output = output + this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) + this._keyStr.charAt(
+        enc3) + this._keyStr.charAt(enc4)
     }
     return output
   }
@@ -88,10 +88,10 @@ export default class Base64 {
       chr2 = ((enc2 & 15) << 4) | (enc3 >> 2)
       chr3 = ((enc3 & 3) << 6) | enc4
       output = output + String.fromCharCode(chr1)
-      if (enc3 != 64) {
+      if (enc3 !== 64) {
         output = output + String.fromCharCode(chr2)
       }
-      if (enc4 != 64) {
+      if (enc4 !== 64) {
         output = output + String.fromCharCode(chr3)
       }
     }

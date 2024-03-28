@@ -6,7 +6,7 @@ import { initContent } from '@gx-mock/util/table'
 
 const { Random } = mockjs
 
-export type BasicDetails = {
+export interface BasicDetails {
   pickNum: number;
   saleNum: number;
   orderNum: number;
@@ -19,7 +19,7 @@ export type BasicDetails = {
   status: 'success' | 'dispatch';
 }
 
-export type CommodityRecord = {
+export interface CommodityRecord {
   key: string;
   name: string;
   barcode: string;
@@ -28,7 +28,7 @@ export type CommodityRecord = {
   amount: number;
 }
 
-export type ScheduleRecord = {
+export interface ScheduleRecord {
   time: string;
   rate: string;
   status: 'success' | 'processing';
@@ -45,10 +45,10 @@ const commodity = initContent<CommodityRecord>(4, () => ({
   amount: Random.integer(100, 200),
 }))
 
-const schedule = initContent<ScheduleRecord>(5, (i) => ({
+const schedule = initContent<ScheduleRecord>(5, i => ({
   time: dayjs().subtract(Random.integer(1, 120), 'minute').format('YYYY-MM-DD HH:mm'),
-  rate: [ '联系客户', '取货员出发', '取货员接单', '申请审批通过', '发起退货申请' ][ i % 5 ],
-  status: [ 'success', 'processing' ][ i % 2 ] as any,
+  rate: [ '联系客户', '取货员出发', '取货员接单', '申请审批通过', '发起退货申请' ][i % 5],
+  status: [ 'success', 'processing' ][i % 2] as any,
   operator: `取货员 ID${Random.integer(10, 100)}`,
 }))
 

@@ -1,4 +1,4 @@
-export type SearchState = {
+export interface SearchState {
   pageNum?: number;
   pageSize?: number;
   rate: string;
@@ -8,7 +8,7 @@ export type SearchState = {
   authorList: string[];
 }
 
-export type TagsListItem = {
+export interface TagsListItem {
   value: string;
   label: string;
 }

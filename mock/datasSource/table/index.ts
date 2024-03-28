@@ -1,11 +1,11 @@
 import mockjs from 'mockjs'
 import { getMockRandowList, getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
-import { initContent, handlePageList } from '@gx-mock/util/table'
+import { handlePageList, initContent } from '@gx-mock/util/table'
 
 const { Random } = mockjs
 
-export type TableRecord = {
+export interface TableRecord {
   name: string;
   title: string;
   author: string;
@@ -20,7 +20,7 @@ export type TableRecord = {
   status: 'published' | 'draft' | 'deleted';
 }
 
-const dataSource = initContent<TableRecord>(120, (i) => ({
+const dataSource = initContent<TableRecord>(120, i => ({
   title: Random.ctitle(10, 20),
   description: Random.cword(30, 50),
   status: getMockRandowList<TableRecord['status']>([ 'published', 'draft', 'deleted' ]),

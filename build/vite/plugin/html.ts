@@ -1,5 +1,4 @@
-import { PluginOption } from 'vite'
-
+import type { PluginOption } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
 
 import cdnModules from '../cdn'
@@ -24,16 +23,14 @@ export function configHtmlPlugin(_: ViteEnv, isBuild: boolean) {
       data: {
         VUE_APP_TITLE: title,
         injectScript: useCdn && isBuild ? cdnModules.map(e => e.js).filter(el => el) : [],
-        injectLink: useCdn && isBuild ? cdnModules.map(e => e.css).filter(el => el) : [],
+        injectLink: useCdn && isBuild ? cdnModules.map(e => e.css).filter(el => el) : []
       },
       // Embed the generated app.config.js file
       tags: isBuild
         ? [
           {
             tag: 'script',
-            attrs: {
-              src: getAppConfigSrc()
-            }
+            attrs: { src: getAppConfigSrc() }
           }
         ]
         : []

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { RequsetFunction, ProTableRef } from '@gx-design-vue/pro-table'
+import type { ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import { useTable } from '@gx-design-vue/pro-table'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
-import { TabPaneStateRecord, TabsStateActiveKey } from './utile/config'
-import { columns, statusState, defaultTableState } from './utile/config'
+import type { TabPaneStateRecord, TabsStateActiveKey } from './utile/config'
+import { columns, defaultTableState, statusState } from './utile/config'
 import { useAdvancedContext } from '../../context'
 
 const props = withDefaults(defineProps<{

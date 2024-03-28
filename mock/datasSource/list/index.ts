@@ -3,13 +3,13 @@ import type { ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList } from '@gx-mock/util/table'
 import { fakeList } from '@gx-mock/config/article'
 
-export type Member = {
+export interface Member {
   avatar: string;
   name: string;
   id: string;
-};
+}
 
-type DefaultListItemDataType = {
+interface DefaultListItemDataType {
   id: string;
   owner: string;
   title: string;

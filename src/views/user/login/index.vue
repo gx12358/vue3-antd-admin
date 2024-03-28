@@ -1,45 +1,8 @@
-<template>
-  <div :class="$style['login-container']">
-    <div :class="$style.content">
-      <GProFormLogin
-        style="margin-top: 40px"
-        :model="userForm"
-        :rules="userRules"
-        :logo="Logo"
-        title="GX Pro Admin"
-        @submit="handleSubmit"
-      >
-        <template #subTitle>
-          <p>GX Pro Admin 是一套基于</p>
-          vue（{{ state.dependencies['vue'] }}） + ant-design-vue（{{
-            state.dependencies['ant-design-vue']
-          }}） 开发的一套后台系统1111
-        </template>
-        <GProFormText
-          name="userName"
-          :fieldProps="{ size: 'large', prefix: userOutlined }"
-          placeholder="用户名: admin"
-        />
-        <GProFormPassword
-          name="password"
-          :fieldProps="{ size: 'large', prefix: lockOutlined }"
-          placeholder="密码: gx.design"
-        />
-        <div class="mb-[24px]">
-          <GProFormCheckbox noStyle name="autoLogin">自动登录</GProFormCheckbox>
-          <a class="float-right">忘记密码</a>
-        </div>
-      </GProFormLogin>
-    </div>
-    <GlobalFooter />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { reactive, h } from 'vue'
+import { h, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { GProFormText, GProFormPassword, GProFormCheckbox, GProFormLogin } from '@gx-design-vue/pro-form'
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { GProFormCheckbox, GProFormLogin, GProFormPassword, GProFormText } from '@gx-design-vue/pro-form'
 import { GlobalFooter } from '@gx-design-vue/pro-layout'
 import Logo from '@/assets/logo.png'
 
@@ -103,6 +66,43 @@ const handleSubmit = async (value) => {
   }
 }
 </script>
+
+<template>
+  <div :class="$style['login-container']">
+    <div :class="$style.content">
+      <GProFormLogin
+        style="margin-top: 40px"
+        :model="userForm"
+        :rules="userRules"
+        :logo="Logo"
+        title="GX Pro Admin"
+        @submit="handleSubmit"
+      >
+        <template #subTitle>
+          <p>GX Pro Admin 是一套基于</p>
+          vue（{{ state.dependencies.vue }}） + ant-design-vue（{{
+            state.dependencies['ant-design-vue']
+          }}） 开发的一套后台系统1111
+        </template>
+        <GProFormText
+          name="userName"
+          :fieldProps="{ size: 'large', prefix: userOutlined }"
+          placeholder="用户名: admin"
+        />
+        <GProFormPassword
+          name="password"
+          :fieldProps="{ size: 'large', prefix: lockOutlined }"
+          placeholder="密码: gx.design"
+        />
+        <div class="mb-[24px]">
+          <GProFormCheckbox noStyle name="autoLogin">自动登录</GProFormCheckbox>
+          <a class="float-right">忘记密码</a>
+        </div>
+      </GProFormLogin>
+    </div>
+    <GlobalFooter />
+  </div>
+</template>
 
 <style lang="less" module>
 @import './style';

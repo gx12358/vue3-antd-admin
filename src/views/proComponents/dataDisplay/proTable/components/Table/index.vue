@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { message } from 'ant-design-vue'
-import type { ProTableRef, RequsetFunction, ProTableProps } from '@gx-design-vue/pro-table'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
-import { getTableList, doDelete } from '@/services/tableCenter'
+import { doDelete, getTableList } from '@/services/tableCenter'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { useDict } from '@gx-admin/hooks/system'
 import ScrollModal from './components/ScrollModal.vue'
@@ -78,7 +78,7 @@ watch(
   () => dictState.sys_common_status,
   (data) => {
     tableConfig.searchMap[0].loading = !!data?.loading
-    tableConfig.searchMap[0].valueEnum = data?.data?.map(item => {
+    tableConfig.searchMap[0].valueEnum = data?.data?.map((item) => {
       return {
         text: item.dictLabel,
         value: item.dictValue
@@ -209,7 +209,7 @@ const onSearchReset = () => {
 }
 
 const batchOperation = (key) => {
-  message.success(`你点击了${key.domEvent.target.innerText}`)
+  message.success(`你点击了${key.domEvent.target.textContent}`)
 }
 
 const removeTable = async () => {
@@ -228,7 +228,7 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
 </script>
 
 <template>
-  <a-form :class="[$style['pro-table'], 'px-10px']" layout="inline" class="mb-20px">
+  <a-form :class="[$style['pro-table']]" layout="inline" class="mb-20px px-10px">
     <a-form-item>
       <template #label>
         Customize
@@ -332,7 +332,7 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
           md: 2,
           lg: 3,
           xl: 4,
-          xxl: 5
+          xxl: 5,
         }"
         :data-source="dataScouce"
       >

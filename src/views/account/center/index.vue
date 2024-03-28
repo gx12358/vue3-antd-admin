@@ -9,7 +9,10 @@ import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
 import TagList from './components/TagList.vue'
 import { provideAccountCenterContext } from './context'
 
-const tabPaneState: { name: string; key: TabsKey }[] = [
+const tabPaneState: {
+  name: string
+  key: TabsKey
+}[] = [
   {
     name: '文章',
     key: 'articles'
@@ -172,7 +175,6 @@ provideAccountCenterContext({
     margin-bottom: 0;
     padding: 0 16px;
   }
-  
   &:deep(.gx-pro-card-body) {
     padding: v-bind(cardRightBodyHeight);
   }

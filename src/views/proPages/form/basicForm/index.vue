@@ -10,11 +10,11 @@ import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import type { ProFormRef } from '@gx-design-vue/pro-form'
 import {
   GProForm,
-  GProFormText,
   GProFormDateRangePicker,
-  GProFormTextArea,
   GProFormDigit,
-  GProFormRadioGroup
+  GProFormRadioGroup,
+  GProFormText,
+  GProFormTextArea,
 } from '@gx-design-vue/pro-form'
 import { submitForm } from '@/services/formCenter'
 

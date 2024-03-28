@@ -1,3 +1,46 @@
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue'
+import { useMediaQuery } from '@gx-design-vue/pro-hooks'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { GColorPicker } from '@gx-design-vue/color-picker'
+import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
+
+const colSize = useMediaQuery()
+
+const isMobile = computed(() => colSize.value === 'sm' || colSize.value === 'xs')
+
+const code = ref(`<GPorWaterMark
+  :rotate="-2"
+  content="示例水印"
+  fontColor="#064417"
+  :fontSize="15"
+  :zIndex="18"
+>
+  <div>xxx</div>
+</GPorWaterMark>`)
+
+const predefineColors = ref([
+  '#FF9D4E', // 0 - 橘黄色
+  '#5BD8A6', // 1 - 绿色
+  '#5B8FF9', // 2 - 蓝色
+  '#F7664E', // 3 - 红色
+  '#FF86B7', // 4 - 水红色
+  '#2B9E9D', // 5 - 墨绿色
+  '#9270CA', // 6 - 紫色
+  '#6DC8EC', // 7 - 浅蓝色
+  '#667796', // 8 - 黛蓝色
+  '#F6BD16' // 9 - 黄色
+])
+
+const formState = reactive({
+  content: '示例水印',
+  fontColor: 'rgba(0,0,0,.15)',
+  fontSize: 16,
+  zIndex: 10,
+  rotate: -22
+})
+</script>
+
 <template>
   <g-pro-page-container :contentStyle="{ position: 'relative' }">
     <a-typography id="watermark-customize">
@@ -12,7 +55,7 @@
     </a-typography>
     <div class="water-mark">
       <div style="padding: 40px 24px">
-        <g-pro-card
+        <GProCard
           bordered
           headerBordered
           :class="$style['gx-pro-card-contain-card']"
@@ -20,7 +63,7 @@
           :bodyStyle="{ display: 'flex', padding: 0, flexWrap: isMobile ? 'wrap' : '' } as CSSProperties"
         >
           <div :style="{ flexShrink: 0, width: isMobile ? '100%' : '70%', borderRight: '1px solid #f0f0f0' }">
-            <g-pro-card :bordered="false">
+            <GProCard :bordered="false">
               <GPorWaterMark
                 :content="formState.content"
                 :fontColor="formState.fontColor"
@@ -62,10 +105,10 @@
                   :style="{ zIndex: 10, maxWidth: '100%', position: 'relative' }"
                 />
               </GPorWaterMark>
-            </g-pro-card>
+            </GProCard>
           </div>
           <div style="width: 100%">
-            <g-pro-card :bordered="false" title="配置面板" :headStyle="{ borderBottom: 0 } as CSSProperties">
+            <GProCard :bordered="false" title="配置面板" :headStyle="{ borderBottom: 0 } as CSSProperties">
               <a-form layout="vertical" :model="formState">
                 <a-form-item label="水印文字">
                   <a-input v-model:value="formState.content" placeholder="Basic usage" />
@@ -88,60 +131,16 @@
                 </a-form-item>
               </a-form>
               <a-divider />
-            </g-pro-card>
+            </GProCard>
             <a-typography-paragraph style="margin: 0 24px 0 24px" copyable class="gx-code-block">
               <pre>{{ code }}</pre>
             </a-typography-paragraph>
           </div>
-        </g-pro-card>
+        </GProCard>
       </div>
     </div>
   </g-pro-page-container>
 </template>
-
-<script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { Slider as ASlider } from 'ant-design-vue'
-import { useMediaQuery } from '@gx-design-vue/pro-hooks'
-import { GProCard } from '@gx-design-vue/pro-card'
-import { GColorPicker } from '@gx-design-vue/color-picker'
-import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
-
-const colSize = useMediaQuery()
-
-const isMobile = computed(() => colSize.value === 'sm' || colSize.value === 'xs')
-
-const code = ref(`<GPorWaterMark
-  :rotate="-2"
-  content='示例水印'
-  fontColor='#064417'
-  :fontSize="15"
-  :zIndex="18"
->
-  <div>xxx</div>
-</GPorWaterMark>`)
-
-const predefineColors = ref([
-  '#FF9D4E', // 0 - 橘黄色
-  '#5BD8A6', // 1 - 绿色
-  '#5B8FF9', // 2 - 蓝色
-  '#F7664E', // 3 - 红色
-  '#FF86B7', // 4 - 水红色
-  '#2B9E9D', // 5 - 墨绿色
-  '#9270CA', // 6 - 紫色
-  '#6DC8EC', // 7 - 浅蓝色
-  '#667796', // 8 - 黛蓝色
-  '#F6BD16' // 9 - 黄色
-])
-
-const formState = reactive({
-  content: '示例水印',
-  fontColor: 'rgba(0,0,0,.15)',
-  fontSize: 16,
-  zIndex: 10,
-  rotate: -22
-})
-</script>
 
 <style lang="less" module>
 .water-mark {

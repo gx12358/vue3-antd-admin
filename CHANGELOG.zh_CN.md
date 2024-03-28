@@ -6,7 +6,8 @@
 
 - **其它**
   - `package.json`新增`"type": "module"`
-  - 更新`.eslintrc.js`文件为`esm`语法
+  - `package.json`去除`eslint`相关插件
+  - 更新`.eslintrc.js`文件为`eslint.config.js`，并引入`@antfu/eslint-config`插件
   - 更新`stylelint.config.js`文件为`esm`语法
   - 更新`prettier.config.js`文件为`esm`语法
   - 更新`commitlint.config.js`文件为`esm`语法

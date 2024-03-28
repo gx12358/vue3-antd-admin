@@ -1,3 +1,153 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+import dayjs from 'dayjs'
+import { cloneDeep } from 'lodash-es'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { compareArray } from '@gx-design-vue/pro-utils'
+import type { AppRouteModule } from '@gx-design-vue/pro-layout'
+import type { MailNoticeListItem } from '@gx-mock/datasSource/notice'
+import type { ProjectHomeCount, ProjectListItem } from '@gx-mock/datasSource/project'
+import type { ListSearchParams } from '@gx-mock/util/table'
+import type { GroupListItem } from '@gx-mock/datasSource/group'
+import type { RadarRecord } from '@gx-mock/datasSource/dataChart'
+import { useRequest } from '@gx-admin/hooks/core'
+import { useThemeStyle } from '@gx-admin/hooks/web'
+import { getProjectList, getProjectNums } from '@/services/projectCenter'
+import { getMailNotice } from '@/services/mailCenter'
+import { getRadarData } from '@/services/dataCenter'
+import { getGroupTopList } from '@/services/groupCenter'
+import { timeFix, toChinesNum } from '@/utils/util'
+import Radar from './components/Radar.vue'
+
+const store = useStore()
+const router = useRouter()
+
+const state = reactive({
+  radarMaxCount: 10,
+  radarData: []
+})
+
+const currentRoute = computed<AppRouteModule>(() => router.currentRoute.value)
+
+const colorTextQuaternary = useThemeStyle({
+  color: 'colorTextQuaternary'
+})
+
+const colorBgSpotlight = useThemeStyle({
+  color: 'colorBgSpotlight'
+})
+
+const colorTextDescription = useThemeStyle({
+  color: 'colorTextDescription'
+})
+
+const colorFillContent = useThemeStyle({
+  borderColor: 'colorFillContent'
+})
+
+const { data: projectCount } = useRequest<Partial<ProjectHomeCount>>(
+  getProjectNums,
+  {
+    params: {
+      userId: store.user.userDetails.userId
+    },
+    defaultData: {},
+    defaultLoading: true
+  }
+)
+const {
+  loading: projectLoading,
+  data: projectList
+} = useRequest<PageResult<ProjectListItem>, ListSearchParams, ProjectListItem[]>(
+  getProjectList,
+  {
+    params: {
+      pageNum: 1,
+      pageSize: 6
+    },
+    defaultData: [],
+    onAfterMutateData: data => data.list,
+    defaultLoading: true
+  }
+)
+
+const { loading: mailNoticeLoading, data: mailNoticeList } = useRequest<MailNoticeListItem[]>(
+  getMailNotice,
+  {
+    params: {
+      userId: store.user.userDetails.userId
+    },
+    defaultData: [],
+    defaultLoading: true
+  }
+)
+
+const { loading: radarLoading, data: radarList } = useRequest<RadarRecord[]>(
+  getRadarData,
+  {
+    params: {
+      userId: store.user.userDetails.userId
+    },
+    defaultData: [],
+    defaultLoading: true
+  }
+)
+
+const { loading: groupLoading, data: groupList } = useRequest<GroupListItem[]>(
+  getGroupTopList,
+  {
+    params: {
+      userId: store.user.userDetails.userId
+    },
+    defaultData: [],
+    defaultLoading: true
+  }
+)
+
+watch(radarList, (val) => {
+  if (val.length) {
+    state.radarMaxCount = cloneDeep(val).sort((a, b) => compareArray(a, b, 'value', 1))?.[0].value
+    let datasource: any[] = []
+    const indicatorList: {
+      name: string
+      max: number
+    }[] = []
+    val.forEach((item) => {
+      if (indicatorList.every(el => el.name !== item.label)) {
+        indicatorList.push({
+          name: item.label,
+          max: state.radarMaxCount
+        })
+      }
+      if (datasource.every(el => el.name !== item.name)) {
+        const radarItems: {
+          name: string
+          label: string[]
+          value: number[]
+        } = {
+          name: item.name,
+          label: [],
+          value: []
+        }
+        radarItems.label.push(item.label)
+        radarItems.value.push(item.value)
+        datasource.push(radarItems)
+      } else {
+        datasource = datasource.map((el: { name: string; value: number[]; label: string[] }) => {
+          if (el.name === item.name) {
+            el.label.push(item.label)
+            el.value.push(item.value)
+          }
+          return el
+        })
+      }
+      return item
+    })
+    state.radarData = datasource
+  }
+}, { deep: true })
+</script>
+
 <template>
   <g-pro-page-container :use-page-card="false">
     <template #contentRender>
@@ -114,156 +264,6 @@
     </a-row>
   </g-pro-page-container>
 </template>
-
-<script setup lang="ts">
-import { reactive } from 'vue'
-import dayjs from 'dayjs'
-import { cloneDeep } from 'lodash-es'
-import { GProCard } from '@gx-design-vue/pro-card'
-import { compareArray } from '@gx-design-vue/pro-utils'
-import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-import type { MailNoticeListItem } from '@gx-mock/datasSource/notice'
-import type { ProjectHomeCount, ProjectListItem } from '@gx-mock/datasSource/project'
-import type { ListSearchParams } from '@gx-mock/util/table'
-import type { GroupListItem } from '@gx-mock/datasSource/group'
-import type { RadarRecord } from '@gx-mock/datasSource/dataChart'
-import { useRequest } from '@gx-admin/hooks/core'
-import { useThemeStyle } from '@gx-admin/hooks/web'
-import { getProjectNums, getProjectList } from '@/services/projectCenter'
-import { getMailNotice } from '@/services/mailCenter'
-import { getRadarData } from '@/services/dataCenter'
-import { getGroupTopList } from '@/services/groupCenter'
-import { timeFix, toChinesNum } from '@/utils/util'
-import Radar from './components/Radar.vue'
-
-const store = useStore()
-const router = useRouter()
-
-const state = reactive({
-  radarMaxCount: 10,
-  radarData: []
-})
-
-const currentRoute = computed<AppRouteModule>(() => router.currentRoute.value)
-
-const colorTextQuaternary = useThemeStyle({
-  color: 'colorTextQuaternary'
-})
-
-const colorBgSpotlight = useThemeStyle({
-  color: 'colorBgSpotlight'
-})
-
-const colorTextDescription = useThemeStyle({
-  color: 'colorTextDescription'
-})
-
-const colorFillContent = useThemeStyle({
-  borderColor: 'colorFillContent'
-})
-
-const { data: projectCount } = useRequest<Partial<ProjectHomeCount>>(
-  getProjectNums,
-  {
-    params: {
-      userId: store.user.userDetails.userId
-    },
-    defaultData: {},
-    defaultLoading: true
-  }
-)
-const {
-  loading: projectLoading,
-  data: projectList
-} = useRequest<PageResult<ProjectListItem>, ListSearchParams, ProjectListItem[]>(
-  getProjectList,
-  {
-    params: {
-      pageNum: 1,
-      pageSize: 6
-    },
-    defaultData: [],
-    onAfterMutateData: (data) => data.list,
-    defaultLoading: true
-  }
-)
-
-const { loading: mailNoticeLoading, data: mailNoticeList } = useRequest<MailNoticeListItem[]>(
-  getMailNotice,
-  {
-    params: {
-      userId: store.user.userDetails.userId
-    },
-    defaultData: [],
-    defaultLoading: true
-  }
-)
-
-const { loading: radarLoading, data: radarList } = useRequest<RadarRecord[]>(
-  getRadarData,
-  {
-    params: {
-      userId: store.user.userDetails.userId
-    },
-    defaultData: [],
-    defaultLoading: true
-  }
-)
-
-const { loading: groupLoading, data: groupList } = useRequest<GroupListItem[]>(
-  getGroupTopList,
-  {
-    params: {
-      userId: store.user.userDetails.userId
-    },
-    defaultData: [],
-    defaultLoading: true
-  }
-)
-
-watch(radarList, (val) => {
-  if (val.length) {
-    state.radarMaxCount = cloneDeep(val).sort((a, b) => compareArray(a, b, 'value', 1))?.[0].value
-    let datasource: any[] = []
-    let indicatorList: {
-      name: string
-      max: number
-    }[] = []
-    val.forEach((item) => {
-      if (indicatorList.every((el) => el.name !== item.label)) {
-        indicatorList.push({
-          name: item.label,
-          max: state.radarMaxCount
-        })
-      }
-      if (datasource.every((el) => el.name !== item.name)) {
-        const radarItems: {
-          name: string
-          label: string[]
-          value: number[]
-        } = {
-          name: item.name,
-          label: [],
-          value: []
-        }
-        radarItems.label.push(item.label)
-        radarItems.value.push(item.value)
-        datasource.push(radarItems)
-      } else {
-        datasource = datasource.map((el: { name: string; value: number[]; label: string[] }) => {
-          if (el.name === item.name) {
-            el.label.push(item.label)
-            el.value.push(item.value)
-          }
-          return el
-        })
-      }
-      return item
-    })
-    state.radarData = datasource
-  }
-}, { deep: true })
-</script>
 
 <style lang="less" scoped>
 @import "./style";

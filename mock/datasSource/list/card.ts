@@ -1,8 +1,7 @@
 import mockjs from 'mockjs'
 import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
-import { initContent } from '@gx-mock/util/table'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
-import { handlePageList, postDataSource } from '@gx-mock/util/table'
+import { handlePageList, initContent, postDataSource } from '@gx-mock/util/table'
 
 const { Random } = mockjs
 
@@ -14,7 +13,7 @@ export type CardListItemDataType = {
   title: string;
   avatar: string;
   description: string;
-} & ListItem;
+} & ListItem
 
 let dataSource = initContent<CardListItemDataType>(100, () => ({
   title: Random.ctitle(10, 20),
@@ -36,7 +35,7 @@ export default [
           pageSize,
           callBack: (data) => {
             if (title) {
-              data = data.filter((data) => data.title.includes(title || ''))
+              data = data.filter(data => data.title.includes(title || ''))
             }
 
             return data
@@ -51,7 +50,7 @@ export default [
     method: 'get',
     timeout: 200,
     callback: ({ query }) => {
-      return dataSource.find(el => el.id == query.id)
+      return dataSource.find(el => el.id === query.id)
     }
   }),
   getMockRequest<Partial<CardListItemDataType>>({

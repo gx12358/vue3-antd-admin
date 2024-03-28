@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import ProTable from './components/Table/index.vue'
+</script>
+
 <template>
   <g-pro-page-container :contentStyle="{ position: 'relative' }">
     <a-typography id="g-pro-table">
@@ -8,7 +12,3 @@
     <ProTable />
   </g-pro-page-container>
 </template>
-
-<script setup lang="ts">
-import ProTable from './components/Table/index.vue'
-</script>

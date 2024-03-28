@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { GProCard } from '@gx-design-vue/pro-card'
-import type { ProTableRef, ProTableProps, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
 import { GProTable, useTable } from '@gx-design-vue/pro-table'
 import { getArticleList } from '@/services/listCenter'

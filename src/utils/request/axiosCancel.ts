@@ -1,7 +1,7 @@
 import type { Canceler } from 'axios'
 import axios from 'axios'
 import { isFunction } from '@gx-design-vue/pro-utils'
-import { GAxiosOptions } from './typings'
+import type { GAxiosOptions } from './typings'
 
 export const getPendingUrl = (
   config: GAxiosOptions,
@@ -26,14 +26,12 @@ export class AxiosCanceler {
     !this.ignoreCancelToken && this.removePending(config)
 
     const url = getPendingUrl(config)
-    config.cancelToken =
-      config.cancelToken ||
-      new axios.CancelToken((cancel) => {
-        if (!this.pendingMap.has(url)) {
-          // If there is no current request in pending, add it
-          this.pendingMap.set(url, cancel)
-        }
-      })
+    config.cancelToken = config.cancelToken || new axios.CancelToken((cancel) => {
+      if (!this.pendingMap.has(url)) {
+        // If there is no current request in pending, add it
+        this.pendingMap.set(url, cancel)
+      }
+    })
   }
 
   /**

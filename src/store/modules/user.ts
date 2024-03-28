@@ -2,7 +2,7 @@ import { reactive, toRefs } from 'vue'
 import { defineStore } from 'pinia'
 import { notification } from 'ant-design-vue'
 import { defaultSettings } from '@gx-config'
-import type { UserInfo, UserDetails } from '@gx-mock/config/user'
+import type { UserDetails, UserInfo } from '@gx-mock/config/user'
 import { defaultUser } from '@gx-mock/config/user'
 import { getUserInfo, login, logout } from '@/services/userCenter'
 import { getAccessToken, removeAccessToken, setAccessToken } from '@/utils/accessToken'
@@ -97,9 +97,20 @@ export const useStoreUser = defineStore('user', () => {
    * @description 获取用户信息
    */
   const checkUserPremission = async () => {
-    if (loginInterception) await updateUserInfo()
+    if (loginInterception)
+      await updateUserInfo()
     else setVirtualUserInfo()
     return Object.keys(state.userInfo).length
+  }
+
+  const resetPermissions = () => {
+    state.accessToken = ''
+    removeAccessToken()
+    auth.changeValue('admin', false)
+    auth.changeValue('role', [])
+    auth.changeValue('ability', [])
+    routes.resetRoute()
+    tabsRouter.blankingTabs()
   }
 
   /**
@@ -113,16 +124,6 @@ export const useStoreUser = defineStore('user', () => {
     resetPermissions()
   }
 
-  const resetPermissions = () => {
-    state.accessToken = ''
-    removeAccessToken()
-    auth.changeValue('admin', false)
-    auth.changeValue('role', [])
-    auth.changeValue('ability', [])
-    routes.resetRoute()
-    tabsRouter.blankingTabs()
-  }
-
   return {
     ...toRefs(state),
     userDetails,
@@ -130,6 +131,6 @@ export const useStoreUser = defineStore('user', () => {
     userLogut,
     setState,
     resetPermissions,
-    checkUserPremission,
+    checkUserPremission
   }
 })

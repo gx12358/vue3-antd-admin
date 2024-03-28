@@ -2,7 +2,7 @@ import type { ComputedRef } from 'vue'
 import { defineComponent } from 'vue'
 import { CheckableTag } from 'ant-design-vue'
 import { useWindowSize } from '@vueuse/core'
-import { useState, onMountedOrActivated, useMergedState } from '@gx-design-vue/pro-hooks'
+import { onMountedOrActivated, useMergedState, useState } from '@gx-design-vue/pro-hooks'
 import { cloneDeep } from 'lodash-es'
 import type { TagsListItem } from '../typings'
 
@@ -47,8 +47,10 @@ const TagsSelect = defineComponent({
     const [ expandOpen, changeExpandOpen ] = useState(false)
 
     const handleCheckValue = (): string[] => {
-      if (props.selectType === 'checkbox') return props.value as string[]
-      if (props.selectType === 'radio') return [ props.value as string ]
+      if (props.selectType === 'checkbox')
+        return props.value as string[]
+      if (props.selectType === 'radio')
+        return [ props.value as string ]
     }
 
     const [ checkValue, changeCheckList ] = useMergedState<string[]>(handleCheckValue, {
@@ -61,7 +63,9 @@ const TagsSelect = defineComponent({
     })
 
     const dataSouce: ComputedRef<TagsListItem[]> = computed(() => {
-      return (props.hideCheckAll || props.selectType === 'radio' ? [] : defaultList).concat(props.data)
+      return (props.hideCheckAll || props.selectType === 'radio'
+        ? []
+        : defaultList).concat(props.data)
     })
 
     const classNamse = computed(() => {
@@ -77,14 +81,17 @@ const TagsSelect = defineComponent({
       } else {
         let oldCheckValue = unref(checkValue)
         if (checked) {
-          if (value === '-1') oldCheckValue = unref(dataSouce).map(item => item.value)
+          if (value === '-1')
+            oldCheckValue = unref(dataSouce).map(item => item.value)
           else oldCheckValue.push(value)
         } else {
-          if (value === '-1') oldCheckValue = []
+          if (value === '-1')
+            oldCheckValue = []
           else oldCheckValue = oldCheckValue.filter(item => item !== value)
         }
         const dataValues = oldCheckValue.filter(val => val !== '-1')
-        if (dataValues.length === props.data.length) changeCheckList(dataValues.concat([ '-1' ]))
+        if (dataValues.length === props.data.length)
+          changeCheckList(dataValues.concat([ '-1' ]))
         else changeCheckList(dataValues)
       }
     }
@@ -106,7 +113,7 @@ const TagsSelect = defineComponent({
             {dataSouce.value.map(item => (
               <CheckableTag
                 style={{ marginRight: '24px', fontSize: '14px' }}
-                onChange={(checked) => changeCheckValue(item.value, checked)}
+                onChange={checked => changeCheckValue(item.value, checked)}
                 checked={checkValue.value.includes(item.value)}
                 key={item.value}
               >
@@ -115,8 +122,11 @@ const TagsSelect = defineComponent({
             ))}
           </div>
           {props.expandable && (
-            <a class={[ 'absolute right-0px top-0px', expandOpen.value ? '' : 'hidden-none' ]} onClick={() => changeExpand(!expand.value)}>
-              { expand.value ? '收起' : '展开' }
+            <a
+              class={[ 'absolute right-0px top-0px', expandOpen.value ? '' : 'hidden-none' ]}
+              onClick={() => changeExpand(!expand.value)}
+            >
+              {expand.value ? '收起' : '展开'}
             </a>
           )}
         </div>

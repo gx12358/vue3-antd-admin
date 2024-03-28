@@ -1,4 +1,4 @@
-export function drag (e, el, coor) {
+export function drag(e, el, coor) {
   if (!el) {
     return
   }
@@ -6,7 +6,7 @@ export function drag (e, el, coor) {
   const currentY = e.clientY
 
   let left = currentX - coor.x
-  let top = coor.y -currentY
+  let top = coor.y - currentY
   if (left <= coor.minLeft) {
     left = coor.minLeft
   }
@@ -25,8 +25,9 @@ export function drag (e, el, coor) {
   }
 }
 
-export function getMatchRangeTime (time, ranges) {
-  if (!ranges) return time
+export function getMatchRangeTime(time, ranges) {
+  if (!ranges)
+    return time
   if (ranges?.length === 0) {
     return 0
   }
@@ -40,7 +41,7 @@ export function getMatchRangeTime (time, ranges) {
   return time
 }
 
-export function getElementOffsets (obj) {
+export function getElementOffsets(obj) {
   let left = 0
   let top = 0
   do {
@@ -57,8 +58,7 @@ export function _isSupportPIP() {
   if ('pictureInPictureEnabled' in document) {
     return true
   }
-  // @ts-ignore
-  const el = document.createElement('video')
+  const el = window.document.createElement('video')
   if (el.requestPictureInPicture && typeof el.requestPictureInPicture === 'function') {
     return true
   }

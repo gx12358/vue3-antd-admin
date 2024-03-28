@@ -66,13 +66,13 @@ const settingConfig: SettingConfig = {
   tokenName: 'Authorization',
   // token在localStorage、sessionStorage、cookie存储的key的名称
   tokenTableName: 'GxAccessToken',
-  //token存储位置localStorage sessionStorage cookie
+  // token存储位置localStorage sessionStorage cookie
   storage: 'localStorage',
   // token失效回退到登录页时是否记录本次的路由
   recordRoute: false,
   // 是否开启登录拦截
   loginInterception: true,
-  //是否开启登录RSA加密
+  // 是否开启登录RSA加密
   loginRSA: false,
   // front（前端导出路由）和 all（后端导出路由）两种方式
   authentication: 'all',

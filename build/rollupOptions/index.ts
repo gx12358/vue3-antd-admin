@@ -17,8 +17,6 @@ export default function (useCdn: boolean) {
       assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
     },
     external: useCdn ? Object.keys(getExternalMap()) : [],
-    plugins: useCdn ? [
-      externalGlobals(getExternalMap())
-    ] : []
+    plugins: useCdn ? [ externalGlobals(getExternalMap()) ] : []
   } as RollupOptions
 }

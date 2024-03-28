@@ -1,13 +1,13 @@
 import type {
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosInstance,
-  AxiosPromise,
   AxiosError,
-  Method,
+  AxiosInstance,
   AxiosInterceptorManager,
   AxiosInterceptorOptions,
-  InternalAxiosRequestConfig
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  Method
 } from 'axios'
 
 export interface GAxiosResponse<T = any> extends Omit<AxiosResponse, 'data' | 'config'> {
@@ -15,9 +15,13 @@ export interface GAxiosResponse<T = any> extends Omit<AxiosResponse, 'data' | 'c
   config: Omit<GAxiosOptions, 'headers'>;
 }
 
-export type CancelOptions = { cancel: (key?: string) => void, cancelAll: () => void; reset: () => void }
+export interface CancelOptions {
+  cancel: (key?: string) => void,
+  cancelAll: () => void;
+  reset: () => void
+}
 
-export type XhtInstance = {
+export interface XhtInstance {
   /**
    * @Author      gx12358
    * @DateTime    2023/1/6
@@ -165,4 +169,3 @@ export enum ContentTypeEnum {
   // form-data qs
   FORM_URLENCODED = 'application/x-www-form-urlencoded;charset=UTF-8',
 }
-

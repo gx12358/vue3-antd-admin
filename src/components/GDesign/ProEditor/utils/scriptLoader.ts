@@ -8,7 +8,7 @@
 
 import { uuid } from './utils'
 
-export type callbackFn = () => void;
+export type callbackFn = () => void
 
 export interface IStateObj {
   listeners: callbackFn[];
@@ -54,7 +54,7 @@ const CreateScriptLoader = (): ScriptLoader => {
       state.listeners.push(callback)
       if (!doc.getElementById(state.scriptId)) {
         injectScriptTag(state.scriptId, doc, url, () => {
-          state.listeners.forEach((fn) => fn())
+          state.listeners.forEach(fn => fn())
           state.scriptLoaded = true
         })
       }
@@ -72,8 +72,8 @@ const CreateScriptLoader = (): ScriptLoader => {
   }
 }
 
-const ScriptLoader = CreateScriptLoader()
+const scriptLoader = CreateScriptLoader()
 
 export {
-  ScriptLoader
+  scriptLoader
 }

@@ -6,8 +6,9 @@ import { omit } from 'lodash-es'
 import { handleRandomImage } from '@gx-mock/util/utils'
 import type { CardListItemDataType } from '@gx-mock/datasSource/list/card'
 import { hanndleField } from '@gx-design-vue/pro-utils'
-import { getCardListDetails, cardListOperate } from '@/services/listCenter'
-import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import { cardListOperate, getCardListDetails } from '@/services/listCenter'
+import type { RulesState } from '@gx-admin/hooks/system'
+import { useForm } from '@gx-admin/hooks/system'
 import GUpload from '@/components/GDesign/Upload'
 
 type FormState = Partial<CardListItemDataType>
@@ -41,8 +42,16 @@ const handleChange = (url: string[]) => {
   formState.avatar = url.join()
 }
 
+const handleCancel = () => {
+  resetFields()
+  spinning.value = false
+  userReadyFetch.value = false
+  skeletonLoading.value = false
+  open.value = false
+}
+
 const handleOk = () => {
-  validate().then(async _ => {
+  validate().then(async (_) => {
     spinning.value = true
     const response = await cardListOperate(omit(
       { ...formState, avatar: handleRandomImage(100, 100) },
@@ -57,14 +66,6 @@ const handleOk = () => {
     
     spinning.value = false
   })
-}
-
-const handleCancel = () => {
-  resetFields()
-  spinning.value = false
-  userReadyFetch.value = false
-  skeletonLoading.value = false
-  open.value = false
 }
 
 defineExpose({

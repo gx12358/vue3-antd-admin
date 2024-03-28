@@ -31,7 +31,8 @@ const { countLoading, isMobile } = useAccountCenterContext()
 const floatReady = ref(false)
 
 watch(() => countLoading.value, (val) => {
-  if (!val) nextTick(() => floatReady.value = true)
+  if (!val)
+    nextTick(() => floatReady.value = true)
 }, { immediate: true })
 
 const handleReload = () => {
@@ -42,7 +43,6 @@ const handleReload = () => {
 const pullRefreshFun = (callback) => {
   pullRefresh.value = true
   reloadList(20)
-  
   const stopWath = watch(pullRefresh, (val) => {
     if (!val) {
       stopWath()

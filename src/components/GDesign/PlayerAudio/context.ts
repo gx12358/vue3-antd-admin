@@ -1,7 +1,7 @@
-import type { Ref, ComputedRef } from 'vue'
-import { inject, InjectionKey, provide } from 'vue'
+import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import { inject, provide } from 'vue'
 
-export type ContextType = any;
+export type ContextType = any
 
 export interface AudioContextProps {
   /* 附加属性 */
@@ -19,7 +19,7 @@ export interface AudioContextProps {
 const audioContextInjectKey: InjectionKey<AudioContextProps> = Symbol('video-context')
 
 export const useContext = <T>(
-  contextInjectKey: string | InjectionKey<ContextType> = Symbol(),
+  contextInjectKey: string | InjectionKey<ContextType> = audioContextInjectKey,
   defaultValue?: ContextType
 ): T => {
   return inject(contextInjectKey, defaultValue || ({} as T))

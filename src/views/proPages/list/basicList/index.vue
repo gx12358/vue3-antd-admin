@@ -4,10 +4,14 @@ import { message } from 'ant-design-vue'
 import { useMounted } from '@vueuse/core'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useTable } from '@gx-design-vue/pro-table'
-import type { ProTableRef, ProTableProps, RequsetFunction } from '@gx-design-vue/pro-table'
-import type { BasicCountState, BasicSearchParmas, BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type {
+  BasicCountState,
+  BasicListItemDataType,
+  BasicSearchParmas
+} from '@gx-mock/datasSource/list/basic'
 import { useRequest } from '@gx-admin/hooks/core'
-import { getBasicCount, getBasicList, deleteBasicList } from '@/services/listCenter'
+import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import OperateModal from './components/OperateModal.vue'
 import type { CountState } from './utils/config'
@@ -37,7 +41,8 @@ const { reload, changeLoading } = useTable(tableRef)
 const { loading } = useRequest<BasicCountState>(getBasicCount, {
   onSuccess: (data) => {
     for (const key in data) {
-      if (countState[key]) countState[key as keyof BasicCountState].count = data[key]
+      if (countState[key])
+        countState[key as keyof BasicCountState].count = data[key]
     }
     
     tableState.showLoading = true
@@ -67,7 +72,7 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
             await reload({ immediate: true, removeKeys: [ record.id ] })
           }
           changeLoading(false)
-        },
+        }
       })
       break
     case 'update':
@@ -79,7 +84,7 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
 
 <template>
   <g-pro-page-container :use-page-card="false" :loading="loading">
-    <g-pro-card>
+    <GProCard>
       <a-row>
         <a-col v-for="item in Object.keys(countState) as (keyof BasicCountState)[]" :sm="8" :xs="24" :key="item">
           <div class="flex-center flex-col gap-4px relative">
@@ -89,8 +94,8 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
           </div>
         </a-col>
       </a-row>
-    </g-pro-card>
-    <g-pro-card class="mt-24px" title="基本列表">
+    </GProCard>
+    <GProCard class="mt-24px" title="基本列表">
       <template #extra>
         <div class="flex gap-16px lt-sm:flex-wrap">
           <div class="flex-shrink-0 flex lt-sm:justify-end lt-sm:w-full">
@@ -156,7 +161,7 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
           </a-list>
         </template>
       </g-pro-table>
-    </g-pro-card>
+    </GProCard>
     <Teleport to=".ant-layout-has-sider>.ant-layout" v-if="isMount">
       <div class="mt-32px h-49px" />
     </Teleport>

@@ -9,12 +9,13 @@ import { getRandomNumber } from '@gx-design-vue/pro-utils'
  */
 export const createFileName = ({
   file,
-  name,
+  name
 }: {
   file: File | string;
   name?: string;
 }) => {
-  if (name !== 'image' && name !== 'vod') return name
+  if (name !== 'image' && name !== 'vod')
+    return name
   const names = file instanceof File ? file.name.split('.') : file.split('.')
   const time1 = dayjs().format('YYYYMMDDHH')
   const uuid = `${name || 'vod'}/creator/${time1}/${getRandomNumber().uuid(32).toLowerCase()}`

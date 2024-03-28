@@ -10,7 +10,6 @@ function isAuth(el: Element, binding: any) {
     hasPermission(value)
     if (!permission.value) el.parentNode?.removeChild(el)
   }
-  return
 }
 
 const mounted = (el: Element, binding: DirectiveBinding) => {

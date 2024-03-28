@@ -10,8 +10,11 @@ const { title, titleReverse, titleSeparator } = defaultSettings
  */
 export default function getPageTitle(pageTitle: string) {
   let newTitles: string[] = []
-  if (pageTitle) newTitles.push(pageTitle)
-  if (title) newTitles.push(title)
-  if (titleReverse) newTitles = newTitles.reverse()
+  if (pageTitle)
+    newTitles.push(pageTitle)
+  if (title)
+    newTitles.push(title)
+  if (titleReverse)
+    newTitles = newTitles.reverse()
   return newTitles.join(titleSeparator)
 }

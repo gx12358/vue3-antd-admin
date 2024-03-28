@@ -42,7 +42,7 @@ export interface UserInfo {
   user: UserDetails;
 }
 
-export type UserList = {
+export interface UserList {
   id: number;
   name: string;
 }
@@ -130,7 +130,7 @@ export const otherAccountList: UserList[] = [ '付小小', '曲丽丽', '林东�
   .map((name, key) => {
     return {
       id: key + 1,
-      name: name
+      name
     }
   })
 

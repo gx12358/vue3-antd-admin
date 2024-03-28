@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch, reactive, computed } from 'vue'
+import { computed, defineComponent, reactive, ref, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { onClickOutside } from '@vueuse/core'
 import { useVideoContext } from '../context'
@@ -16,6 +16,15 @@ const Settings = defineComponent({
     const isLoop = ref(false)
     const isAutoplay = ref(false)
     const settingsPanel = ref()
+    const volumeLayer = ref()
+    const settingsConfigs = ref(cloneDeep(settingsBackDrop.filter(el => !el.disabled)))
+
+    const settingsPanelStyle = reactive({
+      width: 250,
+      height: settingsConfigs.value.length * 35
+    })
+
+    const speedItem = computed(() => settingsConfigs.value.find(item => item.type === 'speed'))
 
     watch(
       () => loop.value,
@@ -37,51 +46,7 @@ const Settings = defineComponent({
       }
     )
 
-    onClickOutside(settingsPanel, (e) => {
-      if (e.target['attributes']?.['data-target']?.value === 'settings') {
-        changePanelOpen(open.value ? 0 : 1)
-      } else {
-        changePanelOpen(0)
-      }
-    })
-
-    const volumeLayer = ref()
-    const settingsConfigs = ref(cloneDeep(settingsBackDrop.filter((el) => !el.disabled)))
-
-    const settingsPanelStyle = reactive({
-      width: 250,
-      height: settingsConfigs.value.length * 35
-    })
-
-    const speedItem = computed(() => settingsConfigs.value.find((item) => item.type === 'speed'))
-
-    const changePanelOpen = (value: number, params?: { type: string; value?: number }) => {
-      open.value = value
-      if (value === 1 || value === 0) {
-        settingsPanelStyle.width = 250
-        settingsPanelStyle.height = settingsBackDrop.length * 35
-      }
-      if (value === 2) {
-        settingsPanelStyle.width = 200
-        settingsPanelStyle.height = (speedItem.value.configs.length + 1) * 35 + 1
-      }
-      if (params) {
-        if (params.type === 'loop' && value == 1) setVideoConfig('loop', params.value)
-        if (params.type === 'autoplay' && value == 1) setVideoConfig('autoplay', params.value)
-        if (params.type === 'speed' && value == 1) setVideoConfig('playbackRate', params.value)
-        if (params.type === 'pictureInPicture' && value == 1) requestPictureInPicture()
-        if (params.value) changeSettingValue(params)
-      }
-    }
-
-    const changeSettingValue = (params: { type: string; value?: number }) => {
-      settingsConfigs.value = settingsConfigs.value.map((item) => {
-        if (item.type === params.type) {
-          item.value = params.value
-        }
-        return item
-      })
-    }
+    const setVideoConfig = (type, value) => player.value[type] = value
 
     const requestPictureInPicture = () => {
       try {
@@ -95,9 +60,46 @@ const Settings = defineComponent({
       }
     }
 
-    const setVideoConfig = (type, value) => {
-      player.value[type] = value
+    const changeSettingValue = (params: { type: string; value?: number }) => {
+      settingsConfigs.value = settingsConfigs.value.map((item) => {
+        if (item.type === params.type) {
+          item.value = params.value
+        }
+        return item
+      })
     }
+
+    const changePanelOpen = (value: number, params?: { type: string; value?: number }) => {
+      open.value = value
+      if (value === 1 || value === 0) {
+        settingsPanelStyle.width = 250
+        settingsPanelStyle.height = settingsBackDrop.length * 35
+      }
+      if (value === 2) {
+        settingsPanelStyle.width = 200
+        settingsPanelStyle.height = (speedItem.value.configs.length + 1) * 35 + 1
+      }
+      if (params) {
+        if (params.type === 'loop' && value === 1)
+          setVideoConfig('loop', params.value)
+        if (params.type === 'autoplay' && value === 1)
+          setVideoConfig('autoplay', params.value)
+        if (params.type === 'speed' && value === 1)
+          setVideoConfig('playbackRate', params.value)
+        if (params.type === 'pictureInPicture' && value === 1)
+          requestPictureInPicture()
+        if (params.value)
+          changeSettingValue(params)
+      }
+    }
+
+    onClickOutside(settingsPanel, (e) => {
+      if (e.target['attributes']?.['data-target']?.value === 'settings') {
+        changePanelOpen(open.value ? 0 : 1)
+      } else {
+        changePanelOpen(0)
+      }
+    })
 
     expose({
       remove: () => {
@@ -113,7 +115,7 @@ const Settings = defineComponent({
           <div
             ref={settingsPanel}
             style={{
-              display: !!open.value ? 'block' : 'none',
+              display: open.value ? 'block' : 'none',
               width: `${settingsPanelStyle.width}px`,
               height: `${settingsPanelStyle.height}px`
             }}
@@ -125,15 +127,14 @@ const Settings = defineComponent({
                 [`${props.prefixCls}-settings-panel_current`]: open.value === 1
               }}
             >
-              {settingsConfigs.value.map((item) => (
+              {settingsConfigs.value.map(item => (
                 <div
                   class={`${props.prefixCls}-settings-panel_item`}
                   onClick={() =>
                     changePanelOpen(item.panelStatus, {
                       type: item.type,
                       value: item.type === 'speed' ? null : item.value === 1 ? 2 : 1
-                    })
-                  }
+                    })}
                 >
                   <div class={`${props.prefixCls}-settings-panel_item_left`}>
                     <i class={`icon playerfont ${item.icon}`} />
@@ -143,7 +144,7 @@ const Settings = defineComponent({
                     {item.type === 'speed' ? (
                       <>
                         <div class={`${props.prefixCls}-settings-panel_item_right_tooltip`}>
-                          {(item.configs as any).find((el) => el.value === item.value).name}
+                          {(item.configs as any).find(el => el.value === item.value).name}
                         </div>
                         <div class={`${props.prefixCls}-settings-panel_item_right_icon`}>
                           <i class="playerfont icon player-youce" />
@@ -176,18 +177,17 @@ const Settings = defineComponent({
                   <span style={{ marginLeft: '10px' }}>{speedItem.value.name}</span>
                 </div>
               </div>
-              {speedItem.value.configs.map((el) => (
+              {speedItem.value.configs.map(el => (
                 <div
                   onClick={() =>
                     changePanelOpen(1, {
                       type: 'speed',
                       value: el.value
-                    })
-                  }
+                    })}
                   class={{
                     [`${props.prefixCls}-settings-panel_item`]: true,
                     [`${props.prefixCls}-settings-panel_current`]:
-                      speedItem.value.value === el.value
+                    speedItem.value.value === el.value
                   }}
                 >
                   <div class={`${props.prefixCls}-settings-panel_item_left`}>

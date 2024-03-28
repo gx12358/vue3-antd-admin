@@ -1,7 +1,8 @@
 import type { AccountListRecord } from '@gx-mock/datasSource/project'
 import type { TabsKey } from '@gx-mock/datasSource/user/account'
 import { useScrollPageList } from '@gx-admin/hooks/web'
-import { toConvertNumberShow, scrollToContainer, type NumberToShow } from '@/utils/util'
+import type { NumberToShow } from '@/utils/util'
+import { scrollToContainer, toConvertNumberShow } from '@/utils/util'
 import { useAccountCenterContext } from '../context'
 
 export type ListRecord = AccountListRecord & {
@@ -25,15 +26,15 @@ export default function (serve: (data: any) => Promise<ResponseResult>) {
     scrollRoot: isMobile.value ? '' : `.${getScrollRoot(activeKey.value)}`,
     pageSize: 20,
     reloadClear: false,
-    onAfterMutateData: (list) => list.map(item => ({
+    onAfterMutateData: list => list.map(item => ({
       ...item,
       tagList: (item.tags || '')?.split(','),
       activeUserObj: toConvertNumberShow(item.activeUser, { unit: '万' })
     }))
   })
 
-  watch(loading, (val) => !val && (pullRefresh.value = false))
-  watch(() => state.y, (val) => openFloatBtn.value = val > (isMobile.value ? 600 : 100))
+  watch(loading, val => !val && (pullRefresh.value = false))
+  watch(() => state.y, val => openFloatBtn.value = val > (isMobile.value ? 600 : 100))
 
   const handleScrollTop = (count: number) => {
     if (isMobile.value) {

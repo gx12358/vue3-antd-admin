@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
 import type { UserInfo } from '@gx-mock/config/user'
-import { userList, otherAccountList } from '@gx-mock/config/user'
+import { otherAccountList, userList } from '@gx-mock/config/user'
 import { groupList } from '@gx-mock/config/group'
-import { getTokeUserInfo, getMockRequest } from '@gx-mock/util/utils'
+import { getMockRequest, getTokeUserInfo } from '@gx-mock/util/utils'
 
 export type TabsKey = 'articles' | 'projects' | 'applications'
 

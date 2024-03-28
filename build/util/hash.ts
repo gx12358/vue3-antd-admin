@@ -9,7 +9,7 @@ function strToHex(str: string) {
   const result: string[] = []
   for (let i = 0; i < str.length; ++i) {
     const hex = str.charCodeAt(i).toString(16)
-    result.push(('000' + hex).slice(-4))
+    result.push((`000${hex}`).slice(-4))
   }
   return result.join('').toUpperCase()
 }

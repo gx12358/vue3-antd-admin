@@ -41,7 +41,7 @@ export default defineComponent({
     return () => (
       <>
         {props.loading ? (
-          <div style={style} class={'gx-admin-page-loading'}>
+          <div style={style} class="gx-admin-page-loading">
             <Spin size={props.size} style={spinStyle} tip={props.tip} indicator={indicator?.value} />
           </div>
         ) : null}

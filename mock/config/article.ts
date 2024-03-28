@@ -5,7 +5,10 @@ import { handleRandomImage } from '../util/utils'
 
 const { Random } = mockjs
 
-export function fakeList<T = undefined>(count: number, extraFun?: (key: number) => T): ListItemDataType<T>[] {
+export function fakeList<T = undefined>(
+  count: number,
+  extraFun?: (key: number) => T
+): ListItemDataType<T>[] {
   const list: ListItemDataType<T>[] = []
   for (let i = 0; i < count; i += 1) {
     list.push({
@@ -14,11 +17,7 @@ export function fakeList<T = undefined>(count: number, extraFun?: (key: number) 
       title: Random.ctitle(),
       avatar: handleRandomImage(50, 50),
       cover: handleRandomImage(300, 200),
-      status: [ 'active', 'exception', 'normal' ][i % 3] as
-        | 'normal'
-        | 'exception'
-        | 'active'
-        | 'success',
+      status: [ 'active', 'exception', 'normal' ][i % 3] as | 'normal' | 'exception' | 'active' | 'success',
       percent: Math.ceil(Math.random() * 50) + 50,
       logo: handleRandomImage(50, 50),
       href: 'https://next.antdv.com',

@@ -38,12 +38,19 @@ export default defineComponent({
       })
     }
 
-
     const clearFileBotEditor = () => {
-      if (filerobotImageEditor) filerobotImageEditor.terminate()
+      if (filerobotImageEditor)
+        filerobotImageEditor.terminate()
       filerobotImageEditor = null
       window.editorConfig = {}
       window.editorConfig.isFirstRenderCropUpdated = false
+    }
+
+    const handleCancel = () => {
+      setOpen(false)
+      changeSpinning(false)
+      changeSpinningTip('初始化中...')
+      setTimeout(() => clearFileBotEditor(), 250)
     }
 
     const handleOk = () => {
@@ -57,13 +64,6 @@ export default defineComponent({
         changeSpinning(false)
         changeSpinningTip('')
       }
-    }
-
-    const handleCancel = () => {
-      setOpen(false)
-      changeSpinning(false)
-      changeSpinningTip('初始化中...')
-      setTimeout(() => clearFileBotEditor(), 250)
     }
 
     expose({
@@ -83,16 +83,16 @@ export default defineComponent({
     return () => {
       return (
         <GProModal
-          title={'图片剪裁'}
+          title="图片剪裁"
           width={782}
           open={open.value}
           spinning={spinning.value}
           spinningTip={spinningTip.value}
-          type={'normal'}
+          type="normal"
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <div id={imageEditorId} class={'w-full'} />
+          <div id={imageEditorId} class="w-full" />
         </GProModal>
       )
     }

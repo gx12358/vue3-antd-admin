@@ -1,10 +1,10 @@
 import { defaultSettings } from '@gx-config'
 import {
-  setStorage,
+  delCookie,
   getStorage,
   removeStorage,
   setCookie,
-  delCookie
+  setStorage
 } from '@/utils/storage'
 
 const { storage, tokenTableName } = defaultSettings
@@ -27,20 +27,20 @@ export function getAccessToken() {
  */
 export function setAccessToken(accessToken: string, expired?: number) {
   if (storage) {
-    if ('localStorage' === storage) {
+    if (storage === 'localStorage') {
       return setStorage({
         key: tokenTableName,
         value: accessToken,
         expired
       })
-    } else if ('sessionStorage' === storage) {
+    } else if (storage === 'sessionStorage') {
       return setStorage({
         key: tokenTableName,
         value: accessToken,
         expired,
         type: 'session'
       })
-    } else if ('cookie' === storage) {
+    } else if (storage === 'cookie') {
       return setCookie(tokenTableName, accessToken, expired)
     } else {
       return setStorage({
@@ -65,11 +65,11 @@ export function setAccessToken(accessToken: string, expired?: number) {
  */
 export function removeAccessToken() {
   if (storage) {
-    if ('localStorage' === storage) {
+    if (storage === 'localStorage') {
       return removeStorage(tokenTableName)
-    } else if ('sessionStorage' === storage) {
+    } else if (storage === 'sessionStorage') {
       return removeStorage(tokenTableName, 'session')
-    } else if ('cookie' === storage) {
+    } else if (storage === 'cookie') {
       return delCookie(tokenTableName)
     } else {
       return removeStorage(tokenTableName)

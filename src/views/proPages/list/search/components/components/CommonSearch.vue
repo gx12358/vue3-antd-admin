@@ -5,7 +5,7 @@ import type { SearchState } from '../typings'
 import { useSearchListContext } from '../../context'
 
 const props = withDefaults(defineProps<{
-  disabled:boolean;
+  disabled: boolean;
   state: Partial<SearchState>;
 }>(), {
   state: () => ({

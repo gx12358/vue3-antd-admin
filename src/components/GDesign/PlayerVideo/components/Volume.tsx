@@ -33,14 +33,14 @@ const Loading = defineComponent({
       }
     )
 
-    onMounted(() => {
-      onEvent(player.value, [videoEvent.PLAY], canplay)
-    })
-
     const canplay = () => {
-      volume.value = parseInt(player.value?.volume * 100)
+      volume.value = Number.parseInt(`${player.value?.volume * 100}`)
       dragStartValue.value = volume.value
     }
+
+    onMounted(() => {
+      onEvent(player.value, [ videoEvent.PLAY ], canplay)
+    })
 
     const toggle = () => {
       isMuted.value = !isMuted.value
@@ -49,12 +49,13 @@ const Loading = defineComponent({
         volume.value = 0
       } else {
         player.value.muted = false
-        volume.value = parseInt(player.value?.volume * 100)
+        volume.value = Number.parseInt(`${player.value?.volume * 100}`)
       }
     }
 
     const seek = (e) => {
-      if (isMove.value) return
+      if (isMove.value)
+        return
       isClick.value = true
       let top = e.offsetY
       if (e.target.className === 'volume-current') {
@@ -69,7 +70,7 @@ const Loading = defineComponent({
         player.value.muted = false
       }
       player.value.volume = value
-      volume.value = parseInt(value * 100)
+      volume.value = Number.parseInt(`${value * 100}`)
       dragStartValue.value = volume.value
       isMove.value = false
       setTimeout(() => {
@@ -113,7 +114,8 @@ const Loading = defineComponent({
     }
 
     const handleMouseDown = (e) => {
-      if (!isClick.value) initDrag(e)
+      if (!isClick.value)
+        initDrag(e)
     }
 
     expose({

@@ -1,8 +1,8 @@
 import { defineComponent } from 'vue'
-import { Dropdown, Avatar, Menu, MenuItem } from 'ant-design-vue'
-import { QuestionCircleOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons-vue'
+import { Avatar, Dropdown, Menu, MenuItem } from 'ant-design-vue'
+import { LogoutOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useDebounceFn } from '@vueuse/core'
-import { default as ResizeObserver } from 'ant-design-vue/es/vc-resize-observer'
+import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { useStyle } from './style'
@@ -30,7 +30,7 @@ export default defineComponent({
 
     const handleLogout = () => {
       changeLoading(true)
-      store.user.userLogut().then(_ => {}).finally(() => {
+      store.user.userLogut().then((_) => {}).finally(() => {
         router.push({ path: '/user' })
         changeLoading(false)
       })
@@ -72,20 +72,29 @@ export default defineComponent({
                   </div>
                   <div class={`${prefixCls}-header-actions-avatar ${hashId.value}`.trim()}>
                     <Dropdown
-                      overlay={
+                      overlay={(
                         <Menu>
-                          <MenuItem key={'logout'} icon={<LogoutOutlined />} onClick={() => handleLogout()} disabled={logoutLoading.value}>
+                          <MenuItem
+                            key="logout"
+                            icon={<LogoutOutlined />}
+                            onClick={() => handleLogout()}
+                            disabled={logoutLoading.value}
+                          >
                             退出登录
                           </MenuItem>
                         </Menu>
-                      }
+                      )}
                     >
                       <div>
-                        <Avatar size={28} icon={<UserOutlined />} src={store.user.userInfo.avatar} />
+                        <Avatar
+                          size={28}
+                          icon={<UserOutlined />}
+                          src={store.user.userInfo.avatar}
+                        />
                         <div style={{ marginInlineStart: '8px' }}>
-                        <span class={'anticon'}>
-                          {store.user.userInfo.nickName}
-                        </span>
+                          <span class="anticon">
+                            {store.user.userInfo.nickName}
+                          </span>
                         </div>
                       </div>
                     </Dropdown>

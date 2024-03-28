@@ -1,4 +1,4 @@
-export function drag (e, el, coor) {
+export function drag(e, el, coor) {
   if (!el) {
     return
   }
@@ -6,7 +6,7 @@ export function drag (e, el, coor) {
   const currentY = e.clientY
 
   let left = currentX - coor.x
-  let top = coor.y -currentY
+  let top = coor.y - currentY
   if (left <= coor.minLeft) {
     left = coor.minLeft
   }
@@ -25,7 +25,7 @@ export function drag (e, el, coor) {
   }
 }
 
-export function getMatchRangeTime (time, ranges) {
+export function getMatchRangeTime(time, ranges) {
   if (ranges.length === 0) {
     return 0
   }
@@ -39,7 +39,7 @@ export function getMatchRangeTime (time, ranges) {
   return time
 }
 
-export function getElementOffsets (obj) {
+export function getElementOffsets(obj) {
   let left = 0
   let top = 0
   do {

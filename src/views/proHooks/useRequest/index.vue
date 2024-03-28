@@ -1,15 +1,5 @@
-<template>
-  <g-pro-page-container>
-    <div class="text-5 mb-15px font-500">
-      useRequest-请打开F12查看效果
-    </div>
-    
-    <a-button :loading="loading" type="primary" @click="() => run()">手动请求</a-button>
-  </g-pro-page-container>
-</template>
-
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { getTableList } from '@/services/tableCenter'
 import type { TableRecord } from '@gx-mock/datasSource/table'
@@ -51,6 +41,12 @@ onBeforeRouteLeave(() => {
 })
 </script>
 
-<style lang="less" module>
-
-</style>
+<template>
+  <g-pro-page-container>
+    <div class="text-5 mb-15px font-500">
+      useRequest-请打开F12查看效果
+    </div>
+    
+    <a-button :loading="loading" type="primary" @click="() => run()">手动请求</a-button>
+  </g-pro-page-container>
+</template>

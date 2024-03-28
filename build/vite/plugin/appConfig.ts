@@ -1,9 +1,9 @@
 import colors from 'picocolors'
+import type { PluginOption } from 'vite'
 import { readPackageJSON } from 'pkg-types'
-import { type PluginOption } from 'vite'
 
 import { getEnvConfig, rootPath } from '../../util'
-import { createContentHash } from '../../util/hash'
+import { createContentHash, strToHex } from '../../util/hash'
 
 const GLOBAL_CONFIG_FILE_NAME = '_app.config.js'
 const PLUGIN_NAME = 'app-config'
@@ -59,7 +59,7 @@ async function createAppConfigPlugin({
         console.log(colors.cyan(`✨configuration file is build successfully!`))
       } catch (error) {
         console.log(
-          colors.red('configuration file configuration file failed to package:\n' + error)
+          colors.red(`configuration file configuration file failed to package:\n${error}`)
         )
       }
     }
@@ -71,15 +71,6 @@ async function createAppConfigPlugin({
  * @param env
  */
 const getVariableName = (title: string) => {
-  function strToHex(str: string) {
-    const result: string[] = []
-    for (let i = 0; i < str.length; ++i) {
-      const hex = str.charCodeAt(i).toString(16)
-      result.push(('000' + hex).slice(-4))
-    }
-    return result.join('').toUpperCase()
-  }
-
   return `__PRODUCTION__${strToHex(title) || '__APP'}__CONF__`.toUpperCase().replace(/\s/g, '')
 }
 

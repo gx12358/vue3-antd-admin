@@ -1,4 +1,4 @@
-import type { WithFalse, CustomRender } from '@gx-design-vue/pro-utils'
+import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import { PropTypes } from '@/utils'
 import type { MaterialListItem } from './typings'
 
@@ -31,7 +31,7 @@ export const proUploadProps = {
     default: () => []
   },
   // 封面图list，顺序和dataList对应（针对不是图片类型）
-  coverDataList:{
+  coverDataList: {
     type: Array as VuePropType<string[]>,
     default: () => []
   },
@@ -65,7 +65,7 @@ export const proUploadProps = {
   // 是否展示进度条
   progress: PropTypes.bool.def(true),
   // 额外添加参数
-  dataExtraInfo:  {
+  dataExtraInfo: {
     type: Array as VuePropType<any[]>,
     default: () => []
   },
@@ -74,7 +74,7 @@ export const proUploadProps = {
   errorClean: PropTypes.bool,
   wordExtra: PropTypes.VueNode,
   fallback: {
-    type:[ Function, Object ] as VuePropType<WithFalse<() => CustomRender>>,
+    type: [ Function, Object ] as VuePropType<WithFalse<() => CustomRender>>,
     default: () => undefined
   },
   placeholder: {
@@ -82,14 +82,14 @@ export const proUploadProps = {
     default: () => undefined
   },
   triggerRender: {
-    type:[ Function, Boolean ] as VuePropType<WithFalse<() => CustomRender>>,
+    type: [ Function, Boolean ] as VuePropType<WithFalse<() => CustomRender>>,
     default: () => undefined
   },
   customOperationRender: {
-    type:[ Function, Boolean ] as VuePropType<WithFalse<(view: Function, download: Function, remove: Function) => CustomRender>>,
+    type: [ Function, Boolean ] as VuePropType<WithFalse<(view: Function, download: Function, remove: Function) => CustomRender>>,
     default: () => undefined
   },
-  request: Function as VuePropType<(file: File, id: string, record?: MaterialListItem ) => Promise<{ code: number; url: string; previewUrl: string }>>,
+  request: Function as VuePropType<(file: File, id: string, record?: MaterialListItem) => Promise<{ code: number; url: string; previewUrl: string }>>,
   waterChange: PropTypes.func,
   onOpenFileDialog: PropTypes.func,
   downLoad: PropTypes.func,

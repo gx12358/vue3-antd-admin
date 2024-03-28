@@ -3,11 +3,11 @@ import 'crypto-js/tripledes'
 import 'crypto-js/sha1'
 import * as CryptoJS from 'crypto-js/core'
 import { isJSONStr } from '@/utils/validate'
-import { isObject, isArray } from '@gx-design-vue/pro-utils'
+import { isArray, isObject } from '@gx-design-vue/pro-utils'
 
-const key = '1234123412ABCDEF'  //十六位十六进制数作为密钥
+const key = '1234123412ABCDEF' // 十六位十六进制数作为密钥
 
-//加密方法
+// 加密方法
 export function Encrypt(word) {
   let str: string | object = word
   if (isObject(word) || isArray(word)) {
@@ -23,7 +23,7 @@ export function Encrypt(word) {
   return CryptoJS.enc.Base64.stringify(encrypted.ciphertext)
 }
 
-//解密方法
+// 解密方法
 export function Decrypt(word) {
   const keyHex = CryptoJS.enc.Utf8.parse(key)
   const ivHex = CryptoJS.enc.Utf8.parse(key)
@@ -35,5 +35,7 @@ export function Decrypt(word) {
     padding: CryptoJS.pad.Pkcs7
   })
   const decryptedStr = decrypted.toString(CryptoJS.enc.Utf8)
-  return isJSONStr(decryptedStr.toString()) ? JSON.parse(decryptedStr.toString()) : decryptedStr.toString()
+  return isJSONStr(decryptedStr.toString())
+    ? JSON.parse(decryptedStr.toString())
+    : decryptedStr.toString()
 }

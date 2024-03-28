@@ -1,3 +1,79 @@
+<script setup lang="ts">
+import { h, reactive, ref } from 'vue'
+import { message } from 'ant-design-vue'
+import { MailTwoTone } from '@ant-design/icons-vue'
+import type { ProFormRef } from '@gx-design-vue/pro-form'
+import type { PublicFormState } from '@gx-mock/config/form'
+import {
+  GProForm,
+  GProFormCaptcha,
+  GProFormCascader,
+  GProFormDateRangePicker,
+  GProFormDigit,
+  GProFormGroup,
+  GProFormMoney,
+  GProFormSelect,
+  GProFormText
+} from '@gx-design-vue/pro-form'
+import { getFormDetails } from '@/services/formCenter'
+
+const formRef = ref<ProFormRef>()
+
+const initValues = reactive<PublicFormState>({
+  name: '',
+  company: '',
+  count: null,
+  contract: '',
+  createTime: [],
+  useMode: undefined,
+  unusedMode: undefined,
+  phone: '',
+  captcha: '',
+  id: null,
+  project: '',
+  mangerName: '',
+  area: [ 'zhejiang', 'hangzhou', 'xihu' ]
+})
+
+const rules = reactive({
+  name: [ { required: true, message: '这是必填项' } ],
+  useMode: [ { required: true, message: '请选择合同约定生效方式' } ],
+  phone: [ { required: true, message: '这是必填项' } ],
+  captcha: [ { required: true, message: '请输入验证码' } ]
+})
+
+const waitTime = (time = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true)
+    }, time)
+  })
+}
+
+const queryForm: () => Promise<Partial<PublicFormState>> = async () => {
+  const response: ResponseResult<PublicFormState> = await getFormDetails()
+  return {
+    ...response?.data || {},
+    useMode: 'chapter'
+  }
+}
+
+const handleGetCaptcha = async (phone) => {
+  await waitTime(1000)
+  message.success(`手机号 ${phone} 验证码发送成功!`)
+}
+
+const handleFinish = async (values: any) => {
+  await waitTime(2000)
+  console.log(values)
+  const val1 = await formRef.value?.formRef()?.modelRef
+  console.log('validateFields:', val1)
+  const val2 = await formRef.value?.formRef()?.validateFieldsReturnFormatValue?.()
+  console.log('validateFieldsReturnFormatValue:', val2)
+  message.success('提交成功')
+}
+</script>
+
 <template>
   <g-pro-page-container>
     <a-typography id="g-pro-form">
@@ -68,8 +144,8 @@
           :options="[
             {
               value: 'chapter',
-              label: '盖章后生效'
-            }
+              label: '盖章后生效',
+            },
           ]"
         />
         <GProFormSelect
@@ -79,8 +155,8 @@
           :options="[
             {
               value: 'time',
-              label: '履行完终止'
-            }
+              label: '履行完终止',
+            },
           ]"
         />
         <GProFormMoney width="md" name="money" label="合同约定金额" />
@@ -102,11 +178,11 @@
                   children: [
                     {
                       value: 'xihu',
-                      label: 'West Lake'
-                    }
-                  ]
-                }
-              ]
+                      label: 'West Lake',
+                    },
+                  ],
+                },
+              ],
             },
             {
               value: 'jiangsu',
@@ -118,12 +194,12 @@
                   children: [
                     {
                       value: 'zhonghuamen',
-                      label: 'Zhong Hua Men'
-                    }
-                  ]
-                }
-              ]
-            }
+                      label: 'Zhong Hua Men',
+                    },
+                  ],
+                },
+              ],
+            },
           ]
         "
         name="area"
@@ -133,7 +209,7 @@
         <GProFormCaptcha
           :fieldProps="{
             size: 'large',
-            prefix: h(MailTwoTone as any)
+            prefix: h(MailTwoTone),
           } as any"
           label="验证码"
           :captchaProps="{ size: 'large' }"
@@ -146,79 +222,3 @@
     </GProForm>
   </g-pro-page-container>
 </template>
-
-<script setup lang="ts">
-import { reactive, ref, h } from 'vue'
-import { message } from 'ant-design-vue'
-import { MailTwoTone } from '@ant-design/icons-vue'
-import type { ProFormRef } from '@gx-design-vue/pro-form'
-import type { PublicFormState } from '@gx-mock/config/form'
-import {
-  GProForm,
-  GProFormGroup,
-  GProFormMoney,
-  GProFormText,
-  GProFormDigit,
-  GProFormDateRangePicker,
-  GProFormCaptcha,
-  GProFormCascader,
-  GProFormSelect
-} from '@gx-design-vue/pro-form'
-import { getFormDetails } from '@/services/formCenter'
-
-const formRef = ref<ProFormRef>()
-
-const initValues = reactive<PublicFormState>({
-  name: '',
-  company: '',
-  count: null,
-  contract: '',
-  createTime: [],
-  useMode: undefined,
-  unusedMode: undefined,
-  phone: '',
-  captcha: '',
-  id: null,
-  project: '',
-  mangerName: '',
-  area: [ 'zhejiang', 'hangzhou', 'xihu' ]
-})
-
-const rules = reactive({
-  name: [ { required: true, message: '这是必填项' } ],
-  useMode: [ { required: true, message: '请选择合同约定生效方式' } ],
-  phone: [ { required: true, message: '这是必填项' } ],
-  captcha: [ { required: true, message: '请输入验证码' } ]
-})
-
-const waitTime = (time = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true)
-    }, time)
-  })
-}
-
-const queryForm: () => Promise<Partial<PublicFormState>> = async () => {
-  const response: ResponseResult<PublicFormState> = await getFormDetails()
-  return {
-    ...response?.data || {},
-    useMode: 'chapter'
-  }
-}
-
-const handleGetCaptcha = async (phone) => {
-  await waitTime(1000)
-  message.success(`手机号 ${phone} 验证码发送成功!`)
-}
-
-const handleFinish = async (values: any) => {
-  await waitTime(2000)
-  console.log(values)
-  const val1 = await formRef.value?.formRef()?.modelRef
-  console.log('validateFields:', val1)
-  const val2 = await formRef.value?.formRef()?.validateFieldsReturnFormatValue?.()
-  console.log('validateFieldsReturnFormatValue:', val2)
-  message.success('提交成功')
-}
-</script>

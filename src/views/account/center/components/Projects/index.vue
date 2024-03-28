@@ -16,7 +16,6 @@ import WrapScroll from '../Layout/WrapScroll.vue'
         <div class="text-hidden-2 leading-20px mb-14px">{{ item.description }}</div>
         <div class="flex items-center justify-between">
           <span class=" text-rgba-[0-0-0-0.65] text-12px">{{ dayjs(item.createdAt).fromNow() }}</span>
-          
           <a-avatar-group size="small" :max-count="4">
             <template v-for="member in item.members" :key="member.id" >
               <a-tooltip placement="top" :title="member.name">

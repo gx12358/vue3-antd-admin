@@ -1,4 +1,4 @@
-import { Ref } from 'vue'
+import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 import { cloneDeep, omit } from 'lodash-es'
 import { checkFileType, generateVidoePicture, isString } from '@gx-design-vue/pro-utils'
@@ -28,17 +28,24 @@ export function useUploadData(state: {
   )
 
   async function getDataList(list) {
-    if (state.bindValue.value) dataValue.value = []
-    const newUploadList = list.filter(item => state.bindValue.value ? true : dataValue.value.every(el => {
-      if (isString(item)) return el?.url !== item
-      return el?.url !== (item?.url || '')
-    })).filter(item => {
-      if (state.bindValue.value) return true
-      if (isString(item)) return item
+    if (state.bindValue.value)
+      dataValue.value = []
+    const newUploadList = list.filter(item => state.bindValue.value
+      ? true
+      : dataValue.value.every((el) => {
+        if (isString(item))
+          return el?.url !== item
+        return el?.url !== (item?.url || '')
+      })).filter((item) => {
+      if (state.bindValue.value)
+        return true
+      if (isString(item))
+        return item
       return item?.url || ''
     })
     for (let i = 0; i < newUploadList.length; i += 1) {
-      if (dataValue.value.length > state.limit.value - 1) return
+      if (dataValue.value.length > state.limit.value - 1)
+        return
       const url = isString(newUploadList[i]) ? newUploadList[i] : (newUploadList[i]?.url || '')
       const type = newUploadList[i]?.type || checkFileType(url)
       const coverImg = state.coverDataList.value[i] || ''
@@ -58,7 +65,7 @@ export function useUploadData(state: {
       })
 
       if (!coverImg && type === '3') {
-        generateVidoePicture(url).then(coverUrl => {
+        generateVidoePicture(url).then((coverUrl) => {
           changeDataValue(url, { coverImg: coverUrl })
         })
       }
@@ -74,7 +81,7 @@ export function useUploadData(state: {
   }
 
   function changeDataValue(uid, params: MaterialListItem) {
-    dataValue.value = dataValue.value.map(item => {
+    dataValue.value = dataValue.value.map((item) => {
       if (item.id === uid) {
         return {
           ...item,
@@ -86,8 +93,8 @@ export function useUploadData(state: {
   }
 
   function batchChangeDataValue(list) {
-    list.map(item => {
-      dataValue.value = dataValue.value.map(el => {
+    list.map((item) => {
+      dataValue.value = dataValue.value.map((el) => {
         if (el.id === item.id) {
           return {
             ...el,
@@ -101,7 +108,7 @@ export function useUploadData(state: {
   }
 
   function changeFileDataValue(file, params) {
-    dataValue.value = dataValue.value.map(item => {
+    dataValue.value = dataValue.value.map((item) => {
       if (item.name === file.name && item.size === file.size) {
         return {
           ...item,
@@ -112,8 +119,8 @@ export function useUploadData(state: {
     })
   }
 
-  function deleteDataValue(idName) {
-    dataValue.value = dataValue.value.filter(item => item.id !== idName)
+  function deleteDataValue(uuid) {
+    dataValue.value = dataValue.value.filter(item => item.id !== uuid)
   }
 
   function deleteFileDataValue(file) {

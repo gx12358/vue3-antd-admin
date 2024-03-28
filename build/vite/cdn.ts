@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { defaultSettings } from '../../config'
 
 const { cdnUrl, cdnModules } = defaultSettings
@@ -16,16 +16,15 @@ function getModuleVersion(name: string): string {
 }
 
 function isFullPath(path: string) {
-  return path.startsWith('http:')
-  || path.startsWith('https:')
-  || path.startsWith('//') ? true : false
+  return path.startsWith('http:') || path.startsWith('https:') || path.startsWith('//')
 }
 
 function renderUrl(data: CdnModuleList & {
   version: string
 }) {
   const { path } = data
-  if (isFullPath(path)) return path
+  if (isFullPath(path))
+    return path
   return cdnUrl.replace(/\{name\}/g, data.name)
     .replace(/\{version\}/g, data.version)
     .replace(/\{path\}/g, path)

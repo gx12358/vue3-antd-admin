@@ -136,13 +136,8 @@ export function isChina(value) {
  * @returns {boolean}
  */
 export function isBlank(value) {
-  return (
-    value == null ||
-    false ||
-    value === '' ||
-    value.trim() === '' ||
-    value.toLocaleLowerCase().trim() === 'null'
-  )
+  return (value == null || false || value === '' || value.trim() === '' || value.toLocaleLowerCase()
+    .trim() === 'null')
 }
 
 /**
@@ -214,8 +209,8 @@ export function isJSONStr(str: any) {
 }
 
 export function checkURL(URL) {
-  const str = URL,
-    Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/,
-    objExp = new RegExp(Expression)
+  const str = URL
+  const Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/
+  const objExp = new RegExp(Expression)
   return objExp.test(str)
 }

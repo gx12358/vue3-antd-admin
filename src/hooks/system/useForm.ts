@@ -1,5 +1,5 @@
 import { Form } from 'ant-design-vue'
-import type { Props, validateOptions, ValidateInfo } from 'ant-design-vue/es/form/useForm'
+import type { Props, ValidateInfo, validateOptions } from 'ant-design-vue/es/form/useForm'
 import type { RuleError } from 'ant-design-vue/es/form/interface'
 
 const useForm = Form.useForm

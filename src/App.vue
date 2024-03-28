@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { ConfigProvider } from 'ant-design-vue'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import { GProApp } from '@gx-design-vue/pro-app'
+import PageLoading from '@/components/PageLoading'
+import Empty from '@/components/GlobalLayout/Empty/index.vue'
+
+const indicator = h('i', {
+  class: 'iconfont gx-jiazaizhong gx-admin-spin',
+  spin: true
+})
+
+const store = useStore()
+const route = useRoute()
+
+const loading = computed(() => store.routes.routerLoading)
+</script>
+
 <template>
   <ConfigProvider :locale="zhCN">
     <template #renderEmpty>
@@ -16,21 +34,3 @@
     </GProApp>
   </ConfigProvider>
 </template>
-
-<script setup lang="ts">
-import { ConfigProvider } from 'ant-design-vue'
-import zhCN from 'ant-design-vue/es/locale/zh_CN'
-import { GProApp } from '@gx-design-vue/pro-app'
-import PageLoading from '@/components/PageLoading'
-import Empty from '@/components/GlobalLayout/Empty/index.vue'
-
-const indicator = h('i', {
-  class: 'iconfont gx-jiazaizhong gx-admin-spin',
-  spin: true
-})
-
-const store = useStore()
-const route = useRoute()
-
-const loading = computed(() => store.routes.routerLoading)
-</script>

@@ -1,6 +1,6 @@
-import { defineComponent, ref, onMounted, computed } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useVideoContext } from '../context'
-import { drag, getMatchRangeTime, getElementOffsets } from '../utils/util'
+import { drag, getElementOffsets, getMatchRangeTime } from '../utils/util'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'
 
@@ -23,14 +23,9 @@ const Progress = defineComponent({
     const bufferProgress = ref(0)
 
     const progressStyle = computed(() => {
-      if (progress.value === 0 || progress.value === 100) return `${progress.value}%`
+      if (progress.value === 0 || progress.value === 100)
+        return `${progress.value}%`
       else return `calc(${progress.value}% - 6px)`
-    })
-
-    onMounted(() => {
-      onEvent(context.player.value, [videoEvent.TIMEUPDATE], timeUpdate)
-      onEvent(context.player.value, [videoEvent.PROGRESS], downLoad)
-      onEvent(context.player.value, [videoEvent.LOADSTART], loadstart)
     })
 
     const timeUpdate = () => {
@@ -48,7 +43,8 @@ const Progress = defineComponent({
       const duration = context.player.value?.duration || 0
       if (bufferTime > 0 && duration > 0) {
         const bufferNumber = Number(((bufferTime / duration) * 100).toFixed(2))
-        if (bufferNumber > bufferProgress.value) bufferProgress.value = bufferNumber
+        if (bufferNumber > bufferProgress.value)
+          bufferProgress.value = bufferNumber
       }
     }
 
@@ -57,8 +53,15 @@ const Progress = defineComponent({
       const bufferTime = getMatchRangeTime(currentTime, context.player.value.buffered)
       const duration = context.player.value.duration || 0
       const bufferNumber = Number(((bufferTime / duration) * 100).toFixed(2))
-      if (bufferNumber > bufferProgress.value) bufferProgress.value = bufferNumber
+      if (bufferNumber > bufferProgress.value)
+        bufferProgress.value = bufferNumber
     }
+
+    onMounted(() => {
+      onEvent(context.player.value, [ videoEvent.TIMEUPDATE ], timeUpdate)
+      onEvent(context.player.value, [ videoEvent.PROGRESS ], downLoad)
+      onEvent(context.player.value, [ videoEvent.LOADSTART ], loadstart)
+    })
 
     const seek = (e) => {
       const offsets = getElementOffsets(e.currentTarget)
@@ -82,7 +85,7 @@ const Progress = defineComponent({
         ? Number(getComputedStyle(_dragEl.value, null).marginLeft.split('px')[0])
         : Number(getComputedStyle(_dragEl.value, null).marginLeft)
       if (marginLeft) {
-        marginLeft = parseFloat(marginLeft)
+        marginLeft = Number.parseFloat(`${marginLeft}`)
       }
 
       const coor = {
@@ -119,7 +122,7 @@ const Progress = defineComponent({
       document.addEventListener('mouseup', stopMove, false)
     }
 
-    const handleMouseDown = (e) => initDrag(e)
+    const handleMouseDown = e => initDrag(e)
 
     expose({
       remove: removeAllEvent

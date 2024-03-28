@@ -2,7 +2,7 @@ import { groupList } from '@gx-mock/config/group'
 import { compareArray } from '@gx-design-vue/pro-utils'
 import { getMockRequest } from '@gx-mock/util/utils'
 
-export type GroupListItem = {
+export interface GroupListItem {
   id: number;
   icon: string;
   title: string;

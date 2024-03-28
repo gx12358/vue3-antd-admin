@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash-es'
 import type { ClientDetails } from '@/store/modules/oss'
 import { getUplaodInfos } from '@/services/systemCenter'
 import { checkURL } from '@/utils/validate'
-import { isArray, checkFileType, getFileSuffix } from '@gx-design-vue/pro-utils'
+import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'
 import { createFileName } from '@/utils/uploadFile'
 
 export function useOss() {
@@ -86,7 +86,9 @@ export function useOss() {
     if (response) {
       const url = file instanceof File ? file.name : file
       const infos = response.data
-      name = `${checkFileType(url) === '1' ? infos.pictureUrl1 : infos.videoUrl}.${getFileSuffix(url)}`
+      name = `${checkFileType(url) === '1'
+        ? infos.pictureUrl1
+        : infos.videoUrl}.${getFileSuffix(url)}`
     }
     return name
   }
@@ -94,9 +96,10 @@ export function useOss() {
   async function getOssUploadName({
     name,
     fullName,
-    file,
+    file
   }) {
-    if (fullName) return fullName
+    if (fullName)
+      return fullName
     const fileName = await getUploadName({
       file,
       fileName: name

@@ -1,16 +1,16 @@
-import type { ViteMockOptions, MockMethod, Recordable, RespThisType } from './types'
-
+import type { MockMethod, Recordable, RespThisType, ViteMockOptions } from './types'
 import path from 'node:path'
 import fs from 'node:fs'
 import chokidar from 'chokidar'
 import colors from 'picocolors'
-import url from 'url'
+import url from 'node:url'
 import fg from 'fast-glob'
 import Mock from 'mockjs'
-import { pathToRegexp, match } from 'path-to-regexp'
-import { isArray, isFunction, sleep, isRegExp, isAbsPath } from './utils'
-import { IncomingMessage, NextHandleFunction } from 'connect'
-import { bundleRequire, GetOutputFile, JS_EXT_RE } from 'bundle-require'
+import { match, pathToRegexp } from 'path-to-regexp'
+import { isAbsPath, isArray, isFunction, isRegExp, sleep } from './utils'
+import type { IncomingMessage, NextHandleFunction } from 'connect'
+import type { GetOutputFile } from 'bundle-require'
+import { bundleRequire, JS_EXT_RE } from 'bundle-require'
 import type { ResolvedConfig } from 'vite'
 
 export let mockData: MockMethod[] = []
@@ -28,7 +28,8 @@ export async function createMockServer(
     ...opt,
   }
 
-  if (mockData.length > 0) return
+  if (mockData.length > 0)
+    return
   mockData = await getMockConfig(opt, config)
   await createWatch(opt, config)
 }

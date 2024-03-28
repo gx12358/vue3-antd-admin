@@ -1,18 +1,3 @@
-<template>
-  <router-view>
-    <template #default="{ Component }">
-      <PageTranstion v-bind="animate">
-        <template v-if="reloadStatus">
-          <keep-alive :include="keepliveRouterNames">
-            <component :is="Component"  />
-          </keep-alive>
-        </template>
-      </PageTranstion>
-    </template>
-  </router-view>
-  <IframeView v-if="iframeSrc" :frameSrc="iframeSrc" />
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { BasicLayoutProps, Meta } from '@gx-design-vue/pro-layout'
@@ -53,3 +38,18 @@ watch(
   }, { immediate: true }
 )
 </script>
+
+<template>
+  <router-view>
+    <template #default="{ Component }">
+      <PageTranstion v-bind="animate">
+        <template v-if="reloadStatus">
+          <keep-alive :include="keepliveRouterNames">
+            <component :is="Component"  />
+          </keep-alive>
+        </template>
+      </PageTranstion>
+    </template>
+  </router-view>
+  <IframeView v-if="iframeSrc" :frameSrc="iframeSrc" />
+</template>

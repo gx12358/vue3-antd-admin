@@ -1,6 +1,3 @@
-<script lang="ts" setup>
-</script>
-
 <template>
   <g-pro-page-container>
     <a-card :bordered="false">

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import dayjs, { Dayjs } from 'dayjs'
+import type { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
 import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
-import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-admin/hooks/system'
+import { useForm } from '@gx-admin/hooks/system'
 import { addRules, updateRules } from '@/services/listCenter'
 import { defauleState } from '../utils/config'
 import { message } from 'ant-design-vue'
 
-type FormState = {
+interface FormState {
   id?: number;
   name: string;
   desc: string;
@@ -19,11 +21,11 @@ type FormState = {
   createTimeDay?: Dayjs;
 }
 
-const steps = [ '基本信息', '配置规则属性', '设定调度周期' ]
-
 const emit = defineEmits<{
   (e: 'ok'): void
 }>()
+
+const steps = [ '基本信息', '配置规则属性', '设定调度周期' ]
 
 const open = ref(false)
 const spinning = ref(false)
@@ -49,7 +51,8 @@ const ruleState = reactive<Partial<RulesState<FormState>>>({
     {
       required: true,
       validator: (_, value: Dayjs) => {
-        if (value || current.value !== 2) return Promise.resolve()
+        if (value || current.value !== 2)
+          return Promise.resolve()
         
         return Promise.reject('请选择开始时间')
       }
@@ -61,20 +64,28 @@ const { validateInfos, validate, resetFields, clearValidate } = useForm(formStat
 
 const changeStep = (type: 'next' | 'back') => {
   if (type === 'next') {
-    validate().then(_ => {
+    validate().then((_) => {
       current.value += 1
-    }).catch(_ => {})
+    }).catch((_) => {})
   } else if (type === 'back') {
     clearValidate(Object.keys(ruleState))
     current.value -= 1
   }
 }
 
+const handleCancel = () => {
+  open.value = false
+  spinning.value = false
+  current.value = 0
+  resetFields()
+}
+
 const handleOk = () => {
-  validate().then(async _ => {
+  validate().then(async (_) => {
     spinning.value = true
-    if (operateType.value === 'update') formState.createTime = dayjs(formState.createTimeDay)
-      .format('YYYY-MM-DD HH:mm:ss')
+    if (operateType.value === 'update')
+      formState.createTime = dayjs(formState.createTimeDay)
+        .format('YYYY-MM-DD HH:mm:ss')
     const fetchFun = operateType.value === 'add' ? addRules : updateRules
     const response = await fetchFun({ ...omit(formState, 'createTimeDay') })
     
@@ -85,18 +96,11 @@ const handleOk = () => {
     }
     
     spinning.value = false
-  }).catch(_ => {})
-}
-
-const handleCancel = () => {
-  open.value = false
-  spinning.value = false
-  current.value = 0
-  resetFields()
+  }).catch((_) => {})
 }
 
 defineExpose({
-  open: (type: 'add' | 'update', record?: RulesListItem ) => {
+  open: (type: 'add' | 'update', record?: RulesListItem) => {
     operateType.value = type
     
     if (record) {
@@ -140,12 +144,12 @@ defineExpose({
             :options="[
               {
                 value: '0',
-                label: '表一'
+                label: '表一',
               },
               {
                 value: '1',
-                label: '表二'
-              }
+                label: '表二',
+              },
             ]"
             placeholder="请选择"
             v-model:value="formState.target"
@@ -158,12 +162,12 @@ defineExpose({
             :options="[
               {
                 value: '0',
-                label: '规则模板一'
+                label: '规则模板一',
               },
               {
                 value: '1',
-                label: '规则模板二'
-              }
+                label: '规则模板二',
+              },
             ]"
             placeholder="请选择"
             v-model:value="formState.template"
@@ -175,12 +179,12 @@ defineExpose({
             :options="[
               {
                 value: '0',
-                label: '强'
+                label: '强',
               },
               {
                 value: '1',
-                label: '弱'
-              }
+                label: '弱',
+              },
             ]"
             v-model:value="formState.type"
           />
@@ -200,12 +204,12 @@ defineExpose({
             :options="[
               {
                 value: 'month',
-                label: '月'
+                label: '月',
               },
               {
                 value: 'week',
-                label: '周'
-              }
+                label: '周',
+              },
             ]"
             placeholder="请选择"
             v-model:value="formState.frequency"

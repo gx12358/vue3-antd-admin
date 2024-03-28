@@ -6,6 +6,8 @@
 
 - **Others**
   - `package.json`add`"type": "module"`
+  - `package.json` Remove `eslint` related plugins
+  - Updated the `.eslintrc.js` file to `eslint.config.js` and introduce the `@antfu/eslint-config` plugin
   - Updated `.eslintrc.js` file to `esm` syntax
   - Updated `stylelint.config.js` file to `esm` syntax
   - Updated `prettier.config.js` file to `esm` syntax

@@ -1,5 +1,5 @@
 import { defaultSettings } from '@gx-config'
-import { accounts, accessTokens } from '@gx-mock/config/user'
+import { accessTokens, accounts } from '@gx-mock/config/user'
 import { createrToken, getMockRequest } from '@gx-mock/util/utils'
 
 const { tokenName } = defaultSettings

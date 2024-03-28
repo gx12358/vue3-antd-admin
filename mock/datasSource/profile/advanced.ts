@@ -2,12 +2,12 @@ import dayjs from 'dayjs'
 import mockjs from 'mockjs'
 import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
-import { initContent, handlePageList } from '@gx-mock/util/table'
+import { handlePageList, initContent } from '@gx-mock/util/table'
 import { otherAccountList } from '@gx-mock/config/user'
 
 const { Random } = mockjs
 
-export type AdvancedDetails = {
+export interface AdvancedDetails {
   createId: number;
   createName: string;
   createTime: string;
@@ -17,7 +17,7 @@ export type AdvancedDetails = {
   status: 'wait' | 'success';
 }
 
-export type AdvancedTableRecord = {
+export interface AdvancedTableRecord {
   type: string;
   name: string;
   status: 'agree' | 'reject' | 'active';
@@ -25,7 +25,7 @@ export type AdvancedTableRecord = {
   memo: string;
 }
 
-const advancedTableOne = initContent<AdvancedTableRecord>(100, (i) => ({
+const advancedTableOne = initContent<AdvancedTableRecord>(100, i => ({
   type: Random.ctitle(10, 15),
   name: Random.cname(),
   status: [ 'active', 'agree', 'reject' ][i % 3] as any,
@@ -33,7 +33,7 @@ const advancedTableOne = initContent<AdvancedTableRecord>(100, (i) => ({
   memo: Random.cword(10, 20)
 }))
 
-const advancedTableTwo = initContent<AdvancedTableRecord>(100, (i) => ({
+const advancedTableTwo = initContent<AdvancedTableRecord>(100, i => ({
   type: Random.ctitle(10, 15),
   name: Random.cname(),
   status: [ 'active', 'agree', 'reject' ][i % 3] as any,
@@ -41,7 +41,7 @@ const advancedTableTwo = initContent<AdvancedTableRecord>(100, (i) => ({
   memo: Random.cword(10, 20)
 }))
 
-const advancedTableThree = initContent<AdvancedTableRecord>(100, (i) => ({
+const advancedTableThree = initContent<AdvancedTableRecord>(100, i => ({
   type: Random.ctitle(10, 15),
   name: Random.cname(),
   status: [ 'active', 'agree', 'reject' ][i % 3] as any,

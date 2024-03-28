@@ -4,7 +4,7 @@ import { getRandomNumber } from '@gx-design-vue/pro-utils'
 
 const props = withDefaults(defineProps<{ tags: string[] }>(), { tags: () => [] })
 
-type TagsList = {
+interface TagsList {
   id: string;
   value: string;
 }
@@ -24,14 +24,13 @@ watch(
 
 const showInput = () => {
   inputVisible.value = true
-  
   nextTick(() => {
     inputRef.value && inputRef.value.focus()
   })
 }
 
 const handleInputConfirm = () => {
-  if (inputValue.value && tagsList.value.every(item => item.value.indexOf(inputValue.value) === -1)) {
+  if (inputValue.value && tagsList.value.every(item => item.value.includes(inputValue.value))) {
     tagsList.value = [ ...tagsList.value, { id: getRandomNumber().uuid(5), value: inputValue.value } ]
   }
   inputValue.value = ''

@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import type { ProTableProps, ProColumnType } from '@gx-design-vue/pro-table'
-import type { BasicDetails, CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
+import type { ProTableProps } from '@gx-design-vue/pro-table'
+import type {
+  BasicDetails,
+  CommodityRecord,
+  ScheduleRecord
+} from '@gx-mock/datasSource/profile/basic'
 import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { descriptionsState, defaultSTableState, statusState } from './utils/config'
+import { defaultSTableState, descriptionsState, statusState } from './utils/config'
 import { goodsColumns, scheduleColumns } from './utils/columns'
 import dayjs from 'dayjs'
 
@@ -26,7 +30,10 @@ const scheduleState = reactive<ProTableProps<Partial<ScheduleRecord>>>({
   columns: scheduleColumns
 })
 
-const { loading: tableLoading } = useRequest<{ schedule: ScheduleRecord[]; commodity: CommodityRecord[]; }>(getBasicTable, {
+const { loading: tableLoading } = useRequest<{
+  schedule: ScheduleRecord[];
+  commodity: CommodityRecord[];
+}>(getBasicTable, {
   onSuccess: (data) => {
     const { schedule, commodity } = data
     scheduleState.loading = false
@@ -57,7 +64,8 @@ const commodityColumns = computed(() => {
       dataIndex: 'key',
       key: 'key',
       customCell: (_, rowIndex) => {
-        if (rowIndex >= scheduleState.dataSource.length) return { colSpan: 4 }
+        if (rowIndex >= scheduleState.dataSource.length)
+          return { colSpan: 4 }
       }
     },
     {

@@ -6,14 +6,14 @@ import { message } from 'ant-design-vue'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { hanndleField, scrollTo } from '@gx-design-vue/pro-utils'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
-import type { ProTableRef, ProTableProps, RequsetFunction, ProColumnType } from '@gx-design-vue/pro-table'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import { useTable } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/form/advanced'
 import {
-  getAdvancedForm,
-  getAdvancedFormTable,
   addAdvancedFormTable,
   deleteAdvancedFormTable,
+  getAdvancedForm,
+  getAdvancedFormTable,
   updateAdvancedFormTable
 } from '@/services/formCenter'
 import { defaultSettings } from '@gx-config'
@@ -21,7 +21,7 @@ import { useRequest } from '@gx-admin/hooks/core'
 import { useForm } from '@gx-admin/hooks/system'
 import { handleOffsetTop } from '@/utils/util'
 import { columns } from './utils/columns'
-import { rules, fieldLabels } from './utils/config'
+import { fieldLabels, rules } from './utils/config'
 
 const { viewScrollRoot } = defaultSettings
 
@@ -30,7 +30,7 @@ interface ErrorField {
   errors: string[]
 }
 
-type FormState = {
+interface FormState {
   name: string;
   url: string;
   owner?: any;
@@ -90,7 +90,7 @@ const { loading } = useRequest(getAdvancedForm, {
   },
   onSuccess: (data) => {
     tableState.showLoading = true
-    for (let i in formState) {
+    for (const i in formState) {
       switch (i) {
         case 'owner':
           formState[i] = data[i] || undefined
@@ -252,12 +252,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '付晓晓',
-                      value: 'xiao'
+                      value: 'xiao',
                     },
                     {
                       label: '周毛毛',
-                      value: 'mao'
-                    }
+                      value: 'mao',
+                    },
                   ]"
                   placeholder="请选择管理员"
                   v-model:value="formState.owner"
@@ -273,12 +273,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '付晓晓',
-                      value: 'xiao'
+                      value: 'xiao',
                     },
                     {
                       label: '周毛毛',
-                      value: 'mao'
-                    }
+                      value: 'mao',
+                    },
                   ]"
                   placeholder="请选择审批员"
                   v-model:value="formState.approver"
@@ -297,12 +297,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '私密',
-                      value: 'private'
+                      value: 'private',
                     },
                     {
                       label: '公开',
-                      value: 'public'
-                    }
+                      value: 'public',
+                    },
                   ]"
                   placeholder="请选择仓库类型"
                   v-model:value="formState.type"
@@ -330,12 +330,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '付晓晓',
-                      value: 'xiao'
+                      value: 'xiao',
                     },
                     {
                       label: '周毛毛',
-                      value: 'mao'
-                    }
+                      value: 'mao',
+                    },
                   ]"
                   placeholder="请选择执行人"
                   v-model:value="formState.owner2"
@@ -351,12 +351,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '付晓晓',
-                      value: 'xiao'
+                      value: 'xiao',
                     },
                     {
                       label: '周毛毛',
-                      value: 'mao'
-                    }
+                      value: 'mao',
+                    },
                   ]"
                   placeholder="请选择责任人"
                   v-model:value="formState.approver2"
@@ -379,12 +379,12 @@ const resetForm = () => {
                   :options="[
                     {
                       label: '私密',
-                      value: 'private'
+                      value: 'private',
                     },
                     {
                       label: '公开',
-                      value: 'public'
-                    }
+                      value: 'public',
+                    },
                   ]"
                   placeholder="请选择仓库类型"
                   v-model:value="formState.type2"
@@ -443,8 +443,7 @@ const resetForm = () => {
         <div class="flex items-center">
           <span
             v-if="
-              state.errorFields.length > 0 &&
-              state.errorFields.filter((item) => item.errors.length > 0).length > 0
+              state.errorFields.length > 0 && state.errorFields.filter((item) => item.errors.length > 0).length > 0
             "
             class="errorIcon"
           >

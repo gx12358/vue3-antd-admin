@@ -1,33 +1,3 @@
-<template>
-  <g-pro-modal
-    title="Scroll"
-    width="450px"
-    type="normal"
-    :open="visible"
-    @ok="handleSubmit"
-    @cancel="handleCancel"
-  >
-    <a-form v-bind="formItemLayout">
-      <a-form-item label="x" v-bind="validateInfos.x">
-        <a-input
-          style="width: 100%"
-          v-model:value="scrollRef.x"
-          placeholder="请输入横向x"
-          allow-clear
-        />
-      </a-form-item>
-      <a-form-item label="y" v-bind="validateInfos.y">
-        <a-input
-          style="width: 100%"
-          v-model:value="scrollRef.y"
-          placeholder="请输入纵向y"
-          allow-clear
-        />
-      </a-form-item>
-    </a-form>
-  </g-pro-modal>
-</template>
-
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
@@ -85,4 +55,32 @@ defineExpose({
 })
 </script>
 
-<style lang="less" module></style>
+<template>
+  <g-pro-modal
+    title="Scroll"
+    width="450px"
+    type="normal"
+    :open="visible"
+    @ok="handleSubmit"
+    @cancel="handleCancel"
+  >
+    <a-form v-bind="formItemLayout">
+      <a-form-item label="x" v-bind="validateInfos.x">
+        <a-input
+          style="width: 100%"
+          v-model:value="scrollRef.x"
+          placeholder="请输入横向x"
+          allow-clear
+        />
+      </a-form-item>
+      <a-form-item label="y" v-bind="validateInfos.y">
+        <a-input
+          style="width: 100%"
+          v-model:value="scrollRef.y"
+          placeholder="请输入纵向y"
+          allow-clear
+        />
+      </a-form-item>
+    </a-form>
+  </g-pro-modal>
+</template>

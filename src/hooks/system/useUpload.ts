@@ -1,6 +1,6 @@
 import { useOss } from './useOss'
 
-export type OssResponse = {
+export interface OssResponse {
   code: number;
   url?: string;
   name?: string;
@@ -8,7 +8,7 @@ export type OssResponse = {
   data?: any;
 }
 
-export type UploadConfig = {
+export interface UploadConfig {
   client?: any;
   name?: string;
   fullName?: string
@@ -76,7 +76,7 @@ export function useUpload(): {
             data: res
           })
         })
-        .catch(e => {
+        .catch((e) => {
           resolve({
             code: 500,
             data: e
@@ -112,7 +112,7 @@ export function useUpload(): {
             progressCallback && progressCallback(Number((p * 100).toFixed(1)), cpt)
           }
         })
-        .then(res => {
+        .then((res) => {
           const originInfo = handleOssResponse(res?.res || {})
           if (originInfo.url) {
             resolve({
@@ -126,7 +126,7 @@ export function useUpload(): {
             data: res
           })
         })
-        .catch(e => {
+        .catch((e) => {
           resolve({
             code: 500,
             data: e
@@ -158,7 +158,7 @@ export function useUpload(): {
             progressCallback && progressCallback(Number((p * 100).toFixed(1)), cpt)
           }
         })
-        .then(res => {
+        .then((res) => {
           const originInfo = handleOssResponse(res?.res || {})
           if (originInfo.url) {
             resolve({
@@ -172,7 +172,7 @@ export function useUpload(): {
             data: res
           })
         })
-        .catch(e => {
+        .catch((e) => {
           resolve({
             code: 500,
             data: e

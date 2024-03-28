@@ -4,9 +4,9 @@ import { toChinesNum } from '@/utils/util'
 
 const { Random } = mockjs
 
-export type DictType =  'sys_common_status' | 'sys_common_category' | 'sys_common_author'
+export type DictType = 'sys_common_status' | 'sys_common_category' | 'sys_common_author'
 
-export type DictRecord = {
+export interface DictRecord {
   dictType: DictType;
   dictValue: string | number;
   dictSort: number;

@@ -3,11 +3,12 @@ import axios from 'axios'
 import { cloneDeep } from 'lodash-es'
 import qs from 'qs'
 import { isFunction } from '@gx-design-vue/pro-utils'
-import type { GAxiosInstance, GAxiosOptions } from './typings'
-import { ContentTypeEnum, GAxiosResponse, RequestEnum } from './typings'
+import type { GAxiosInstance, GAxiosOptions, GAxiosResponse } from './typings'
+import { ContentTypeEnum, RequestEnum } from './typings'
 import { AxiosCanceler } from './axiosCancel'
 
-export const getPendingUrl = (config: GAxiosOptions) => config.cancelKey || [ config.method, config.url ].join('&')
+export const getPendingUrl = (config: GAxiosOptions) => config.cancelKey || [ config.method, config.url ].join(
+  '&')
 
 /**
  * @Author      gx12358
@@ -55,9 +56,10 @@ export class GAxios {
     }, undefined)
 
     // Request interceptor error capture
-    requestInterceptorsCatch &&
-    isFunction(requestInterceptorsCatch) &&
-    this.axiosInstance.interceptors.request.use(undefined, requestInterceptorsCatch)
+    requestInterceptorsCatch && isFunction(requestInterceptorsCatch) && this.axiosInstance.interceptors.request.use(
+      undefined,
+      requestInterceptorsCatch
+    )
 
     // Response result interceptor processing
     this.axiosInstance.interceptors.response.use((res: GAxiosResponse) => {
@@ -69,13 +71,14 @@ export class GAxios {
     }, undefined)
 
     // Response result interceptor error capture
-    responseInterceptorsCatch &&
-    isFunction(responseInterceptorsCatch) &&
-    this.axiosInstance.interceptors.response.use(undefined, (error) => {
-      axiosCanceler.removePending(error.config)
+    responseInterceptorsCatch && isFunction(responseInterceptorsCatch) && this.axiosInstance.interceptors.response.use(
+      undefined,
+      (error) => {
+        axiosCanceler.removePending(error.config)
 
-      return responseInterceptorsCatch(this.axiosInstance, error)
-    })
+        return responseInterceptorsCatch(this.axiosInstance, error)
+      }
+    )
   }
 
   // support form-data
@@ -83,11 +86,10 @@ export class GAxios {
     const headers = config.headers || this.options.headers
     const contentType = headers?.['Content-Type'] || headers?.['content-type']
 
-    if (
-      contentType !== ContentTypeEnum.FORM_URLENCODED ||
-      !Reflect.has(config, 'data') ||
-      config.method?.toUpperCase() === RequestEnum.GET
-    ) {
+    if (contentType !== ContentTypeEnum.FORM_URLENCODED || !Reflect.has(
+      config,
+      'data'
+    ) || config.method?.toUpperCase() === RequestEnum.GET) {
       return config
     }
 

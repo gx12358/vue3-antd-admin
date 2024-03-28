@@ -6,11 +6,12 @@
  *
  */
 
-import { Ref, watch, SetupContext } from 'vue'
-import { Editor as TinyMCEEditor, EditorEvent } from 'tinymce'
+import type { Ref, SetupContext } from 'vue'
+import { watch } from 'vue'
+import type { EditorEvent, Editor as TinyMCEEditor } from 'tinymce'
 import type { IPropTypes } from '../props'
 
-const getGlobal = (): any => (typeof window !== 'undefined' ? window : global)
+const getGlobal = (): any => (typeof window !== 'undefined' ? window : globalThis)
 
 const validEvents = [
   'onActivate',
@@ -78,7 +79,7 @@ const validEvents = [
 ]
 
 const isValidKey = (key: string) =>
-  validEvents.map((event) => event.toLowerCase()).indexOf(key.toLowerCase()) !== -1
+  validEvents.map(event => event.toLowerCase()).includes(key.toLowerCase())
 
 const bindHandlers = (initEvent: EditorEvent<any>, listeners: any, editor: TinyMCEEditor): void => {
   Object.keys(listeners)
@@ -95,7 +96,12 @@ const bindHandlers = (initEvent: EditorEvent<any>, listeners: any, editor: TinyM
     })
 }
 
-const bindModelHandlers = (props: IPropTypes, ctx: SetupContext, editor: TinyMCEEditor, modelValue: Ref<any>) => {
+const bindModelHandlers = (
+  props: IPropTypes,
+  ctx: SetupContext,
+  editor: TinyMCEEditor,
+  modelValue: Ref<any>
+) => {
   const modelEvents = props.modelEvents ? props.modelEvents : null
   const normalizedEvents = Array.isArray(modelEvents) ? modelEvents.join(' ') : modelEvents
 
@@ -105,7 +111,7 @@ const bindModelHandlers = (props: IPropTypes, ctx: SetupContext, editor: TinyMCE
     }
   })
 
-  editor.on(normalizedEvents ? normalizedEvents : 'change input undo redo', () => {
+  editor.on(normalizedEvents || 'change input undo redo', () => {
     ctx.emit('update:modelValue', (editor as any).getContent({ format: props.outputFormat }))
   })
 }
@@ -157,7 +163,7 @@ const getTinymce = () => {
 }
 
 const isNullOrUndefined = (value: any): value is null | undefined =>
-  value === null || value === undefined;
+  value === null || value === undefined
 
 export {
   getTinymce,

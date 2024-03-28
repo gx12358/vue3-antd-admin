@@ -1,5 +1,5 @@
-import { ComputedRef, onMounted } from 'vue'
-import { computed, defineComponent, ref } from 'vue'
+import type { ComputedRef } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { getPrefixCls, isArray } from '@gx-design-vue/pro-utils'
 import { audioProps } from './props'
 import useAudio from './hooks/useAudio'
@@ -27,12 +27,14 @@ const GPlayerAudio = defineComponent({
     const { onEvent } = useAudio(player)
 
     const audioSource: ComputedRef<string> = computed(() => {
-      if (isArray(props.src)) return (props.src as AudioSource[])?.[0]?.src || ''
+      if (isArray(props.src))
+        return (props.src as AudioSource[])?.[0]?.src || ''
       return props.src as string
     })
 
     const audioInfo: ComputedRef<AudioSource> = computed(() => {
-      if (isArray(props.src)) return (props.src as AudioSource[])?.[0] || null
+      if (isArray(props.src))
+        return (props.src as AudioSource[])?.[0] || null
       return null
     })
 
@@ -100,7 +102,10 @@ const GPlayerAudio = defineComponent({
               <div class={`${prefixCls}-music`}>
                 <span class={`${prefixCls}-title`}>{audioInfo.value?.name || '歌曲'}</span>
                 {!!audioInfo.value?.author && (
-                  <span class={`${prefixCls}-author`}> - {audioInfo.value?.author}</span>
+                  <span class={`${prefixCls}-author`}>
+                    -
+                    {audioInfo.value?.author}
+                  </span>
                 )}
               </div>
               <div class={`${prefixCls}-controls`}>

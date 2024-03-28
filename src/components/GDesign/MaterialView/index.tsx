@@ -1,13 +1,19 @@
 import type { ExtractPropTypes } from 'vue'
-import { computed, defineComponent, ref, watch, onDeactivated, onUnmounted } from 'vue'
+import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
 import { Empty } from 'ant-design-vue'
-import { default as ResizeObserver } from 'ant-design-vue/es/vc-resize-observer'
+import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { ImageViewer } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import Nodata from '@/assets/public_images/nodata.svg'
 import GPlayerVideo from '@gx-design/PlayerVideo'
 import PlayerAudio from '@gx-design/PlayerAudio'
-import { getPrefixCls, isString, isArray, getFileSuffix, globalConfig } from '@gx-design-vue/pro-utils'
+import {
+  getFileSuffix,
+  getPrefixCls,
+  globalConfig,
+  isArray,
+  isString
+} from '@gx-design-vue/pro-utils'
 import { gMaterialViewProps } from './props'
 
 import './style.less'
@@ -79,9 +85,7 @@ export default defineComponent({
       spinning.value = false
       spinningTip.value = '正在加载中...'
       if (allowPlay.value) {
-        videoPlayer.value &&
-        typeof videoPlayer.value?.destroy === 'function' &&
-        videoPlayer.value?.destroy()
+        videoPlayer.value && typeof videoPlayer.value?.destroy === 'function' && videoPlayer.value?.destroy()
       }
       videoPlayer.value = null
       musicPlayer.value = null
@@ -100,11 +104,14 @@ export default defineComponent({
       }
     )
 
-    watch([ () => showViewer.value, () => props.type, () => imageViewerRef.value ], ([ open, type, viewer ]) => {
-      if (open && type === '1' && viewer) {
-        viewer?.setOpen(true)
+    watch(
+      [ () => showViewer.value, () => props.type, () => imageViewerRef.value ],
+      ([ open, type, viewer ]) => {
+        if (open && type === '1' && viewer) {
+          viewer?.setOpen(true)
+        }
       }
-    })
+    )
 
     onUnmounted(() => {
       showViewer.value = false
@@ -126,7 +133,7 @@ export default defineComponent({
               props.type === '2'
                 ? { height: '66px', width: '500px' }
                 : props.type === '3'
-                  ? { height: responsive.value ? '400px' : '590px', width:'850px' }
+                  ? { height: responsive.value ? '400px' : '590px', width: '850px' }
                   : undefined
             }
             class={`${baseClassName}-player`}

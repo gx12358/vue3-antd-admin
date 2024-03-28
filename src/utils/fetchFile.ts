@@ -2,10 +2,11 @@ import type { Method } from 'axios'
 import { message } from 'ant-design-vue'
 import { defaultSettings } from '@gx-config'
 import { tansParams } from '@/utils/util'
+import { typeViteEnv } from '@/utils/env'
 
 const { tokenName } = defaultSettings
 
-export type DownLoadRequestConfig<D = any> = {
+export interface DownLoadRequestConfig<D = any> {
   url: string;
   method?: Method | string;
   headers?: HeadersInit;
@@ -33,7 +34,8 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
       ...options.headers
     }
   }
-  if (!options.direct) options.url = `${import.meta.env.VITE_BASE_URL}${options.url}`
+  if (!options.direct)
+    options.url = `${typeViteEnv('VITE_BASE_URL')}${options.url}`
   if (user.accessToken && !options.direct)
     opations.headers[tokenName] = `${user.accessToken}`
   if (options.params) {
@@ -54,7 +56,8 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
   if (blobResponse) {
     const a = window.document.createElement('a')
     const downUrl = window.URL.createObjectURL(blobResponse)
-    if (options.read) return downUrl
+    if (options.read)
+      return downUrl
     a.href = downUrl
     a.download = `${decodeURI(fileName)}`
     a.click()

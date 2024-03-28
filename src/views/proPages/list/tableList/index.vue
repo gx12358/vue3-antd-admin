@@ -3,10 +3,10 @@ import { Teleport } from 'vue'
 import { message } from 'ant-design-vue'
 import { useMounted } from '@vueuse/core'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
-import type { ProTableProps, RequsetFunction, ProColumnType, ProTableRef } from '@gx-design-vue/pro-table'
+import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import { useTable } from '@gx-design-vue/pro-table'
 import type { RulesListItem, RulesListSearchParams } from '@gx-mock/datasSource/list/rule'
-import { getRulesList, deleteRules } from '@/services/listCenter'
+import { deleteRules, getRulesList } from '@/services/listCenter'
 import PreviewDrawer from './components/PreviewDrawer.vue'
 import OperateModal from './components/OperateModal.vue'
 import { columns } from './utils/columns'
@@ -34,10 +34,13 @@ const tableState = reactive<ProTableProps>({
 })
 
 onActivated(() => {
-  if (reload) reload?.()
+  reload?.()
 })
 
-const getTableData: RequsetFunction<RulesListItem, RulesListSearchParams> = async (params, sorter: SorterResult) => {
+const getTableData: RequsetFunction<RulesListItem, RulesListSearchParams> = async (
+  params,
+  sorter: SorterResult
+) => {
   const response = await getRulesList<PageResult<RulesListItem>>({
     ...params,
     sortOrder: sorter?.order || '',

@@ -5,11 +5,11 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
-import { ProxyOptions } from 'vite'
+import type { ProxyOptions } from 'vite'
 import { isObject, isString } from '@gx-design-vue/pro-utils'
 import defaultSettings from './defaultSettings'
 
-type ProxyTargetList = ProxyOptions & { rewrite: (path: string) => string };
+type ProxyTargetList = ProxyOptions & { rewrite: (path: string) => string }
 
 export function createProxy(prefix) {
   const ret = {
@@ -19,12 +19,12 @@ export function createProxy(prefix) {
   }
 
   if (isObject(defaultSettings.proxyTarget)) {
-    Object.keys(defaultSettings.proxyTarget).forEach(prefix => {
+    Object.keys(defaultSettings.proxyTarget).forEach((prefix) => {
       const proxy = {
         target: `${defaultSettings.proxyTarget[prefix]}`,
         changeOrigin: true,
         ws: true,
-        rewrite: (path) => path.replace(new RegExp(`^${prefix}`), '')
+        rewrite: path => path.replace(new RegExp(`^${prefix}`), '')
       } as ProxyTargetList
 
       ret.dev[prefix] = proxy
@@ -36,7 +36,7 @@ export function createProxy(prefix) {
       target: `${defaultSettings.proxyTarget}`,
       changeOrigin: true,
       ws: true,
-      rewrite: (path) => path.replace(new RegExp(`^${prefix}`), '')
+      rewrite: path => path.replace(new RegExp(`^${prefix}`), '')
     }
     ret.dev[prefix] = proxy
     ret.test[prefix] = proxy

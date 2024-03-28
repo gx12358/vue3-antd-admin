@@ -1,4 +1,4 @@
-export type VideoSource = {
+export interface VideoSource {
   src: string;
   resolution: string;
 }

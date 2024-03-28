@@ -47,7 +47,8 @@ function dynamicImport(
   const keys = Object.keys(dynamicViewsModules)
   const matchKeys = keys.filter((key) => {
     const k = key.replace('../../views', '')
-    if (!component) return false
+    if (!component)
+      return false
     const startFlag = component.startsWith('/')
     const endFlag = component.endsWith('.vue') || component.endsWith('.tsx')
     const startIndex = startFlag ? 0 : 1
@@ -62,7 +63,6 @@ function dynamicImport(
       true,
       '请不要在views文件夹下的同一层次目录中创建具有相同文件名的“.vue”和“.TSX”文件。这将导致动态导入失败'
     )
-    return
   } else {
     warning(
       true,
@@ -70,6 +70,8 @@ function dynamicImport(
     )
     return EXCEPTION_COMPONENT
   }
+
+  return false
 }
 
 /**
@@ -155,11 +157,11 @@ function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
     title = '',
     menuType,
     icon = '',
-    iconType = 1, //菜单图标类型 0:本地 1:自定义 2:图片
-    tagFixed = '1', //标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
-    tagHidden = '0', //标签栏显示状态（隐藏的路由是否显示在标签栏中（只有标签栏为显示转态才生效））0:显示 1:隐藏
-    homePageFlag = 0, //是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
-    isFrame = '1', //是否外链 0:是 1:否
+    iconType = 1, // 菜单图标类型 0:本地 1:自定义 2:图片
+    tagFixed = '1', // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
+    tagHidden = '0', // 标签栏显示状态（隐藏的路由是否显示在标签栏中（只有标签栏为显示转态才生效））0:显示 1:隐藏
+    homePageFlag = 0, // 是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
+    isFrame = '1', // 是否外链 0:是 1:否
     keepAlive = false,
     animateDisabled = false,
     redirect,
@@ -200,7 +202,7 @@ function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
  * @description 将后台树形结构菜单数据添加后修改属性（具体修改看后台返回值）
  */
 export function buildMenu(list: MenuDataItem[]) {
-  return list.map(muenuItem => {
+  return list.map((muenuItem) => {
     return { ...handleMenuParams(muenuItem), children: buildMenu(muenuItem.children || []) }
   })
 }
@@ -211,8 +213,12 @@ export function buildMenu(list: MenuDataItem[]) {
  * @lastTime    2021/5/14
  * @description 将后台菜单数据变成树形结构（具体修改看后台返回值）
  */
-export function buildtree(rootMenu: MenuDataItem[], menuList: MenuDataItem[], parentId: string | number) {
-  rootMenu.forEach(muenuItem => {
+export function buildtree(
+  rootMenu: MenuDataItem[],
+  menuList: MenuDataItem[],
+  parentId: string | number
+) {
+  rootMenu.forEach((muenuItem) => {
     if (muenuItem.parentId === parentId) {
       const child: MenuDataItem = { ...handleMenuParams(muenuItem), children: [] }
       buildtree(rootMenu, child.children, muenuItem.menuId)

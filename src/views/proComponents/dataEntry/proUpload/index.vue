@@ -1,14 +1,3 @@
-<template>
-  <g-pro-page-container>
-    <GUpload
-      :progress="false"
-      :data-list="urlList"
-      :request="uploadHttps"
-      wordExtra="打包后在Mock模式下，不能启用快编功能！"
-    />
-  </g-pro-page-container>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 import { dataURLtoBlob, getBase64, getBlobUrl } from '@gx-design-vue/pro-utils'
@@ -41,4 +30,13 @@ const uploadHttps: GUploadProps['request'] = async (file) => {
 }
 </script>
 
-<style lang="less" module></style>
+<template>
+  <g-pro-page-container>
+    <GUpload
+      :progress="false"
+      :data-list="urlList"
+      :request="uploadHttps"
+      wordExtra="打包后在Mock模式下，不能启用快编功能！"
+    />
+  </g-pro-page-container>
+</template>

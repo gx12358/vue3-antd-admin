@@ -1,22 +1,6 @@
-<template>
-  <g-pro-page-container :use-page-card="false">
-    <div :class="prefixCls" :style="frameStyle">
-      <a-spin :spinning="loading" size="large" :style="frameStyle">
-        <iframe
-          :src="frameSrc"
-          :class="[`${prefixCls}-main`]"
-          :style="frameStyle"
-          ref="frameRef"
-          @load="hideLoading"
-        />
-      </a-spin>
-    </div>
-  </g-pro-page-container>
-</template>
-
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
 
@@ -39,9 +23,9 @@ const loading = ref(true)
 
 const publicHeight = computed(
   () =>
-    token.value.layout?.header.heightLayoutHeader +
-    24 * 2 +
-    (store.global.settings.showTabsBar ? (store.global.settings.fixedMultiTab ? 62 : 46) : 0)
+    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (store.global.settings.showTabsBar
+      ? (store.global.settings.fixedMultiTab ? 62 : 46)
+      : 0)
 )
 
 const frameStyle = reactive({
@@ -60,6 +44,8 @@ watch(
   }
 )
 
+const calcHeight = () => (frameStyle.height = `${window.innerHeight - publicHeight.value}px`)
+
 onMounted(() => {
   window.addEventListener('resize', calcHeight)
 })
@@ -68,9 +54,23 @@ onUnmounted(() => {
   window.removeEventListener('resize', calcHeight)
 })
 
-const calcHeight = () => (frameStyle.height = `${window.innerHeight - publicHeight.value}px`)
-
 const hideLoading = () => {
   loading.value = false
 }
 </script>
+
+<template>
+  <g-pro-page-container :use-page-card="false">
+    <div :class="prefixCls" :style="frameStyle">
+      <a-spin :spinning="loading" size="large" :style="frameStyle">
+        <iframe
+          :src="frameSrc"
+          :class="[`${prefixCls}-main`]"
+          :style="frameStyle"
+          ref="frameRef"
+          @load="hideLoading"
+        />
+      </a-spin>
+    </div>
+  </g-pro-page-container>
+</template>

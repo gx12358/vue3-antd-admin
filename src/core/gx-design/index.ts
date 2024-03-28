@@ -4,10 +4,8 @@ import MaterialView from '@gx-design/MaterialView'
 import InputSearch from '@gx-design/InputSearch'
 
 const gxDesign = (app) => {
-  // image
   app.component('g-image', GImage)
   app.component('g-image-viewer', ImageViewer)
-  // scrollbars
   app.component('g-scrollbars', GScrollbars)
   app.component('g-material-view', MaterialView)
   app.component('g-input-search', InputSearch)

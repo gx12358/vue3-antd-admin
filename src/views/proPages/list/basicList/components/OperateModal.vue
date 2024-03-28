@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { message } from 'ant-design-vue'
-import dayjs, { Dayjs } from 'dayjs'
+import type { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import type { BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
 import type { UserList } from '@gx-mock/config/user'
 import { hanndleField } from '@gx-design-vue/pro-utils'
-import { getBasicListDetails, basicListOperate } from '@/services/listCenter'
+import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
 import Empty from '@/components/GlobalLayout/Empty/index.vue'
 import { getUserList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-admin/hooks/system'
+import { useForm } from '@gx-admin/hooks/system'
 import { omit } from 'lodash-es'
 
 type FormState = Partial<BasicListItemDataType> & {
@@ -50,8 +52,16 @@ const { loading, data: userList } = useRequest<UserList[]>(getUserList, {
   ready: userReadyFetch
 })
 
+const handleCancel = () => {
+  resetFields()
+  spinning.value = false
+  userReadyFetch.value = false
+  skeletonLoading.value = false
+  open.value = false
+}
+
 const handleOk = () => {
-  validate().then(async _ => {
+  validate().then(async (_) => {
     spinning.value = true
     const response = await basicListOperate(omit({
       ...formState,
@@ -67,14 +77,6 @@ const handleOk = () => {
     
     spinning.value = false
   })
-}
-
-const handleCancel = () => {
-  resetFields()
-  spinning.value = false
-  userReadyFetch.value = false
-  skeletonLoading.value = false
-  open.value = false
 }
 
 defineExpose({

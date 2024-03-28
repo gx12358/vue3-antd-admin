@@ -1,8 +1,9 @@
-import { defineComponent, onMounted, reactive, watch, onBeforeUnmount, computed } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Result403 from '@/assets/error_images/403.png'
 import Result404 from '@/assets/error_images/404.png'
 import ResultCloud from '@/assets/error_images/cloud.png'
+
 import './style.less'
 
 export interface SubInfo {
@@ -65,6 +66,26 @@ export default defineComponent({
       exceptionImage: Result404
     })
 
+    const handleBackRouter = () => {
+      router.push({ path: backRouter.value })
+      if (routers.value?.length) {
+        store.tabsRouter.delOthersVisitedRoutes({ path: '/' })
+      } else {
+        store.user.resetPermissions()
+      }
+      clearInterval(state.timer)
+    }
+
+    const timeChange = () => {
+      state.timer = setInterval(() => {
+        if (state.jumpTime) {
+          state.jumpTime--
+        } else {
+          handleBackRouter()
+        }
+      }, 1000)
+    }
+
     onMounted(() => {
       timeChange()
     })
@@ -92,26 +113,6 @@ export default defineComponent({
       }
     )
 
-    const timeChange = () => {
-      state.timer = setInterval(() => {
-        if (state.jumpTime) {
-          state.jumpTime--
-        } else {
-          handleBackRouter()
-        }
-      }, 1000)
-    }
-
-    const handleBackRouter = () => {
-      router.push({ path: backRouter.value })
-      if (routers.value?.length) {
-        store.tabsRouter.delOthersVisitedRoutes({ path: '/' })
-      } else {
-        store.user.resetPermissions()
-      }
-      clearInterval(state.timer)
-    }
-
     return () => (
       <div class="error-container">
         <div class="error-content">
@@ -119,7 +120,7 @@ export default defineComponent({
             <a-col lg={12} md={12} sm={24} xl={12} xs={24}>
               <div class="pic-error">
                 <img class="pic-error-parent" src={state.exceptionImage} />
-                <img class={['pic-error-child', 'left']} src={ResultCloud} />
+                <img class={[ 'pic-error-child', 'left' ]} src={ResultCloud} />
               </div>
             </a-col>
             <a-col lg={12} md={12} sm={24} xl={12} xs={24}>
@@ -128,7 +129,10 @@ export default defineComponent({
                 <div class="bullshit-headline">{state.headline}</div>
                 <div class="bullshit-info">{state.info}</div>
                 <a class="bullshit-return-home" onClick={() => handleBackRouter()}>
-                  {state.jumpTime}s&nbsp;{state.btn}
+                  {state.jumpTime}
+                  s
+                  &nbsp;
+                  {state.btn}
                 </a>
               </div>
             </a-col>

@@ -1,5 +1,6 @@
-import type { App } from 'vue';
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
+import type { App } from 'vue'
+import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { defaultSettings } from '@gx-config'
 import { constantRoutes } from './routes'
 
@@ -26,5 +27,5 @@ export const router = createRouter({
 
 // 配置路由器
 export function setupRouter(app: App<Element>) {
-  app.use(router);
+  app.use(router)
 }

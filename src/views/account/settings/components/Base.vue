@@ -4,7 +4,8 @@ import { message } from 'ant-design-vue'
 import type { UserDetails } from '@gx-mock/config/user'
 import { GUpload } from '@gx-design/Upload'
 import cityOptions from '@/assets/json/china.json'
-import { useForm, type RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-admin/hooks/system'
+import { useForm } from '@gx-admin/hooks/system'
 import { useRequest } from '@gx-admin/hooks/core'
 import { updateUserDetails } from '@/services/userCenter'
 import { isEmail, isPhone } from '@/utils/validate'
@@ -61,15 +62,15 @@ const ruleState = reactive<RulesState<UserFormState>>({
 
 const { resetFields, validateInfos, validate } = useForm<UserFormState>(formState, ruleState)
 
-watch(() => user.userInfo, (state) => Object.assign(formState, { ...state }), { deep: true })
+watch(() => user.userInfo, state => Object.assign(formState, { ...state }), { deep: true })
 
-const filter = (inputValue, path) => path.some((option) => option.label?.toLowerCase()
+const filter = (inputValue, path) => path.some(option => option.label?.toLowerCase()
   .indexOf(inputValue.toLowerCase()) > -1)
 
 const submitInfos = () => {
-  validate().then(_ => {
+  validate().then((_) => {
     run(unref(formState))
-  }).catch(_ => {})
+  }).catch((_) => {})
 }
 </script>
 
@@ -118,7 +119,6 @@ const submitInfos = () => {
           </a-form-item>
         </div>
       </div>
-      
       <a-button @click="resetFields">重置基本信息</a-button>
       <a-button @click="submitInfos" type="primary" class="ml-10px">更新基本信息</a-button>
     </a-form>

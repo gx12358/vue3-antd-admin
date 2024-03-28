@@ -1,5 +1,5 @@
-import type { Ref, MaybeRef } from 'vue'
-import { ref, reactive, computed, isRef } from 'vue'
+import type { MaybeRef, Ref } from 'vue'
+import { computed, isRef, reactive, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { useScroll } from '@vueuse/core'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
@@ -37,10 +37,41 @@ export default function <T, R = any>(serve: any, options: {
     pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize
   })
 
+  const { data, loading, refresh } = useRequest<PageResult<T>, R & {
+    pageNum: number;
+    pageSize: number;
+  }, T[]>(serve, {
+    params: computed(() => ({
+      ...cloneDeep(options.otherParmas),
+      ...pageState
+    })),
+    stopWatchParams,
+    onAfterMutateData: (response) => {
+      return options?.onAfterMutateData?.(response.list || []) || (response?.list || [])
+    },
+    onBefore: (params) => {
+      if (params?.pageNum === 1) {
+        const reloadClear = isBoolean(options?.reloadClear) ? options?.reloadClear : true
+        if (reloadClear)
+          list.value = []
+        state.init = false
+      }
+    },
+    onSuccess: (response) => {
+      list.value = pageState?.pageNum === 1 ? data.value : unref(list).concat(data.value)
+      state.isMore = unref(list).length < (response.totalCount || 0)
+      state.init = true
+    }
+  })
+
+  const hasEmpty = computed(() => state.init && unref(list).length === 0)
+  const initLoading = computed(() => !state.init && loading.value)
+
   if (options?.pageSize && isRef(options.pageSize)) {
     watch(() => (options.pageSize as Ref<number>)?.value, (val) => {
       stopWatchParams.value = true
-      if (val) pageState.pageSize = val
+      if (val)
+        pageState.pageSize = val
       nextTick(() => {
         stopWatchParams.value = false
       })
@@ -51,7 +82,7 @@ export default function <T, R = any>(serve: any, options: {
     const { arrivedState, y } = useScroll(scrollEl, {
       offset: {
         bottom: options?.scrollBotomm || 124 + 24 * 2
-      },
+      }
     })
 
     let stopWatchBottom: Function
@@ -59,8 +90,10 @@ export default function <T, R = any>(serve: any, options: {
     let stopWatchScrollY: Function
 
     onMountedOrActivated(() => {
-      if (stopWatchBottom) stopWatchBottom?.()
-      if (stopWatchScrollY) stopWatchScrollY?.()
+      if (stopWatchBottom)
+        stopWatchBottom?.()
+      if (stopWatchScrollY)
+        stopWatchScrollY?.()
       stopWatchBottom = null
       stopWatchScrollY = null
 
@@ -100,35 +133,6 @@ export default function <T, R = any>(serve: any, options: {
       pageState.pageNum = 1
     }
   }, { deep: true })
-
-  const { data, loading, refresh } = useRequest<PageResult<T>, R & {
-    pageNum: number;
-    pageSize: number;
-  }, T[]>(serve, {
-    params: computed(() => ({
-      ...cloneDeep(options.otherParmas),
-      ...pageState
-    })),
-    stopWatchParams,
-    onAfterMutateData: (response) => {
-      return options?.onAfterMutateData?.(response.list || []) || (response?.list || [])
-    },
-    onBefore: (params) => {
-      if (params?.pageNum === 1) {
-        const reloadClear = isBoolean(options?.reloadClear) ? options?.reloadClear : true
-        if (reloadClear) list.value = []
-        state.init = false
-      }
-    },
-    onSuccess: (response) => {
-      list.value = pageState?.pageNum === 1 ? data.value : unref(list).concat(data.value)
-      state.isMore = unref(list).length < (response.totalCount || 0)
-      state.init = true
-    }
-  })
-
-  const hasEmpty = computed(() => state.init && unref(list).length === 0)
-  const initLoading = computed(() => !state.init && loading.value)
 
   const handleNext = () => pageState.pageNum += 1
 

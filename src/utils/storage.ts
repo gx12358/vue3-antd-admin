@@ -12,7 +12,8 @@ function isEncryption(status: boolean) {
 }
 
 function handleStorageValue(value: string) {
-  if (isJSONStr(value)) return JSON.parse(value)
+  if (isJSONStr(value))
+    return JSON.parse(value)
   return value
 }
 
@@ -41,12 +42,13 @@ export function getStorage({
   type = 'localStorage',
   originKey
 }: { key: string, encryption?: boolean, type?: SettingConfig['storage'], originKey?: boolean }) {
-  const storageValue = type === 'localStorage' ?
-    localStorage.getItem(getStorageKey(key, originKey))
-    : type === 'sessionStorage' ? sessionStorage.getItem(getStorageKey(key, originKey)) : getCookie(getStorageKey(key, originKey))
-  const result: string | LocalResult = storageValue ?
-    isEncryption(encryption) ? Decrypt(storageValue) : handleStorageValue(storageValue)
-    : ''
+  const storageValue = type === 'localStorage'
+    ? localStorage.getItem(getStorageKey(key, originKey)) : type === 'sessionStorage'
+      ? sessionStorage.getItem(getStorageKey(key, originKey))
+      : getCookie(
+        getStorageKey(key, originKey))
+  const result: string | LocalResult = storageValue
+    ? isEncryption(encryption) ? Decrypt(storageValue) : handleStorageValue(storageValue) : ''
   if (result && isObject(result)) {
     if (result.expired) {
       const expiredStatus = dayjs().diff(dayjs(result.time)) >= result.expired
@@ -85,8 +87,10 @@ export function setStorage({
     time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     expired: expired || 0
   }
-  const storageValue = isEncryption(encryption) ? Encrypt(JSON.stringify(result)) : JSON.stringify(result)
-  if (type === 'local') localStorage.setItem(getStorageKey(key, originKey), storageValue)
+  const storageValue = isEncryption(encryption) ? Encrypt(JSON.stringify(result)) : JSON.stringify(
+    result)
+  if (type === 'local')
+    localStorage.setItem(getStorageKey(key, originKey), storageValue)
   sessionStorage.setItem(getStorageKey(key, originKey), storageValue)
 }
 
@@ -97,7 +101,8 @@ export function setStorage({
  * @description 删除Storage
  */
 export function removeStorage(key: string, type = 'local', originKey?: boolean) {
-  if (type === 'local') localStorage.removeItem(getStorageKey(key, originKey))
+  if (type === 'local')
+    localStorage.removeItem(getStorageKey(key, originKey))
   sessionStorage.removeItem(getStorageKey(key, originKey))
 }
 
@@ -132,7 +137,8 @@ function getCookies(cname: string) {
 function GetCookieDomain() {
   let host = location.hostname
   const ip = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-  if (ip.test(host) === true || host === 'localhost') return host
+  if (ip.test(host) === true || host === 'localhost')
+    return host
   const regex = /([^]*).*/
   const match = host.match(regex)
   if (typeof match !== 'undefined' && match !== null) {

@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { ref } from 'vue'
-import { isString, isArray, isObject } from '@gx-design-vue/pro-utils'
+import { isArray, isObject, isString } from '@gx-design-vue/pro-utils'
 
 export function usePermissions(): {
   permission: Ref<boolean | object>;
@@ -13,10 +13,10 @@ export function usePermissions(): {
 
   function hasPermission(value: object | string | string[]) {
     if (value && isObject(value) && Object.keys(value).length > 0) {
-      Object.keys(value).map(item => {
+      Object.keys(value).map((item) => {
         let isExist = true
         const permissionFlag = value[item]
-        const hasPermissions = permissions.some(el => {
+        const hasPermissions = permissions.some((el) => {
           return all_permission.value === el || permissionFlag.includes(el)
         })
         if (!hasPermissions) {
@@ -26,11 +26,12 @@ export function usePermissions(): {
         return item
       })
     } else if (isString(value) || isArray(value)) {
-      permission.value = permissions.some(el => {
+      permission.value = permissions.some((el) => {
         return all_permission.value === el || (value as string[]).includes(el)
       })
     }
   }
+
   return {
     permission,
     hasPermission

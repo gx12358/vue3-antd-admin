@@ -1,7 +1,3 @@
-<template>
-  <div style="width: 100%; min-height: 400px" id="radar-container"></div>
-</template>
-
 <script lang="ts">
 import { defineComponent, watch } from 'vue'
 import * as echarts from 'echarts'
@@ -22,11 +18,9 @@ export default defineComponent({
   },
   setup(props) {
     const initRadar = (indicator) => {
-      var chartDom = document.getElementById('radar-container')
-      var myChart = echarts.init(chartDom)
-      var option
-
-      option = {
+      const chartDom = document.getElementById('radar-container')
+      const myChart = echarts.init(chartDom)
+      const option = {
         legend: {
           data: ['个人', '团队', '部门']
         },
@@ -65,3 +59,7 @@ export default defineComponent({
   }
 })
 </script>
+
+<template>
+  <div style="width: 100%; min-height: 400px" id="radar-container"></div>
+</template>
