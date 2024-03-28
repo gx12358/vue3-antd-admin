@@ -1,4 +1,4 @@
-<div align="center"> <a href="https://github.com/gx12358/vue3-antd-admin"> <img alt="VbenAdmin Logo" width="200" src="http://47.120.73.101/resource/img/logo.png"> </a> <br> <br>
+<div align="center"> <a href="https://github.com/gx12358/vue3-antd-admin"> <img alt="VbenAdmin Logo" width="200" src="http://47.120.73.101/resource/img/favicon.ico"> </a> <br> <br>
 
 <h1>GX Pro Admin（Ant Design Vue）</h1>
 </div>
