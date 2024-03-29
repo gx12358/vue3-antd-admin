@@ -8,6 +8,9 @@ export default defineComponent({
   name: 'GlobalImage',
   inheritAttrs: false,
   props: {
+    slotClass: {
+      type: String as VuePropType<string>,
+    },
     slotImageClass: {
       type: String as VuePropType<string>,
       default: 'w-30px'
@@ -21,7 +24,7 @@ export default defineComponent({
   }>,
   setup(props, { slots, attrs }) {
     const renderImage: () => any = () => (
-      <div class={'gx-image-slot'}>
+      <div class={[ 'gx-image-slot', props.slotClass ]}>
         <img class={props.slotImageClass} src="/src/assets/public_images/placeholder.svg" alt="" />
       </div>
     )

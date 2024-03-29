@@ -74,11 +74,13 @@ const previewList = [
         <a-typography-title :level="3">
           图片 - 懒加载
         </a-typography-title>
-        <div class="w-300px h-500px">
-          <g-scrollbars style="height: 100%">
+        <div class="w-300px">
+          <g-scrollbars :max-height="500">
             <div class="p-20px" style="background: rgb(240, 242, 245)">
               <g-admin-image
-                style="min-height: 200px; margin-bottom: 15px"
+                slot-class="min-h-200px"
+                slot-image-class="w-50px"
+                class="mb-15px"
                 v-for="el in imageUrls"
                 :key="el"
                 :src="el"
