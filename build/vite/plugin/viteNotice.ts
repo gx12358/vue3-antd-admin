@@ -1,20 +1,13 @@
 import type { Plugin } from 'vite'
-import dayjs from 'dayjs'
-import type { Dayjs } from 'dayjs'
-import duration from 'dayjs/plugin/duration'
 import chalk from 'chalk'
 import { readPackageJSON } from 'pkg-types'
 import { defaultSettings } from '../../../config'
 import { getPackageSize, getRootPath, rootPath } from '../../util'
 
-dayjs.extend(duration)
-
 const { outputDir } = defaultSettings
 
 export default async function viteNotice(): Promise<Plugin> {
   let config: { command: string }
-  let startTime: Dayjs
-  let endTime: Dayjs
   const { name = '' } = await readPackageJSON(rootPath)
 
   return {
@@ -32,14 +25,9 @@ export default async function viteNotice(): Promise<Plugin> {
           )
         )
       )
-
-      if (config.command === 'build') {
-        startTime = dayjs()
-      }
     },
     closeBundle() {
       if (config.command === 'build') {
-        endTime = dayjs()
         getPackageSize({
           folder: getRootPath(outputDir),
           callBack: (size: string) => {

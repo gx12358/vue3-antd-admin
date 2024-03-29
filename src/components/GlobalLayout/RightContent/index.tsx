@@ -6,6 +6,7 @@ import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { useStyle } from './style'
+import { typeViteEnv } from '@/utils/env'
 
 export default defineComponent({
   name: 'GlobalRightContent',
@@ -67,7 +68,7 @@ export default defineComponent({
                 <div class={`${prefixCls}-header-actions ${hashId.value}`.trim()}>
                   <div class={`${prefixCls}-header-actions-item ${hashId.value}`.trim()}>
                     <div style={{ display: 'flex', height: '26px' }}>
-                      <QuestionCircleOutlined />
+                      <QuestionCircleOutlined onClick={() => window.open(typeViteEnv('VITE_HOME_PAGE_DOC'))} />
                     </div>
                   </div>
                   <div class={`${prefixCls}-header-actions-avatar ${hashId.value}`.trim()}>

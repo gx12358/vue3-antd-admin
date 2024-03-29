@@ -48,13 +48,13 @@ declare global {
     VITE_BASE_URL: string;
     VITE_APP_ENV: 'dev';
     VUE_APP_VERSION: string;
-    VUE_APP_AUTHOR: any;
     VITE_PROXY: [ string, string ][];
     VITE_DROP_CONSOLE: boolean;
     VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none';
     VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE: boolean;
     VITE_LEGACY: boolean;
-    VITE_GENERATE_UI: string;
+    VITE_HOME_PAGE: string; // 主页
+    VITE_HOME_PAGE_DOC: string; // 系统文档
   }
 
   declare function parseInt(s: string | number, radix?: number): number;
