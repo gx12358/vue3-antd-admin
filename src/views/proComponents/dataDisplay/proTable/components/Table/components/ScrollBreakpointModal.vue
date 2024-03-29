@@ -11,7 +11,7 @@ const formItemLayout = {
   wrapperCol: { span: 21 }
 }
 
-const scrollRef = reactive({
+const scrollState = reactive({
   mode: 'grid',
   grid: 'xl',
   width: ''
@@ -19,24 +19,24 @@ const scrollRef = reactive({
 
 const resetModalState = () => {
   visible.value = false
-  scrollRef.mode = 'grid'
-  scrollRef.grid = 'xl'
-  scrollRef.width = ''
+  scrollState.mode = 'grid'
+  scrollState.grid = 'xl'
+  scrollState.width = ''
 }
 
 const open = (params = 'xl') => {
   visible.value = true
   if (isString(params)) {
-    scrollRef.mode = 'grid'
-    scrollRef.grid = params
+    scrollState.mode = 'grid'
+    scrollState.grid = params
   } else {
-    scrollRef.mode = 'wdith'
-    scrollRef.grid = params
+    scrollState.mode = 'wdith'
+    scrollState.grid = params
   }
 }
 
 const handleSubmit = () => {
-  emits('handleOk', scrollRef.mode === 'grid' ? scrollRef.grid : Number(scrollRef.width))
+  emits('handleOk', scrollState.mode === 'grid' ? scrollState.grid : Number(scrollState.width))
   resetModalState()
 }
 
@@ -58,15 +58,15 @@ defineExpose({
     @ok="handleSubmit"
     @cancel="handleCancel"
   >
-    <a-form v-model="scrollRef" v-bind="formItemLayout">
+    <a-form :model="scrollState" v-bind="formItemLayout">
       <a-form-item label="模式">
-        <a-radio-group v-model:value="scrollRef.mode">
+        <a-radio-group v-model:value="scrollState.mode">
           <a-radio value="grid">Grid</a-radio>
           <a-radio value="width">Width</a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item v-if="scrollRef.mode === 'grid'" label="Grid">
-        <a-radio-group v-model:value="scrollRef.grid">
+      <a-form-item v-if="scrollState.mode === 'grid'" label="Grid">
+        <a-radio-group v-model:value="scrollState.grid">
           <a-radio-button value="xxxl">xxxl</a-radio-button>
           <a-radio-button value="xxl">xxl</a-radio-button>
           <a-radio-button value="xl">xl</a-radio-button>
@@ -75,10 +75,10 @@ defineExpose({
           <a-radio-button value="xs">xs</a-radio-button>
         </a-radio-group>
       </a-form-item>
-      <a-form-item v-if="scrollRef.mode === 'width'" label="Width">
+      <a-form-item v-if="scrollState.mode === 'width'" label="Width">
         <a-input
           style="width: 100%"
-          v-model:value="scrollRef.width"
+          v-model:value="scrollState.width"
           placeholder="请输入断点数值"
           allow-clear
         />
