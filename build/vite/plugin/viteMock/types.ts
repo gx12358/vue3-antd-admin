@@ -3,6 +3,8 @@ import { IncomingMessage, ServerResponse } from 'http'
 export interface ViteMockOptions {
   mockPath?: string;
   configPath?: string;
+  injectFile?: string;
+  injectCode?: string;
   ignore?: RegExp | ((fileName: string) => boolean);
   watchFiles?: boolean;
   enable?: boolean;

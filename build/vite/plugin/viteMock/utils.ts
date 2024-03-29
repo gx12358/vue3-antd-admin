@@ -1,10 +1,20 @@
+import fs from 'node:fs'
+
 const toString = Object.prototype.toString
 
 export function is(val: unknown, type: string) {
   return toString.call(val) === `[object ${type}]`
 }
 
-// eslint-disable-next-line
+export function fileExists(f: string) {
+  try {
+    fs.accessSync(f, fs.constants.W_OK);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 export function isFunction<T = Function>(val: unknown): val is T {
   return is(val, 'Function') || is(val, 'AsyncFunction')
 }

@@ -4,6 +4,11 @@ export function configMockPlugin() {
   return viteMockServe({
     ignore: /^_/,
     mockPath: 'mock',
-    enable: true
+    enable: true,
+    injectCode: `
+      import { setupProdMockServer } from '../mock/_createProductionServer';
+
+      setupProdMockServer();
+      `,
   })
 }

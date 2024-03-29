@@ -1,9 +1,9 @@
-/* eslint-disable */
-import type { MockMethod } from './types'
+import mockJs from 'mockjs'
+import { pathToRegexp } from 'path-to-regexp'
 
-export async function createProdMockServer(mockList: any[]) {
-  const Mock: any = await import('mockjs')
-  const { pathToRegexp } = await import('path-to-regexp')
+const Mock = mockJs as any
+
+export function createProdMockServer(mockList: any[]) {
   Mock.XHR.prototype.__send = Mock.XHR.prototype.send
   Mock.XHR.prototype.send = function () {
     if (this.custom.xhr) {
@@ -36,11 +36,11 @@ export async function createProdMockServer(mockList: any[]) {
   }
 
   for (const { url, method, response, timeout } of mockList) {
-    __setupMock__(Mock, timeout)
+    __setupMock__(timeout)
     Mock.mock(
       pathToRegexp(url, undefined, { end: false }),
       method || 'get',
-      __XHR2ExpressReqWrapper__(Mock, response),
+      __XHR2ExpressReqWrapper__(response)
     )
   }
 }
@@ -52,52 +52,37 @@ function __param2Obj__(url: string) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}',
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
 
-function __XHR2ExpressReqWrapper__(_Mock: any, handle: (d: any) => any) {
+function __XHR2ExpressReqWrapper__(handle: (d: any) => any) {
   return function (options: any) {
     let result = null
     if (typeof handle === 'function') {
       const { body, type, url, headers } = options
-
-      let b = body
-      try {
-        b = JSON.parse(body)
-      } catch {}
       result = handle({
         method: type,
-        body: b,
+        body: JSON.parse(body),
         query: __param2Obj__(url),
-        headers,
+        headers
       })
     } else {
       result = handle
     }
 
-    return _Mock.mock(result)
+    return Mock.mock(result)
   }
 }
 
-function __setupMock__(mock: any, timeout = 0) {
+function __setupMock__(timeout = 0) {
   timeout &&
-    mock.setup({
-      timeout,
-    })
-}
-
-export function defineMockModule(
-  fn: (config: {
-    env: Record<string, any>
-    mode: string
-    command: 'build' | 'serve'
-  }) => Promise<MockMethod[]> | MockMethod[],
-) {
-  return fn
+  Mock.setup({
+    timeout
+  })
 }
