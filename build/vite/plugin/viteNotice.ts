@@ -43,9 +43,7 @@ export default async function viteNotice(): Promise<Plugin> {
         getPackageSize({
           folder: getRootPath(outputDir),
           callBack: (size: string) => {
-            console.log(chalk.bold(chalk.green(`✨ ${chalk.blue(`[${name}]`)} all build successfully, Packaging time ${dayjs
-              .duration(endTime.diff(startTime))
-              .format('mm:ss')}, Total files ${size}`)))
+            console.log(chalk.bold(chalk.green(`✨ ${chalk.blue(`[${name}]`)} all build successfully, Total files ${size}`)))
           }
         })
       }
