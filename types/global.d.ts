@@ -55,6 +55,8 @@ declare global {
     VITE_LEGACY: boolean;
     VITE_HOME_PAGE: string; // 主页
     VITE_HOME_PAGE_DOC: string; // 系统文档
+    VITE_GITHUB_PAGE: string; // github 地址
+    VITE_GITEE_PAGE: string; // gitee 地址
   }
 
   declare function parseInt(s: string | number, radix?: number): number;

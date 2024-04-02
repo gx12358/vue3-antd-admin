@@ -6,6 +6,18 @@ import { mergeToken, setAlpha, useStyle as useProStyle } from '@gx-design-vue/pr
 const genStyle: GenerateStyle<ProAliasToken> = (token): CSSObject => {
   return {
     [`${token.componentCls}`]: {
+      [`${token.componentCls}-right-content.dark`]: {
+        [`${token.componentCls}-header-actions-item`]: {
+          '.iconfont,.anticon': {
+            color: token.colorWhite
+          }
+        },
+        [`${token.componentCls}-header-actions-avatar`]: {
+          '> div': {
+            color: token.colorWhite
+          }
+        },
+      },
       '&-header-actions': {
         display: 'flex',
         height: '100%',

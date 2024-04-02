@@ -5,6 +5,7 @@ import { useDebounceFn } from '@vueuse/core'
 import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
+import { useProLayoutContext } from '@gx-design-vue/pro-layout'
 import { useStyle } from './style'
 import { typeViteEnv } from '@/utils/env'
 
@@ -13,6 +14,7 @@ export default defineComponent({
   setup(_) {
     const store = useStore()
     const router = useRouter()
+    const { theme, layout } = useProLayoutContext()
 
     const prefixCls = getPrefixCls({
       suffixCls: 'global-header',
@@ -21,6 +23,9 @@ export default defineComponent({
 
     const [ logoutLoading, changeLoading ] = useState(false)
     const { wrapSSR, hashId } = useStyle(prefixCls)
+
+    const layoutSide = computed(() => layout.value === 'side' || layout.value === 'simple')
+    const hTheme = computed(() => (layoutSide.value && 'light') || theme.value)
 
     const [ rightSize, setRightSize ] = useState<number | string>('auto')
 
@@ -40,7 +45,7 @@ export default defineComponent({
     return () => {
       return wrapSSR(
         <div
-          class={`${prefixCls}-right-content ${hashId.value}`.trim()}
+          class={`${prefixCls}-right-content ${hTheme.value} ${hashId.value}`.trim()}
           style={{
             minWidth: rightSize.value,
             height: '100%'
@@ -67,8 +72,18 @@ export default defineComponent({
               >
                 <div class={`${prefixCls}-header-actions ${hashId.value}`.trim()}>
                   <div class={`${prefixCls}-header-actions-item ${hashId.value}`.trim()}>
-                    <div style={{ display: 'flex', height: '26px' }}>
+                    <div class="flex leading-26px">
                       <QuestionCircleOutlined onClick={() => window.open(typeViteEnv('VITE_HOME_PAGE_DOC'))} />
+                    </div>
+                  </div>
+                  <div class={`${prefixCls}-header-actions-item ${hashId.value}`.trim()}>
+                    <div class="flex leading-26px" onClick={() => window.open(typeViteEnv('VITE_GITHUB_PAGE'))}>
+                      <i class="iconfont gx-github !text-18px text-hex-main" />
+                    </div>
+                  </div>
+                  <div class={`${prefixCls}-header-actions-item ${hashId.value}`.trim()}>
+                    <div class="flex leading-26px" onClick={() => window.open(typeViteEnv('VITE_GITEE_PAGE'))}>
+                      <i class="iconfont gx-gitee text-hex-C71D23" />
                     </div>
                   </div>
                   <div class={`${prefixCls}-header-actions-avatar ${hashId.value}`.trim()}>
