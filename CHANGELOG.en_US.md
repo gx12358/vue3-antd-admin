@@ -1,3 +1,15 @@
+## 3.0.2(2024-04.02)
+
+## Upgrade instructions
+
+### ✨ Feat
+
+- **Others**
+  - `.env`Add`VITE_GITHUB_PAGE``VITE_GITEE_PAGE`environment
+  - `assets/public_icon/`Add`gitee``github`Icon
+- **GlobalLayout/RightContent component**
+  - Add`gitee``github`Icon and Address Redirection
+
 ## 3.0.1(2024-03.28)
 
 ## Upgrade instructions
