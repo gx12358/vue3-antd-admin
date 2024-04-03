@@ -10,18 +10,19 @@ declare module '*.tiff'
 
 declare module 'vue' {
   export type JSXComponent<Props = any> =
-    | { new (): ComponentPublicInstance<Props> }
-    | FunctionalComponent<Props>;
+    | { new(): ComponentPublicInstance<Props> }
+    | FunctionalComponent<Props>
 }
 
 /// <reference types="vite/client" />
 declare module '*.vue' {
-  import type { DefineComponent } from 'vue';
-  const Component: DefineComponent<{}, {}, any>;
-  export default Component;
+  import type { DefineComponent } from 'vue'
+
+  const Component: DefineComponent<Record<any, any>, Record<any, any>, any>
+  export default Component
 }
 
 declare module 'virtual:*' {
-  const result: any;
-  export default result;
+  const result: any
+  export default result
 }

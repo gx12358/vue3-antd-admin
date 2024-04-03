@@ -1,10 +1,10 @@
+import Vue from 'vue'
 import type {
+  PropType,
   VNode,
   VNodeChild,
-  CSSProperties as VueCSSProperties,
-  PropType,
+  CSSProperties as VueCSSProperties
 } from 'vue'
-import Vue from 'vue'
 import type { CSSObject as ProCssObject } from 'ant-design-vue'
 import type { ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
 
@@ -19,7 +19,7 @@ declare global {
     lastBuildTime: string;
   }
 
-  declare type LocalResult = {
+  declare interface LocalResult {
     value: any;
     time: string;
     expired: number;
@@ -30,14 +30,16 @@ declare global {
   declare type CSSObject = ProCssObject
 
   // vue
-  declare type Key = string | number;
-  declare type VuePropType<T> = PropType<T>;
-  declare type VueNode = VNodeChild | JSX.Element;
+  declare type Key = string | number
+  declare type VuePropType<T> = PropType<T>
+  declare type VueNode = VNodeChild | JSX.Element
 
-  declare type Recordable<T = any> = Record<string, T>;
+  declare type Recordable<T = any> = Record<string, T>
 
-  declare type Nullable<T> = T | null;
-  declare type Recordable<T = any> = Record<string, T>;
+  declare type Recordable<T = any> = Record<string, T>
+  interface Fn<T = any, R = T> {
+    (...arg: T[]): R;
+  }
 
   declare interface ViteEnv {
     VITE_PORT: number;
@@ -59,9 +61,9 @@ declare global {
     VITE_GITEE_PAGE: string; // gitee 地址
   }
 
-  declare function parseInt(s: string | number, radix?: number): number;
+  declare function parseInt(s: string | number, radix?: number): number
 
-  declare function parseFloat(string: string | number): number;
+  declare function parseFloat(string: string | number): number
 
   class FilerobotImageEditor {
     constructor(selector: HTMLElement, options: any) {
@@ -76,7 +78,7 @@ declare global {
   }
 
   namespace JSX {
-    type Element = VNode;
+    type Element = VNode
 
     interface ElementClass extends Vue {}
 

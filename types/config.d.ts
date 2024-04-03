@@ -1,3 +1,10 @@
+declare interface CdnModuleList {
+  name: string;
+  globalName: string;
+  path: string;
+  css?: string;
+}
+
 declare interface SettingConfig {
   publicPath: string;
   outputDir: string;
@@ -34,11 +41,4 @@ declare interface SettingConfig {
 declare interface NetworkConfig {
   requestTimeout: number;
   successCode: (string | number)[];
-}
-
-declare type CdnModuleList = {
-  name: string;
-  globalName: string;
-  path: string;
-  css?: string;
 }

@@ -7,7 +7,6 @@ export default antFuEslint({
   gitignore: true,
   markdown: true,
   ignores: [
-    'types',
     'src/assets/**/*.js',
     'build/vite/plugin/viteMock',
     'public',
@@ -43,6 +42,7 @@ export default antFuEslint({
     'unicorn/escape-case': 0,
     'ts/method-signature-style': 0,
     'style/no-trailing-spaces': 0,
+    'ts/consistent-type-imports': 0,
     'style/type-generic-spacing': 0,
     'prefer-promise-reject-errors': 0
   }
