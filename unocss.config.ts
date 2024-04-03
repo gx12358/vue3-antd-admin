@@ -1,7 +1,7 @@
 import {
   defineConfig,
-  presetUno,
   presetAttributify,
+  presetUno,
   transformerDirectives,
   transformerVariantGroup
 } from 'unocss'
@@ -99,4 +99,3 @@ export default defineConfig({
     ]
   ]
 })
-

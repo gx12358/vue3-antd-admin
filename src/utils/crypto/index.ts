@@ -2,10 +2,26 @@ import 'crypto-js/enc-utf8'
 import 'crypto-js/tripledes'
 import 'crypto-js/sha1'
 import * as CryptoJS from 'crypto-js/core'
+import CryptoProJS from 'crypto-js'
 import { isJSONStr } from '@/utils/validate'
 import { isArray, isObject } from '@gx-design-vue/pro-utils'
 
 const key = '1234123412ABCDEF' // 十六位十六进制数作为密钥
+
+/**
+ * 登录密码加密
+ * @param password
+ * @returns {string}
+ */
+export const encodePassword = (password: string) => {
+  const key = CryptoProJS.enc.Utf8.parse('8QONwyJtHesysWpM')
+  const passwordENC = CryptoProJS.AES.encrypt(password, key, {
+    mode: CryptoProJS.mode.ECB,
+    padding: CryptoProJS.pad.Pkcs7
+  })
+  const encodePW = passwordENC.ciphertext.toString()
+  return encodePW
+}
 
 // 加密方法
 export function Encrypt(word) {

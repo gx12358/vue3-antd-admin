@@ -33,10 +33,8 @@ declare global {
   declare type Key = string | number
   declare type VuePropType<T> = PropType<T>
   declare type VueNode = VNodeChild | JSX.Element
-
   declare type Recordable<T = any> = Record<string, T>
 
-  declare type Recordable<T = any> = Record<string, T>
   interface Fn<T = any, R = T> {
     (...arg: T[]): R;
   }
