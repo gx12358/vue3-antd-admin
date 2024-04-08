@@ -74,15 +74,15 @@ export const proUploadProps = {
   errorClean: PropTypes.bool,
   wordExtra: PropTypes.VueNode,
   fallback: {
-    type: [ Function, Object ] as VuePropType<WithFalse<() => CustomRender>>,
+    type: [ Function, Object ] as VuePropType<WithFalse<CustomRender>>,
     default: () => undefined
   },
   placeholder: {
-    type: [ Function, Object ] as VuePropType<WithFalse<() => CustomRender>>,
+    type: [ Function, Object ] as VuePropType<WithFalse<CustomRender>>,
     default: () => undefined
   },
   triggerRender: {
-    type: [ Function, Boolean ] as VuePropType<WithFalse<() => CustomRender>>,
+    type: [ Function, Boolean ] as VuePropType<WithFalse<CustomRender>>,
     default: () => undefined
   },
   customOperationRender: {

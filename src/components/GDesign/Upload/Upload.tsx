@@ -508,7 +508,7 @@ const GUpload = defineComponent({
     const renderUploadButton = () => {
       if (!showUpload.value)
         return null
-      const triggerIconRender = getSlot<WithFalse<() => CustomRender>>(
+      const triggerIconRender = getSlot<() => WithFalse<CustomRender>>(
         slots,
         props,
         'triggerRender'
@@ -541,17 +541,17 @@ const GUpload = defineComponent({
 
     return () => {
       const wordExtraRender = getSlotVNode(slots, props, 'wordExtra')
-      const errorExtraRender = getSlotVNode<WithFalse<() => CustomRender>>(
+      const errorExtraRender = getSlotVNode<WithFalse<CustomRender>>(
         slots,
         props,
         'fallback'
       )
-      const placeholderExtra = getSlotVNode<WithFalse<() => CustomRender>>(
+      const placeholderExtra = getSlotVNode<WithFalse<CustomRender>>(
         slots,
         props,
         'placeholder'
       )
-      const customOperationRender = getSlot<WithFalse<() => CustomRender>>(
+      const customOperationRender = getSlot<GUploadProps['customOperationRender']>(
         slots,
         props,
         'customOperationRender'

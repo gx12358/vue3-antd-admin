@@ -29,9 +29,9 @@ export default defineComponent({
       </div>
     )
     return () => {
-      const placeholderSlot = getSlotVNode<WithFalse<() => CustomRender>>(slots, props, 'placeholder')
-      const fallbackSlot = getSlotVNode<WithFalse<() => CustomRender>>(slots, props, 'fallback')
-      const renderHolder = getSlotVNode<WithFalse<() => CustomRender>>(slots, props, 'renderHolder')
+      const placeholderSlot = getSlotVNode<WithFalse<CustomRender>>(slots, props, 'placeholder')
+      const fallbackSlot = getSlotVNode<WithFalse<CustomRender>>(slots, props, 'fallback')
+      const renderHolder = getSlotVNode<WithFalse<CustomRender>>(slots, props, 'renderHolder')
 
       return (
         <GImage
