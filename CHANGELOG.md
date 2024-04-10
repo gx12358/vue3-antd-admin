@@ -1,3 +1,19 @@
+## 3.0.3(2024-04.10)
+
+## Upgrade instructions
+
+### ✨ Feat
+
+- **Others**
+  - `config` add `theme` themeConfig
+
+### ✨ Refactor
+
+- **ThemeConfig**
+  - `BasicLayout.vue` add `state` move to `store/global`
+  - `store/global`
+    - add `layout`
+
 ## 3.0.2(2024-04.02)
 
 ## Upgrade instructions

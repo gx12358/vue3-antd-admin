@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { compareArray } from '@gx-design-vue/pro-utils'
 import type { AppRouteModule } from '@gx-design-vue/pro-layout'
@@ -21,6 +22,11 @@ import Radar from './components/Radar.vue'
 
 const store = useStore()
 const router = useRouter()
+const { token } = useProConfigContext()
+
+watchEffect(() => {
+  console.log(token.value.layout)
+})
 
 const state = reactive({
   radarMaxCount: 10,

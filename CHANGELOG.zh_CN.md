@@ -1,3 +1,20 @@
+## 3.0.3(2024-04.10)
+
+## 升级说明
+
+### ✨ Feat
+
+- **其它**
+  - `config`新增`theme`主题配置
+
+### ✨ Refactor
+
+- **主题参数**
+  - `BasicLayout.vue` 新增 `state` 参数迁移至 `store/global`
+  - `store/global`重构
+    - 新增 `layout` 参数
+
+
 ## 3.0.2(2024-04.02)
 
 ## 升级说明

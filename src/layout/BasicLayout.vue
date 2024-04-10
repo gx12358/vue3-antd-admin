@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { cloneDeep } from 'lodash-es'
-import logo from '@/assets/logo.png'
 import { isFunction, isString, merge } from '@gx-design-vue/pro-utils'
 import type { BaseLayoutDesignToken, ThemeConfig } from '@gx-design-vue/pro-provider'
-import type { AppRouteModule, BasicLayoutProps, Route } from '@gx-design-vue/pro-layout'
-import { themeConfig as proThemeConfig } from '@gx-design-vue/pro-provider'
+import type { AppRouteModule, BasicLayoutProps } from '@gx-design-vue/pro-layout'
 import {
   GProLayout,
   SettingDrawer,
@@ -13,26 +10,17 @@ import {
   getMatchedList,
   getMenuData,
   getMenuFirstLastChildPath,
-  handleThemeConfig,
   hanlePathKey,
 } from '@gx-design-vue/pro-layout'
 import RightContent from '@/components/GlobalLayout/RightContent'
 import ProContent from './ContentView.vue'
 
-const store = useStore()
+const { global } = useStore()
 const router = useRouter()
 
 const reloadStatus = ref(true)
 
 const routeData: AppRouteModule[] = router.getRoutes() as any
-
-const themeConfig = reactive(cloneDeep({ ...proThemeConfig } as ThemeConfig))
-
-const state = reactive({
-  logo,
-  breadcrumb: [],
-  ...handleThemeConfig(themeConfig)
-} as Omit<BasicLayoutProps, 'breadcrumb' | 'token'> & { breadcrumb: Route[]; token: any })
 
 const menuState = reactive<Pick<BasicLayoutProps, 'menuData' | 'levelMenuData'>>({
   menuData: [],
@@ -50,11 +38,17 @@ const matchedMenu = computed(() => getMatchedList(
   hanlePathKey(router.currentRoute.value as AppRouteModule)
 ))
 
-watch(() => state, (val) => {
-  store.global.setGlobalData({
-    settings: val as any
+const breadcrumbRouters = computed(() => {
+  return matchedMenu.value.map((menuItem: AppRouteModule) => {
+    const path = getMenuFirstLastChildPath(menuItem.meta?.hideChildrenInMenu ? [] : menuItem.children || [])
+    return {
+      path: path ? isString(menuItem.redirect) ? menuItem.redirect as string : isFunction(menuItem.redirect)
+        ? (menuItem.redirect as any)?.() as string
+        : '' || menuItem.path : '',
+      breadcrumbName: menuItem.meta?.title || ''
+    }
   })
-}, { deep: true, immediate: true })
+})
 
 const handleMenuData = () => {
   const menuInfos = getMenuData(clearMenuItem(routeData))
@@ -68,21 +62,10 @@ const handleMenuData = () => {
 }
 
 watch(
-  () => router.currentRoute.value as any,
-  (val: AppRouteModule) => {
-    if (val) {
+  () => router.currentRoute.value,
+  (val) => {
+    if (val)
       handleMenuData()
-      const breadcrumb: Route[] = matchedMenu.value.map((menuItem: AppRouteModule) => {
-        const path = getMenuFirstLastChildPath(menuItem.meta?.hideChildrenInMenu ? [] : menuItem.children || [])
-        return {
-          path: path ? isString(menuItem.redirect) ? menuItem.redirect as string : isFunction(menuItem.redirect)
-            ? (menuItem.redirect as any)?.() as string
-            : '' || menuItem.path : '',
-          breadcrumbName: menuItem.meta?.title || ''
-        }
-      })
-      state.breadcrumb = cloneDeep(breadcrumb)
-    }
   },
   { deep: true, immediate: true }
 )
@@ -107,17 +90,11 @@ const changeTabs = (_routers: any) => {
 }
 
 const changeTheme = (newVal: ThemeConfig) => {
-  Object.assign(state, newVal)
-  Object.assign(themeConfig, newVal)
-  if (newVal.animate?.name) {
-    store.global.setGlobalData({
-      animateSetting: { ...newVal.animate }
-    })
-  }
+  global.settings.layout = merge(global.settings.layout, { ...newVal })
 }
 
 const changeLayoutTheme = (newVal: BaseLayoutDesignToken) => {
-  state.token = merge(state.token, { ...newVal })
+  global.settings.layout.token = merge(global.settings.layout.token, { ...newVal })
 }
 </script>
 
@@ -126,20 +103,20 @@ const changeLayoutTheme = (newVal: BaseLayoutDesignToken) => {
     v-model:collapsed="baseState.collapsed"
     v-model:selectedKeys="baseState.selectedKeys"
     v-model:openKeys="baseState.openKeys"
-    v-bind="state as BasicLayoutProps"
+    v-bind="global.settings.layout as BasicLayoutProps"
+    :breadcrumb="{ routes: breadcrumbRouters }"
     :menu-data="menuState.menuData as AppRouteModule[]"
-    :breadcrumb="{ routes: state.breadcrumb }"
     @changeTabs="changeTabs"
     @reloadPage="handleReload"
     @menuHeaderClick="() => router.push('/')"
   >
-    <template v-if="state.layout === 'wide'" #menuExtraRender>
+    <template v-if="global.settings.layout.layout === 'wide'" #menuExtraRender>
       <div class="text-center"> 额外元素</div>
     </template>
     <template #rightContentRender>
       <RightContent />
     </template>
-    <ProContent :animate="store.global.animateSetting" :reloadStatus="reloadStatus" />
-    <SettingDrawer :settings="state" @change="changeTheme" @changeLayout="changeLayoutTheme" weakmode show-progress />
+    <ProContent :animate="global.settings.layout.animate" :reloadStatus="reloadStatus" />
+    <SettingDrawer :settings="global.settings.layout" @change="changeTheme" @changeLayout="changeLayoutTheme" weakmode show-progress />
   </GProLayout>
 </template>

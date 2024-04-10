@@ -7,6 +7,7 @@ import type {
 } from 'vue'
 import type { CSSObject as ProCssObject } from 'ant-design-vue'
 import type { ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
+import type { DeepPartial, ProAliasToken as GProAliasToken } from '@gx-design-vue/pro-provider'
 
 declare global {
   const __APP_INFO__: {
@@ -25,6 +26,7 @@ declare global {
     expired: number;
   }
 
+  type ProAliasToken = DeepPartial<GProAliasToken>
   declare type CSSProperties = VueCSSProperties
   declare type ProColumnType = GProColumnType
   declare type CSSObject = ProCssObject
