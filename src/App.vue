@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConfigProvider } from 'ant-design-vue'
+import ProConfigProvider from '@gx-design-vue/pro-provider'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
 import { GProApp } from '@gx-design-vue/pro-app'
 import PageLoading from '@/components/PageLoading'
@@ -10,14 +10,14 @@ const indicator = h('i', {
   spin: true
 })
 
-const store = useStore()
+const { global, routes } = useStore()
 const route = useRoute()
 
-const loading = computed(() => store.routes.routerLoading)
+const loading = computed(() => routes.routerLoading)
 </script>
 
 <template>
-  <ConfigProvider :locale="zhCN">
+  <ProConfigProvider :locale="zhCN" :token="{ colorPrimary: global.state.settings.layout.primaryColor }">
     <template #renderEmpty>
       <Empty :text="false" />
     </template>
@@ -32,5 +32,5 @@ const loading = computed(() => store.routes.routerLoading)
         <PageLoading :loading="loading && route.fullPath === '/'" />
       </div>
     </GProApp>
-  </ConfigProvider>
+  </ProConfigProvider>
 </template>

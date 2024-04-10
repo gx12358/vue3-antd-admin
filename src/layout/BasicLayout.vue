@@ -16,6 +16,7 @@ import RightContent from '@/components/GlobalLayout/RightContent'
 import ProContent from './ContentView.vue'
 
 const { global } = useStore()
+
 const router = useRouter()
 
 const reloadStatus = ref(true)
@@ -90,11 +91,11 @@ const changeTabs = (_routers: any) => {
 }
 
 const changeTheme = (newVal: ThemeConfig) => {
-  global.settings.layout = merge(global.settings.layout, { ...newVal })
+  global.state.settings.layout = merge(global.state.settings.layout, { ...newVal })
 }
 
 const changeLayoutTheme = (newVal: BaseLayoutDesignToken) => {
-  global.settings.layout.token = merge(global.settings.layout.token, { ...newVal })
+  global.state.settings.layout.token = merge(global.state.settings.layout.token, { ...newVal })
 }
 </script>
 
@@ -103,20 +104,20 @@ const changeLayoutTheme = (newVal: BaseLayoutDesignToken) => {
     v-model:collapsed="baseState.collapsed"
     v-model:selectedKeys="baseState.selectedKeys"
     v-model:openKeys="baseState.openKeys"
-    v-bind="global.settings.layout as BasicLayoutProps"
+    v-bind="global.state.settings.layout as BasicLayoutProps"
     :breadcrumb="{ routes: breadcrumbRouters }"
     :menu-data="menuState.menuData as AppRouteModule[]"
     @changeTabs="changeTabs"
     @reloadPage="handleReload"
     @menuHeaderClick="() => router.push('/')"
   >
-    <template v-if="global.settings.layout.layout === 'wide'" #menuExtraRender>
+    <template v-if="global.state.settings.layout.layout === 'wide'" #menuExtraRender>
       <div class="text-center"> 额外元素</div>
     </template>
     <template #rightContentRender>
       <RightContent />
     </template>
-    <ProContent :animate="global.settings.layout.animate" :reloadStatus="reloadStatus" />
-    <SettingDrawer :settings="global.settings.layout" @change="changeTheme" @changeLayout="changeLayoutTheme" weakmode show-progress />
+    <ProContent :animate="global.state.settings.layout.animate" :reloadStatus="reloadStatus" />
+    <SettingDrawer :settings="global.state.settings.layout" @change="changeTheme" @changeLayout="changeLayoutTheme" weakmode show-progress />
   </GProLayout>
 </template>

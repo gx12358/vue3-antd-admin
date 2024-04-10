@@ -1,4 +1,4 @@
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 import type { ThemeConfig } from '@gx-design-vue/pro-provider'
 import { themeConfig as proThemeConfig } from '@gx-design-vue/pro-provider'
@@ -22,8 +22,9 @@ export interface GlobalState {
   isLogut: boolean;
   settings: {
     layout: BasicLayoutProps;
-    showProgressBar: boolean;
     keepAlive: boolean;
+    showProgressBar: boolean;
+    disabledScrollTop: boolean;
   };
 }
 
@@ -37,7 +38,8 @@ export const useStoreGlobal = defineStore('global', () => {
         ...handleThemeConfig({ ...layoutThemeConfig, primaryColor: theme.colorPrimary })
       },
       keepAlive: true,
-      showProgressBar: true
+      showProgressBar: true,
+      disabledScrollTop: false,
     },
     isLogut: false
   })
@@ -47,7 +49,7 @@ export const useStoreGlobal = defineStore('global', () => {
   }
 
   return {
-    ...toRefs(state),
+    state,
     setGlobalData
   }
 })

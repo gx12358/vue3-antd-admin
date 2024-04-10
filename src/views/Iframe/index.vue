@@ -23,8 +23,8 @@ const loading = ref(true)
 
 const publicHeight = computed(
   () =>
-    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (store.global.settings.showTabsBar
-      ? (store.global.settings.fixedMultiTab ? 62 : 46)
+    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (store.global.state.settings.layout.showTabsBar
+      ? (store.global.state.settings.layout.fixedMultiTab ? 62 : 46)
       : 0)
 )
 

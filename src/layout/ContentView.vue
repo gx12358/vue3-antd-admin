@@ -29,11 +29,11 @@ const iframeSrc = computed(() => {
 
 watch(
   [
-    () => store.global.settings?.keepAlive
+    () => store.global.state.settings?.keepAlive
   ],
   () => {
     keepliveRouterNames.value = router.getRoutes()
-      .filter(item => store.global.settings?.keepAlive || (item.meta as Meta)?.keepAlive)
+      .filter(item => store.global.state.settings?.keepAlive || (item.meta as Meta)?.keepAlive)
       .map(item => item.name)
   }, { immediate: true }
 )

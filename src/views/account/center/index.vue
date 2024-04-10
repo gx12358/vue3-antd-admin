@@ -58,16 +58,16 @@ const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
 
 const contentHeight = computed(() => {
   const herderHeight = token.value.layout?.header?.heightLayoutHeader
-  const tabsHeight = global.settings?.showTabsBar ? '62px' : '0px'
-  const pageHeaderHieght = global.settings?.pageHeaderRender === false ? '0px' : '46px'
+  const tabsHeight = global.state.settings.layout?.showTabsBar ? '62px' : '0px'
+  const pageHeaderHieght = global.state.settings.layout.pageHeaderRender === false ? '0px' : '46px'
   return isMobile.value ? undefined : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
 })
 
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
 
 onActivated(() => {
-  global.settings.disabledScrollTop = true
-  global.settings.showProgressBar = false
+  global.state.settings.disabledScrollTop = true
+  global.state.settings.showProgressBar = false
   ready.value = true
 })
 
@@ -77,8 +77,8 @@ const changeRouter = (value: TabsKey) => {
 
 onBeforeRouteLeave((to) => {
   if (!to.fullPath.includes('/account/center/')) {
-    global.settings.showProgressBar = true
-    global.settings.disabledScrollTop = false
+    global.state.settings.showProgressBar = true
+    global.state.settings.disabledScrollTop = false
   }
 })
 

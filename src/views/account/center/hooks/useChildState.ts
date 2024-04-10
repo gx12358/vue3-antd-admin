@@ -59,7 +59,7 @@ export default function (serve: (data: any) => Promise<ResponseResult>) {
   })
 
   onDeactivated(() => {
-    global.settings.disabledScrollTop = true
+    global.state.settings.disabledScrollTop = true
     scrollTop.value = state.y
   })
 
