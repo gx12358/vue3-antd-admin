@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
   frameSrc: ''
 })
 
-const store = useStore()
+const { global } = useStore()
 const { token } = useProConfigContext()
 
 const prefixCls = getPrefixCls({
@@ -23,9 +23,9 @@ const loading = ref(true)
 
 const publicHeight = computed(
   () =>
-    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (store.global.state.settings.layout.showTabsBar
-      ? (store.global.state.settings.layout.fixedMultiTab ? 62 : 46)
-      : 0)
+    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (
+      global.globalLayout.showTabsBar ? global.globalLayout.fixedMultiTab ? 62 : 46 : 0
+    )
 )
 
 const frameStyle = reactive({

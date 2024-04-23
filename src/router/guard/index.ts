@@ -26,7 +26,7 @@ export function createPageGuard(router: Router) {
     const { meta } = to as MenuDataItem
     document.title = getPageTitle(meta.title || '')
     if (
-      global.state.settings.layout.layout !== 'wide' && routes.routerLoadList.every(item => item !== to.path) && routesWhiteList.includes(
+      global.globalLayout.layout !== 'wide' && routes.routerLoadList.every(item => item !== to.path) && routesWhiteList.includes(
         to.path)
     ) {
       routes.addRouterLoadList(to.path)
@@ -40,8 +40,9 @@ export function createPageLoadingGuard(router: Router) {
 
   router.beforeEach(async (to) => {
     if (
-      global.state.settings.layout.layout !== 'wide' && routes.routerLoadList.every(item => item !== to.path) && routesWhiteList.includes(
-        to.path)
+      global.globalLayout.layout !== 'wide' &&
+      routes.routerLoadList.every(item => item !== to.path) &&
+      routesWhiteList.includes(to.path)
     ) {
       routes.setRouteState({
         routerLoading: true
@@ -56,7 +57,7 @@ export function createPageLoadingGuard(router: Router) {
       routes.setRouteState({
         routerLoading: false
       })
-    }, global.state.settings.layout.layout === 'wide' ? 0 : 200)
+    }, global.globalLayout.layout === 'wide' ? 0 : 200)
   })
 }
 
@@ -64,14 +65,14 @@ export function createScrollGuard(router: Router) {
   const global = useStoreGlobal()
 
   router.afterEach((_) => {
-    !global.state.settings.disabledScrollTop && scrollToContainer({ count: 0 })
+    !global.disabledScrollTop && scrollToContainer({ count: 0 })
   })
 }
 
 export function createProgressGuard(router: Router) {
   const global = useStoreGlobal()
   router.beforeEach(() => {
-    if (global.state.settings.showProgressBar)
+    if (global.showProgressBar)
       NProgress.start()
     return true
   })

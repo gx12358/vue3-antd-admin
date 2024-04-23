@@ -9,7 +9,7 @@ import logo from '@/assets/logo.png'
 
 const layoutThemeConfig = {
   ...proThemeConfig,
-  title: defaultSettings.title,
+  title: defaultSettings.title
 } as ThemeConfig
 
 /**
@@ -19,37 +19,24 @@ const layoutThemeConfig = {
  * @description store-global 全局属性
  */
 export interface GlobalState {
-  isLogut: boolean;
-  settings: {
-    layout: BasicLayoutProps;
-    keepAlive: boolean;
-    showProgressBar: boolean;
-    disabledScrollTop: boolean;
-  };
+  globalLayout: BasicLayoutProps;
+  keepAlive: boolean;
+  showProgressBar: boolean;
+  disabledScrollTop: boolean;
 }
-
-type GlobalStateKey = keyof GlobalState
 
 export const useStoreGlobal = defineStore('global', () => {
   const state = reactive<GlobalState>({
-    settings: {
-      layout: {
-        logo,
-        ...handleThemeConfig({ ...layoutThemeConfig, primaryColor: theme.colorPrimary })
-      },
-      keepAlive: true,
-      showProgressBar: true,
-      disabledScrollTop: false,
-    },
-    isLogut: false
+    keepAlive: true,
+    showProgressBar: true,
+    disabledScrollTop: false,
+    globalLayout: {
+      logo,
+      ...handleThemeConfig({ ...layoutThemeConfig, primaryColor: theme.colorPrimary })
+    }
   })
 
-  const setGlobalData: (params: Partial<Record<GlobalStateKey, GlobalState[GlobalStateKey]>>) => void = (params) => {
-    Object.assign(state, params)
-  }
-
   return {
-    state,
-    setGlobalData
+    ...toRefs(state)
   }
 })

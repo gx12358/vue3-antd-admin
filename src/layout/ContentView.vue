@@ -17,7 +17,7 @@ defineProps({
   }
 })
 
-const store = useStore()
+const { global } = useStore()
 const router = useRouter()
 
 const keepliveRouterNames = ref([])
@@ -27,16 +27,11 @@ const iframeSrc = computed(() => {
   return meta?.target && Number(meta?.targetStatus) === 0 ? meta?.target || '' : ''
 })
 
-watch(
-  [
-    () => store.global.state.settings?.keepAlive
-  ],
-  () => {
-    keepliveRouterNames.value = router.getRoutes()
-      .filter(item => store.global.state.settings?.keepAlive || (item.meta as Meta)?.keepAlive)
-      .map(item => item.name)
-  }, { immediate: true }
-)
+watch(() => global.keepAlive, () => {
+  keepliveRouterNames.value = router.getRoutes()
+    .filter(item => global.keepAlive || (item.meta as Meta)?.keepAlive)
+    .map(item => item.name)
+}, { immediate: true })
 </script>
 
 <template>
@@ -45,7 +40,7 @@ watch(
       <PageTranstion v-bind="animate">
         <template v-if="reloadStatus">
           <keep-alive :include="keepliveRouterNames">
-            <component :is="Component"  />
+            <component :is="Component" />
           </keep-alive>
         </template>
       </PageTranstion>

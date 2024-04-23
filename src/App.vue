@@ -17,7 +17,7 @@ const loading = computed(() => routes.routerLoading)
 </script>
 
 <template>
-  <ProConfigProvider :locale="zhCN" :token="{ colorPrimary: global.state.settings.layout.primaryColor }">
+  <ProConfigProvider :locale="zhCN" :token="{ colorPrimary: global.globalLayout.primaryColor }">
     <template #renderEmpty>
       <Empty :text="false" />
     </template>
