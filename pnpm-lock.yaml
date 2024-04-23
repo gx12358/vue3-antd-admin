@@ -51,8 +51,8 @@ dependencies:
     specifier: ^6.17.1
     version: 6.20.0
   ant-design-vue:
-    specifier: ^4.1.2
-    version: 4.1.2(vue@3.4.21)
+    specifier: ^4.2.0
+    version: 4.2.0(vue@3.4.21)
   axios:
     specifier: ^1.6.7
     version: 1.6.8
@@ -2086,7 +2086,7 @@ packages:
       '@gx-design-vue/pro-provider': 0.1.0-beta.51(typescript@5.4.3)
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
     transitivePeerDependencies:
@@ -2101,7 +2101,7 @@ packages:
       '@gx-design-vue/pro-provider': 0.1.0-beta.51(typescript@5.4.3)
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
     transitivePeerDependencies:
@@ -2128,7 +2128,7 @@ packages:
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@gx-design-vue/pro-utils-components': 0.1.0-beta.27(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
@@ -2147,7 +2147,7 @@ packages:
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@gx-design-vue/pro-utils-components': 0.1.0-beta.27(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       dayjs: 1.11.10
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
@@ -2169,7 +2169,7 @@ packages:
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@gx-design-vue/pro-utils-components': 0.1.0-beta.27(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       dayjs: 1.11.10
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
@@ -2199,7 +2199,7 @@ packages:
       '@gx-design-vue/pro-watermark': 0.2.0-beta.6(typescript@5.4.3)
       '@gx-design-vue/scrollbar': 0.2.0-beta.12(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       dayjs: 1.11.10
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
@@ -2217,7 +2217,7 @@ packages:
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@gx-design-vue/scrollbar': 0.2.0-beta.12(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
@@ -2230,7 +2230,7 @@ packages:
     resolution: {integrity: sha512-PD/0O0LI+FAWZZZ/QBkqtiuIp3WvoyFcAb4amF+A7EwO/V+RZR8X6u1akrpkTeBVF8kDeP4ZVNrYsLPn3I0zMw==}
     dependencies:
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
     transitivePeerDependencies:
@@ -2245,7 +2245,7 @@ packages:
       '@gx-design-vue/pro-provider': 0.1.0-beta.51(typescript@5.4.3)
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
       '@vueuse/core': 9.13.0(vue@3.4.21)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       dayjs: 1.11.10
       lodash-es: 4.17.21
       vue: 3.4.21(typescript@5.4.3)
@@ -2260,7 +2260,7 @@ packages:
     dependencies:
       '@gx-design-vue/pro-provider': 0.1.0-beta.51(typescript@5.4.3)
       '@gx-design-vue/pro-utils': 0.2.0-beta.26(typescript@5.4.3)
-      ant-design-vue: 4.1.2(vue@3.4.21)
+      ant-design-vue: 4.2.0(vue@3.4.21)
       vue: 3.4.21(typescript@5.4.3)
       vue-types: 4.2.1(vue@3.4.21)
     transitivePeerDependencies:
@@ -3784,8 +3784,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue@4.1.2(vue@3.4.21):
-    resolution: {integrity: sha512-ynFkDJLlHgumeK6Hr1UZ7PvQNZ1uBcri/pmejBdS3kRqHeA5VRsxneYDwa8YxA+uYB5YfT2jpYsSHsiMiCjRGg==}
+  /ant-design-vue@4.2.0(vue@3.4.21):
+    resolution: {integrity: sha512-tw20aZn5Qv/xtJze+BMPNueS8pETBeuO1UWqbBQmg2/wp9WmtetsbEcANBg1QERI6E9ikSrQ2Yr9xlIyIJEYdw==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
