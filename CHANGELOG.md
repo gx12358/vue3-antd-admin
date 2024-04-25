@@ -1,3 +1,12 @@
+## 3.0.3(2024-04.25)
+
+## Upgrade instructions
+
+### ✨ FIX
+
+- **Plugins**
+  - Fix `roll up plugin visualizer` causing `report` failure in version `vite5`
+
 ## 3.0.3(2024-04.10)
 
 ## Upgrade instructions
