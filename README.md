@@ -1,4 +1,4 @@
-<div align="center"> <a href="https://github.com/gx12358/vue3-antd-admin"> <img alt="VbenAdmin Logo" width="200" src="http://47.120.73.101/resource/img/favicon.ico"> </a> <br> <br>
+<div align="center"> <a href="https://github.com/gx12358/vue3-antd-admin"> <img alt="VbenAdmin Logo" width="200" src="https://gx12358.cn/resource/img/favicon.ico"> </a> <br> <br>
 
 <h1>GX Pro Admin（Ant Design Vue）</h1>
 </div>
@@ -19,11 +19,11 @@ GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0
 
 ## 预览
 
-- [🚀 pro 版演示地址](http://47.120.73.101/)
+- [🚀 pro 版演示地址](https://gx12358.cn/)
 测试账号: admin/gx.design
 
-- [🚀 系统文档地址](http://47.120.73.101/doc/)
-- [🚀 pro 组件文档地址](http://47.120.73.101/procomponents/)
+- [🚀 系统文档地址](https://gx12358.cn/doc/)
+- [🚀 pro 组件文档地址](https://gx12358.cn/procomponents/)
 
 
 ## 准备
