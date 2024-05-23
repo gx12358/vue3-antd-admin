@@ -2,7 +2,7 @@ import antFuEslint from '@antfu/eslint-config'
 
 export default antFuEslint({
   vue: true,
-  vueJsx: false,
+  vueJsx: true,
   typescript: true,
   gitignore: true,
   markdown: true,
