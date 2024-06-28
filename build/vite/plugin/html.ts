@@ -9,7 +9,6 @@ import pkg from '../../../package.json'
 const { title, publicPath, useCdn } = defaultSettings
 
 export function configHtmlPlugin(_: ViteEnv, isBuild: boolean) {
-
   const path = publicPath.endsWith('/') ? publicPath : `${publicPath}/`
 
   const getAppConfigSrc = () => {

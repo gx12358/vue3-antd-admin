@@ -33,7 +33,7 @@
     "@gx-design-vue/pro-layout": "^0.1.0-beta.53",
     "@gx-design-vue/pro-modal": "^0.2.0-beta.14",
     "@gx-design-vue/pro-provider": "^0.1.0-beta.51",
-    "@gx-design-vue/pro-table": "^0.2.0-beta.46",
+    "@gx-design-vue/pro-table": "^0.2.0-beta.47",
     "@gx-design-vue/pro-utils": "^0.2.0-beta.26",
     "@gx-design-vue/pro-watermark": "^0.2.0-beta.6",
     "@gx-design-vue/scrollbar": "^0.2.0-beta.12",
@@ -107,7 +107,7 @@
     "vite-plugin-compression": "0.5.1",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-pwa": "^0.19.0",
-    "vite-plugin-vue-devtools": "^7.0.24",
+    "vite-plugin-vue-devtools": "^7.3.4",
     "vite-plugin-vue-setup-extend": "0.4.0",
     "vue-eslint-parser": "^9.4.2",
     "vue-tsc": "^1.8.27"
