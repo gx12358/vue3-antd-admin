@@ -40,6 +40,8 @@ export default antFuEslint({
     'eslint-comments/no-unlimited-disable': 0,
     'no-async-promise-executor': 0,
     'unicorn/escape-case': 0,
+    'ts/ban-ts-comment': 0,
+    'ts/prefer-ts-expect-error': 0,
     'ts/method-signature-style': 0,
     'style/no-trailing-spaces': 0,
     'ts/consistent-type-imports': 0,
