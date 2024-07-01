@@ -1,3 +1,17 @@
+## 3.0.4(2024-07.01)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **Plugins**
+  - Upgrade the versions of `vite`, `vue`, and `ant-design-vue` plugins in `package.json`
+
+### ✨ FIX
+
+- **Dayjs**
+  - Fix errors in `dayjs` when using `local` and `build` in version `vite5`, by writing the `local` configuration file of `dayjs` to the local system
+
 ## 3.0.3(2024-04.25)
 
 ## Upgrade instructions

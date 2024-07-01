@@ -1,3 +1,17 @@
+## 3.0.4(2024-07.01)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件**
+  - `package.json`相关插件`vite` `vue` `ant-design-vue`升级版本
+
+### ✨ FIX
+
+- **Dayjs**
+  - 修复`dayjs`在`vite5`版本下使用`local` `build`报错，将`dayjs`的`local`配置文件写到本地
+
 ## 3.0.3(2024-04.25)
 
 ## 升级说明
