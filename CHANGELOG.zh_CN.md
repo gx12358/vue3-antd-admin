@@ -1,3 +1,21 @@
+## 3.0.4(2024-09.06)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件**
+  - `package.json`相关插件`@gx-desing-pro/****` `vue` 版本升级
+  
+### ✨ FIX
+
+- **Pro Layout**
+  - 修复暗黑模式下 `ProLayout` 的 `layout` 样式不生效
+  - 调整 `ProLayout` 的主题配置方案，改为 `theme:layout` 方式，来完成多模式下的主题配色
+- **Pro Provider**
+  - 调整 `hashId` 的取值问题，改为 `ant` 的 `hashId`，解决暗黑模式不生效问题
+  - `token:layout` 新增 `theme:layout` 值，解决 `ProLayout` 下的多模式配色不生效问题
+
 ## 3.0.4(2024-07.01)
 
 ## 升级说明

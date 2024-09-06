@@ -5,7 +5,7 @@
  * @returns {boolean}
  */
 export function isExternal(path) {
-  return /^(https?:|mailto:|tel:)/.test(path)
+  return /^(?:https?:|mailto:|tel:)/.test(path)
 }
 
 /**
@@ -15,7 +15,7 @@ export function isExternal(path) {
  * @returns {boolean}
  */
 export function isName(value) {
-  const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
+  const reg = /^[\u4e00-\u9fa5a-z0-9]+$/i
   return reg.test(value)
 }
 
@@ -26,7 +26,7 @@ export function isName(value) {
  * @returns {boolean}
  */
 export function isIP(ip) {
-  const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+  const reg = /^(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
   return reg.test(ip)
 }
 
@@ -37,7 +37,7 @@ export function isIP(ip) {
  * @returns {boolean}
  */
 export function isUrl(url) {
-  const reg = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
+  const reg = /^(?:https?|ftp):\/\/(?:[a-zA-Z0-9.-]+(?::[a-zA-Z0-9.&%$-]+)*@)*(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d?)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}|(?:[a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(?:com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(?::\d+)*(?:\/(?:$|[\w.,?'\\+&%$#=~-]+))*$/
   return reg.test(url)
 }
 
@@ -70,7 +70,7 @@ export function isUpperCase(value) {
  * @returns {boolean}
  */
 export function isAlphabets(value) {
-  const reg = /^[A-Za-z]+$/
+  const reg = /^[A-Z]+$/i
   return reg.test(value)
 }
 
@@ -81,7 +81,7 @@ export function isAlphabets(value) {
  * @returns {boolean}
  */
 export function isPort(value) {
-  const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+  const reg = /^(?:\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
   return reg.test(value)
 }
 
@@ -103,7 +103,7 @@ export function isPhone(value = '', backReg?: boolean) {
  * @returns {boolean}
  */
 export function isIdCard(value) {
-  const reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+  const reg = /^[1-9]\d{5}(?:18|19|[23]\d)\d{2}(?:0[1-9]|10|11|12)(?:[0-2][1-9]|10|20|30|31)\d{3}[0-9X]$/i
   return reg.test(value)
 }
 
@@ -147,7 +147,7 @@ export function isBlank(value) {
  * @returns {boolean}
  */
 export function isTel(value) {
-  const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})([- ])?)?([0-9]{7,8})(([- 转])*([0-9]{1,4}))?$/
+  const reg = /^(?:400|800)[0-9\\-]{7,10}|(?:(?:\d{4}|\d{3})[- ]?)?\d{7,8}(?:[- 转]*\d{1,4})?$/
   return reg.test(value)
 }
 
@@ -158,7 +158,7 @@ export function isTel(value) {
  * @returns {boolean}
  */
 export function isLongitude(value) {
-  const reg = /^[-|+]?(0?\d{1,2}\.\d{1,5}|1[0-7]?\d{1}\.\d{1,5}|180\.0{1,5})$/
+  const reg = /^[-|+]?(?:0?\d{1,2}\.\d{1,5}|1[0-7]?\d\.\d{1,5}|180\.0{1,5})$/
   return reg.test(value)
 }
 
@@ -169,7 +169,7 @@ export function isLongitude(value) {
  * @returns {boolean}
  */
 export function isLatitude(value) {
-  const reg = /^[-|+]?([0-8]?\d{1}\.\d{1,5}|90\.0{1,5})$/
+  const reg = /^[-|+]?(?:[0-8]?\d\.\d{1,5}|90\.0{1,5})$/
   return reg.test(value)
 }
 
@@ -180,9 +180,9 @@ export function isLatitude(value) {
  * @returns {boolean}
  */
 export function isRTSP(value) {
-  const reg = /^rtsp:\/\/([a-z]{0,10}:.{0,10}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-  const reg1 = /^rtsp:\/\/([a-z]{0,10}:.{0,10}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):[0-9]{1,5}/
-  const reg2 = /^rtsp:\/\/([a-z]{0,10}:.{0,10}@)?(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\//
+  const reg = /^rtsp:\/\/(?:[a-z]{0,10}:.{0,10}@)?(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+  const reg1 = /^rtsp:\/\/(?:[a-z]{0,10}:.{0,10}@)?(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):\d{1,5}/
+  const reg2 = /^rtsp:\/\/(?:[a-z]{0,10}:.{0,10}@)?(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\//
   return reg.test(value) || reg1.test(value) || reg2.test(value)
 }
 
@@ -210,7 +210,8 @@ export function isJSONStr(str: any) {
 
 export function checkURL(URL) {
   const str = URL
-  const Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/
+  // eslint-disable-next-line regexp/strict
+  const Expression = /https?:\/\/(?:[\w-]+\.)+[\w-]+(?:\/[\w- ./?%&=]*)?/
   const objExp = new RegExp(Expression)
   return objExp.test(str)
 }

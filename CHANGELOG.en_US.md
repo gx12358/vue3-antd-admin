@@ -1,3 +1,21 @@
+## 3.0.4(2024-09.06)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **Plugins**
+  - Upgrade the versions of `@gx-desing-pro/****`, `vue` plugins in `package.json`
+
+### ✨ FIX
+
+- **Pro Layout**
+  - Fix the `layout` style of `ProLayout` not working in dark mode
+  - Adjust the theme configuration scheme of `ProLayout` to `theme:layout` mode to achieve theme color matching in multiple modes
+- **Pro Provider**
+  - Adjust the value of `hashId` to `ant:hashId` to solve the problem of dark mode not working
+  - Add a new `theme:layout` value to `token:layout` to solve the problem of ineffective multimode color matching in `ProLayout`
+
 ## 3.0.4(2024-07.01)
 
 ## 升级说明
