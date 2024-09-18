@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { GProCard } from '@gx-design-vue/pro-card'
+import type { Color } from '@gx-design-vue/color-picker'
 import { GColorPicker } from '@gx-design-vue/color-picker'
 import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
 
@@ -66,7 +67,7 @@ const formState = reactive({
             <GProCard :bordered="false">
               <GPorWaterMark
                 :content="formState.content"
-                :fontColor="formState.fontColor"
+                :fontColor="typeof formState.fontColor === 'string' ? formState.fontColor : (formState.fontColor as Color).toCssString()"
                 :fontSize="formState.fontSize"
                 :zIndex="formState.zIndex"
                 :rotate="formState.rotate"
