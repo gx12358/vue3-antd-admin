@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 
 import App from './App.vue'
-import { setupStore } from './store'
 import { setupGlobCommon } from './core'
 import { router, setupRouter } from './router'
 import { setupRouterGuard } from './router/guard'
+import { setupStore } from './store'
 
 import 'uno.css'
 import 'nprogress/nprogress.css'

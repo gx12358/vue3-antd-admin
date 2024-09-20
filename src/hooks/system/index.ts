@@ -1,8 +1,8 @@
-import { useOss } from './useOss'
 import { useDict } from './useDict'
-import { useUpload } from './useUpload'
-import { usePermissions } from './usePermissions'
 import useForm, { type RulesState } from './useForm'
+import { useOss } from './useOss'
+import { usePermissions } from './usePermissions'
+import { useUpload } from './useUpload'
 
 export * from './useListUpload'
 
@@ -11,9 +11,9 @@ export type {
 }
 
 export {
-  useOss,
-  useForm,
   useDict,
-  useUpload,
-  usePermissions
+  useForm,
+  useOss,
+  usePermissions,
+  useUpload
 }

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { GProCard } from '@gx-design-vue/pro-card'
 import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
-import { GProTable, useTable } from '@gx-design-vue/pro-table'
 import { getArticleList } from '@/services/listCenter'
 import { toConvertNumberShow } from '@/utils/util'
-import useSearchForm from './hooks/useSearchForm'
-import CommonSearch from './components/CommonSearch.vue'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { GProTable, useTable } from '@gx-design-vue/pro-table'
 import { useSearchListContext } from '../context'
+import CommonSearch from './components/CommonSearch.vue'
+import useSearchForm from './hooks/useSearchForm'
 
 const tableRef = ref<ProTableRef>()
 
@@ -64,7 +64,7 @@ watchEffect(() => {
     <GProTable ref="tableRef" v-bind="tableState" :request="getTableRequest">
       <template #customRender="dataSource: ListItemDataType[]">
         <a-list
-          rowKey="id"
+          row-key="id"
           :grid="state.listGrid"
           :data-source="dataSource"
         >
@@ -74,16 +74,22 @@ watchEffect(() => {
                 <div class="flex gap-16px items-start">
                   <a-avatar :src="item.logo" size="small" />
                   <div class="flex flex-col gap-16px flex-auto">
-                    <div class="text-16px font-600 text-hidden-1">{{ item.title }}</div>
+                    <div class="text-16px font-600 text-hidden-1">
+                      {{ item.title }}
+                    </div>
                     <div class="flex flex-auto items-center justify-between">
                       <div class="flex flex-col gap-4px">
-                        <div class="text-rgba-[0-0-0-0.65] text-12px  leading-20px">活跃用户</div>
+                        <div class="text-rgba-[0-0-0-0.65] text-12px  leading-20px">
+                          活跃用户
+                        </div>
                         <div class="text-24px leading-32px">
                           {{ toConvertNumberShow(item.activeUser, { showStr: false }).numberValue }}<span class="ml-2px text-14px relative top-[-2px]">万</span>
                         </div>
                       </div>
                       <div class="flex flex-col gap-4px">
-                        <div class="text-rgba-[0-0-0-0.65] text-12px  leading-20px">新增用户</div>
+                        <div class="text-rgba-[0-0-0-0.65] text-12px  leading-20px">
+                          新增用户
+                        </div>
                         <div class="text-24px leading-32px">
                           {{ toConvertNumberShow(item.newUser, { showStr: false }).numberValue }}<span class="ml-2px text-14px relative top-[-2px]">万</span>
                         </div>
@@ -92,9 +98,15 @@ watchEffect(() => {
                   </div>
                 </div>
                 <template #actions>
-                  <a-tooltip title="下载"><download-outlined key="setting" /></a-tooltip>
-                  <a-tooltip title="编辑"><edit-outlined key="edit" /></a-tooltip>
-                  <a-tooltip title="分享"><share-alt-outlined key="share" /></a-tooltip>
+                  <a-tooltip title="下载">
+                    <download-outlined key="setting" />
+                  </a-tooltip>
+                  <a-tooltip title="编辑">
+                    <edit-outlined key="edit" />
+                  </a-tooltip>
+                  <a-tooltip title="分享">
+                    <share-alt-outlined key="share" />
+                  </a-tooltip>
                   <a-dropdown>
                     <ellipsis-outlined key="ellipsis" />
                     <template #overlay>

@@ -1,8 +1,8 @@
-import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import Result403 from '@/assets/error_images/403.png'
 import Result404 from '@/assets/error_images/404.png'
 import ResultCloud from '@/assets/error_images/cloud.png'
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import './style.less'
 
@@ -69,7 +69,7 @@ export default defineComponent({
     const handleBackRouter = () => {
       router.push({ path: backRouter.value })
       if (routers.value?.length) {
-        store.tabsRouter.delOthersVisitedRoutes({ path: '/' })
+        console.log(222)
       } else {
         store.user.resetPermissions()
       }

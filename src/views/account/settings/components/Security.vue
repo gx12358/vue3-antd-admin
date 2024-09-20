@@ -44,8 +44,10 @@ const securityViewData = [
 </script>
 
 <template>
-  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">基本设置</div>
-  <a-list itemLayout="horizontal" :data-source="securityViewData">
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">
+    基本设置
+  </div>
+  <a-list item-layout="horizontal" :data-source="securityViewData">
     <template #renderItem="{ item }">
       <a-list-item class="!px-0">
         <template #actions>

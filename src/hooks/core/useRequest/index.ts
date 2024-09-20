@@ -1,9 +1,9 @@
-import type { MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
-import { computed, isReactive, isRef, reactive, ref, watch } from 'vue'
-import { cloneDeep } from 'lodash-es'
-import { useThrottleFn } from '@vueuse/core'
-import { useState } from '@gx-design-vue/pro-hooks'
 import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
+import type { MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
+import { useState } from '@gx-design-vue/pro-hooks'
+import { useThrottleFn } from '@vueuse/core'
+import { cloneDeep } from 'lodash-es'
+import { computed, isReactive, isRef, reactive, ref, watch } from 'vue'
 
 type DefaultToT<T, R> = R extends undefined ? T : R
 
@@ -27,7 +27,7 @@ function useRequest<T, P = any, R = undefined, >(
 ) {
   const [ loading, setLoading ] = useState(!!options.defaultLoading)
 
-  const data: Ref<UnwrapRef<DefaultToT<T, R>>> = ref(options?.defaultData)
+  const data = ref<DefaultToT<T, R>>(options?.defaultData)
 
   const state = reactive<{ params: MaybeRef<P> }>({
     params: (isRef(options.params) ? options.params?.value : options.params) || {} as P

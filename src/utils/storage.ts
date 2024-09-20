@@ -1,9 +1,9 @@
-import dayjs from 'dayjs'
-import { defaultSettings } from '@gx-config'
-import { isPro, typeViteEnv } from '@/utils/env'
 import { Decrypt, Encrypt } from '@/utils/crypto'
+import { isPro, typeViteEnv } from '@/utils/env'
 import { isJSONStr } from '@/utils/validate'
+import { defaultSettings } from '@gx-config'
 import { isObject } from '@gx-design-vue/pro-utils'
+import dayjs from 'dayjs'
 
 const { shortName } = defaultSettings
 
@@ -136,10 +136,11 @@ function getCookies(cname: string) {
  */
 function GetCookieDomain() {
   let host = location.hostname
-  const ip = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+  const ip = /^(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
   if (ip.test(host) === true || host === 'localhost')
     return host
-  const regex = /([^]*).*/
+  // eslint-disable-next-line regexp/optimal-quantifier-concatenation
+  const regex = /([\s\S]*).*/
   const match = host.match(regex)
   if (typeof match !== 'undefined' && match !== null) {
     const someIndex = 1

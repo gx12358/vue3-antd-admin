@@ -1,21 +1,26 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { isFunction, isString, merge } from '@gx-design-vue/pro-utils'
+import type {
+  AppRouteModule,
+  BasicLayoutProps,
+  MergerSettingsType
+} from '@gx-design-vue/pro-layout'
 import type { BaseLayoutDesignToken, ThemeConfig } from '@gx-design-vue/pro-provider'
-import type { AppRouteModule, BasicLayoutProps } from '@gx-design-vue/pro-layout'
+import RightContent from '@/components/GlobalLayout/RightContent'
 import {
-  GProLayout,
-  SettingDrawer,
   clearMenuItem,
   getMatchedList,
   getMenuData,
   getMenuFirstLastChildPath,
+  GProLayout,
   hanlePathKey,
+  SettingDrawer
 } from '@gx-design-vue/pro-layout'
-import RightContent from '@/components/GlobalLayout/RightContent'
+import { isFunction, isString, merge } from '@gx-design-vue/pro-utils'
+import { useRouter } from 'vue-router'
 import ProContent from './ContentView.vue'
 
 const { global } = useStore()
+const { globalLayout } = toRefs(global.state)
 
 const router = useRouter()
 
@@ -41,11 +46,16 @@ const matchedMenu = computed(() => getMatchedList(
 
 const breadcrumbRouters = computed(() => {
   return matchedMenu.value.map((menuItem: AppRouteModule) => {
-    const path = getMenuFirstLastChildPath(menuItem.meta?.hideChildrenInMenu ? [] : menuItem.children || [])
+    const path = getMenuFirstLastChildPath(menuItem.meta?.hideChildrenInMenu
+      ? []
+      : menuItem.children || [])
     return {
-      path: path ? isString(menuItem.redirect) ? menuItem.redirect as string : isFunction(menuItem.redirect)
-        ? (menuItem.redirect as any)?.() as string
-        : '' || menuItem.path : '',
+      path: path ? isString(menuItem.redirect)
+          ? menuItem.redirect as string
+          : isFunction(menuItem.redirect)
+            ? (menuItem.redirect as any)?.()
+            : menuItem.path || ''
+        : '',
       breadcrumbName: menuItem.meta?.title || ''
     }
   })
@@ -90,34 +100,36 @@ const changeTabs = (_routers: any) => {
   // console.log(_routers)
 }
 
-const changeTheme = (newVal: ThemeConfig) => {
-  global.globalLayout = merge(global.globalLayout, { ...newVal })
+const changeTheme = (newVal: MergerSettingsType<ThemeConfig>) => {
+  merge(globalLayout.value, { ...newVal })
 }
 
-const changeLayoutTheme = (newVal: BaseLayoutDesignToken) => {
-  global.globalLayout.token = merge(global.globalLayout.token, { ...newVal })
+const changeLayoutTheme = (newVal: Partial<BaseLayoutDesignToken>) => {
+  globalLayout.value.token = merge(globalLayout.value.token, { ...newVal })
 }
 </script>
 
 <template>
   <GProLayout
     v-model:collapsed="baseState.collapsed"
-    v-model:selectedKeys="baseState.selectedKeys"
-    v-model:openKeys="baseState.openKeys"
-    v-bind="global.globalLayout as BasicLayoutProps"
+    v-model:selected-keys="baseState.selectedKeys"
+    v-model:open-keys="baseState.openKeys"
+    v-bind="globalLayout as BasicLayoutProps"
     :breadcrumb="{ routes: breadcrumbRouters }"
     :menu-data="menuState.menuData as AppRouteModule[]"
-    @changeTabs="changeTabs"
-    @reloadPage="handleReload"
-    @menuHeaderClick="() => router.push('/')"
+    @change-tabs="changeTabs"
+    @reload-page="handleReload"
+    @menu-header-click="() => router.push('/')"
   >
-    <template v-if="global.globalLayout.layout === 'wide'" #menuExtraRender>
-      <div class="text-center"> 额外元素</div>
+    <template v-if="globalLayout.layout === 'wide'" #menuExtraRender>
+      <div class="text-center">
+        额外元素
+      </div>
     </template>
     <template #rightContentRender>
       <RightContent />
     </template>
-    <ProContent :animate="global.globalLayout.animate" :reloadStatus="reloadStatus" />
-    <SettingDrawer :settings="global.globalLayout" @change="changeTheme" @changeLayout="changeLayoutTheme" weakmode show-progress />
+    <ProContent :animate="globalLayout.animate" :reload-status="reloadStatus" />
+    <SettingDrawer :settings="globalLayout" weakmode show-progress @change="changeTheme" @change-layout="changeLayoutTheme" />
   </GProLayout>
 </template>

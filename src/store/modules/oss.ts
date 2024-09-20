@@ -1,7 +1,7 @@
-import { reactive, toRefs } from 'vue'
+import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
-import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
+import { reactive, toRefs } from 'vue'
 
 export interface ClientDetails {
   bucket?: string;

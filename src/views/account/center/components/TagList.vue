@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { cloneDeep } from 'lodash-es'
 import { getRandomNumber } from '@gx-design-vue/pro-utils'
+import { cloneDeep } from 'lodash-es'
 
 const props = withDefaults(defineProps<{ tags: string[] }>(), { tags: () => [] })
 

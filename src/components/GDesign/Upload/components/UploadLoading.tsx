@@ -1,6 +1,6 @@
 import type { FunctionalComponent as FC } from 'vue'
-import { Spin } from 'ant-design-vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
+import { Spin } from 'ant-design-vue'
 
 const UploadLoading: FC<{
   loadingText?: string

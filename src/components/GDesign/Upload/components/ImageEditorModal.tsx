@@ -1,8 +1,8 @@
-import { defineComponent, reactive } from 'vue'
-import { useState } from '@gx-design-vue/pro-hooks'
-import { isBase64 } from '@gx-design-vue/pro-utils'
-import { GProModal } from '@gx-design-vue/pro-modal'
 import global from '@/common/global'
+import { useState } from '@gx-design-vue/pro-hooks'
+import { GProModal } from '@gx-design-vue/pro-modal'
+import { isBase64 } from '@gx-design-vue/pro-utils'
+import { defineComponent, reactive } from 'vue'
 
 let filerobotImageEditor
 

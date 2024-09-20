@@ -74,17 +74,19 @@ export function postDataSource<T>(
   type: 'delete' | 'add' | 'update' = 'update',
   options?: { key?: string; params: Partial<(Omit<T, 'id' | 'createTime'> & ListItem)> }
 ) {
-  if (type === 'update')
+  if (type === 'update') {
     dataSource = dataSource.map((item: any) => {
       if (options?.params?.[options.key] === item[options?.key])
         return { ...item, ...options?.params }
       return item
     })
-  if (type === 'add')
+}
+  if (type === 'add') {
     dataSource.unshift({
       ...options?.params as (Omit<T, 'id' | 'createTime'> & ListItem),
       id: dataSource.length + 1
     })
+}
   if (type === 'delete')
     dataSource = dataSource.filter(item => options?.params?.[options.key] !== item[options?.key])
 

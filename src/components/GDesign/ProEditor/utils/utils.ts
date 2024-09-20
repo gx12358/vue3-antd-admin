@@ -1,15 +1,7 @@
-/**
- * Copyright (c) 2018-present, Ephox, Inc.
- *
- * This source code is licensed under the Apache 2 license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-import type { Ref, SetupContext } from 'vue'
-import { watch } from 'vue'
 import type { EditorEvent, Editor as TinyMCEEditor } from 'tinymce'
+import type { Ref, SetupContext } from 'vue'
 import type { IPropTypes } from '../props'
+import { watch } from 'vue'
 
 const getGlobal = (): any => (typeof window !== 'undefined' ? window : globalThis)
 
@@ -166,13 +158,13 @@ const isNullOrUndefined = (value: any): value is null | undefined =>
   value === null || value === undefined
 
 export {
-  getTinymce,
   bindHandlers,
   bindModelHandlers,
+  getTinymce,
   initEditor,
-  isValidKey,
-  uuid,
+  isNullOrUndefined,
   isTextarea,
+  isValidKey,
   mergePlugins,
-  isNullOrUndefined
+  uuid
 }

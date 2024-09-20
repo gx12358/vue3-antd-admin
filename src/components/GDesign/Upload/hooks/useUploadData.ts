@@ -1,9 +1,9 @@
 import type { Ref } from 'vue'
-import { computed, ref, unref, watch } from 'vue'
-import { cloneDeep, omit } from 'lodash-es'
-import { checkFileType, generateVidoePicture, isString } from '@gx-design-vue/pro-utils'
 import type { MaterialListItem } from '../typings'
 import type { GUploadProps } from '../Upload'
+import { checkFileType, generateVidoePicture, isString } from '@gx-design-vue/pro-utils'
+import { cloneDeep, omit } from 'lodash-es'
+import { computed, ref, unref, watch } from 'vue'
 
 export function useUploadData(state: {
   limit: Ref<GUploadProps['limit']>,
@@ -13,8 +13,7 @@ export function useUploadData(state: {
 }) {
   const dataValue = ref<MaterialListItem[]>([])
   const getDataValueRef = computed(() => unref(dataValue))
-  const getUrlValueRef = computed(() => unref(dataValue).filter(item => item.url)
-    .map(item => item.url))
+  const getUrlValueRef = computed(() => unref(dataValue).filter(item => item.url).map(item => item.url))
 
   watch(
     () => state.dataList.value,

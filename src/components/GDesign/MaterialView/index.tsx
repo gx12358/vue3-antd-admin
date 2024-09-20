@@ -1,12 +1,9 @@
 import type { ExtractPropTypes } from 'vue'
-import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
-import { Empty } from 'ant-design-vue'
-import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
+import Nodata from '@/assets/public_images/nodata.svg'
+import PlayerAudio from '@gx-design/PlayerAudio'
+import GPlayerVideo from '@gx-design/PlayerVideo'
 import { ImageViewer } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
-import Nodata from '@/assets/public_images/nodata.svg'
-import GPlayerVideo from '@gx-design/PlayerVideo'
-import PlayerAudio from '@gx-design/PlayerAudio'
 import {
   getFileSuffix,
   getPrefixCls,
@@ -14,6 +11,9 @@ import {
   isArray,
   isString
 } from '@gx-design-vue/pro-utils'
+import { Empty } from 'ant-design-vue'
+import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
+import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
 import { gMaterialViewProps } from './props'
 
 import './style.less'

@@ -1,13 +1,13 @@
-import { defineComponent } from 'vue'
-import { Avatar, Dropdown, Menu, MenuItem } from 'ant-design-vue'
-import { LogoutOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons-vue'
-import { useDebounceFn } from '@vueuse/core'
-import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
-import { useState } from '@gx-design-vue/pro-hooks'
-import { getPrefixCls } from '@gx-design-vue/pro-utils'
-import { useProLayoutContext } from '@gx-design-vue/pro-layout'
-import { useStyle } from './style'
 import { typeViteEnv } from '@/utils/env'
+import { LogoutOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons-vue'
+import { useState } from '@gx-design-vue/pro-hooks'
+import { useProLayoutContext } from '@gx-design-vue/pro-layout'
+import { getPrefixCls } from '@gx-design-vue/pro-utils'
+import { useDebounceFn } from '@vueuse/core'
+import { Avatar, Dropdown, Menu, MenuItem } from 'ant-design-vue'
+import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
+import { defineComponent } from 'vue'
+import { useStyle } from './style'
 
 export default defineComponent({
   name: 'GlobalRightContent',

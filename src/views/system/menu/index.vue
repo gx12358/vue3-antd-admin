@@ -15,7 +15,7 @@ const state = reactive({
 
 const getTableData: RequsetFunction<AppRouteModule, { title: string }> = async () => {
   const response = await getMenuList<AppRouteModule[], { total: number }>()
-  
+
   return {
     success: !!response,
     data: treeData(response.data || [], 'menuId') as AppRouteModule[],
@@ -30,7 +30,7 @@ const getTableData: RequsetFunction<AppRouteModule, { title: string }> = async (
       draggabled
       row-key="menuId"
       :options="false"
-      :showIndex="false"
+      :show-index="false"
       :columns="columns"
       :request="getTableData"
     >

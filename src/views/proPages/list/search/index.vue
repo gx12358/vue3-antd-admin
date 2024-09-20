@@ -1,8 +1,8 @@
 <script setup lang="ts" name="SearchList">
 import type { ComputedRef } from 'vue'
+import type { TagsListItem } from './components/typings'
 import { useDict } from '@gx-admin/hooks/system'
 import { provideSearchListContext } from './context'
-import type { TagsListItem } from './components/typings'
 
 type ListType = 'articles' | 'projects' | 'applications'
 
@@ -38,20 +38,20 @@ provideSearchListContext({
     <template #contentRender>
       <div class="flex-center my-16px">
         <a-input-search
+          v-model:value="state.keywordStr"
           placeholder="请输入关键字"
           enter-button="搜索"
           class="max-w-552px"
           size="large"
           allow-clear
-          v-model:value="state.keywordStr"
           :loading="loading"
           @search="value => state.keyword = value"
         />
       </div>
       <a-tabs class="search-list-tabs" :active-key="listType" @change="changeListType">
-        <a-tab-pane class="!hidden" key="articles" tab="文章" />
-        <a-tab-pane class="!hidden" key="projects" tab="项目" />
-        <a-tab-pane class="!hidden" key="applications" tab="应用" />
+        <a-tab-pane key="articles" class="!hidden" tab="文章" />
+        <a-tab-pane key="projects" class="!hidden" tab="项目" />
+        <a-tab-pane key="applications" class="!hidden" tab="应用" />
       </a-tabs>
     </template>
     <router-view>

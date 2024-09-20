@@ -1,7 +1,7 @@
-import { createVNode } from 'vue'
 import type { ModalFuncProps } from 'ant-design-vue'
-import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+import { Modal } from 'ant-design-vue'
+import { createVNode } from 'vue'
 
 export function globalConfirm({
   className,

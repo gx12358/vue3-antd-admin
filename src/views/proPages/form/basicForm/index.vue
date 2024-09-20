@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { omit } from 'lodash-es'
-import dayjs from 'dayjs'
-import { message } from 'ant-design-vue'
-import type { Dayjs } from 'dayjs'
-import type { RangePickerProps } from 'ant-design-vue/es/date-picker/dayjs'
-import type { BasicFormState } from '@gx-mock/datasSource/form'
-import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import type { ProFormRef } from '@gx-design-vue/pro-form'
+import type { BasicFormState } from '@gx-mock/datasSource/form'
+import type { RangePickerProps } from 'ant-design-vue/es/date-picker/dayjs'
+import type { Dayjs } from 'dayjs'
+import { submitForm } from '@/services/formCenter'
 import {
   GProForm,
   GProFormDateRangePicker,
@@ -16,7 +12,11 @@ import {
   GProFormText,
   GProFormTextArea,
 } from '@gx-design-vue/pro-form'
-import { submitForm } from '@/services/formCenter'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
+import { omit } from 'lodash-es'
+import { reactive } from 'vue'
 
 type FormState = BasicFormState & {
   timeRange: Dayjs[]

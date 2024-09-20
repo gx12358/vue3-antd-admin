@@ -1,8 +1,8 @@
+import type { NumberToShow } from '@/utils/util'
 import type { AccountListRecord } from '@gx-mock/datasSource/project'
 import type { TabsKey } from '@gx-mock/datasSource/user/account'
-import { useScrollPageList } from '@gx-admin/hooks/web'
-import type { NumberToShow } from '@/utils/util'
 import { scrollToContainer, toConvertNumberShow } from '@/utils/util'
+import { useScrollPageList } from '@gx-admin/hooks/web'
 import { useAccountCenterContext } from '../context'
 
 export type ListRecord = AccountListRecord & {
@@ -59,7 +59,7 @@ export default function (serve: (data: any) => Promise<ResponseResult>) {
   })
 
   onDeactivated(() => {
-    global.disabledScrollTop = true
+    global.state.disabledScrollTop = true
     scrollTop.value = state.y
   })
 

@@ -201,6 +201,7 @@ export function isJSONStr(str: any) {
       } else {
         return false
       }
+      // eslint-disable-next-line unused-imports/no-unused-vars
     } catch (e) {
       return false
     }

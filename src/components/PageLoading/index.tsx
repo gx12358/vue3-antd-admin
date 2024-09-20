@@ -1,7 +1,7 @@
-import { defineComponent, reactive } from 'vue'
 import type { SpinProps } from 'ant-design-vue'
-import { Spin } from 'ant-design-vue'
 import { useProAppContext } from '@gx-design-vue/pro-app'
+import { Spin } from 'ant-design-vue'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   name: 'GPageLoading',

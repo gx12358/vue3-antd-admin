@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-export * from './step'
 export * from './advanced'
+export * from './step'
 
 export function submitForm(data) {
   return request({

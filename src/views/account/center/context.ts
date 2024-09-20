@@ -1,6 +1,6 @@
+import type { TabsKey } from '@gx-mock/datasSource/user/account'
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
 import { inject, provide } from 'vue'
-import type { TabsKey } from '@gx-mock/datasSource/user/account'
 
 export interface AccountCenterContextProps {
   /* 附加属性 */

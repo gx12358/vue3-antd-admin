@@ -1,6 +1,6 @@
-import { reactive, toRefs } from 'vue'
-import { defineStore } from 'pinia'
 import type { DictRecord, DictType } from '@gx-mock/config/dict'
+import { defineStore } from 'pinia'
+import { reactive, toRefs } from 'vue'
 
 /**
  * @Author      gx12358

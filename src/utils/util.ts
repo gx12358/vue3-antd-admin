@@ -1,6 +1,6 @@
-import { h } from 'vue'
 import { defaultSettings } from '@gx-config'
 import { isFunction, isNumber, isObject, scrollTo } from '@gx-design-vue/pro-utils'
+import { h } from 'vue'
 
 export interface NumberToShow {
   numberValue: string;
@@ -130,31 +130,34 @@ export function toConvertNumberShow(
         : number < 100000000 ? 'w' : 'e'
       : ''
   )
-  if (!isNumber(number) || options?.unit)
+  if (!isNumber(number) || options?.unit) {
     return {
       numberValue: `${number}`,
       countStr,
       joinStr: `${number}${countStr}`
     }
-  if (number < 10000)
+  }
+  if (number < 10000) {
     return {
       numberValue: `${number}`,
       countStr,
       joinStr: `${number}${countStr}`
     }
+  }
 
   if (options?.fixed) {
     const numStr = (number / (number < 100000000 ? 10000 : 100000000)).toFixed(1).split('.')[0]
     const numFixed = (number / (number < 100000000 ? 10000 : 100000000)).toFixed(1).split('.')[1]
 
-    if (numFixed === '0')
+    if (numFixed === '0') {
       return {
         numberValue: `${numStr}`,
         countStr,
         joinStr: `${numStr}${countStr}`
       }
+    }
   }
-  const match = fixedNum === 1 ? /^\d+(?:\.\d{0,1})?/ : /^\d+(?:\.\d{0,2})?/
+  const match = fixedNum === 1 ? /^\d+(?:\.\d?)?/ : /^\d+(?:\.\d{0,2})?/
   const numberValue = number < 100000000 ? number / 10000 : number / 100000000
 
   return {

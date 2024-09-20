@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { GProCard } from '@gx-design-vue/pro-card'
 import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
-import { GProTable, useTable } from '@gx-design-vue/pro-table'
-import { getArticleList } from '@/services/listCenter'
 import type { SearchState } from './typings'
-import useSearchForm from './hooks/useSearchForm'
-import CommonSearch from './components/CommonSearch.vue'
-import { useSearchListContext } from '../context'
+import { getArticleList } from '@/services/listCenter'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { GProTable, useTable } from '@gx-design-vue/pro-table'
 import dayjs from 'dayjs'
+import { useSearchListContext } from '../context'
+import CommonSearch from './components/CommonSearch.vue'
+import useSearchForm from './hooks/useSearchForm'
 
 const tableRef = ref<ProTableRef>()
 
@@ -65,7 +65,7 @@ watchEffect(() => {
     <GProTable ref="tableRef" v-bind="tableState" :request="getTableRequest">
       <template #customRender="dataSource: ListItemDataType[]">
         <a-list
-          rowKey="id"
+          row-key="id"
           :grid="state.listGrid"
           :data-source="dataSource"
         >
@@ -73,15 +73,19 @@ watchEffect(() => {
             <a-list-item class="!p-0 card-item">
               <a-card bordered hoverable>
                 <template #cover>
-                  <g-admin-image :src="item.cover" slotImageClass="w-30%" class="h-200px" fit="cover" />
+                  <g-admin-image :src="item.cover" slot-image-class="w-30%" class="h-200px" fit="cover" />
                 </template>
-                <div class="card-title">{{ item.title }}</div>
-                <div class="text-hidden-2 leading-20px mb-14px">{{ item.description }}</div>
+                <div class="card-title">
+                  {{ item.title }}
+                </div>
+                <div class="text-hidden-2 leading-20px mb-14px">
+                  {{ item.description }}
+                </div>
                 <div class="flex items-center justify-between">
                   <span class=" text-rgba-[0-0-0-0.65] text-12px">{{ dayjs(item.createdAt).fromNow() }}</span>
                   
                   <a-avatar-group size="small" :max-count="4">
-                    <template v-for="member in item.members" :key="member.id" >
+                    <template v-for="member in item.members" :key="member.id">
                       <a-tooltip placement="top" :title="member.name">
                         <a-avatar :src="member.avatar" />
                       </a-tooltip>

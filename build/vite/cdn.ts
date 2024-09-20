@@ -31,7 +31,7 @@ function renderUrl(data: CdnModuleList & {
 }
 
 function getCdnModuleFiles() {
-  return cdnModules.map(m => {
+  return cdnModules.map((m) => {
     const version = getModuleVersion(m.name)
     if (!version) {
       throw new Error(`modules: ${m.name} package.json file does not exist`)

@@ -9,7 +9,7 @@ export interface ErrorPlayer {
   errMsg?: string
 }
 
-const DefaultError = (refresh: ErrorPlayer['refresh']) => (
+const DefaultErrorRender = (refresh: ErrorPlayer['refresh']) => (
   <>
     请
     &nbsp;
@@ -33,7 +33,7 @@ const Error: FC<ErrorPlayer> = (props: ErrorPlayer, { slots }) => {
           {slots.title && isFunction(slots.title) ? (
             <div v-slots={{ default: () => slots.title?.() }} />
           ) : (
-            <>{props.title || DefaultError(props.refresh)}</>
+            <>{props.title || DefaultErrorRender(props.refresh)}</>
           )}
         </div>
         <p class={`${props.prefixCls}-error-wrapper_msg`}>{props.errMsg}</p>

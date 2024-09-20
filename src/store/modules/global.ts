@@ -1,11 +1,11 @@
-import { reactive } from 'vue'
-import { defineStore } from 'pinia'
-import type { ThemeConfig } from '@gx-design-vue/pro-provider'
-import { themeConfig as proThemeConfig } from '@gx-design-vue/pro-provider'
 import type { BasicLayoutProps } from '@gx-design-vue/pro-layout'
-import { handleThemeConfig } from '@gx-design-vue/pro-layout'
-import { defaultSettings, theme } from '@gx-config'
+import type { ThemeConfig } from '@gx-design-vue/pro-provider'
 import logo from '@/assets/logo.png'
+import { defaultSettings, theme } from '@gx-config'
+import { handleThemeConfig } from '@gx-design-vue/pro-layout'
+import { themeConfig as proThemeConfig } from '@gx-design-vue/pro-provider'
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 
 const layoutThemeConfig = {
   ...proThemeConfig,
@@ -21,6 +21,7 @@ const layoutThemeConfig = {
 export interface GlobalState {
   globalLayout: BasicLayoutProps;
   keepAlive: boolean;
+  pageLoading: boolean;
   showProgressBar: boolean;
   disabledScrollTop: boolean;
 }
@@ -28,6 +29,7 @@ export interface GlobalState {
 export const useStoreGlobal = defineStore('global', () => {
   const state = reactive<GlobalState>({
     keepAlive: true,
+    pageLoading: false,
     showProgressBar: true,
     disabledScrollTop: false,
     globalLayout: {
@@ -37,6 +39,6 @@ export const useStoreGlobal = defineStore('global', () => {
   })
 
   return {
-    ...toRefs(state)
+    state
   }
 })

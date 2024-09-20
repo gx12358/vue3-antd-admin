@@ -1,8 +1,8 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useAudioContext } from '../context'
-import { drag, getMatchRangeTime } from '../utils/util'
 import useAudio from '../hooks/useAudio'
 import audioEvent from '../utils/event'
+import { drag, getMatchRangeTime } from '../utils/util'
 
 const Progress = defineComponent({
   props: {
@@ -26,7 +26,8 @@ const Progress = defineComponent({
     const progressStyle = computed(() => {
       if (progress.value === 0 || progress.value === 100 || preOperationType.value === 'click') {
         return `${progress.value}%`
-      } else return `calc(${progress.value}% - 6px)`
+      } else { return `calc(${progress.value}% - 6px)`
+}
     })
 
     function timeUpdate() {

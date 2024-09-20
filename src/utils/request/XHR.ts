@@ -1,11 +1,11 @@
 import type { AxiosError } from 'axios'
+import type { GAxiosInstance, GAxiosOptions, GAxiosResponse } from './typings'
+import { isFunction } from '@gx-design-vue/pro-utils'
 import axios from 'axios'
 import { cloneDeep } from 'lodash-es'
 import qs from 'qs'
-import { isFunction } from '@gx-design-vue/pro-utils'
-import type { GAxiosInstance, GAxiosOptions, GAxiosResponse } from './typings'
-import { ContentTypeEnum, RequestEnum } from './typings'
 import { AxiosCanceler } from './axiosCancel'
+import { ContentTypeEnum, RequestEnum } from './typings'
 
 export const getPendingUrl = (config: GAxiosOptions) => config.cancelKey || [ config.method, config.url ].join(
   '&')
@@ -119,8 +119,9 @@ export class GAxios {
             try {
               const ret = transformResponseHook(res, config)
               resolve(ret)
-            } catch (err) {
-              resolve(false as any)
+              // eslint-disable-next-line unused-imports/no-unused-vars
+            } catch (_err) {
+              resolve(false as unknown as Promise<T>)
               return
             }
             return

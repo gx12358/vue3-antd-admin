@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { GProFormSwitch } from '@gx-design-vue/pro-form'
 import { GProCard, GProCheckCard, GProCheckCardGroup } from '@gx-design-vue/pro-card'
+import { GProFormSwitch } from '@gx-design-vue/pro-form'
 
 const checkValue = ref('A')
 const checkValueArray = ref([ 'A' ])
@@ -67,7 +67,7 @@ const checkValueArray = ref([ 'A' ])
         </GProCheckCardGroup>
       </GProCard>
       <GProCard title="多选">
-        <GProCheckCardGroup multiple v-model:value="checkValueArray">
+        <GProCheckCardGroup v-model:value="checkValueArray" multiple>
           <GProCheckCard
             title="Card A"
             value="A"

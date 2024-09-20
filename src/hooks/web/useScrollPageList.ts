@@ -1,11 +1,11 @@
 import type { MaybeRef, Ref } from 'vue'
-import { computed, isRef, reactive, ref } from 'vue'
-import { cloneDeep } from 'lodash-es'
-import { useScroll } from '@vueuse/core'
+import useRequest from '@gx-admin/hooks/core/useRequest'
+import { defaultSettings } from '@gx-config'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isBoolean } from '@gx-design-vue/pro-utils'
-import { defaultSettings } from '@gx-config'
-import useRequest from '@gx-admin/hooks/core/useRequest'
+import { useScroll } from '@vueuse/core'
+import { cloneDeep } from 'lodash-es'
+import { computed, isRef, reactive, ref } from 'vue'
 
 const { viewScrollRoot } = defaultSettings
 
@@ -58,7 +58,7 @@ export default function <T, R = any>(serve: any, options: {
       }
     },
     onSuccess: (response) => {
-      list.value = pageState?.pageNum === 1 ? data.value : unref(list).concat(data.value)
+      list.value = pageState?.pageNum === 1 ? data.value as unknown as any[] : unref(list).concat(data.value)
       state.isMore = unref(list).length < (response.totalCount || 0)
       state.init = true
     }
@@ -85,9 +85,9 @@ export default function <T, R = any>(serve: any, options: {
       }
     })
 
-    let stopWatchBottom: Function
+    let stopWatchBottom: Fn
 
-    let stopWatchScrollY: Function
+    let stopWatchScrollY: Fn
 
     onMountedOrActivated(() => {
       if (stopWatchBottom)

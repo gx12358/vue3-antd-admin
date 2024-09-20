@@ -1,14 +1,14 @@
 .statistic_item {
   --at-apply: flex items-center text-right;
-  
+
   &::after {
     content: '';
     --at-apply: h-40px w-1px bg-hex-f0f0f0 ml-32px;
   }
-  
+
   &:last-child {
     --at-apply: pr-0;
-    
+
     &::after {
       --at-apply: hidden;
     }
@@ -19,7 +19,7 @@
   background: transparent;
   border-radius: 0;
   box-shadow: 1px 0 0 0 #f0f0f0, 0 1px 0 0 #f0f0f0, 1px 1px 0 0 #f0f0f0, 1px 0 0 0 #f0f0f0 inset, 0 1px 0 0 #f0f0f0 inset;
-  
+
   &:hover {
     box-shadow: 0 1px 2px -2px #00000029, 0 3px 6px #0000001f, 0 5px 12px 4px #00000017;
   }

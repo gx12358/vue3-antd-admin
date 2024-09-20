@@ -61,7 +61,7 @@ export default {
       searchConfig: {
         name: 'createTime',
         valueType: 'dateRange',
-        placeholder: ['请选择' , '请选择'],
+        placeholder: ['请选择', '请选择'],
         showTime: false,
         valueFormat: 'YYYY-MM-DD',
       }

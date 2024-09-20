@@ -25,7 +25,8 @@
       "@gx-config": ["config/index.ts"],
       "@gx-vuex": ["src/store/index.ts"],
       "@gx-admin/hooks/*": ["src/hooks/*"],
-      "@gx-design/*": ["src/components/GDesign/*"]
+      "@gx-design/*": ["src/components/GDesign/*"],
+      "@gx-design-vue/app": ["node_modules/@gx-design-vue/pro-app/dist/index.d.ts"],
     }
   },
   "include": [

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { message } from 'ant-design-vue'
-import { GProCard } from '@gx-design-vue/pro-card'
 import type { CardListItemDataType, CardSearchParmas } from '@gx-mock/datasSource/list/card'
-import { useScrollPageList } from '@gx-admin/hooks/web'
-import { deleteCardList, getCardList } from '@/services/listCenter/card'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import { deleteCardList, getCardList } from '@/services/listCenter/card'
+import { useScrollPageList } from '@gx-admin/hooks/web'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { message } from 'ant-design-vue'
 import OperateModal from './components/OperateModal.vue'
 import { cardGridConfig } from './utils/config'
 
@@ -52,7 +52,9 @@ const handleDelete = (id) => {
 <template>
   <g-pro-page-container :use-page-card="false" :loading="initLoading">
     <template #contentRender>
-      <div class="mt-8px font-600 text-rgba-[0-0-0-0.88] text-20px leading-32p text-hidden-1">卡片列表</div>
+      <div class="mt-8px font-600 text-rgba-[0-0-0-0.88] text-20px leading-32p text-hidden-1">
+        卡片列表
+      </div>
       <div class="mt-12px text-rgba-[0-0-0-0.88] leading-22px mb-14px">
         段落示意：蚂蚁金服务设计平台 ant.design，用最小的工作量，无缝接入蚂蚁金服生态， 提供跨越设计与开发的体验解决方案。
       </div>
@@ -84,26 +86,32 @@ const handleDelete = (id) => {
         </div>
       </GProCard>
       <GProCard
-        :key="item.id"
         v-for="item in list"
+        :key="item.id"
         :col-span="cardGridConfig.colSpan"
         hoverable
       >
         <div class="flex gap-16px">
           <g-admin-image :src="item.avatar" :width="48" :height="48" class="rd-50% flex-shrink-0" />
           <div class="flex flex-col gap-8px">
-            <div class="gx-admin-a text-16px font-600 text-rgba-[0-0-0-0.88] text-hidden-1 leading-26px">{{ item.title }}</div>
-            <div class="text-rgba-[0-0-0-0.88] text-hidden-3 leading-22px h-66px">{{ item.title }}</div>
+            <div class="gx-admin-a text-16px font-600 text-rgba-[0-0-0-0.88] text-hidden-1 leading-26px">
+              {{ item.title }}
+            </div>
+            <div class="text-rgba-[0-0-0-0.88] text-hidden-3 leading-22px h-66px">
+              {{ item.title }}
+            </div>
           </div>
         </div>
         <template #actions>
-          <span class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" key="update" @click="operate?.open(item.id)">更新</span>
-          <span class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" key="delete" @click="handleDelete(item.id)">删除</span>
+          <span key="update" class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" @click="operate?.open(item.id)">更新</span>
+          <span key="delete" class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" @click="handleDelete(item.id)">删除</span>
         </template>
       </GProCard>
     </GProCard>
     <div class="flex-center">
-      <a-button class="mt-24px" :loading="loading" v-if="state.isMore" @click="handleNext">更多</a-button>
+      <a-button v-if="state.isMore" class="mt-24px" :loading="loading" @click="handleNext">
+        更多
+      </a-button>
     </div>
     <OperateModal ref="operate" @ok="reloadList" />
   </g-pro-page-container>

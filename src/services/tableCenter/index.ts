@@ -1,5 +1,5 @@
-import request from '@/utils/request'
 import type { GAxiosOptions } from '@/utils/request/typings'
+import request from '@/utils/request'
 
 export function getTableList<T = any, R = undefined>(data, config: Partial<GAxiosOptions> = {}) {
   return request<T, R>({

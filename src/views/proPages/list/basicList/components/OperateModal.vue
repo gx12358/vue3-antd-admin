@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { message } from 'ant-design-vue'
-import type { Dayjs } from 'dayjs'
-import dayjs from 'dayjs'
-import type { BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
+import type { RulesState } from '@gx-admin/hooks/system'
 import type { UserList } from '@gx-mock/config/user'
-import { hanndleField } from '@gx-design-vue/pro-utils'
-import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
+import type { BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
+import type { Dayjs } from 'dayjs'
 import Empty from '@/components/GlobalLayout/Empty/index.vue'
+import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
 import { getUserList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import type { RulesState } from '@gx-admin/hooks/system'
 import { useForm } from '@gx-admin/hooks/system'
+import { hanndleField } from '@gx-design-vue/pro-utils'
+import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
+import { reactive } from 'vue'
 
 type FormState = Partial<BasicListItemDataType> & {
   ownerId?: number;
@@ -111,7 +111,7 @@ defineExpose({
     :width="640"
     :open="open"
     :spinning="spinning"
-    :skeletonLoading="skeletonLoading"
+    :skeleton-loading="skeletonLoading"
     :title="formState.id ? '任务编辑' : '任务新增'"
     @ok="handleOk"
     @cancel="handleCancel"
@@ -119,13 +119,13 @@ defineExpose({
     <a-form :colon="false" :wrapper-col="{ span: 20 }" :label-col="{ span: 4 }">
       <a-form-item label="任务名称" v-bind="validateInfos.title">
         <a-input
+          v-model:value="formState.title"
           allow-clear
           placeholder="请输入任务名称"
-          v-model:value="formState.title"
         />
       </a-form-item>
       <a-form-item label="任务名称" v-bind="validateInfos.createTimeDay">
-        <a-date-picker style="width: 100%" showTime v-model:value="formState.createTimeDay" />
+        <a-date-picker v-model:value="formState.createTimeDay" style="width: 100%" show-time />
       </a-form-item>
       <a-form-item label="任务负责人" v-bind="validateInfos.ownerId">
         <a-select
@@ -137,7 +137,7 @@ defineExpose({
             <g-spin v-if="loading" class="spinner-icon" />
             <Empty v-else :width="80" />
           </template>
-          <a-select-option :key="item" :value="item.id" v-for="item in userList">
+          <a-select-option v-for="item in userList" :key="item" :value="item.id">
             {{ item.name }}
           </a-select-option>
         </a-select>

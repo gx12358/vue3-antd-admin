@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { GProCard } from '@gx-design-vue/pro-card'
-import { getArticlesList } from '@/services/projectCenter'
 import type { ListRecord } from '../../hooks/useChildState'
+import { getArticlesList } from '@/services/projectCenter'
+import { GProCard } from '@gx-design-vue/pro-card'
 import WrapScroll from '../Layout/WrapScroll.vue'
 </script>
 

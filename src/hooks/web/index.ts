@@ -1,7 +1,7 @@
-import useThemeStyle from './useThemeStyle'
 import useScrollPageList from './useScrollPageList'
+import useThemeStyle from './useThemeStyle'
 
 export {
-  useThemeStyle,
-  useScrollPageList
+  useScrollPageList,
+  useThemeStyle
 }

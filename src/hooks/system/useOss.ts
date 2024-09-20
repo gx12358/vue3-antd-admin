@@ -1,10 +1,10 @@
-import OSS from 'ali-oss'
-import { cloneDeep } from 'lodash-es'
 import type { ClientDetails } from '@/store/modules/oss'
 import { getUplaodInfos } from '@/services/systemCenter'
+import { createFileName } from '@/utils/uploadFile'
 import { checkURL } from '@/utils/validate'
 import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'
-import { createFileName } from '@/utils/uploadFile'
+import OSS from 'ali-oss'
+import { cloneDeep } from 'lodash-es'
 
 export function useOss() {
   const store = useStore()

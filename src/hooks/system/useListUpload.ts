@@ -1,9 +1,5 @@
 import type { Ref } from 'vue'
-import { createVNode, onMounted, ref } from 'vue'
-import { cloneDeep } from 'lodash-es'
-import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
-import { onBeforeRouteLeave } from 'vue-router'
 import {
   checkFileType,
   generateVidoePicture,
@@ -11,6 +7,10 @@ import {
   getMediaInfos,
   getRandomNumber
 } from '@gx-design-vue/pro-utils'
+import { Modal } from 'ant-design-vue'
+import { cloneDeep } from 'lodash-es'
+import { createVNode, onMounted, ref } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { useOss } from './useOss'
 
 export interface UploadItem {
@@ -136,12 +136,13 @@ export function useListUpload(limit?: Ref<number>) {
         height,
         duration
       })
-      if (play)
+      if (play) {
         generateVidoePicture(URL.createObjectURL(file)).then((coverImage) => {
           changeListItem(key, {
             coverImage
           })
         })
+      }
     })
   }
 

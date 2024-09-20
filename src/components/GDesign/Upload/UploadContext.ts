@@ -1,6 +1,6 @@
 import type { ComputedRef, InjectionKey } from 'vue'
-import { inject, provide } from 'vue'
 import type { MaterialListItem } from './typings'
+import { inject, provide } from 'vue'
 
 export type ContextType = any
 

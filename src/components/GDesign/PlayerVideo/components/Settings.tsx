@@ -1,9 +1,9 @@
-import { computed, defineComponent, reactive, ref, watch } from 'vue'
-import { cloneDeep } from 'lodash-es'
 import { onClickOutside } from '@vueuse/core'
+import { cloneDeep } from 'lodash-es'
+import { computed, defineComponent, reactive, ref, watch } from 'vue'
+import Volume from '../components/Volume'
 import { useVideoContext } from '../context'
 import { settingsBackDrop } from '../utils/config'
-import Volume from '../components/Volume'
 
 const Settings = defineComponent({
   props: {

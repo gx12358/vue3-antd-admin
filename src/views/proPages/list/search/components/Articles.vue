@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
-import { GProCard } from '@gx-design-vue/pro-card'
+import type { SearchState } from './typings'
+import Empty from '@/components/GlobalLayout/Empty/index.vue'
+import { getArticleList } from '@/services/listCenter'
 import { useDict } from '@gx-admin/hooks/system'
 import { useScrollPageList } from '@gx-admin/hooks/web'
-import { getArticleList } from '@/services/listCenter'
-import Empty from '@/components/GlobalLayout/Empty/index.vue'
-import type { SearchState } from './typings'
-import useSearchForm from './hooks/useSearchForm'
-import CommonSearch from './components/CommonSearch.vue'
-import { owners } from '../utils/config'
+import { GProCard } from '@gx-design-vue/pro-card'
+import dayjs from 'dayjs'
 import { useSearchListContext } from '../context'
+import { owners } from '../utils/config'
+import CommonSearch from './components/CommonSearch.vue'
+import useSearchForm from './hooks/useSearchForm'
 
 const { dictState } = useDict('sys_common_author')
 
@@ -56,11 +56,13 @@ watchEffect(() => {
     <CommonSearch v-model:state="searchParams" :disabled="loading">
       <template #author>
         <div class="max-md-flex-wrap form-item">
-          <div class="label shrink-0 max-md-w-full max-md-mb-8px mr-15px text-hex-999">所属作者：</div>
+          <div class="label shrink-0 max-md-w-full max-md-mb-8px mr-15px text-hex-999">
+            所属作者：
+          </div>
           <div class="flex items-center flex-main gap-10px">
             <a-select
-              class="max-md-w-60% w-220px max-w-550px"
               v-model:value="searchParams.authorList"
+              class="max-md-w-60% w-220px max-w-550px"
               mode="multiple"
               placeholder="请选择所示作者"
               :options="authorOptions"
@@ -83,16 +85,24 @@ watchEffect(() => {
         <Empty v-if="hasEmpty" />
         <template v-else>
           <div
-            class="pb-16px border-b-width-1px border-b-width-1px border-b-hex-0e050505 border-b-solid"
-            :class="sort === 0 ? '' : 'pt-16px'"
             v-for="(item, sort) in articleData"
             :key="item.id"
+            class="pb-16px border-b-width-1px border-b-width-1px border-b-hex-0e050505 border-b-solid"
+            :class="sort === 0 ? '' : 'pt-16px'"
           >
-            <div class="text-hex-#e0000000 text-16px leading-18px mb-12px">{{ item.title }}</div>
+            <div class="text-hex-#e0000000 text-16px leading-18px mb-12px">
+              {{ item.title }}
+            </div>
             <div class="flex items-center gap-8px">
-              <a-tag class="m-0">Ant Design</a-tag>
-              <a-tag class="m-0">设计语言</a-tag>
-              <a-tag class="m-0">蚂蚁金服</a-tag>
+              <a-tag class="m-0">
+                Ant Design
+              </a-tag>
+              <a-tag class="m-0">
+                设计语言
+              </a-tag>
+              <a-tag class="m-0">
+                蚂蚁金服
+              </a-tag>
             </div>
             <div class="leading-22px max-w-720px mt-16px">
               {{ item.description }}

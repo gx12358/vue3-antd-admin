@@ -1,9 +1,9 @@
-import type { SlotsType } from 'vue'
-import { defineComponent } from 'vue'
-import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
-import { getSlotVNode } from '@gx-design-vue/pro-utils'
 import type { GImageProps } from '@gx-design-vue/image'
+import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
+import type { SlotsType } from 'vue'
 import { GImage, gImagePorps } from '@gx-design-vue/image'
+import { getSlotVNode } from '@gx-design-vue/pro-utils'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'GlobalImage',

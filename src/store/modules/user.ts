@@ -1,17 +1,16 @@
-import { reactive, toRefs } from 'vue'
-import { defineStore } from 'pinia'
-import { notification } from 'ant-design-vue'
-import { defaultSettings } from '@gx-config'
 import type { UserDetails, UserInfo } from '@gx-mock/config/user'
-import { defaultUser } from '@gx-mock/config/user'
 import { getUserInfo, login, logout } from '@/services/userCenter'
 import { getAccessToken, removeAccessToken, setAccessToken } from '@/utils/accessToken'
 import { timeFix } from '@/utils/util'
-import { useStoreRoutes } from './routes'
-import { useStorePermission } from './permission'
-import { useStoreTabsRouter } from './tabsRouter'
+import { defaultSettings } from '@gx-config'
 import { isObject } from '@gx-design-vue/pro-utils'
+import { defaultUser } from '@gx-mock/config/user'
+import { notification } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
+import { defineStore } from 'pinia'
+import { reactive, toRefs } from 'vue'
+import { useStorePermission } from './permission'
+import { useStoreRoutes } from './routes'
 
 const { tokenName, loginInterception } = defaultSettings
 
@@ -25,7 +24,6 @@ type UserStateKey = keyof UserState
 export const useStoreUser = defineStore('user', () => {
   const routes = useStoreRoutes()
   const auth = useStorePermission()
-  const tabsRouter = useStoreTabsRouter()
 
   const state = reactive<UserState>({
     accessToken: getAccessToken(),
@@ -110,7 +108,6 @@ export const useStoreUser = defineStore('user', () => {
     auth.changeValue('role', [])
     auth.changeValue('ability', [])
     routes.resetRoute()
-    tabsRouter.blankingTabs()
   }
 
   /**

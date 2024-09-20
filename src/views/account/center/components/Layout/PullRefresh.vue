@@ -115,8 +115,8 @@ useEventListener(document, 'mouseup', () => {
   >
     <div class="pull-header flex-center mb-[-16px]">
       <template v-if="isVertical">
-        <g-spin :icon-style="{ fontSize: '20px' }" v-if="touchState.status === 'loading'" />
-        <span class="text-hex-ccc" v-if="isMoved">
+        <g-spin v-if="touchState.status === 'loading'" :icon-style="{ fontSize: '20px' }" />
+        <span v-if="isMoved" class="text-hex-ccc">
           {{ `${touchState.status === 'pulling' ? '下拉' : '释放'}既可刷新...` }}
         </span>
       </template>

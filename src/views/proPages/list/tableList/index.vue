@@ -1,14 +1,13 @@
 <script setup lang="ts" name="TableList">
-import { Teleport } from 'vue'
-import { message } from 'ant-design-vue'
-import { useMounted } from '@vueuse/core'
-import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
-import { useTable } from '@gx-design-vue/pro-table'
 import type { RulesListItem, RulesListSearchParams } from '@gx-mock/datasSource/list/rule'
+import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { deleteRules, getRulesList } from '@/services/listCenter'
-import PreviewDrawer from './components/PreviewDrawer.vue'
+import { useTable } from '@gx-design-vue/pro-table'
+import { useMounted } from '@vueuse/core'
+import { message } from 'ant-design-vue'
 import OperateModal from './components/OperateModal.vue'
+import PreviewDrawer from './components/PreviewDrawer.vue'
 import { columns } from './utils/columns'
 
 const isMounted = useMounted()
@@ -87,7 +86,9 @@ const removeTableRule = async (id: number) => {
       <template #bodyCell="{ column, record }: { column: ProColumnType, record: RulesListItem }">
         <template v-if="column.dataIndex === 'name'">
           <a v-if="record.name" @click="preview?.open(record)">{{ record.name }}</a>
-          <template v-else>-</template>
+          <template v-else>
+            -
+          </template>
         </template>
         <template v-if="column.dataIndex === 'callNo'">
           {{ record.callNo > 0 ? `${record.callNo}万` : record.callNo }}
@@ -109,7 +110,7 @@ const removeTableRule = async (id: number) => {
         </template>
       </template>
     </g-pro-table>
-    <Teleport to=".gx-pro-table-list-toolbar" v-if="isMounted && selectedKey?.length">
+    <Teleport v-if="isMounted && selectedKey?.length" to=".gx-pro-table-list-toolbar">
       <div class="mb-16px px-24px py-12px bg-rgba-[0-0-0-0.02] rd-6px flex items-center justify-between">
         <div class="flex gap-8px text-rgba-[0-0-0-0.45]">
           <span>已选择</span>

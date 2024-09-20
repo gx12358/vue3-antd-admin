@@ -1,7 +1,7 @@
-import { defineComponent, h } from 'vue'
-import { spinProps } from 'ant-design-vue/es/spin'
-import { Spin } from 'ant-design-vue'
 import { useProAppContext } from '@gx-design-vue/pro-app'
+import { Spin } from 'ant-design-vue'
+import { spinProps } from 'ant-design-vue/es/spin'
+import { defineComponent, h } from 'vue'
 
 export default defineComponent({
   name: 'GSpin',

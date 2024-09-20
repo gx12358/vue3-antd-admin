@@ -1,11 +1,11 @@
 <script setup lang="ts" name="AccountCenter">
-import { GProCard } from '@gx-design-vue/pro-card'
-import { useProConfigContext } from '@gx-design-vue/pro-provider'
-import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
 import type { TabsKey } from '@gx-mock/datasSource/user/account'
-import { useRequest } from '@gx-admin/hooks/core'
 import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
+import { useRequest } from '@gx-admin/hooks/core'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { useMediaQuery } from '@gx-design-vue/pro-hooks'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import TagList from './components/TagList.vue'
 import { provideAccountCenterContext } from './context'
 
@@ -32,6 +32,7 @@ const route = useRoute()
 const router = useRouter()
 const { token } = useProConfigContext()
 const col = useMediaQuery()
+const { globalLayout, disabledScrollTop, showProgressBar } = toRefs(global.state)
 
 const ready = ref(false)
 
@@ -58,16 +59,16 @@ const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
 
 const contentHeight = computed(() => {
   const herderHeight = token.value.layout?.header?.heightLayoutHeader
-  const tabsHeight = global.globalLayout?.showTabsBar ? '62px' : '0px'
-  const pageHeaderHieght = global.globalLayout.pageHeaderRender === false ? '0px' : '46px'
+  const tabsHeight = globalLayout.value?.showTabsBar ? '62px' : '0px'
+  const pageHeaderHieght = globalLayout.value?.pageHeaderRender === false ? '0px' : '46px'
   return isMobile.value ? undefined : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
 })
 
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
 
 onActivated(() => {
-  global.disabledScrollTop = true
-  global.showProgressBar = false
+  disabledScrollTop.value = true
+  showProgressBar.value = false
   ready.value = true
 })
 
@@ -77,8 +78,8 @@ const changeRouter = (value: TabsKey) => {
 
 onBeforeRouteLeave((to) => {
   if (!to.fullPath.includes('/account/center/')) {
-    global.showProgressBar = true
-    global.disabledScrollTop = false
+    showProgressBar.value = true
+    disabledScrollTop.value = false
   }
 })
 
@@ -119,13 +120,17 @@ provideAccountCenterContext({
           </div>
         </div>
         <a-divider dashed />
-        <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">标签</div>
+        <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">
+          标签
+        </div>
         <TagList :tags="user.userDetails.tags?.split(',') || []" />
         <a-divider dashed />
         <GProCard :body-style="{ padding: 0 }" :loading="loading" class="group-card">
-          <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">团队</div>
+          <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">
+            团队
+          </div>
           <a-row :gutter="[ 36, 24 ]">
-            <a-col :key="item.id" v-for="item in groupData" :lg="24" :xl="12">
+            <a-col v-for="item in groupData" :key="item.id" :lg="24" :xl="12">
               <div class="flex items-center gap-12px">
                 <g-admin-image class="flex-shrink-0 w-24px h-24px rd-50%" :src="item.icon">
                   <template #placeholder>
@@ -145,8 +150,8 @@ provideAccountCenterContext({
         :loading="countLoading"
         class="card-right"
       >
-        <a-tabs :activeKey="activeKey" @change="changeRouter">
-          <a-tab-pane :tab-key="item.key" v-for="item in tabPaneState" :key="item.key">
+        <a-tabs :active-key="activeKey" @change="changeRouter">
+          <a-tab-pane v-for="item in tabPaneState" :key="item.key" :tab-key="item.key">
             <template #tab>
               {{ item.name }} <span>（{{ countData[item.key] }}）</span>
             </template>

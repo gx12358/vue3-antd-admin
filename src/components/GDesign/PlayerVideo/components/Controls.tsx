@@ -1,6 +1,6 @@
 import { defineComponent, ref } from 'vue'
-import Progress from '../components/Progress'
 import PlayBack from '../components/PlayBack'
+import Progress from '../components/Progress'
 import Setting from '../components/Settings'
 
 export default defineComponent({

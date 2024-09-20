@@ -1,13 +1,13 @@
-import Vue from 'vue'
+import type { DeepPartial, ProAliasToken as GProAliasToken } from '@gx-design-vue/pro-provider'
+import type { ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
+import type { CSSObject as ProCssObject } from 'ant-design-vue'
 import type {
   PropType,
   VNode,
   VNodeChild,
   CSSProperties as VueCSSProperties
 } from 'vue'
-import type { CSSObject as ProCssObject } from 'ant-design-vue'
-import type { ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
-import type { DeepPartial, ProAliasToken as GProAliasToken } from '@gx-design-vue/pro-provider'
+import Vue from 'vue'
 
 declare global {
   const __APP_INFO__: {

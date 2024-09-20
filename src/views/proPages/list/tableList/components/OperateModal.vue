@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
 import type { Dayjs } from 'dayjs'
+import { addRules, updateRules } from '@/services/listCenter'
+import { useForm } from '@gx-admin/hooks/system'
+import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
-import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
-import type { RulesState } from '@gx-admin/hooks/system'
-import { useForm } from '@gx-admin/hooks/system'
-import { addRules, updateRules } from '@/services/listCenter'
 import { defauleState } from '../utils/config'
-import { message } from 'ant-design-vue'
 
 interface FormState {
   id?: number;
@@ -83,9 +83,10 @@ const handleCancel = () => {
 const handleOk = () => {
   validate().then(async (_) => {
     spinning.value = true
-    if (operateType.value === 'update')
+    if (operateType.value === 'update') {
       formState.createTime = dayjs(formState.createTimeDay)
         .format('YYYY-MM-DD HH:mm:ss')
+}
     const fetchFun = operateType.value === 'add' ? addRules : updateRules
     const response = await fetchFun({ ...omit(formState, 'createTimeDay') })
     
@@ -125,11 +126,11 @@ defineExpose({
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <a-steps v-model:current="current" size="small" v-if="operateType === 'update'">
+    <a-steps v-if="operateType === 'update'" v-model:current="current" size="small">
       <a-step v-for="item in steps" :key="item" :title="item" />
     </a-steps>
     <div :class="operateType === 'update' ? 'w-60% m-auto mt-24px' : ''">
-      <a-form layout="vertical" v-show="current === 0">
+      <a-form v-show="current === 0" layout="vertical">
         <a-form-item v-bind="validateInfos.name" label="规则名称">
           <a-input v-model:value="formState.name" placeholder="请输入" allow-clear />
         </a-form-item>
@@ -137,9 +138,10 @@ defineExpose({
           <a-textarea v-model:value="formState.desc" placeholder="请输入" allow-clear :auto-size="{ minRows: 4 }" />
         </a-form-item>
       </a-form>
-      <a-form layout="vertical" v-show="current === 1" v-if="operateType === 'update'">
+      <a-form v-show="current === 1" v-if="operateType === 'update'" layout="vertical">
         <a-form-item v-bind="validateInfos.target" label="监控对象">
           <a-select
+            v-model:value="formState.target"
             style="width: 100%"
             :options="[
               {
@@ -152,12 +154,12 @@ defineExpose({
               },
             ]"
             placeholder="请选择"
-            v-model:value="formState.target"
             allow-clear
           />
         </a-form-item>
         <a-form-item v-bind="validateInfos.template" label="规则模板">
           <a-select
+            v-model:value="formState.template"
             style="width: 100%"
             :options="[
               {
@@ -170,12 +172,12 @@ defineExpose({
               },
             ]"
             placeholder="请选择"
-            v-model:value="formState.template"
             allow-clear
           />
         </a-form-item>
         <a-form-item v-bind="validateInfos.type" label="规则类型">
           <a-radio-group
+            v-model:value="formState.type"
             :options="[
               {
                 value: '0',
@@ -186,20 +188,20 @@ defineExpose({
                 label: '弱',
               },
             ]"
-            v-model:value="formState.type"
           />
         </a-form-item>
       </a-form>
-      <a-form layout="vertical" v-show="current === 2" v-if="operateType === 'update'">
+      <a-form v-show="current === 2" v-if="operateType === 'update'" layout="vertical">
         <a-form-item v-bind="validateInfos.createTimeDay" label="开始时间">
           <a-date-picker
-            style="width: 100%"
-            showTime
             v-model:value="formState.createTimeDay"
+            style="width: 100%"
+            show-time
           />
         </a-form-item>
         <a-form-item v-bind="validateInfos.frequency" label="监控对象">
           <a-select
+            v-model:value="formState.frequency"
             style="width: 100%"
             :options="[
               {
@@ -212,16 +214,21 @@ defineExpose({
               },
             ]"
             placeholder="请选择"
-            v-model:value="formState.frequency"
             allow-clear
           />
         </a-form-item>
       </a-form>
     </div>
-    <template #footer v-if="operateType === 'update'">
-      <a-button v-if="current > 0" @click="changeStep('back')">上一步</a-button>
-      <a-button v-if="current < steps.length - 1" type="primary" @click="changeStep('next')">下一步</a-button>
-      <a-button v-if="current === steps.length - 1" type="primary" @click="handleOk">提交</a-button>
+    <template v-if="operateType === 'update'" #footer>
+      <a-button v-if="current > 0" @click="changeStep('back')">
+        上一步
+      </a-button>
+      <a-button v-if="current < steps.length - 1" type="primary" @click="changeStep('next')">
+        下一步
+      </a-button>
+      <a-button v-if="current === steps.length - 1" type="primary" @click="handleOk">
+        提交
+      </a-button>
     </template>
   </g-pro-modal>
 </template>

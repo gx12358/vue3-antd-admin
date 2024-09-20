@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { dataURLtoBlob, getBase64, getBlobUrl } from '@gx-design-vue/pro-utils'
 import GUpload, { type GUploadProps } from '@gx-design/Upload'
+import { dataURLtoBlob, getBase64, getBlobUrl } from '@gx-design-vue/pro-utils'
+import { computed } from 'vue'
 
 const { user } = useStore()
 
@@ -36,7 +36,7 @@ const uploadHttps: GUploadProps['request'] = async (file) => {
       :progress="false"
       :data-list="urlList"
       :request="uploadHttps"
-      wordExtra="打包后在Mock模式下，不能启用快编功能！"
+      word-extra="打包后在Mock模式下，不能启用快编功能！"
     />
   </g-pro-page-container>
 </template>

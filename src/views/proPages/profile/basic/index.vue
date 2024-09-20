@@ -7,9 +7,9 @@ import type {
 } from '@gx-mock/datasSource/profile/basic'
 import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { defaultSTableState, descriptionsState, statusState } from './utils/config'
-import { goodsColumns, scheduleColumns } from './utils/columns'
 import dayjs from 'dayjs'
+import { goodsColumns, scheduleColumns } from './utils/columns'
+import { defaultSTableState, descriptionsState, statusState } from './utils/config'
 
 const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic, {
   defaultData: {}
@@ -40,7 +40,7 @@ const { loading: tableLoading } = useRequest<{
     scheduleState.dataSource = schedule
     commodityState.loading = false
     commodityState.dataSource = commodity
-    
+
     if (commodity.length) {
       let num = 0
       let amount = 0
@@ -103,8 +103,12 @@ function renderContent(_, rowIndex) {
     <template v-for="item in descriptionsState" :key="item.name">
       <a-descriptions :title="item.name" class="mb-32px">
         <a-descriptions-item v-for="el in Object.keys(item.data)" :key="el" :label="item.data[el]">
-          <template v-if="el === 'status'">{{ statusState[basicData[el]] }}</template>
-          <template v-else>{{ basicData[el] }}</template>
+          <template v-if="el === 'status'">
+            {{ statusState[basicData[el]] }}
+          </template>
+          <template v-else>
+            {{ basicData[el] }}
+          </template>
         </a-descriptions-item>
       </a-descriptions>
       <a-divider class="mb-32px" />
@@ -121,10 +125,7 @@ function renderContent(_, rowIndex) {
     <g-pro-table v-bind="scheduleState">
       <template #bodyCell="{ column, text, record }: { column: ProColumnType; text: string; record: ScheduleRecord; }">
         <template v-if="column.dataIndex === 'status'">
-          <a-badge
-            :status="text === 'success' ? 'success' : 'processing'"
-            :text="text === 'success' ? '成功' : '进行中'"
-          />
+          <a-badge :status="text === 'success' ? 'success' : 'processing'" :text="text === 'success' ? '成功' : '进行中'" />
         </template>
         <template v-if="column.dataIndex === 'cost'">
           {{ dayjs(record.time).fromNow() }}

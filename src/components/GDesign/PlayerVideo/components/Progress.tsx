@@ -1,8 +1,8 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { useVideoContext } from '../context'
-import { drag, getElementOffsets, getMatchRangeTime } from '../utils/util'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'
+import { drag, getElementOffsets, getMatchRangeTime } from '../utils/util'
 
 const Progress = defineComponent({
   props: {

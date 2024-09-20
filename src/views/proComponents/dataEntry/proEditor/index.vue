@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Editor as TinyMCEEditor } from 'tinymce'
-import GProEditor from '@gx-design/ProEditor'
 import Localization from '@/assets/public_images/localization.png'
+import GProEditor from '@gx-design/ProEditor'
+import { ref } from 'vue'
 
 const editors = ref()
 const content = ref('<p>hello world</p>')

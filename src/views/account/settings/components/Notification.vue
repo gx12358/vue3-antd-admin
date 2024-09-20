@@ -19,15 +19,17 @@ const notificationViewData = [
 </script>
 
 <template>
-  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">新消息通知</div>
-  <a-list itemLayout="horizontal" :data-source="notificationViewData">
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">
+    新消息通知
+  </div>
+  <a-list item-layout="horizontal" :data-source="notificationViewData">
     <template #renderItem="{ item }">
       <a-list-item class="!px-0">
         <template #actions>
           <a-switch
-            checkedChildren="开"
-            unCheckedChildren="关"
             v-model:checked="item.checkedValue"
+            checked-children="开"
+            un-checked-children="关"
           />
         </template>
         <a-list-item-meta :title="item.title" :description="item.description" />

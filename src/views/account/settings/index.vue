@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Base from './components/Base.vue'
-import Security from './components/Security.vue'
 import Binding from './components/Binding.vue'
 import Notification from './components/Notification.vue'
+import Security from './components/Security.vue'
 
 type menuKey = 'base' | 'security' | 'binding' | 'notification'
 
@@ -30,8 +30,8 @@ const activeKey = ref<menuKey>('base')
 
 <template>
   <g-pro-page-container :page-card-props="{ bodyStyle: { paddingInline: '16px' } }">
-    <a-tabs v-model:activeKey="activeKey" tab-position="left" animated>
-      <a-tab-pane class="!px-30px" v-for="(item, key) in menuMap" :key="key" :tab="item.name">
+    <a-tabs v-model:active-key="activeKey" tab-position="left" animated>
+      <a-tab-pane v-for="(item, key) in menuMap" :key="key" class="!px-30px" :tab="item.name">
         <component :is="item.components" />
       </a-tab-pane>
     </a-tabs>

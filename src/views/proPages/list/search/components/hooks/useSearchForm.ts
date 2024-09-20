@@ -1,5 +1,5 @@
-import { reactive } from 'vue'
 import type { SearchState } from '../typings'
+import { reactive } from 'vue'
 import { useSearchListContext } from '../../context'
 
 export default function () {

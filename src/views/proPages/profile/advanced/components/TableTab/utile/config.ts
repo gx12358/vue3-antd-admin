@@ -1,6 +1,6 @@
 import type { ProColumnsType, ProTableProps } from '@gx-design-vue/pro-table'
-import type { ListSearchParams } from '@gx-mock/util/table'
 import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
+import type { ListSearchParams } from '@gx-mock/util/table'
 import { getAdvancedTable1, getAdvancedTable2, getAdvancedTable3 } from '@/services/profileCenter'
 
 export type TabsStateActiveKey = 'table1' | 'table2' | 'table3'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import type { BasicLayoutProps, Meta } from '@gx-design-vue/pro-layout'
 import { PageTranstion } from '@gx-design-vue/pro-layout'
+import { computed, ref } from 'vue'
 import IframeView from '../views/Iframe/index.vue'
 
 defineProps({
@@ -27,9 +27,9 @@ const iframeSrc = computed(() => {
   return meta?.target && Number(meta?.targetStatus) === 0 ? meta?.target || '' : ''
 })
 
-watch(() => global.keepAlive, () => {
+watch(() => global.state.keepAlive, () => {
   keepliveRouterNames.value = router.getRoutes()
-    .filter(item => global.keepAlive || (item.meta as Meta)?.keepAlive)
+    .filter(item => global.state.keepAlive || (item.meta as Meta)?.keepAlive)
     .map(item => item.name)
 }, { immediate: true })
 </script>
@@ -46,5 +46,5 @@ watch(() => global.keepAlive, () => {
       </PageTranstion>
     </template>
   </router-view>
-  <IframeView v-if="iframeSrc" :frameSrc="iframeSrc" />
+  <IframeView v-if="iframeSrc" :frame-src="iframeSrc" />
 </template>

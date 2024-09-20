@@ -1,7 +1,7 @@
 import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-import UserLayout from '@/layout/UserLayout.vue'
-import BlankLayout from '@/layout/BlankLayout.vue'
 import BasicLayout from '@/layout/BasicLayout.vue'
+import BlankLayout from '@/layout/BlankLayout.vue'
+import UserLayout from '@/layout/UserLayout.vue'
 
 // import.meta.globEager() 直接引入所有的模块 Vite 独有的功能
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true })

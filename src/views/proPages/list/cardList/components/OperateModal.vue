@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import type { RulesState } from '@gx-admin/hooks/system'
+import type { CardListItemDataType } from '@gx-mock/datasSource/list/card'
+import GUpload from '@/components/GDesign/Upload'
+import { cardListOperate, getCardListDetails } from '@/services/listCenter'
+import { useForm } from '@gx-admin/hooks/system'
+import { hanndleField } from '@gx-design-vue/pro-utils'
+import { handleRandomImage } from '@gx-mock/util/utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
-import { handleRandomImage } from '@gx-mock/util/utils'
-import type { CardListItemDataType } from '@gx-mock/datasSource/list/card'
-import { hanndleField } from '@gx-design-vue/pro-utils'
-import { cardListOperate, getCardListDetails } from '@/services/listCenter'
-import type { RulesState } from '@gx-admin/hooks/system'
-import { useForm } from '@gx-admin/hooks/system'
-import GUpload from '@/components/GDesign/Upload'
+import { reactive } from 'vue'
 
 type FormState = Partial<CardListItemDataType>
 
@@ -31,9 +31,9 @@ const formState = reactive<FormState>({
 })
 
 const ruleState = reactive<RulesState<FormState>>({
-  title: [ { required: true, message: '请输入' } ],
-  avatar: [ { required: true, message: '请上传' } ],
-  description: [ { required: true, message: '请输入' } ]
+  title: [{ required: true, message: '请输入' }],
+  avatar: [{ required: true, message: '请上传' }],
+  description: [{ required: true, message: '请输入' }]
 })
 
 const { validate, validateInfos, resetFields } = useForm(formState, ruleState)
@@ -55,15 +55,15 @@ const handleOk = () => {
     spinning.value = true
     const response = await cardListOperate(omit(
       { ...formState, avatar: handleRandomImage(100, 100) },
-      [ formState?.id ? '' : 'id' ]
+      [formState?.id ? '' : 'id']
     ))
-    
+
     if (response) {
       message.success('操作成功')
       emit('ok')
       handleCancel()
     }
-    
+
     spinning.value = false
   })
 }
@@ -95,23 +95,12 @@ defineExpose({
 
 <template>
   <g-pro-modal
-    full-spin
-    type="normal"
-    :width="640"
-    :open="open"
-    :spinning="spinning"
-    :skeletonLoading="skeletonLoading"
-    :title="formState.id ? '任务编辑' : '任务新增'"
-    @ok="handleOk"
-    @cancel="handleCancel"
+    full-spin type="normal" :width="640" :open="open" :spinning="spinning"
+    :skeleton-loading="skeletonLoading" :title="formState.id ? '任务编辑' : '任务新增'" @ok="handleOk" @cancel="handleCancel"
   >
     <a-form :colon="false" :wrapper-col="{ span: 20 }" :label-col="{ span: 4 }">
       <a-form-item label="名称" v-bind="validateInfos.title">
-        <a-input
-          allow-clear
-          placeholder="请输入"
-          v-model:value="formState.title"
-        />
+        <a-input v-model:value="formState.title" allow-clear placeholder="请输入" />
       </a-form-item>
       <a-form-item v-bind="validateInfos.avatar">
         <template #label>
@@ -121,22 +110,13 @@ defineExpose({
           </a-tooltip>
         </template>
         <GUpload
-          :progress="false"
-          :data-list="[ { url: formState.avatar, previewUrl: formState.avatar, type: '1' } ]"
-          :limit="1"
-          :disabled="false"
-          :trigger-style="{ overflow: 'hidden', borderRadius: '4px' }"
-          :card-item-style="{ overflow: 'hidden', borderRadius: '4px' }"
-          @change="handleChange"
+          :progress="false" :data-list="[{ url: formState.avatar, previewUrl: formState.avatar, type: '1' }]"
+          :limit="1" :disabled="false" :trigger-style="{ overflow: 'hidden', borderRadius: '4px' }"
+          :card-item-style="{ overflow: 'hidden', borderRadius: '4px' }" @change="handleChange"
         />
       </a-form-item>
       <a-form-item class="!mb-0" label="描述" v-bind="validateInfos.description">
-        <a-textarea
-          v-model:value="formState.description"
-          :auto-size="{ minRows: 5 }"
-          placeholder="请输入"
-          allow-clear
-        />
+        <a-textarea v-model:value="formState.description" :auto-size="{ minRows: 5 }" placeholder="请输入" allow-clear />
       </a-form-item>
     </a-form>
   </g-pro-modal>

@@ -1,8 +1,8 @@
-import { reactive } from 'vue'
+import type { DictRecord, DictType } from '@gx-mock/config/dict'
 import { getDicts } from '@/services/systemCenter'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
-import type { DictRecord, DictType } from '@gx-mock/config/dict'
+import { reactive } from 'vue'
 
 export type SystemDictData = Partial<{ loading: boolean; data: DictRecord[] }>
 

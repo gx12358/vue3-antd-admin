@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent, watch } from 'vue'
 import * as echarts from 'echarts'
+import { defineComponent, watch } from 'vue'
 
 export default defineComponent({
   name: 'Radar',
@@ -61,5 +61,5 @@ export default defineComponent({
 </script>
 
 <template>
-  <div style="width: 100%; min-height: 400px" id="radar-container"></div>
+  <div id="radar-container" style="width: 100%; min-height: 400px" />
 </template>

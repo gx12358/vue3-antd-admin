@@ -1,10 +1,10 @@
+import { isJSONStr } from '@/utils/validate'
+import { isArray, isObject } from '@gx-design-vue/pro-utils'
+import CryptoProJS from 'crypto-js'
+import * as CryptoJS from 'crypto-js/core'
 import 'crypto-js/enc-utf8'
 import 'crypto-js/tripledes'
 import 'crypto-js/sha1'
-import * as CryptoJS from 'crypto-js/core'
-import CryptoProJS from 'crypto-js'
-import { isJSONStr } from '@/utils/validate'
-import { isArray, isObject } from '@gx-design-vue/pro-utils'
 
 const key = '1234123412ABCDEF' // 十六位十六进制数作为密钥
 

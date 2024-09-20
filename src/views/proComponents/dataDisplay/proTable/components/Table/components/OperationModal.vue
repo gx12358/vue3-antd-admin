@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProSearchMap, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
 import { getTableList } from '@/services/tableCenter'
 import { deepCopy } from '@gx-design-vue/pro-utils'
+import { reactive, ref } from 'vue'
 import columns from '../utils/columns'
 
 const store = useStore()
@@ -15,7 +15,7 @@ const spinning = ref(false)
 const waitRequest = ref(true)
 const skeletonLoading = ref(false)
 const tableData = ref<TableRecord[]>([])
-const searchMap = ref<ProTableProps['searchMap']>([
+const searchMap = ref<ProSearchMap[]>([
   {
     name: 'status',
     valueType: 'select',
@@ -91,10 +91,10 @@ defineExpose({
     title="ModalTable"
     type="normal"
     :width="900"
-    :isFail="isFail"
+    :is-fail="isFail"
     :open="visible"
     :spinning="spinning"
-    :skeletonLoading="skeletonLoading"
+    :skeleton-loading="skeletonLoading"
     @ok="handleSubmit"
     @cancel="handleCancel"
   >
@@ -102,15 +102,17 @@ defineExpose({
       ref="tableRef"
       align="center"
       :options="false"
-      modalScroll
-      :searchMap="searchMap as ProTableProps['searchMap']"
-      :waitRequest="waitRequest"
+      modal-scroll
+      :search-map="searchMap"
+      :wait-request="waitRequest"
       :columns="columns.operationModal"
       :request="getTableData"
       @reset="onReset"
     >
       <template #headerCell="{ column }">
-        <template v-if="column.dataIndex === 'name'"> FullName</template>
+        <template v-if="column.dataIndex === 'name'">
+          FullName
+        </template>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'name'">

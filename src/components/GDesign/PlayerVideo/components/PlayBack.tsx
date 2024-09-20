@@ -1,5 +1,5 @@
-import { defineComponent, onMounted, ref } from 'vue'
 import { formatDuraton } from '@gx-design-vue/pro-utils'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useVideoContext } from '../context'
 import useVideo from '../hooks/useVideo'
 import videoEvent from '../utils/event'

@@ -1,21 +1,10 @@
-import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
-import {
-  computed,
-  defineComponent,
-  onDeactivated,
-  onUnmounted,
-  reactive,
-  ref,
-  toRefs,
-  unref
-} from 'vue'
-import { cloneDeep, pick } from 'lodash-es'
-import { Upload, message } from 'ant-design-vue'
-import { PlusOutlined } from '@ant-design/icons-vue'
+import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
+import type { MaterialListItem } from './typings'
 import global from '@/common/global'
 import { download } from '@/services/common'
 import { createFileName } from '@/utils/uploadFile'
+import { PlusOutlined } from '@ant-design/icons-vue'
 import {
   checkFileType,
   dataURLtoBlob,
@@ -30,14 +19,25 @@ import {
   getSlotVNode,
   getVideoCoverPicture
 } from '@gx-design-vue/pro-utils'
-import { proUploadProps } from './props'
-import { provideUploadContext } from './UploadContext'
-import { useUploadData } from './hooks/useUploadData'
-import UploadCard from './components/UploadCard'
-import ImageEditorModal from './components/ImageEditorModal'
+import { message, Upload } from 'ant-design-vue'
+import { cloneDeep, pick } from 'lodash-es'
+import {
+  computed,
+  defineComponent,
+  onDeactivated,
+  onUnmounted,
+  reactive,
+  ref,
+  toRefs,
+  unref
+} from 'vue'
 import MaterialView from '../MaterialView'
+import ImageEditorModal from './components/ImageEditorModal'
+import UploadCard from './components/UploadCard'
+import { useUploadData } from './hooks/useUploadData'
+import { proUploadProps } from './props'
 
-import type { MaterialListItem } from './typings'
+import { provideUploadContext } from './UploadContext'
 
 import './style.less'
 
@@ -350,7 +350,7 @@ const GUpload = defineComponent({
           duration: fileDuration
         })
       } else {
-        if (props.listType === 'card' || !getDataValueRef.value.length)
+        if (props.listType === 'card' || !getDataValueRef.value.length) {
           addDataValue({
             id,
             url: '',
@@ -369,7 +369,7 @@ const GUpload = defineComponent({
             width: fileWidth,
             height: fileHeight
           })
-        else {
+        } else {
           id = getDataValueRef.value[0].id
           changeDataValue(id, {
             url: '',

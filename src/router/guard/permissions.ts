@@ -1,4 +1,4 @@
-import type { RouteRecordRaw, Router } from 'vue-router'
+import type { Router, RouteRecordRaw } from 'vue-router'
 import { defaultSettings } from '@gx-config'
 
 const { authentication, loginInterception, recordRoute, routesWhiteList } = defaultSettings
@@ -48,9 +48,6 @@ export function createPermissionGuard(router: Router) {
       const routes = authentication === 'all'
         ? await routeStore.setAllRoutes()
         : await routeStore.setRoutes()
-      routeStore.setRouteState({
-        meunLoading: false
-      })
       if (routes?.length) {
         routes.forEach((route) => {
           router.addRoute(route as RouteRecordRaw)

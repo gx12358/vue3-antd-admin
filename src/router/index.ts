@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { defaultSettings } from '@gx-config'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { constantRoutes } from './routes'
 
 const { routerMode } = defaultSettings

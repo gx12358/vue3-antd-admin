@@ -47,7 +47,9 @@ defineExpose({
         </template>
         <a>{{ state.params?.name }}</a>
       </a-descriptions-item>
-      <a-descriptions-item label="描述">{{ state.params?.desc }}</a-descriptions-item>
+      <a-descriptions-item label="描述">
+        {{ state.params?.desc }}
+      </a-descriptions-item>
       <a-descriptions-item label="服务调用次数">
         {{ state.params.callNo > 0 ? `${state.params.callNo}万` : state.params.callNo }}
       </a-descriptions-item>
@@ -57,7 +59,9 @@ defineExpose({
         <a-badge v-if="state.params.status === '2'" status="success" text="已上线" />
         <a-badge v-if="state.params.status === '3'" status="error" text="异常" />
       </a-descriptions-item>
-      <a-descriptions-item label="上次调度时间">{{ state.params?.createTime }}</a-descriptions-item>
+      <a-descriptions-item label="上次调度时间">
+        {{ state.params?.createTime }}
+      </a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>

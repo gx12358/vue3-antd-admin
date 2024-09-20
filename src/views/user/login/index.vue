@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { h, reactive } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import Logo from '@/assets/logo.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { GProFormCheckbox, GProFormLogin, GProFormPassword, GProFormText } from '@gx-design-vue/pro-form'
 import { GlobalFooter } from '@gx-design-vue/pro-layout'
-import Logo from '@/assets/logo.png'
+import { h, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 interface UserState {
   userName: string
@@ -86,16 +86,18 @@ const handleSubmit = async (value) => {
         </template>
         <GProFormText
           name="userName"
-          :fieldProps="{ size: 'large', prefix: userOutlined }"
+          :field-props="{ size: 'large', prefix: userOutlined }"
           placeholder="用户名: admin"
         />
         <GProFormPassword
           name="password"
-          :fieldProps="{ size: 'large', prefix: lockOutlined }"
+          :field-props="{ size: 'large', prefix: lockOutlined }"
           placeholder="密码: gx.design"
         />
         <div class="mb-[24px]">
-          <GProFormCheckbox noStyle name="autoLogin">自动登录</GProFormCheckbox>
+          <GProFormCheckbox no-style name="autoLogin">
+            自动登录
+          </GProFormCheckbox>
           <a class="float-right">忘记密码</a>
         </div>
       </GProFormLogin>

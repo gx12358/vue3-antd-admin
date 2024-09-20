@@ -1,6 +1,6 @@
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
-import { PropTypes } from '@/utils'
 import type { MaterialListItem } from './typings'
+import { PropTypes } from '@/utils'
 
 export const cardSize: CSSProperties = { width: '104px', height: '104px' }
 
@@ -86,7 +86,7 @@ export const proUploadProps = {
     default: () => undefined
   },
   customOperationRender: {
-    type: [ Function, Boolean ] as VuePropType<WithFalse<(view: Function, download: Function, remove: Function) => CustomRender>>,
+    type: [ Function, Boolean ] as VuePropType<WithFalse<(view: Fn, download: Fn, remove: Fn) => CustomRender>>,
     default: () => undefined
   },
   request: Function as VuePropType<(file: File, id: string, record?: MaterialListItem) => Promise<{ code: number; url: string; previewUrl: string }>>,

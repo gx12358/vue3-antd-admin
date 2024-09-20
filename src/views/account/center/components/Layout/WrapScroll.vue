@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Teleport } from 'vue'
 import type { ListGridType } from 'ant-design-vue/es/list'
 import { getArticlesList } from '@/services/projectCenter'
-import PullRefresh from './PullRefresh.vue'
+import { Teleport } from 'vue'
 import { useAccountCenterContext } from '../../context'
 import useChildState, { type ListRecord } from '../../hooks/useChildState'
+import PullRefresh from './PullRefresh.vue'
 
 defineProps<{
   serve: (data: any) => Promise<ResponseResult>;
@@ -55,10 +55,10 @@ const pullRefreshFun = (callback) => {
 <template>
   <g-spin :spinning="pullRefresh ? false : initLoading">
     <g-scrollbars ref="scrollRef" :wrap-class="scrollRoot" :max-height="contentHeight">
-      <PullRefresh :scroll-y="state.y" class="px-24px relative" @refresh="pullRefreshFun" :style="listStyle">
+      <PullRefresh :scroll-y="state.y" class="px-24px relative" :style="listStyle" @refresh="pullRefreshFun">
         <a-list :data-source="list" item-layout="vertical" :grid="grid">
           <template #renderItem="{ item }: { item: ListRecord }">
-            <a-list-item class="!px-0" :key="item.id">
+            <a-list-item :key="item.id" class="!px-0">
               <slot name="renderItem" :item="item" />
             </a-list-item>
           </template>
@@ -70,7 +70,7 @@ const pullRefreshFun = (callback) => {
           已经到底部了哦~
         </div>
       </PullRefresh>
-      <Teleport to="#list-float-btn" v-if="floatReady">
+      <Teleport v-if="floatReady" to="#list-float-btn">
         <a-float-button-group v-show="openFloatBtn" shape="square" :style="isMobile ? undefined : { position: 'absolute', right: '24px' }">
           <a-float-button @click="handleReload">
             <template #icon>

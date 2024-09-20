@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import dayjs from 'dayjs'
 import { GProField, type ProFieldFCMode } from '@gx-design-vue/pro-field'
+import dayjs from 'dayjs'
+import { ref } from 'vue'
 
 const state = ref<ProFieldFCMode>('read')
 const plain = ref(false)
@@ -35,16 +35,24 @@ const jsonCode = ref(`{
         ProField
       </a-typography-title>
       <a-typography-paragraph>
-        <a-typography-text type="secondary">该组件为内部组件，请勿直接使用。</a-typography-text>
-        <div class="mt-10px">原子信息组件，统一 ProForm等组件里面的字段定义。</div>
+        <a-typography-text type="secondary">
+          该组件为内部组件，请勿直接使用。
+        </a-typography-text>
+        <div class="mt-10px">
+          原子信息组件，统一 ProForm等组件里面的字段定义。
+        </div>
       </a-typography-paragraph>
       <a-typography-title :level="3">
         Demo
       </a-typography-title>
       <a-space>
         <a-radio-group v-model:value="state">
-          <a-radio value="read">只读</a-radio>
-          <a-radio value="edit">编辑</a-radio>
+          <a-radio value="read">
+            只读
+          </a-radio>
+          <a-radio value="edit">
+            编辑
+          </a-radio>
         </a-radio-group>
         简约模式
         <a-switch v-model:checked="plain" />
@@ -57,7 +65,7 @@ const jsonCode = ref(`{
           <GProField
             text="https://avatars2.githubusercontent.com/u/8186664?s=60&v=4"
             mode="read"
-            valueType="avatar"
+            value-type="avatar"
           />
         </a-descriptions-item>
         <a-descriptions-item label="文本">
@@ -66,35 +74,35 @@ const jsonCode = ref(`{
         <a-descriptions-item label="图片">
           <GProField
             text="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            valueType="image"
+            value-type="image"
             :mode="state"
             :plain="plain"
           />
         </a-descriptions-item>
         <a-descriptions-item label="金额">
-          <GProField text="100" valueType="money" :mode="state" :plain="plain" />
+          <GProField text="100" value-type="money" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="颜色">
-          <GProField text="#1099aa" valueType="color" :mode="state" :plain="plain" />
+          <GProField text="#1099aa" value-type="color" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="数字">
-          <GProField text="19897979797979" valueType="digit" :mode="state" :plain="plain" />
+          <GProField text="19897979797979" value-type="digit" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="秒格式化">
-          <GProField text="2000000" valueType="second" :mode="state" :plain="plain" />
+          <GProField text="2000000" value-type="second" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="百分比">
-          <GProField text="100" valueType="percent" :mode="state" :plain="plain" />
+          <GProField text="100" value-type="percent" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="评分">
-          <GProField text="3.5" valueType="rate" :mode="state" :plain="plain" />
+          <GProField text="3.5" value-type="rate" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="选择框">
           <GProField
             light
             text="open"
             :mode="state"
-            :valueEnum="{
+            :value-enum="{
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
@@ -115,8 +123,8 @@ const jsonCode = ref(`{
           <GProField
             :text="['open', 'closed']"
             :mode="state"
-            valueType="checkbox"
-            :valueEnum="{
+            value-type="checkbox"
+            :value-enum="{
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
@@ -146,8 +154,8 @@ const jsonCode = ref(`{
               },
             ]"
             :mode="state"
-            valueType="checkbox"
-            :valueEnum="{
+            value-type="checkbox"
+            :value-enum="{
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
@@ -168,8 +176,8 @@ const jsonCode = ref(`{
           <GProField
             text="open"
             :mode="state"
-            valueType="radio"
-            :valueEnum="{
+            value-type="radio"
+            :value-enum="{
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
@@ -190,8 +198,8 @@ const jsonCode = ref(`{
           <GProField
             text="open"
             :mode="state"
-            valueType="radioButton"
-            :valueEnum="{
+            value-type="radioButton"
+            :value-enum="{
               all: { text: '全部', disabled: true, status: 'Default' },
               open: {
                 text: '未解决',
@@ -211,7 +219,7 @@ const jsonCode = ref(`{
         <a-descriptions-item label="远程选择框">
           <GProField
             text="open"
-            valueType="select"
+            value-type="select"
             :mode="state"
             :request="async () => [
               { label: '全部', value: 'all' },
@@ -233,7 +241,7 @@ const jsonCode = ref(`{
         <a-descriptions-item label="级联选择框">
           <GProField
             :text="['zhejiang', 'hangzhou', 'xihu']"
-            valueType="cascader"
+            value-type="cascader"
             :mode="state"
             :request="async () => [
               {
@@ -272,13 +280,13 @@ const jsonCode = ref(`{
           />
         </a-descriptions-item>
         <a-descriptions-item label="进度条">
-          <GProField text="40" valueType="progress" :mode="state" :plain="plain" />
+          <GProField text="40" value-type="progress" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="百分比">
           <a-space>
             <GProField
               :text="10"
-              :valueType="{
+              :value-type="{
                 type: 'percent',
                 showSymbol: true,
                 showColor: true,
@@ -287,7 +295,7 @@ const jsonCode = ref(`{
             />
             <GProField
               :text="0"
-              :valueType="{
+              :value-type="{
                 type: 'percent',
                 showSymbol: true,
                 showColor: true,
@@ -296,7 +304,7 @@ const jsonCode = ref(`{
             />
             <GProField
               :text="-10"
-              :valueType="{
+              :value-type="{
                 type: 'percent',
                 showSymbol: true,
                 showColor: true,
@@ -306,38 +314,38 @@ const jsonCode = ref(`{
           </a-space>
         </a-descriptions-item>
         <a-descriptions-item label="日期时间">
-          <GProField :text="dateTime" valueType="dateTime" :mode="state" :plain="plain" />
+          <GProField :text="dateTime" value-type="dateTime" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="相对于当前时间">
           <a-space>
-            <GProField :text="dateTime" valueType="fromNow" :mode="state" :plain="plain" />
+            <GProField :text="dateTime" value-type="fromNow" :mode="state" :plain="plain" />
             <GProField
               :text="dayjs('2013-11-16 12:50:26').valueOf()"
-              valueType="fromNow"
+              value-type="fromNow"
               :mode="state"
               :plain="plain"
             />
           </a-space>
         </a-descriptions-item>
         <a-descriptions-item label="日期">
-          <GProField :text="dateTime" valueType="date" :mode="state" :plain="plain" />
+          <GProField :text="dateTime" value-type="date" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="日期:周">
-          <GProField :text="dateTime" valueType="dateWeek" :mode="state" :plain="plain" />
+          <GProField :text="dateTime" value-type="dateWeek" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="日期:月">
-          <GProField :text="dateTime" valueType="dateMonth" :mode="state" :plain="plain" />
+          <GProField :text="dateTime" value-type="dateMonth" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="日期:季度">
           <GProField
             :text="dayjs().valueOf()"
-            valueType="dateQuarter"
+            value-type="dateQuarter"
             :mode="state"
             :plain="plain"
           />
         </a-descriptions-item>
         <a-descriptions-item label="日期:年">
-          <GProField :text="dayjs().valueOf()" valueType="dateYear" :mode="state" :plain="plain" />
+          <GProField :text="dayjs().valueOf()" value-type="dateYear" :mode="state" :plain="plain" />
         </a-descriptions-item>
         <a-descriptions-item label="日期区间">
           <GProField
@@ -345,7 +353,7 @@ const jsonCode = ref(`{
               dayjs('2019-11-16 12:50:26').add(-1, 'd').valueOf(),
               dayjs('2019-11-16 12:50:26').valueOf(),
             ]"
-            valueType="dateRange"
+            value-type="dateRange"
             :mode="state"
             :plain="plain"
           />
@@ -356,7 +364,7 @@ const jsonCode = ref(`{
               dayjs('2019-11-16 12:50:26').add(-1, 'd').valueOf(),
               dayjs('2019-11-16 12:50:26').valueOf(),
             ]"
-            valueType="dateTimeRange"
+            value-type="dateTimeRange"
             :mode="state"
             :plain="plain"
           />
@@ -364,7 +372,7 @@ const jsonCode = ref(`{
         <a-descriptions-item label="时间">
           <GProField
             :text="dayjs('2019-11-16 12:50:26').valueOf()"
-            valueType="time"
+            value-type="time"
             :mode="state"
             :plain="plain"
           />
@@ -375,7 +383,7 @@ const jsonCode = ref(`{
               dayjs('2019-11-16 12:50:26').add(-1, 'd').valueOf(),
               dayjs('2019-11-16 12:50:26').valueOf(),
             ]"
-            valueType="timeRange"
+            value-type="timeRange"
             :mode="state"
             :plain="plain"
           />
@@ -383,13 +391,13 @@ const jsonCode = ref(`{
         <a-descriptions-item label="代码块">
           <GProField
             :text="code"
-            valueType="code"
+            value-type="code"
             :mode="state"
             :plain="plain"
           />
         </a-descriptions-item>
         <a-descriptions-item label="代码块">
-          <GProField :text="jsonCode" valueType="jsonCode" :mode="state" :plain="plain" />
+          <GProField :text="jsonCode" value-type="jsonCode" :mode="state" :plain="plain" />
         </a-descriptions-item>
       </a-descriptions>
     </a-typography>

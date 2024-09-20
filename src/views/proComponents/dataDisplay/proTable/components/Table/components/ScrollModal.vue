@@ -67,16 +67,16 @@ defineExpose({
     <a-form v-bind="formItemLayout">
       <a-form-item label="x" v-bind="validateInfos.x">
         <a-input
-          style="width: 100%"
           v-model:value="scrollRef.x"
+          style="width: 100%"
           placeholder="请输入横向x"
           allow-clear
         />
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.y">
         <a-input
-          style="width: 100%"
           v-model:value="scrollRef.y"
+          style="width: 100%"
           placeholder="请输入纵向y"
           allow-clear
         />

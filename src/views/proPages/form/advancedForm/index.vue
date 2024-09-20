@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { Teleport } from 'vue'
-import { cloneDeep, omit } from 'lodash-es'
-import dayjs from 'dayjs'
-import { message } from 'ant-design-vue'
-import { GProCard } from '@gx-design-vue/pro-card'
-import { hanndleField, scrollTo } from '@gx-design-vue/pro-utils'
-import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
-import { useTable } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/form/advanced'
 import {
   addAdvancedFormTable,
@@ -16,10 +8,17 @@ import {
   getAdvancedFormTable,
   updateAdvancedFormTable
 } from '@/services/formCenter'
-import { defaultSettings } from '@gx-config'
+import { handleOffsetTop } from '@/utils/util'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useForm } from '@gx-admin/hooks/system'
-import { handleOffsetTop } from '@/utils/util'
+import { defaultSettings } from '@gx-config'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { useTable } from '@gx-design-vue/pro-table'
+import { hanndleField, scrollTo } from '@gx-design-vue/pro-utils'
+import { message } from 'ant-design-vue'
+import dayjs from 'dayjs'
+import { cloneDeep, omit } from 'lodash-es'
 import { columns } from './utils/columns'
 import { fieldLabels, rules } from './utils/config'
 
@@ -237,8 +236,8 @@ const resetForm = () => {
             <a-col :xl="{ span: 6, offset: 2 }" :lg="{ span: 8 }" :md="{ span: 12 }" :sm="24">
               <a-form-item :label="fieldLabels.url" v-bind="validateInfos.url">
                 <a-input
-                  style="width: 100%"
                   v-model:value="formState.url"
+                  style="width: 100%"
                   addon-before="Http://"
                   addon-after=".com"
                   placeholder="请输入"
@@ -249,6 +248,7 @@ const resetForm = () => {
             <a-col :xl="{ span: 8, offset: 2 }" :lg="{ span: 10 }" :md="{ span: 24 }" :sm="24">
               <a-form-item :label="fieldLabels.owner" v-bind="validateInfos.owner">
                 <a-select
+                  v-model:value="formState.owner"
                   :options="[
                     {
                       label: '付晓晓',
@@ -260,7 +260,6 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择管理员"
-                  v-model:value="formState.owner"
                   allow-clear
                 />
               </a-form-item>
@@ -270,6 +269,7 @@ const resetForm = () => {
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :label="fieldLabels.approver" v-bind="validateInfos.approver">
                 <a-select
+                  v-model:value="formState.approver"
                   :options="[
                     {
                       label: '付晓晓',
@@ -281,19 +281,19 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择审批员"
-                  v-model:value="formState.approver"
                   allow-clear
                 />
               </a-form-item>
             </a-col>
             <a-col :xl="{ span: 6, offset: 2 }" :lg="{ span: 8 }" :md="{ span: 12 }" :sm="24">
               <a-form-item :label="fieldLabels.dateRange" v-bind="validateInfos.dateRange">
-                <a-range-picker style="width: 100%" v-model:value="formState.dateRange" />
+                <a-range-picker v-model:value="formState.dateRange" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :xl="{ span: 8, offset: 2 }" :lg="{ span: 10 }" :md="{ span: 24 }" :sm="24">
               <a-form-item :label="fieldLabels.type" v-bind="validateInfos.type">
                 <a-select
+                  v-model:value="formState.type"
                   :options="[
                     {
                       label: '私密',
@@ -305,7 +305,6 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择仓库类型"
-                  v-model:value="formState.type"
                   allow-clear
                 />
               </a-form-item>
@@ -327,6 +326,7 @@ const resetForm = () => {
             <a-col :xl="{ span: 8, offset: 2 }" :lg="{ span: 10 }" :md="{ span: 24 }" :sm="24">
               <a-form-item :label="fieldLabels.owner2" v-bind="validateInfos.owner2">
                 <a-select
+                  v-model:value="formState.owner2"
                   :options="[
                     {
                       label: '付晓晓',
@@ -338,7 +338,6 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择执行人"
-                  v-model:value="formState.owner2"
                   allow-clear
                 />
               </a-form-item>
@@ -348,6 +347,7 @@ const resetForm = () => {
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :label="fieldLabels.approver2" v-bind="validateInfos.approver2">
                 <a-select
+                  v-model:value="formState.approver2"
                   :options="[
                     {
                       label: '付晓晓',
@@ -359,7 +359,6 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择责任人"
-                  v-model:value="formState.approver2"
                   allow-clear
                 />
               </a-form-item>
@@ -367,8 +366,8 @@ const resetForm = () => {
             <a-col :xl="{ span: 6, offset: 2 }" :lg="{ span: 8 }" :md="{ span: 12 }" :sm="24">
               <a-form-item :label="fieldLabels.dateRange2" v-bind="validateInfos.dateRange2">
                 <a-time-picker
-                  style="width: 100%"
                   v-model:value="formState.dateRange2"
+                  style="width: 100%"
                   placeholder="提醒时间"
                 />
               </a-form-item>
@@ -376,6 +375,7 @@ const resetForm = () => {
             <a-col :xl="{ span: 8, offset: 2 }" :lg="{ span: 10 }" :md="{ span: 24 }" :sm="24">
               <a-form-item :label="fieldLabels.type2" v-bind="validateInfos.type2">
                 <a-select
+                  v-model:value="formState.type2"
                   :options="[
                     {
                       label: '私密',
@@ -387,7 +387,6 @@ const resetForm = () => {
                     },
                   ]"
                   placeholder="请选择仓库类型"
-                  v-model:value="formState.type2"
                   allow-clear
                 />
               </a-form-item>
@@ -426,7 +425,7 @@ const resetForm = () => {
               </template>
             </template>
           </g-pro-table>
-          <a-button type="dashed" block @click="handelTableAdd" class="mt-10px">
+          <a-button type="dashed" block class="mt-10px" @click="handelTableAdd">
             <template #icon>
               <PlusOutlined />
             </template>
@@ -435,7 +434,7 @@ const resetForm = () => {
         </GProCard>
       </div>
     </a-form>
-    <Teleport to=".ant-layout-has-sider>.ant-layout" v-if="isMount">
+    <Teleport v-if="isMount" to=".ant-layout-has-sider>.ant-layout">
       <div class="mt-32px h-49px" />
     </Teleport>
     <Teleport to="body">
@@ -449,9 +448,9 @@ const resetForm = () => {
           >
             <a-popover
               title="表单校验信息"
-              overlayClassName="errorPopover"
+              overlay-class-name="errorPopover"
               trigger="click"
-              :getPopupContainer="trigger => trigger?.parentNode as HTMLElement"
+              :get-popup-container="trigger => trigger?.parentNode as HTMLElement"
             >
               <template #content>
                 <li
@@ -471,8 +470,12 @@ const resetForm = () => {
               </div>
             </a-popover>
           </span>
-          <a-button class="mr-8px" @click="resetForm">重置</a-button>
-          <a-button type="primary" @click="submitForm">提交</a-button>
+          <a-button class="mr-8px" @click="resetForm">
+            重置
+          </a-button>
+          <a-button type="primary" @click="submitForm">
+            提交
+          </a-button>
         </div>
       </div>
     </Teleport>

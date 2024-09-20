@@ -3,10 +3,10 @@ import { defaultSettings } from '@gx-config'
 const { title, titleReverse, titleSeparator } = defaultSettings
 
 /**
- * @author gx12358 2539306317@qq.com
+ * @Author      gx12358
+ * @DateTime    2024/9/20
+ * @lastTime    2024/9/20
  * @description 设置标题
- * @param pageTitle
- * @returns {string}
  */
 export default function getPageTitle(pageTitle: string) {
   let newTitles: string[] = []

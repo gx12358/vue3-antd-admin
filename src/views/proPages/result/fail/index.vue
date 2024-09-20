@@ -4,7 +4,7 @@
       <a-result
         status="error"
         title="提交失败"
-        subTitle="请核对并修改以下信息后，再重新提交。"
+        sub-title="请核对并修改以下信息后，再重新提交。"
         class="mt-48px mb-16px"
       >
         <template #extra>

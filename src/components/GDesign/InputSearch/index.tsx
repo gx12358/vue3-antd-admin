@@ -1,8 +1,8 @@
-import { defineComponent, ref, watch } from 'vue'
-import { omit } from 'lodash-es'
-import inputProps from 'ant-design-vue/es/input/inputProps'
-import { InputSearch } from 'ant-design-vue'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
+import { InputSearch } from 'ant-design-vue'
+import inputProps from 'ant-design-vue/es/input/inputProps'
+import { omit } from 'lodash-es'
+import { defineComponent, ref, watch } from 'vue'
 
 const GInputSearch = defineComponent({
   name: 'GInputSearch',

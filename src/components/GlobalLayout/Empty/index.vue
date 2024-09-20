@@ -13,6 +13,6 @@ withDefaults(defineProps<{
 <template>
   <div class="flex-center flex-col">
     <img :style="{ width: `${width}px` }" src="/src/assets/public_images/nodata.svg" alt="">
-    <span class="relative left-[-5px]" v-if="text">{{ isBoolean(text) ? '暂无数据' : text }}</span>
+    <span v-if="text" class="relative left-[-5px]">{{ isBoolean(text) ? '暂无数据' : text }}</span>
   </div>
 </template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
-import { useTable } from '@gx-design-vue/pro-table'
-import type { ListSearchParams } from '@gx-mock/util/table'
 import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
+import type { ListSearchParams } from '@gx-mock/util/table'
 import type { TabPaneStateRecord, TabsStateActiveKey } from './utile/config'
-import { columns, defaultTableState, statusState } from './utile/config'
+import { useTable } from '@gx-design-vue/pro-table'
 import { useAdvancedContext } from '../../context'
+import { columns, defaultTableState, statusState } from './utile/config'
 
 const props = withDefaults(defineProps<{
   type: TabsStateActiveKey;
@@ -23,7 +23,7 @@ const { reload } = useTable(tableRef)
 
 const getTableData: RequsetFunction<AdvancedTableRecord, ListSearchParams> = async (params) => {
   const response = await props.request<PageResult<AdvancedTableRecord>>?.(params)
-  
+
   return {
     success: !!response,
     data: response?.data?.list || [],

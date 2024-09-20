@@ -1,4 +1,7 @@
+import type { EditorEvent, RawEditorSettings, Editor as TinyMCEEditor } from 'tinymce'
 import type { Ref } from 'vue'
+import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
+import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import {
   defineComponent,
   h,
@@ -9,9 +12,6 @@ import {
   toRefs,
   watch
 } from 'vue'
-import type { EditorEvent, RawEditorSettings, Editor as TinyMCEEditor } from 'tinymce'
-import { getPrefixCls } from '@gx-design-vue/pro-utils'
-import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { editorProps } from './props'
 import { getTinymce, initEditor, isTextarea, mergePlugins, uuid } from './utils/utils'
 

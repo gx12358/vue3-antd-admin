@@ -1,6 +1,6 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
-import { inject, provide } from 'vue'
 import type { TagsListItem } from './components/typings'
+import { inject, provide } from 'vue'
 
 export interface SearchListContextProps {
   /* 附加属性 */

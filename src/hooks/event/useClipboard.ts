@@ -1,6 +1,6 @@
-import { watchEffect } from 'vue'
 import { useClipboard as useClipboardVue } from '@vueuse/core'
 import { message } from 'ant-design-vue'
+import { watchEffect } from 'vue'
 
 export default function useClipboard(msg?: string) {
   const { text, copy, copied } = useClipboardVue()

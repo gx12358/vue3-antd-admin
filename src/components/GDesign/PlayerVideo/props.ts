@@ -1,5 +1,5 @@
-import { PropTypes } from '@/utils'
 import type { VideoSource } from './typings'
+import { PropTypes } from '@/utils'
 
 export const videoProps = {
   loop: PropTypes.bool.def(false),

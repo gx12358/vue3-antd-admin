@@ -5,7 +5,7 @@ import defaultSettings from './default/defaultSettings'
 export * from './default/proxy'
 
 export {
-  theme,
+  defaultSettings,
   network,
-  defaultSettings
+  theme
 }

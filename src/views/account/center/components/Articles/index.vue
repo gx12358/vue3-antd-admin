@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
-import { getArticlesList } from '@/services/projectCenter'
 import type { ListRecord } from '../../hooks/useChildState'
+import { getArticlesList } from '@/services/projectCenter'
+import dayjs from 'dayjs'
 import WrapScroll from '../Layout/WrapScroll.vue'
 </script>
 
 <template>
   <WrapScroll :serve="getArticlesList">
     <template #renderItem="{ item }: { item: ListRecord }">
-      <div class="text-rgba-[0-0-0-0.88] mb-12px text-16px leading-25px">{{ item.title }}</div>
-      <div class="flex items-center mb-16px flex-wrap">
-        <a-tag v-for="el in item.tagList" :key="el">{{ el }}</a-tag>
+      <div class="text-rgba-[0-0-0-0.88] mb-12px text-16px leading-25px">
+        {{ item.title }}
       </div>
-      <div class="mb-16px text-hidden-3 leading-20px" v-if="item.description">{{ item.description }}</div>
+      <div class="flex items-center mb-16px flex-wrap">
+        <a-tag v-for="el in item.tagList" :key="el">
+          {{ el }}
+        </a-tag>
+      </div>
+      <div v-if="item.description" class="mb-16px text-hidden-3 leading-20px">
+        {{ item.description }}
+      </div>
       <div class="flex items-center gap-8px mb-16px flex-wrap">
         <g-admin-image :src="item.avatar" :width="24" :height="24" class="rd-50% flex-shrink-0">
           <template #renderHolder>

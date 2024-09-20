@@ -31,8 +31,10 @@ const bindingViewData = [
 </script>
 
 <template>
-  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">账号绑定</div>
-  <a-list itemLayout="horizontal" :data-source="bindingViewData">
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">
+    账号绑定
+  </div>
+  <a-list item-layout="horizontal" :data-source="bindingViewData">
     <template #renderItem="{ item }">
       <a-list-item class="!px-0">
         <template #actions>

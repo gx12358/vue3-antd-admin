@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref, watch } from 'vue'
-import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { getPrefixCls } from '@gx-design-vue/pro-utils'
+import { ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
   frameSrc: string;
@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
 
 const { global } = useStore()
 const { token } = useProConfigContext()
+const { globalLayout } = toRefs(global.state)
 
 const prefixCls = getPrefixCls({
   suffixCls: 'iframe-page',
@@ -24,7 +25,7 @@ const loading = ref(true)
 const publicHeight = computed(
   () =>
     token.value.layout?.header.heightLayoutHeader + 24 * 2 + (
-      global.globalLayout.showTabsBar ? global.globalLayout.fixedMultiTab ? 62 : 46 : 0
+      globalLayout.value.showTabsBar ? globalLayout.value.fixedMultiTab ? 62 : 46 : 0
     )
 )
 
@@ -64,10 +65,10 @@ const hideLoading = () => {
     <div :class="prefixCls" :style="frameStyle">
       <a-spin :spinning="loading" size="large" :style="frameStyle">
         <iframe
+          ref="frameRef"
           :src="frameSrc"
           :class="[`${prefixCls}-main`]"
           :style="frameStyle"
-          ref="frameRef"
           @load="hideLoading"
         />
       </a-spin>

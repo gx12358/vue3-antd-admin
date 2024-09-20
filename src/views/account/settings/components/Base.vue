@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { message } from 'ant-design-vue'
-import type { UserDetails } from '@gx-mock/config/user'
-import { GUpload } from '@gx-design/Upload'
-import cityOptions from '@/assets/json/china.json'
 import type { RulesState } from '@gx-admin/hooks/system'
-import { useForm } from '@gx-admin/hooks/system'
-import { useRequest } from '@gx-admin/hooks/core'
+import type { UserDetails } from '@gx-mock/config/user'
+import cityOptions from '@/assets/json/china.json'
 import { updateUserDetails } from '@/services/userCenter'
 import { isEmail, isPhone } from '@/utils/validate'
+import { useRequest } from '@gx-admin/hooks/core'
+import { useForm } from '@gx-admin/hooks/system'
+import { GUpload } from '@gx-design/Upload'
+import { message } from 'ant-design-vue'
+import { reactive } from 'vue'
 
 type UserFormState = UserDetails & { adressCode?: string[] }
 
@@ -75,7 +75,9 @@ const submitInfos = () => {
 </script>
 
 <template>
-  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">基本设置</div>
+  <div class="leading-28px text-20px mb-12px font-500 text-rgba-[0-0-0-0.88]">
+    基本设置
+  </div>
   <g-spin :spinning="loading">
     <a-form :colon="false" layout="vertical">
       <div class="flex gap-100px">
@@ -84,25 +86,25 @@ const submitInfos = () => {
             <a-input v-model:value="formState.nickName" allow-clear placeholder="请输入昵称" />
           </a-form-item>
           <a-form-item v-bind="validateInfos.introduction" label="个人简介">
-            <a-textarea :auto-size="{ minRows: 5 }" v-model:value="formState.introduction" allow-clear placeholder="请输入个人简介" />
+            <a-textarea v-model:value="formState.introduction" :auto-size="{ minRows: 5 }" allow-clear placeholder="请输入个人简介" />
           </a-form-item>
           <a-form-item v-bind="validateInfos.adressCode" label="国家/地区">
             <a-cascader
               v-model:value="formState.adressCode"
               style="width: 100%"
               allow-clear
-              :dropdownStyle="{ minWidth: '400px' }"
+              :dropdown-style="{ minWidth: '400px' }"
               :options="cityOptions"
               :show-search="{ filter }"
               placeholder="请选择国家/地区"
-              :getPopupContainer="(trigger) => trigger.parentNode"
+              :get-popup-container="(trigger) => trigger.parentNode"
             />
           </a-form-item>
           <a-form-item v-bind="validateInfos.email" label="邮箱">
             <a-input v-model:value="formState.email" type="email" allow-clear placeholder="请输入邮箱" />
           </a-form-item>
           <a-form-item v-bind="validateInfos.phone" label="联系电话">
-            <a-input :maxlength="11" show-count type="number" v-model:value="formState.phone" allow-clear placeholder="请输入联系电话" />
+            <a-input v-model:value="formState.phone" :maxlength="11" show-count type="number" allow-clear placeholder="请输入联系电话" />
           </a-form-item>
         </div>
         <div class="flex-main">
@@ -119,8 +121,12 @@ const submitInfos = () => {
           </a-form-item>
         </div>
       </div>
-      <a-button @click="resetFields">重置基本信息</a-button>
-      <a-button @click="submitInfos" type="primary" class="ml-10px">更新基本信息</a-button>
+      <a-button @click="resetFields">
+        重置基本信息
+      </a-button>
+      <a-button type="primary" class="ml-10px" @click="submitInfos">
+        更新基本信息
+      </a-button>
     </a-form>
   </g-spin>
 </template>

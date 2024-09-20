@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
-import { message } from 'ant-design-vue'
 import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
 import { doDelete, getTableList } from '@/services/tableCenter'
-import { deepCopy } from '@gx-design-vue/pro-utils'
 import { useDict } from '@gx-admin/hooks/system'
-import ScrollModal from './components/ScrollModal.vue'
+import { useTable } from '@gx-design-vue/pro-table'
+import { deepCopy } from '@gx-design-vue/pro-utils'
+import { message } from 'ant-design-vue'
+import { reactive, ref, watch } from 'vue'
 import OperationModal from './components/OperationModal.vue'
 import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
+import ScrollModal from './components/ScrollModal.vue'
 import columns from './utils/columns'
 
 const { dictState } = useDict([ 'sys_common_status' ])
@@ -18,6 +19,8 @@ const scrollModalRef = ref(null)
 const scrollBreakpointModalRef = ref(null)
 
 const tableRef = ref<ProTableRef>()
+
+const { changeLoading, reload } = useTable(tableRef)
 
 const state = reactive({
   inputSearchRef: '',
@@ -213,18 +216,16 @@ const batchOperation = (key) => {
 }
 
 const removeTable = async () => {
-  tableRef.value?.actionRef()?.loadingOperation(true)
+  changeLoading(true)
   const response = await doDelete({
     ids: state.selectedRowKeys.join()
   })
   if (response) {
     message.success('操作成功！')
-    tableRef.value?.actionRef()?.reload({ immediate: true, removeKeys: state.selectedRowKeys })
+    reload({ immediate: true, removeKeys: state.selectedRowKeys })
   }
-  tableRef.value?.actionRef()?.loadingOperation(false)
+  changeLoading(false)
 }
-
-const handleReload = () => tableRef.value?.actionRef()?.reload()
 </script>
 
 <template>
@@ -309,9 +310,15 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
     </a-form-item>
     <a-form-item label="Align">
       <a-radio-group v-model:value="tableConfig.align">
-        <a-radio-button value="left">left</a-radio-button>
-        <a-radio-button value="center">Center</a-radio-button>
-        <a-radio-button value="right">Right</a-radio-button>
+        <a-radio-button value="left">
+          left
+        </a-radio-button>
+        <a-radio-button value="center">
+          Center
+        </a-radio-button>
+        <a-radio-button value="right">
+          Right
+        </a-radio-button>
       </a-radio-group>
     </a-form-item>
   </a-form>
@@ -320,11 +327,11 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
     v-bind="tableConfig"
     :request="getTableData"
     @reset="onReset"
-    @searchReset="onSearchReset"
+    @search-reset="onSearchReset"
   >
     <template v-if="state.showCustomize" #customRender="dataScouce">
       <a-list
-        rowKey="id"
+        row-key="id"
         :grid="{
           gutter: 5,
           xs: 1,
@@ -342,7 +349,9 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
               <template #cover>
                 <g-image :height="200" :src="item.img" class="h-200px" fit="cover">
                   <template #placeholder>
-                    <div class="gx-image-slot"> 加载中...</div>
+                    <div class="gx-image-slot">
+                      加载中...
+                    </div>
                   </template>
                 </g-image>
               </template>
@@ -368,7 +377,9 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
       <div>高级列表</div>
     </template>
     <template #toolBarBtn>
-      <a-button key="button" type="primary" @click="operationRef?.open('sys_common_status')"> 新建</a-button>
+      <a-button key="button" type="primary" @click="operationRef?.open('sys_common_status')">
+        新建
+      </a-button>
       <a-button key="button" type="primary" @click="handlePolling">
         <loading-outlined v-if="tableConfig.polling" />
         <reload-outlined v-else />
@@ -376,8 +387,8 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
       </a-button>
       <a-button
         v-if="state.selectedRowKeys.length > 0"
-        danger
         key="button"
+        danger
         type="primary"
         @click="removeTable"
       >
@@ -386,13 +397,21 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
       <a-dropdown :trigger="['click']">
         <template #overlay>
           <a-menu @click="(e) => batchOperation(e)">
-            <a-menu-item key="0">1st menu item</a-menu-item>
-            <a-menu-item key="1">2nd menu item</a-menu-item>
+            <a-menu-item key="0">
+              1st menu item
+            </a-menu-item>
+            <a-menu-item key="1">
+              2nd menu item
+            </a-menu-item>
             <a-menu-divider />
-            <a-menu-item key="3">3rd menu item</a-menu-item>
+            <a-menu-item key="3">
+              3rd menu item
+            </a-menu-item>
           </a-menu>
         </template>
-        <a-button key="button" v-auth="'pro-table-btn'"> 批量操作</a-button>
+        <a-button key="button" v-auth="'pro-table-btn'">
+          批量操作
+        </a-button>
       </a-dropdown>
     </template>
     <template #search>
@@ -413,7 +432,9 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
       <a-button>这是一个右侧额外的元素</a-button>
     </template>
     <template #headerCell="{ column }">
-      <template v-if="column.dataIndex === 'name'"> FullName</template>
+      <template v-if="column.dataIndex === 'name'">
+        FullName
+      </template>
     </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.dataIndex === 'name'">
@@ -424,9 +445,9 @@ const handleReload = () => tableRef.value?.actionRef()?.reload()
       </template>
     </template>
   </g-pro-table>
-  <ScrollModal ref="scrollModalRef" @handleOk="handleScroll" />
-  <OperationModal ref="operationRef" @handleOk="handleReload" />
-  <ScrollBreakpointModal ref="scrollBreakpointModalRef" @handleOk="handleScrollBreakpoint" />
+  <ScrollModal ref="scrollModalRef" @handle-ok="handleScroll" />
+  <OperationModal ref="operationRef" @handle-ok="reload" />
+  <ScrollBreakpointModal ref="scrollBreakpointModalRef" @handle-ok="handleScrollBreakpoint" />
 </template>
 
 <style lang="less" module>

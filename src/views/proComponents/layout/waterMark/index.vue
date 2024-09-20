@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { useMediaQuery } from '@gx-design-vue/pro-hooks'
-import { GProCard } from '@gx-design-vue/pro-card'
 import type { Color } from '@gx-design-vue/color-picker'
 import { GColorPicker } from '@gx-design-vue/color-picker'
+import { GProCard } from '@gx-design-vue/pro-card'
+import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
+import { computed, reactive, ref } from 'vue'
 
 const colSize = useMediaQuery()
 
@@ -43,7 +43,7 @@ const formState = reactive({
 </script>
 
 <template>
-  <g-pro-page-container :contentStyle="{ position: 'relative' }">
+  <g-pro-page-container :content-style="{ position: 'relative' }">
     <a-typography id="watermark-customize">
       <a-typography-title :level="2">
         自定义配置
@@ -58,18 +58,18 @@ const formState = reactive({
       <div style="padding: 40px 24px">
         <GProCard
           bordered
-          headerBordered
+          header-bordered
           :class="$style['gx-pro-card-contain-card']"
           title="水印自定义配置器"
-          :bodyStyle="{ display: 'flex', padding: 0, flexWrap: isMobile ? 'wrap' : '' } as CSSProperties"
+          :body-style="{ display: 'flex', padding: 0, flexWrap: isMobile ? 'wrap' : '' } as CSSProperties"
         >
           <div :style="{ flexShrink: 0, width: isMobile ? '100%' : '70%', borderRight: '1px solid #f0f0f0' }">
             <GProCard :bordered="false">
               <GPorWaterMark
                 :content="formState.content"
-                :fontColor="typeof formState.fontColor === 'string' ? formState.fontColor : (formState.fontColor as Color).toCssString()"
-                :fontSize="formState.fontSize"
-                :zIndex="formState.zIndex"
+                :font-color="typeof formState.fontColor === 'string' ? formState.fontColor : (formState.fontColor as Color).toCssString()"
+                :font-size="formState.fontSize"
+                :z-index="formState.zIndex"
                 :rotate="formState.rotate"
               >
                 <div :class="$style['customize-set']">
@@ -97,19 +97,19 @@ const formState = reactive({
                 </div>
                 <h4>
                   下面是一张zIndex 为 10 的 position 为 relative 图片，
-                  <br />
+                  <br>
                   如果要在图片中展示水印尝试调大右侧的 zIndex 滑块试试。
                 </h4>
                 <img
                   src="/src/assets/public_images/watermark.svg"
                   alt="示例图片"
                   :style="{ zIndex: 10, maxWidth: '100%', position: 'relative' }"
-                />
+                >
               </GPorWaterMark>
             </GProCard>
           </div>
           <div style="width: 100%">
-            <GProCard :bordered="false" title="配置面板" :headStyle="{ borderBottom: 0 } as CSSProperties">
+            <GProCard :bordered="false" title="配置面板" :head-style="{ borderBottom: 0 } as CSSProperties">
               <a-form layout="vertical" :model="formState">
                 <a-form-item label="水印文字">
                   <a-input v-model:value="formState.content" placeholder="Basic usage" />

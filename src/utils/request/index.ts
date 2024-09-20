@@ -1,14 +1,14 @@
-import { message } from 'ant-design-vue'
-import { defaultSettings, network } from '@gx-config'
+import type { GAxiosOptions, XhtInstance } from './typings'
 import { useStoreUser } from '@/store'
 import { isDev, typeViteEnv } from '@/utils/env'
 import { tansParams } from '@/utils/util'
 import { checkURL } from '@/utils/validate'
+import { defaultSettings, network } from '@gx-config'
 import { isBoolean } from '@gx-design-vue/pro-utils'
-import { GAxios } from './XHR'
-import type { GAxiosOptions, XhtInstance } from './typings'
-import { RequestEnum } from './typings'
+import { message } from 'ant-design-vue'
 import { handleCode } from './checkStatus'
+import { RequestEnum } from './typings'
+import { GAxios } from './XHR'
 
 const { tokenName, requestPrefix, mockPrefixUrl } = defaultSettings
 

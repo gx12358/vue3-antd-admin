@@ -1,10 +1,10 @@
 import type { ComputedRef } from 'vue'
-import { defineComponent } from 'vue'
-import { CheckableTag } from 'ant-design-vue'
-import { useWindowSize } from '@vueuse/core'
-import { onMountedOrActivated, useMergedState, useState } from '@gx-design-vue/pro-hooks'
-import { cloneDeep } from 'lodash-es'
 import type { TagsListItem } from '../typings'
+import { onMountedOrActivated, useMergedState, useState } from '@gx-design-vue/pro-hooks'
+import { useWindowSize } from '@vueuse/core'
+import { CheckableTag } from 'ant-design-vue'
+import { cloneDeep } from 'lodash-es'
+import { defineComponent } from 'vue'
 
 const defaultList: TagsListItem[] = [
   {

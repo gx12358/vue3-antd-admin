@@ -1,5 +1,5 @@
-import type { ExtractPropTypes } from 'vue'
 import type { RawEditorSettings } from 'tinymce'
+import type { ExtractPropTypes } from 'vue'
 import { PropTypes } from '@/utils'
 
 export const editorProps = {

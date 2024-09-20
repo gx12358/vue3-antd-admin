@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { h, reactive, ref } from 'vue'
-import { message } from 'ant-design-vue'
-import { MailTwoTone } from '@ant-design/icons-vue'
 import type { ProFormRef } from '@gx-design-vue/pro-form'
 import type { PublicFormState } from '@gx-mock/config/form'
+import { getFormDetails } from '@/services/formCenter'
+import { MailTwoTone } from '@ant-design/icons-vue'
 import {
   GProForm,
   GProFormCaptcha,
@@ -15,7 +14,8 @@ import {
   GProFormSelect,
   GProFormText
 } from '@gx-design-vue/pro-form'
-import { getFormDetails } from '@/services/formCenter'
+import { message } from 'ant-design-vue'
+import { h, reactive, ref } from 'vue'
 
 const formRef = ref<ProFormRef>()
 
@@ -91,9 +91,13 @@ const handleFinish = async (values: any) => {
       <p>
         ProForm 没有黑科技，只是 antd 的 Form 的封装，如果要使用自定义的组件可以用 Form.Item
         包裹后使用，支持混用。（
-        <a-typography-text type="danger" code style="font-size: 14px">ProForm</a-typography-text>
+        <a-typography-text type="danger" code style="font-size: 14px">
+          ProForm
+        </a-typography-text>
         表单项的
-        <a-typography-text type="danger" code style="font-size: 14px"> name</a-typography-text>
+        <a-typography-text type="danger" code style="font-size: 14px">
+          name
+        </a-typography-text>
         值必须要传，否则报错！）
       </p>
     </a-typography>
@@ -207,16 +211,16 @@ const handleFinish = async (values: any) => {
       />
       <GProFormGroup>
         <GProFormCaptcha
-          :fieldProps="{
+          :field-props="{
             size: 'large',
             prefix: h(MailTwoTone),
           } as any"
           label="验证码"
-          :captchaProps="{ size: 'large' }"
-          phoneName="phone"
+          :captcha-props="{ size: 'large' }"
+          phone-name="phone"
           name="captcha"
           placeholder="请输入验证码"
-          @getCaptcha="handleGetCaptcha"
+          @get-captcha="handleGetCaptcha"
         />
       </GProFormGroup>
     </GProForm>

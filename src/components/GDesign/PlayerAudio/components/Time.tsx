@@ -1,5 +1,5 @@
-import { defineComponent, onMounted, ref } from 'vue'
 import { formatDuraton } from '@gx-design-vue/pro-utils'
+import { defineComponent, onMounted, ref } from 'vue'
 import { useAudioContext } from '../context'
 import useAudio from '../hooks/useAudio'
 import audioEvent from '../utils/event'

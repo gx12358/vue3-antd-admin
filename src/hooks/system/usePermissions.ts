@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
-import { ref } from 'vue'
 import { isArray, isObject, isString } from '@gx-design-vue/pro-utils'
+import { ref } from 'vue'
 
 export function usePermissions(): {
   permission: Ref<boolean | object>;

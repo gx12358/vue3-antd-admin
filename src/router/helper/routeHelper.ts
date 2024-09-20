@@ -1,7 +1,7 @@
-import { cloneDeep } from 'lodash-es'
 import type { AppRouteModule, MenuDataItem } from '@gx-design-vue/pro-layout'
-import { getMaxFloor } from '@gx-design-vue/pro-utils'
 import { warning } from '@gx-design/utils'
+import { getMaxFloor } from '@gx-design-vue/pro-utils'
+import { cloneDeep } from 'lodash-es'
 
 /**
  * @description: default layout

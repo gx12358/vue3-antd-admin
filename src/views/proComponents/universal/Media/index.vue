@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import GPlayerVideo from '@gx-design/PlayerVideo'
 import GPlayerAudio from '@gx-design/PlayerAudio'
+import GPlayerVideo from '@gx-design/PlayerVideo'
+import { ref } from 'vue'
 
 const imageUrls = ref([
   'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
@@ -78,11 +78,11 @@ const previewList = [
           <g-scrollbars :max-height="500">
             <div class="p-20px" style="background: rgb(240, 242, 245)">
               <g-admin-image
+                v-for="el in imageUrls"
+                :key="el"
                 slot-class="min-h-200px"
                 slot-image-class="w-50px"
                 class="mb-15px"
-                v-for="el in imageUrls"
-                :key="el"
                 :src="el"
                 lazy
               />
