@@ -161,7 +161,9 @@ export default defineComponent({
         >
           {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
-              <ImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
+              {showViewer.value && props.type === '1' && (
+                <ImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
+              )}
               <GProModal
                 noStyle
                 class={baseClassName}

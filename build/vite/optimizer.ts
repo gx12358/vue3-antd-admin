@@ -10,16 +10,12 @@ const vendorLibs: { match: string[]; output: string }[] = [
     output: 'echarts',
   },
   {
+    match: ['@gx-design-vue/pro-layout'],
+    output: 'pro-layout',
+  },
+  {
     match: ['@gx-design-vue/pro-table'],
     output: 'pro-table',
-  },
-  {
-    match: ['@gx-design-vue/pro-card'],
-    output: 'pro-card',
-  },
-  {
-    match: ['@gx-design-vue/pro-field'],
-    output: 'pro-field',
   },
   {
     match: ['@gx-design-vue/pro-form'],

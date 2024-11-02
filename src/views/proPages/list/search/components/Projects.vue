@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import type { ProTableRef } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
 import type { SearchState } from './typings'
 import { getArticleList } from '@/services/listCenter'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { useTable } from '@gx-design-vue/pro-table'
+import { type CustomRenderResult, useTable } from '@gx-design-vue/pro-table'
 import dayjs from 'dayjs'
 import { useSearchListContext } from '../context'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'
-
-const tableRef = ref<ProTableRef>()
 
 const { searchParams } = useSearchForm()
 const { loading: spinning } = useSearchListContext()
@@ -26,6 +23,8 @@ const state = reactive({
     xxl: 4
   }
 })
+
+const tableRef = ref()
 
 const { loading, tableState } = useTable<ListItemDataType, SearchState>(tableRef, {
   state: {
@@ -61,7 +60,7 @@ watchEffect(() => {
   </GProCard>
   <GProCard class="mt-24px">
     <g-pro-table ref="tableRef" v-bind="tableState">
-      <template #customRender="dataSource: ListItemDataType[]">
+      <template #customRender="{ dataSource }: CustomRenderResult<ListItemDataType>">
         <a-list
           row-key="id"
           :grid="state.listGrid"

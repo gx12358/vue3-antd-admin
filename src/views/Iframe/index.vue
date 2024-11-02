@@ -10,9 +10,8 @@ const props = withDefaults(defineProps<{
   frameSrc: ''
 })
 
-const { global } = useStore()
+const { layout } = useStore()
 const { token } = useProConfigContext()
-const { globalLayout } = toRefs(global.state)
 
 const prefixCls = getPrefixCls({
   suffixCls: 'iframe-page',
@@ -24,8 +23,8 @@ const loading = ref(true)
 
 const publicHeight = computed(
   () =>
-    token.value.layout?.header.heightLayoutHeader + 24 * 2 + (
-      globalLayout.value.showTabsBar ? globalLayout.value.fixedMultiTab ? 62 : 46 : 0
+    (token.value.layout?.header?.heightLayoutHeader || 0) + 24 * 2 + (
+      layout.settings.showTabsBar ? layout.settings.fixedTabsBar ? 62 : 46 : 0
     )
 )
 

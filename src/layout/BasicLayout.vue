@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BasicLayoutProps, MergerSettingsType } from '@gx-design-vue/pro-layout'
+import type { MergerSettingsType } from '@gx-design-vue/pro-layout'
 import type { BaseLayoutDesignToken, ProLayoutConfig } from '@gx-design-vue/pro-provider'
 import { appList } from '@/common'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
@@ -18,15 +18,10 @@ const { layout, user } = useStore()
 
 const router = useRouter()
 
+const collapsed = ref(false)
 const reloadStatus = ref(true)
 
-const baseState: Partial<BasicLayoutProps> = reactive({
-  selectedKeys: [],
-  openKeys: [],
-  collapsed: false
-})
-
-const { breadcrumbRouters, matchedKeys, menuState } = useLayoutMenu({})
+const { breadcrumbRouters, matchedKeys, menuState } = useLayoutMenu()
 
 const handleReload = () => {
   reloadStatus.value = false
@@ -71,7 +66,7 @@ const userLogout = (callBack: Fn) => {
 
 <template>
   <GProLayout
-    v-model:collapsed="baseState.collapsed"
+    v-model:collapsed="collapsed"
     v-model:selected-keys="matchedKeys.selectedKeys"
     v-model:open-keys="matchedKeys.openKeys"
     v-bind="{ ...layout.settings, ...menuState }"

@@ -9,14 +9,13 @@ const indicator = h('i', {
   spin: true
 })
 
-const route = useRoute()
 const { layout, global } = useStore()
 </script>
 
 <template>
   <ProConfigProvider :locale="zhCN" :token="{ colorPrimary: layout.settings.primaryColor }">
     <ProAppPage
-      :spinning="global.pageLoading && route.fullPath === '/'"
+      :spinning="global.pageLoading"
       :indicator="indicator"
       :spin-props="{ iconStyle: { fontSize: '40px' } }"
     >
