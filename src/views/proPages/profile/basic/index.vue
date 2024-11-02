@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import type { ProTableProps } from '@gx-design-vue/pro-table'
-import type {
-  BasicDetails,
-  CommodityRecord,
-  ScheduleRecord
-} from '@gx-mock/datasSource/profile/basic'
+import type { ProColumnsType, ProTableBodyCellProps } from '@gx-design-vue/pro-table'
+import type { BasicDetails, CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
 import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
+import { useTable } from '@gx-design-vue/pro-table'
 import dayjs from 'dayjs'
 import { goodsColumns, scheduleColumns } from './utils/columns'
 import { defaultSTableState, descriptionsState, statusState } from './utils/config'
@@ -15,19 +12,26 @@ const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic,
   defaultData: {}
 })
 
-const commodityState = reactive<ProTableProps<Partial<CommodityRecord>>>({
-  ...defaultSTableState,
-  headerTitle: '退货商品',
-  loading: true,
-  dataSource: []
+const commodityRef = ref()
+const scheduleRef = ref()
+
+const commodityState = useTable<Partial<CommodityRecord>>(commodityRef, {
+  state: {
+    ...defaultSTableState,
+    headerTitle: '退货商品',
+    loading: true,
+    dataSource: []
+  }
 })
 
-const scheduleState = reactive<ProTableProps<Partial<ScheduleRecord>>>({
-  ...defaultSTableState,
-  headerTitle: '退货进度',
-  dataSource: [],
-  loading: true,
-  columns: scheduleColumns
+const scheduleState = useTable<Partial<ScheduleRecord>>(scheduleRef, {
+  state: {
+    ...defaultSTableState,
+    headerTitle: '退货进度',
+    dataSource: [],
+    loading: true,
+    columns: scheduleColumns
+  }
 })
 
 const { loading: tableLoading } = useRequest<{
@@ -36,19 +40,19 @@ const { loading: tableLoading } = useRequest<{
 }>(getBasicTable, {
   onSuccess: (data) => {
     const { schedule, commodity } = data
-    scheduleState.loading = false
-    scheduleState.dataSource = schedule
-    commodityState.loading = false
-    commodityState.dataSource = commodity
-
+    scheduleState.tableState.loading = false
+    scheduleState.tableState.dataSource = schedule
+    commodityState.tableState.loading = false
+    commodityState.tableState.dataSource = commodity
+    
     if (commodity.length) {
       let num = 0
       let amount = 0
-      commodityState.dataSource.forEach((item) => {
+      commodityState.tableState.dataSource.forEach((item) => {
         num += Number(item.num)
         amount += Number(item.amount)
       })
-      commodityState.dataSource = commodityState.dataSource.concat({
+      commodityState.tableState.dataSource = commodityState.tableState.dataSource.concat({
         key: '总计',
         num,
         amount
@@ -64,7 +68,7 @@ const commodityColumns = computed(() => {
       dataIndex: 'key',
       key: 'key',
       customCell: (_, rowIndex) => {
-        if (rowIndex >= scheduleState.dataSource.length)
+        if (rowIndex && rowIndex >= scheduleState.tableState.dataSource?.length)
           return { colSpan: 4 }
       }
     },
@@ -88,11 +92,11 @@ const commodityColumns = computed(() => {
       customCell: renderContent
     },
     ...goodsColumns
-  ] as ProColumnType[]
+  ] as ProColumnsType<Partial<CommodityRecord>>
 })
 
-function renderContent(_, rowIndex) {
-  if (rowIndex === scheduleState.dataSource.length) {
+function renderContent(_, rowIndex: number) {
+  if (rowIndex === scheduleState.tableState.dataSource.length) {
     return { colSpan: 0 }
   }
 }
@@ -104,7 +108,7 @@ function renderContent(_, rowIndex) {
       <a-descriptions :title="item.name" class="mb-32px">
         <a-descriptions-item v-for="el in Object.keys(item.data)" :key="el" :label="item.data[el]">
           <template v-if="el === 'status'">
-            {{ statusState[basicData[el]] }}
+            {{ statusState[(basicData as any)[el]] }}
           </template>
           <template v-else>
             {{ basicData[el] }}
@@ -113,16 +117,16 @@ function renderContent(_, rowIndex) {
       </a-descriptions>
       <a-divider class="mb-32px" />
     </template>
-    <g-pro-table v-bind="commodityState" :columns="commodityColumns" class="mb-32px">
-      <template #bodyCell="{ column, text, index }: { column: ProColumnType; text: string; index: number; }">
+    <g-pro-table ref="commodityRef" v-bind="commodityState.tableState" :columns="commodityColumns" class="mb-32px">
+      <template #bodyCell="{ column, text, index }: ProTableBodyCellProps<CommodityRecord>">
         <template v-if="column.dataIndex === 'key' || column.dataIndex === 'num' || column.dataIndex === 'amount'">
-          <span :style="{ fontWeight: index < (commodityState.dataSource.length - 1) ? undefined : 600 }">
+          <span :style="{ fontWeight: index < (commodityState.tableState.dataSource.length - 1) ? undefined : 600 }">
             {{ text }}
           </span>
         </template>
       </template>
     </g-pro-table>
-    <g-pro-table v-bind="scheduleState">
+    <g-pro-table ref="scheduleRef" v-bind="scheduleState.tableState">
       <template #bodyCell="{ column, text, record }: { column: ProColumnType; text: string; record: ScheduleRecord; }">
         <template v-if="column.dataIndex === 'status'">
           <a-badge :status="text === 'success' ? 'success' : 'processing'" :text="text === 'success' ? '成功' : '进行中'" />

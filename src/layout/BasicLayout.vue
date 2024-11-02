@@ -1,37 +1,24 @@
 <script setup lang="ts">
-import type {
-  AppRouteModule,
-  BasicLayoutProps,
-  MergerSettingsType
-} from '@gx-design-vue/pro-layout'
-import type { BaseLayoutDesignToken, ThemeConfig } from '@gx-design-vue/pro-provider'
-import RightContent from '@/components/GlobalLayout/RightContent'
+import type { BasicLayoutProps, MergerSettingsType } from '@gx-design-vue/pro-layout'
+import type { BaseLayoutDesignToken, ProLayoutConfig } from '@gx-design-vue/pro-provider'
+import { appList } from '@/common'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import {
-  clearMenuItem,
-  getMatchedList,
-  getMenuData,
-  getMenuFirstLastChildPath,
+  AppsLogoList,
   GProLayout,
-  hanlePathKey,
-  SettingDrawer
+  PageLock,
+  RightContent,
+  SettingDrawer,
+  useLayoutMenu
 } from '@gx-design-vue/pro-layout'
-import { isFunction, isString, merge } from '@gx-design-vue/pro-utils'
 import { useRouter } from 'vue-router'
 import ProContent from './ContentView.vue'
 
-const { global } = useStore()
-const { globalLayout } = toRefs(global.state)
+const { layout, user } = useStore()
 
 const router = useRouter()
 
 const reloadStatus = ref(true)
-
-const routeData: AppRouteModule[] = router.getRoutes() as any
-
-const menuState = reactive<Pick<BasicLayoutProps, 'menuData' | 'levelMenuData'>>({
-  menuData: [],
-  levelMenuData: []
-})
 
 const baseState: Partial<BasicLayoutProps> = reactive({
   selectedKeys: [],
@@ -39,55 +26,7 @@ const baseState: Partial<BasicLayoutProps> = reactive({
   collapsed: false
 })
 
-const matchedMenu = computed(() => getMatchedList(
-  menuState.levelMenuData as AppRouteModule[] || [],
-  hanlePathKey(router.currentRoute.value as AppRouteModule)
-))
-
-const breadcrumbRouters = computed(() => {
-  return matchedMenu.value.map((menuItem: AppRouteModule) => {
-    const path = getMenuFirstLastChildPath(menuItem.meta?.hideChildrenInMenu
-      ? []
-      : menuItem.children || [])
-    return {
-      path: path ? isString(menuItem.redirect)
-          ? menuItem.redirect as string
-          : isFunction(menuItem.redirect)
-            ? (menuItem.redirect as any)?.()
-            : menuItem.path || ''
-        : '',
-      breadcrumbName: menuItem.meta?.title || ''
-    }
-  })
-})
-
-const handleMenuData = () => {
-  const menuInfos = getMenuData(clearMenuItem(routeData))
-  if (router.currentRoute?.value?.meta?.hideMenu) {
-    menuState.menuData = []
-    menuState.levelMenuData = []
-  } else {
-    menuState.menuData = menuInfos.menuData
-    menuState.levelMenuData = menuInfos.levelMenuData
-  }
-}
-
-watch(
-  () => router.currentRoute.value,
-  (val) => {
-    if (val)
-      handleMenuData()
-  },
-  { deep: true, immediate: true }
-)
-
-watchEffect(() => {
-  if (router.currentRoute.value) {
-    baseState.selectedKeys = matchedMenu.value.map(item => item.path)
-    baseState.openKeys = matchedMenu.value.filter(item => item.path !== router.currentRoute.value.path)
-      .map(item => item.path)
-  }
-})
+const { breadcrumbRouters, matchedKeys, menuState } = useLayoutMenu({})
 
 const handleReload = () => {
   reloadStatus.value = false
@@ -96,40 +35,72 @@ const handleReload = () => {
   }, 200)
 }
 
-const changeTabs = (_routers: any) => {
+const tabsChange = (_routers: any) => {
   // console.log(_routers)
 }
 
-const changeTheme = (newVal: MergerSettingsType<ThemeConfig>) => {
-  merge(globalLayout.value, { ...newVal })
+const changeSettings = (value: MergerSettingsType<ProLayoutConfig>) => {
+  layout.setValue({ settings: value })
 }
 
-const changeLayoutTheme = (newVal: Partial<BaseLayoutDesignToken>) => {
-  globalLayout.value.token = merge(globalLayout.value.token, { ...newVal })
+const changeLayoutTheme = (value: Partial<BaseLayoutDesignToken>) => {
+  layout.setValue({
+    settings: {
+      token: {
+        layout: value
+      }
+    }
+  })
+}
+
+const userLogout = (callBack: Fn) => {
+  globalConfirm({
+    title: '温馨提醒',
+    content: '是否确认退出系统?',
+    okText: '确认',
+    cancelText: '取消',
+    onOk: () => {
+      user.userLogut().then((_) => {}).finally(() => {
+        router.push({ path: '/user' })
+        callBack?.()
+      })
+    }
+  })
 }
 </script>
 
 <template>
   <GProLayout
     v-model:collapsed="baseState.collapsed"
-    v-model:selected-keys="baseState.selectedKeys"
-    v-model:open-keys="baseState.openKeys"
-    v-bind="globalLayout as BasicLayoutProps"
+    v-model:selected-keys="matchedKeys.selectedKeys"
+    v-model:open-keys="matchedKeys.openKeys"
+    v-bind="{ ...layout.settings, ...menuState }"
     :breadcrumb="{ routes: breadcrumbRouters }"
-    :menu-data="menuState.menuData as AppRouteModule[]"
-    @change-tabs="changeTabs"
+    @tabs-change="tabsChange"
     @reload-page="handleReload"
     @menu-header-click="() => router.push('/')"
   >
-    <template v-if="globalLayout.layout === 'wide'" #menuExtraRender>
+    <template #appLogoListRender>
+      <AppsLogoList :app-list="appList" />
+    </template>
+    <template v-if="layout.settings.layout === 'wide'" #menuHeaderRender>
       <div class="text-center">
         额外元素
       </div>
     </template>
     <template #rightContentRender>
-      <RightContent />
+      <RightContent :avatar="user.userInfo.avatar" :name="user.userInfo.nickName" @logout="userLogout" />
     </template>
-    <ProContent :animate="globalLayout.animate" :reload-status="reloadStatus" />
-    <SettingDrawer :settings="globalLayout" weakmode show-progress @change="changeTheme" @change-layout="changeLayoutTheme" />
+    <template #pageLockRender>
+      <PageLock :avatar="user.userInfo.avatar" :name="user.userInfo.nickName" />
+    </template>
+    <ProContent :animate="layout.settings.animate" :reload-status="reloadStatus" />
+    <SettingDrawer
+      weakmode
+      show-progress
+      :settings="layout.settings"
+      @change="changeSettings"
+      @layout-change="changeLayoutTheme"
+    />
   </GProLayout>
 </template>

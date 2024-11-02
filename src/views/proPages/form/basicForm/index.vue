@@ -63,9 +63,9 @@ const rules = reactive({
 
 const handleFinish = async (params: FormState) => {
   const response = await submitForm({
+    ...omit(params, 'timeRange'),
     startTime: params.timeRange?.[0] ? dayjs(params.timeRange?.[0]).format('YYYY-MM-DD') : '',
     endTime: params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : '',
-    ...omit(params, 'timeRange')
   } as BasicFormState)
   
   if (response) {

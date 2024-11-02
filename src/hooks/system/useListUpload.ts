@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import {
   checkFileType,
@@ -7,7 +8,6 @@ import {
   getMediaInfos,
   getRandomNumber
 } from '@gx-design-vue/pro-utils'
-import { Modal } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { createVNode, onMounted, ref } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
@@ -17,11 +17,11 @@ export interface UploadItem {
   id: string;
   name: string;
   fileName: string;
+  status: 'prepare' | 'uploading' | 'failed' | 'success' | 'warehousing';
+  size?: number;
   title?: string;
   suffix?: string;
-  size: number;
   file?: File;
-  status: 'prepare' | 'uploading' | 'failed' | 'success' | 'warehousing';
   failedCode?: 0 | 1; // 0 上传失败 1 入库失败
   failedMsg?: string;
   url?: string;
@@ -36,7 +36,7 @@ export interface UploadItem {
 }
 
 export interface UploadConfig {
-  uid?: string;
+  uid: string;
   client?: any;
   name?: string;
   fullName?: string
@@ -79,11 +79,11 @@ function handleOssResponse(data: any) {
 export function useListUpload(limit?: Ref<number>) {
   const { createClent, getSignUrl, getOssUploadName } = useOss()
 
-  const dataList = ref<Partial<UploadItem[]>>([])
+  const dataList = ref<UploadItem[]>([])
 
   const clearData = () => {
     dataList.value.forEach((item) => {
-      item.ossClient && item.ossClient?.cancel()
+      item?.ossClient && item?.ossClient?.cancel()
     })
     dataList.value = []
   }
@@ -99,8 +99,8 @@ export function useListUpload(limit?: Ref<number>) {
 
   onBeforeRouteLeave((_to, _form, next) => {
     if (dataList.value.some(item => (item.status === 'uploading' || item.status === 'success'))) {
-      const status = dataList.value.find(item => (item.status === 'uploading' || item.status === 'success')).status
-      Modal.confirm({
+      const status = dataList.value.find(item => (item.status === 'uploading' || item.status === 'success'))?.status
+      globalConfirm({
         title: '温馨提醒',
         icon: createVNode(ExclamationCircleOutlined),
         content: status === 'uploading'
@@ -151,9 +151,10 @@ export function useListUpload(limit?: Ref<number>) {
       ? cloneDeep(dataList.value.find(item => item.id === key)) : null
   }
 
-  const addListItem = (file: File, name, ossClient) => {
-    if (dataList.value.length >= (limit.value || 5))
-      return
+  const addListItem = (file: File, name, ossClient): string => {
+    const limitValue = limit ? isRef(limit) ? limit.value : limit : 5
+    if (dataList.value.length >= (limitValue || 5))
+      return ''
     const id = getRandomNumber().uuid(15)
     const fileName = file.name.substring(0, file.name.lastIndexOf('.'))
     dataList.value.push({
@@ -171,16 +172,20 @@ export function useListUpload(limit?: Ref<number>) {
 
   const clearItems = (keys: string[]) => {
     dataList.value = dataList.value.map((item) => {
-      if (keys.includes(item.id))
-        item.ossClient && item.ossClient?.cancel()
+      if (keys.includes(item?.id as string))
+        item?.ossClient && item?.ossClient?.cancel()
       return item
-    }).filter(el => !keys.includes(el.id))
+    }).filter(el => !keys.includes(el?.id))
   }
 
-  const confirmClear = (status: UploadItem['status'], callback, finalCallBck?: () => void) => {
+  const confirmClear = (
+    status: UploadItem['status'] | undefined,
+    callback,
+    finalCallBck?: () => void
+  ) => {
     const messageContent = confirmStatus.find(item => item.name === status)?.msg || ''
     if (messageContent) {
-      Modal.confirm({
+      globalConfirm({
         title: '温馨提醒',
         content: messageContent,
         icon: createVNode(ExclamationCircleOutlined),
@@ -199,7 +204,7 @@ export function useListUpload(limit?: Ref<number>) {
   const removeListItem = (key: string, isConfirm?: boolean) => {
     if (isConfirm) {
       const record = getListItem(key)
-      confirmClear(record.status, () => clearItems([ key ]))
+      confirmClear(record?.status, () => clearItems([ key ]))
     } else {
       clearItems([ key ])
     }
@@ -209,7 +214,7 @@ export function useListUpload(limit?: Ref<number>) {
     if (isConfirm) {
       const record = dataList.value.filter(item => keys.includes(item.id))
         .find(item => confirmStatus.some(el => el.name === item.status))
-      confirmClear(record?.status || null, () => clearItems(keys), finalCallBck)
+      confirmClear(record?.status || undefined, () => clearItems(keys), finalCallBck)
     } else {
       clearItems(keys)
     }
@@ -263,7 +268,7 @@ export function useListUpload(limit?: Ref<number>) {
             changeListItem(uid, {
               status: 'warehousing'
             })
-            const { success, params } = await successCallback?.(getListItem(uid))
+            const { success, params } = await successCallback?.(getListItem(uid) as UploadItem)
             warehousingParams.status = success ? 'success' : 'failed'
             if (success) {
               if (params)
@@ -303,11 +308,11 @@ export function useListUpload(limit?: Ref<number>) {
     successCallback,
     progressCallback
   }: UploadConfig) {
-    const { checkpoint, ossClient } = getListItem(uid)
-    const resumeClient = ossClient || client || await createClent()
+    const options = getListItem(uid)
+    const resumeClient = options?.ossClient || client || await createClent()
     resumeClient
       .multipartUpload(name, file, {
-        checkpoint,
+        checkpoint: options?.checkpoint,
         progress: (p, cpt) => {
           const progressNum = Number((p * 100).toFixed(1))
           changeListItem(uid, {
@@ -337,7 +342,7 @@ export function useListUpload(limit?: Ref<number>) {
             changeListItem(uid, {
               status: 'warehousing'
             })
-            const { success, params } = await successCallback?.(getListItem(uid))
+            const { success, params } = await successCallback?.(getListItem(uid) as UploadItem)
             warehousingParams.status = success ? 'success' : 'failed'
             if (success) {
               if (params)

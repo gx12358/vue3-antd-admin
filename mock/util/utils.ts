@@ -1,10 +1,10 @@
-import mockjs from 'mockjs'
-import { defaultSettings } from '@gx-config'
 import type { UserDetails } from '@gx-mock/config/user'
-import { tokenAccount, userList } from '@gx-mock/config/user'
-import { Decrypt, Encrypt } from '@gx-mock/util/crypto'
+import { defaultSettings } from '@gx-config'
 import { getRandomNumber } from '@gx-design-vue/pro-utils'
 import { checkBackDataFun, getRequestToken } from '@gx-mock/_util'
+import { tokenAccount, userList } from '@gx-mock/config/user'
+import { Decrypt, Encrypt } from '@gx-mock/util/crypto'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 
@@ -51,7 +51,7 @@ export function getMockRequest<T = Recordable, R = Record<any, any>, D = undefin
   carryToken?: boolean;
   timeout?: number;
   method: MockMethod['method'];
-  callback?: (res: MockResponse<T, D>, token?: string) => Partial<R>;
+  callback?: (res: MockResponse<T, D>, token?: string) => Partial<R> | null;
 }): MockMethod {
   return {
     url: `${mockPrefixUrl}${url}`,

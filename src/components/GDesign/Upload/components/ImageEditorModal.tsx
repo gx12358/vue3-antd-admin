@@ -1,4 +1,4 @@
-import global from '@/common/global'
+import { global } from '@/common'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import { isBase64 } from '@gx-design-vue/pro-utils'

@@ -1,6 +1,6 @@
 import autoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 import { defaultSettings } from '../../../config'
 
 const importsModules = [ 'vue', 'vue-router' ] as any

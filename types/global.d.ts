@@ -1,12 +1,8 @@
+import type { AppRouteModule as GProAppRouteModule, MenuDataItem } from '@gx-design-vue/pro-layout'
 import type { DeepPartial, ProAliasToken as GProAliasToken } from '@gx-design-vue/pro-provider'
-import type { ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
+import type { ProColumnsType as GProColumnsType, ProColumnType as GProColumnType } from '@gx-design-vue/pro-table'
 import type { CSSObject as ProCssObject } from 'ant-design-vue'
-import type {
-  PropType,
-  VNode,
-  VNodeChild,
-  CSSProperties as VueCSSProperties
-} from 'vue'
+import type { PropType, VNode, CSSProperties as VueCSSProperties } from 'vue'
 import Vue from 'vue'
 
 declare global {
@@ -28,17 +24,22 @@ declare global {
 
   type ProAliasToken = DeepPartial<GProAliasToken>
   declare type CSSProperties = VueCSSProperties
-  declare type ProColumnType = GProColumnType
+  declare type ProColumnType<DataValue = any, SearchParama = RecordType> = GProColumnType<DataValue, SearchParama>
+  declare type ProColumnsType<DataValue = any, SearchParama = RecordType> = GProColumnsType<DataValue, SearchParama>
+  declare type CSSObject = ProCssObject
+  declare type AppRouteModule = GProAppRouteModule
   declare type CSSObject = ProCssObject
 
   // vue
-  declare type Key = string | number
   declare type VuePropType<T> = PropType<T>
-  declare type VueNode = VNodeChild | JSX.Element
   declare type Recordable<T = any> = Record<string, T>
 
   interface Fn<T = any, R = T> {
     (...arg: T[]): R;
+  }
+
+  declare interface SystemMenuItem extends Omit<MenuDataItem, 'children'> {
+    children?: SystemMenuItem[]
   }
 
   declare interface ViteEnv {
@@ -61,10 +62,6 @@ declare global {
     VITE_GITEE_PAGE: string; // gitee 地址
   }
 
-  declare function parseInt(s: string | number, radix?: number): number
-
-  declare function parseFloat(string: string | number): number
-
   class FilerobotImageEditor {
     constructor(selector: HTMLElement, options: any) {
     }
@@ -78,7 +75,7 @@ declare global {
   }
 
   namespace JSX {
-    type Element = VNode
+    interface Element extends VNode {}
 
     interface ElementClass extends Vue {}
 

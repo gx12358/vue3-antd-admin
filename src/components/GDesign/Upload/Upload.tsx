@@ -1,7 +1,7 @@
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
 import type { MaterialListItem } from './typings'
-import global from '@/common/global'
+import { global } from '@/common'
 import { download } from '@/services/common'
 import { createFileName } from '@/utils/uploadFile'
 import { PlusOutlined } from '@ant-design/icons-vue'

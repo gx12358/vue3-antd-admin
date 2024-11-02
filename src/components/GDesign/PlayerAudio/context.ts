@@ -1,11 +1,9 @@
-import type { ComputedRef, InjectionKey, Ref } from 'vue'
-import { inject, provide } from 'vue'
-
-export type ContextType = any
+import type { Ref } from 'vue'
+import { useContext } from '@gx-design-vue/pro-provider'
 
 export interface AudioContextProps {
   /* 附加属性 */
-  player?: Ref<HTMLAudioElement>;
+  player?: Ref<HTMLAudioElement | null>;
   loading?: Ref<boolean>;
   isPlaying?: Ref<boolean>;
   muted?: Ref<boolean>;
@@ -16,18 +14,7 @@ export interface AudioContextProps {
   [key: string]: any;
 }
 
-const audioContextInjectKey: InjectionKey<AudioContextProps> = Symbol('video-context')
-
-export const useContext = <T>(
-  contextInjectKey: string | InjectionKey<ContextType> = audioContextInjectKey,
-  defaultValue?: ContextType
-): T => {
-  return inject(contextInjectKey, defaultValue || ({} as T))
-}
-
-export const provideAudioContext = (value: AudioContextProps | ComputedRef<AudioContextProps>) => {
-  provide(audioContextInjectKey, value)
-}
-
-export const useAudioContext = () =>
-  useContext<Required<AudioContextProps>>(audioContextInjectKey, [])
+export const {
+  provideContext: provideAudioContext,
+  useInjectContext: useAudioContext
+} = useContext<AudioContextProps>('player-audio')

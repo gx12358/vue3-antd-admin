@@ -1,5 +1,5 @@
-import { groupList } from '@gx-mock/config/group'
 import { compareArray } from '@gx-design-vue/pro-utils'
+import { groupList } from '@gx-mock/config/group'
 import { getMockRequest } from '@gx-mock/util/utils'
 
 export interface GroupListItem {

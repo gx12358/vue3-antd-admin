@@ -1,7 +1,7 @@
+import type { GroupListItem } from '@gx-mock/datasSource/group'
+import { handleRandomImage } from '@gx-mock/util/utils'
 import dayjs from 'dayjs'
 import mockjs from 'mockjs'
-import { handleRandomImage } from '@gx-mock/util/utils'
-import type { GroupListItem } from '@gx-mock/datasSource/group'
 
 const { Random } = mockjs
 

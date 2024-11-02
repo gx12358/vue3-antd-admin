@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7216342",
+      "name": "工作台",
+      "font_class": "gongzuotai",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
       "icon_id": "2678601",
       "name": "工具箱",
       "font_class": "gongjuxiang",

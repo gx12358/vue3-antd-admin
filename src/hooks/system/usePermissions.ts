@@ -6,34 +6,33 @@ export function usePermissions(): {
   permission: Ref<boolean | object>;
   hasPermission: (value: object | string | string[]) => void
 } {
-  const store = useStore()
+  const { permission } = useStore()
   const all_permission = ref('*:*:*')
-  const permissions = store.permission.ability
-  const permission = ref<object | boolean>({})
+  const permissionRef = ref<object | boolean>({})
 
   function hasPermission(value: object | string | string[]) {
     if (value && isObject(value) && Object.keys(value).length > 0) {
       Object.keys(value).map((item) => {
         let isExist = true
         const permissionFlag = value[item]
-        const hasPermissions = permissions.some((el) => {
+        const hasPermissions = permission.ability.some((el) => {
           return all_permission.value === el || permissionFlag.includes(el)
         })
         if (!hasPermissions) {
           isExist = false
         }
-        permission.value[item] = isExist
+        permissionRef.value[item] = isExist
         return item
       })
     } else if (isString(value) || isArray(value)) {
-      permission.value = permissions.some((el) => {
+      permissionRef.value = permission.ability.some((el) => {
         return all_permission.value === el || (value as string[]).includes(el)
       })
     }
   }
 
   return {
-    permission,
+    permission: permissionRef,
     hasPermission
   }
 }

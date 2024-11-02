@@ -1,58 +1,57 @@
+import type { DictState } from '@/store/modules/dict'
 import type { DictRecord, DictType } from '@gx-mock/config/dict'
 import { getDicts } from '@/services/systemCenter'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
-import { reactive } from 'vue'
 
-export type SystemDictData = Partial<{ loading: boolean; data: DictRecord[] }>
+export function useDict(dictTypes: DictType | DictType[]): [ ComputedRef<DictState>, (enforce?: boolean) => Promise<void> ] {
+  const { dict } = useStore()
 
-export type SystemDictState = Record<DictType, SystemDictData>
-
-export function useDict(type: DictType | DictType[]) {
-  const dictState = reactive<Partial<SystemDictState>>({})
-
-  const { dict: storeDict } = useStore()
-
-  const dictRef = computed(() => storeDict.data)
-
-  async function getDict() {
-    let response
-    if (typeof type === 'string') {
-      dictState[type] = {
-        loading: !(unref(dictRef)[type] && unref(dictRef)[type].length)
+  const dictValue = computed<Partial<DictState>>(() => {
+    if (typeof dictTypes === 'string') {
+      return {
+        [`${dictTypes}`]: dict[dictTypes]
       }
-      if (unref(dictRef)[type] && unref(dictRef)[type].length) {
-        dictState[type].data = unref(dictRef)[type]
-      } else {
-        dictState[type].loading = true
-        response = await getDicts(type)
+    }
+    if (isArray(dictTypes)) {
+      const result: Partial<DictState> = {}
+      dictTypes.forEach((key) => {
+        result[`${key}`] = dict[key]
+      })
+      return result
+    }
+    return {}
+  })
+
+  async function getDict(enforce?: boolean) {
+    if (typeof dictTypes === 'string') {
+      if (dict[dictTypes]?.loading) return
+      if (enforce || !dict[dictTypes] || !dict[dictTypes]?.data?.length) {
+        dict.setValue({ [`${dictTypes}`]: { loading: true } })
+        const response: ResponseResult<DictRecord[]> = await getDicts(dictTypes)
         if (response) {
-          const data = (response.data || [])
-          storeDict.setDictData(type, data)
-          dictState[type].data = data
+          const data: DictRecord[] = response.data || []
+          dict.setValue({ [`${dictTypes}`]: { data } })
         }
-        dictState[type].loading = false
+        dict.setValue({ [`${dictTypes}`]: { loading: false } })
       }
       return
     }
 
-    if (isArray(type)) {
-      for (let i = 0; i < type.length; i += 1) {
-        const dictType = type[i]
-        dictState[dictType] = {
-          loading: !(unref(dictRef)[dictType] && unref(dictRef)[dictType].length)
-        }
-        if (unref(dictRef)[dictType] && unref(dictRef)[dictType].length) {
-          dictState[dictType].data = unref(dictRef)[dictType]
-        } else {
-          dictState[dictType].loading = true
-          response = await getDicts(dictType)
-          if (response) {
-            const data = (response.data || [])
-            storeDict.setDictData(dictType, data)
-            dictState[dictType].data = data
-          }
-          dictState[dictType].loading = false
+    if (isArray(dictTypes)) {
+      for (let i = 0; i < dictTypes.length; i += 1) {
+        const key = dictTypes[i]
+        if (dict[key]?.loading) return
+        if (enforce || !dict[key] || !dict[key]?.data?.length) {
+          dict.setValue({ [`${key}`]: { loading: true } })
+          getDicts(key).then((response: ResponseResult<DictRecord[]>) => {
+            if (response) {
+              const data: DictRecord[] = response.data || []
+              dict.setValue({ [`${key}`]: { data } })
+            }
+          }).finally(() => {
+            dict.setValue({ [`${key}`]: { loading: false } })
+          })
         }
       }
     }
@@ -62,7 +61,5 @@ export function useDict(type: DictType | DictType[]) {
     getDict()
   })
 
-  return {
-    dictState
-  }
+  return [ dictValue as unknown as ComputedRef<DictState>, getDict ]
 }

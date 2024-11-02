@@ -1,3 +1,6 @@
+import type { RulesState } from '@gx-design-vue/pro-provider'
+import type { FormState } from './columns'
+
 export const fieldLabels = {
   name: '仓库名',
   url: '仓库域名',
@@ -13,7 +16,7 @@ export const fieldLabels = {
   type2: '任务类型'
 }
 
-export const rules = {
+export const rules: RulesState<FormState> = {
   name: [
     { required: true, message: '请输入仓库名称' }
   ],

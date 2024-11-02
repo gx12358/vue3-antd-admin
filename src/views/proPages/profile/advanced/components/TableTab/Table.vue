@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProTableRef } from '@gx-design-vue/pro-table'
 import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import type { TabPaneStateRecord, TabsStateActiveKey } from './utile/config'
 import { useTable } from '@gx-design-vue/pro-table'
 import { useAdvancedContext } from '../../context'
-import { columns, defaultTableState, statusState } from './utile/config'
+import { columns, statusState } from './utile/config'
 
 const props = withDefaults(defineProps<{
   type: TabsStateActiveKey;
@@ -19,17 +19,22 @@ const { showTableLoading } = useAdvancedContext()
 
 const tableRef = ref<ProTableRef>()
 
-const { reload } = useTable(tableRef)
-
-const getTableData: RequsetFunction<AdvancedTableRecord, ListSearchParams> = async (params) => {
-  const response = await props.request<PageResult<AdvancedTableRecord>>?.(params)
-
-  return {
-    success: !!response,
-    data: response?.data?.list || [],
-    total: response?.data?.totalCount || 0
+const { reload, tableState } = useTable<AdvancedTableRecord, ListSearchParams>(tableRef, {
+  state: {
+    columns,
+    bordered: false,
+    pagination: { pageSize: 5 }
+  },
+  request: async (params) => {
+    const response = await props.request<PageResult<AdvancedTableRecord>>?.(params)
+    
+    return {
+      success: !!response,
+      data: response?.data?.list || [],
+      total: response?.data?.totalCount || 0
+    }
   }
-}
+})
 
 defineExpose({
   reload
@@ -37,7 +42,7 @@ defineExpose({
 </script>
 
 <template>
-  <g-pro-table ref="tableRef" :request="getTableData" :columns="columns" :show-loading="showTableLoading" v-bind="defaultTableState">
+  <g-pro-table ref="tableRef" v-bind="tableState" :show-loading="showTableLoading">
     <template #bodyCell="{ column, text }">
       <template v-if="column.dataIndex === 'status'">
         <a-badge :status="statusState[text as AdvancedTableRecord['status']].status" :text="statusState[text as AdvancedTableRecord['status']].text" />

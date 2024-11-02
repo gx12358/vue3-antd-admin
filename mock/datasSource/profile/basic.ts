@@ -1,8 +1,8 @@
-import mockjs from 'mockjs'
-import dayjs from 'dayjs'
-import { getMockRequest } from '@gx-mock/util/utils'
 import { otherAccountList } from '@gx-mock/config/user'
 import { initContent } from '@gx-mock/util/table'
+import { getMockRequest } from '@gx-mock/util/utils'
+import dayjs from 'dayjs'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 

@@ -1,9 +1,9 @@
+import type { ListSearchParams } from '@gx-mock/util/table'
+import { otherAccountList } from '@gx-mock/config/user'
+import { handlePageList, initContent } from '@gx-mock/util/table'
+import { getMockRequest } from '@gx-mock/util/utils'
 import dayjs from 'dayjs'
 import mockjs from 'mockjs'
-import { getMockRequest } from '@gx-mock/util/utils'
-import type { ListSearchParams } from '@gx-mock/util/table'
-import { handlePageList, initContent } from '@gx-mock/util/table'
-import { otherAccountList } from '@gx-mock/config/user'
 
 const { Random } = mockjs
 

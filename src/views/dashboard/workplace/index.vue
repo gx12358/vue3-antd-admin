@@ -19,15 +19,15 @@ import { cloneDeep } from 'lodash-es'
 import { reactive } from 'vue'
 import Radar from './components/Radar.vue'
 
-const store = useStore()
+const { user } = useStore()
 const router = useRouter()
 
 const state = reactive({
   radarMaxCount: 10,
-  radarData: []
+  radarData: [] as any[]
 })
 
-const currentRoute = computed<AppRouteModule>(() => router.currentRoute.value)
+const currentRoute = computed(() => router.currentRoute.value as AppRouteModule)
 
 const colorTextQuaternary = useThemeStyle({
   color: 'colorTextQuaternary'
@@ -49,7 +49,7 @@ const { data: projectCount } = useRequest<Partial<ProjectHomeCount>>(
   getProjectNums,
   {
     params: {
-      userId: store.user.userDetails.userId
+      userId: user.userInfo.userId
     },
     defaultData: {},
     defaultLoading: true
@@ -75,7 +75,7 @@ const { loading: mailNoticeLoading, data: mailNoticeList } = useRequest<MailNoti
   getMailNotice,
   {
     params: {
-      userId: store.user.userDetails.userId
+      userId: user.userInfo.userId
     },
     defaultData: [],
     defaultLoading: true
@@ -86,7 +86,7 @@ const { loading: radarLoading, data: radarList } = useRequest<RadarRecord[]>(
   getRadarData,
   {
     params: {
-      userId: store.user.userDetails.userId
+      userId: user.userInfo.userId
     },
     defaultData: [],
     defaultLoading: true
@@ -97,7 +97,7 @@ const { loading: groupLoading, data: groupList } = useRequest<GroupListItem[]>(
   getGroupTopList,
   {
     params: {
-      userId: store.user.userDetails.userId
+      userId: user.userInfo.userId
     },
     defaultData: [],
     defaultLoading: true
@@ -152,14 +152,14 @@ watch(radarList, (val) => {
   <g-pro-page-container :use-page-card="false">
     <template #contentRender>
       <div class="text-hidden-1 text-20px leading-32px font-600">
-        {{ currentRoute.meta.title }}
+        {{ currentRoute.meta?.title }}
       </div>
       <div class="flex items-center justify-between mt-12px flex-wrap">
         <div class="flex gap-24px lt-md:w-full">
-          <a-avatar class="rd-50% w-70px h-70px overflow-hidden" style="flex-shrink: 0" :src="store.user.userDetails.avatar" />
+          <a-avatar class="rd-50% w-70px h-70px overflow-hidden" style="flex-shrink: 0" :src="user.userInfo.avatar" />
           <div class="flex flex-col py-10px justify-between gap-10px">
             <div class="font-500 leading-20px font-500 text-20px">
-              {{ timeFix() }}，{{ store.user.userDetails.nickName }} ，祝你开心每一天
+              {{ timeFix() }}，{{ user.userInfo.nickName }} ，祝你开心每一天
             </div>
             <div :style="colorTextDescription">
               前端工程师 | （REACT，VUE，UNIAPP、TARO）平台

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-import type { RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
 import { getMenuList } from '@/services/systemCenter'
+import { useTable } from '@gx-design-vue/pro-table'
 import { treeData } from '@gx-design-vue/pro-utils'
-import { columns } from './utils/columns'
+import { columns, type SearchConfig } from './utils/columns'
 
 const state = reactive({
   menuTypeList: {
@@ -13,28 +14,30 @@ const state = reactive({
   }
 })
 
-const getTableData: RequsetFunction<AppRouteModule, { title: string }> = async () => {
-  const response = await getMenuList<AppRouteModule[], { total: number }>()
+const tableRef = ref()
 
-  return {
-    success: !!response,
-    data: treeData(response.data || [], 'menuId') as AppRouteModule[],
-    total: response?.total || 0
+const { tableState } = useTable<AppRouteModule, SearchConfig>(tableRef, {
+  state: {
+    columns,
+    draggabled: true,
+    rowKey: 'menuId'
+  },
+  request: async () => {
+    const response = await getMenuList<AppRouteModule[], { total: number }>()
+    
+    return {
+      success: !!response,
+      data: treeData(response.data || [], 'menuId') as AppRouteModule[],
+      total: response?.total || 0
+    }
   }
-}
+})
 </script>
 
 <template>
   <g-pro-page-container>
-    <g-pro-table
-      draggabled
-      row-key="menuId"
-      :options="false"
-      :show-index="false"
-      :columns="columns"
-      :request="getTableData"
-    >
-      <template #bodyCell="{ column, text, record }: { column: ProColumnType; text: string; record: AppRouteModule }">
+    <g-pro-table v-bind="tableState">
+      <template #bodyCell="{ column, text, record }: ProTableBodyCellProps<AppRouteModule>">
         <template v-if="column.dataIndex === 'menuType'">
           {{ state.menuTypeList[text] || '-' }}
         </template>

@@ -1,5 +1,6 @@
 import {
   delCookie,
+  getCookie,
   getStorage,
   removeStorage,
   setCookie,
@@ -16,7 +17,19 @@ const { storage, tokenTableName } = defaultSettings
  * @description 获取accessToken
  */
 export function getAccessToken() {
-  return getStorage({ key: tokenTableName, type: storage || 'localStorage' })
+  if (storage) {
+    if (storage === 'localStorage') {
+      return getStorage({ key: tokenTableName })
+    } else if (storage === 'sessionStorage') {
+      return getStorage({ key: tokenTableName, type: 'session' })
+    } else if (storage === 'cookie') {
+      return getCookie(tokenTableName)
+    } else {
+      return getStorage({ key: tokenTableName })
+    }
+  } else {
+    return getStorage({ key: tokenTableName })
+  }
 }
 
 /**
@@ -66,15 +79,15 @@ export function setAccessToken(accessToken: string, expired?: number) {
 export function removeAccessToken() {
   if (storage) {
     if (storage === 'localStorage') {
-      return removeStorage(tokenTableName)
+      return removeStorage({ key: tokenTableName })
     } else if (storage === 'sessionStorage') {
-      return removeStorage(tokenTableName, 'session')
+      return removeStorage({ key: tokenTableName, type: 'session' })
     } else if (storage === 'cookie') {
       return delCookie(tokenTableName)
     } else {
-      return removeStorage(tokenTableName)
+      return removeStorage({ key: tokenTableName })
     }
   } else {
-    return removeStorage(tokenTableName)
+    return removeStorage({ key: tokenTableName })
   }
 }

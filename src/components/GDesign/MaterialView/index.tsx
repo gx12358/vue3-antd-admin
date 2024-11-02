@@ -2,7 +2,7 @@ import type { ExtractPropTypes } from 'vue'
 import Nodata from '@/assets/public_images/nodata.svg'
 import PlayerAudio from '@gx-design/PlayerAudio'
 import GPlayerVideo from '@gx-design/PlayerVideo'
-import { ImageViewer } from '@gx-design-vue/image'
+import { ImagePreview } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import {
   getFileSuffix,
@@ -161,9 +161,7 @@ export default defineComponent({
         >
           {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
-              {showViewer.value && props.type === '1' && (
-                <ImageViewer ref={imageViewerRef} urlList={getViewUrl.value as string[]} onClose={() => closeViewer()} />
-              )}
+              <ImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
               <GProModal
                 noStyle
                 class={baseClassName}

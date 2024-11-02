@@ -1,11 +1,11 @@
-import mockjs from 'mockjs'
-import { cloneDeep } from 'lodash-es'
 import dayjs from 'dayjs'
+import { cloneDeep } from 'lodash-es'
+import mockjs from 'mockjs'
 
 const { Random, mock } = mockjs
 
 export interface ListItem {
-  createTime: string;
+  createTime: string | null;
   id: number;
 }
 
@@ -76,6 +76,7 @@ export function postDataSource<T>(
 ) {
   if (type === 'update') {
     dataSource = dataSource.map((item: any) => {
+      // @ts-ignore
       if (options?.params?.[options.key] === item[options?.key])
         return { ...item, ...options?.params }
       return item
@@ -87,8 +88,10 @@ export function postDataSource<T>(
       id: dataSource.length + 1
     })
 }
-  if (type === 'delete')
+  if (type === 'delete') {
+    // @ts-ignore
     dataSource = dataSource.filter(item => options?.params?.[options.key] !== item[options?.key])
+  }
 
   return dataSource
 }

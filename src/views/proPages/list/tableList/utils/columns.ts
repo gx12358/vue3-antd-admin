@@ -1,6 +1,7 @@
 import type { ProColumnsType } from '@gx-design-vue/pro-table'
+import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
 
-export const columns: ProColumnsType = [
+export const columns: ProColumnsType<RulesListItem> = [
   {
     dataIndex: 'name',
     searchConfig: {

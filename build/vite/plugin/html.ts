@@ -1,10 +1,10 @@
 import type { PluginOption } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
 
-import cdnModules from '../cdn'
-import { GLOB_CONFIG_FILE_NAME } from '../../constant'
 import { defaultSettings } from '../../../config'
 import pkg from '../../../package.json'
+import { GLOB_CONFIG_FILE_NAME } from '../../constant'
+import cdnModules from '../cdn'
 
 const { title, publicPath, useCdn } = defaultSettings
 

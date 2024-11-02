@@ -7,9 +7,6 @@ import qs from 'qs'
 import { AxiosCanceler } from './axiosCancel'
 import { ContentTypeEnum, RequestEnum } from './typings'
 
-export const getPendingUrl = (config: GAxiosOptions) => config.cancelKey || [ config.method, config.url ].join(
-  '&')
-
 /**
  * @Author      gx12358
  * @DateTime    2023/1/6
@@ -99,8 +96,8 @@ export class GAxios {
     }
   }
 
-  request<T = ResponseResult | boolean>(config: GAxiosOptions): Promise<T> {
-    let conf: GAxiosOptions = cloneDeep(config)
+  request<T = ResponseResult | boolean>(config?: GAxiosOptions): Promise<T> {
+    let conf = cloneDeep(config || {} as GAxiosOptions)
 
     const opt: GAxiosOptions = Object.assign({}, this.options, conf)
 
@@ -117,10 +114,10 @@ export class GAxios {
         .then((res: GAxiosResponse) => {
           if (transformResponseHook && isFunction(transformResponseHook)) {
             try {
-              const ret = transformResponseHook(res, config)
+              const ret = transformResponseHook(res, config || {})
               resolve(ret)
-              // eslint-disable-next-line unused-imports/no-unused-vars
-            } catch (_err) {
+            } catch (error) {
+              console.error('request-error', error)
               resolve(false as unknown as Promise<T>)
               return
             }

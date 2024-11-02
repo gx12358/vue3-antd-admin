@@ -1,16 +1,7 @@
-import type { BasicLayoutProps } from '@gx-design-vue/pro-layout'
-import type { ThemeConfig } from '@gx-design-vue/pro-provider'
-import logo from '@/assets/logo.png'
-import { defaultSettings, theme } from '@gx-config'
-import { handleThemeConfig } from '@gx-design-vue/pro-layout'
-import { themeConfig as proThemeConfig } from '@gx-design-vue/pro-provider'
+import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
+import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
-
-const layoutThemeConfig = {
-  ...proThemeConfig,
-  title: defaultSettings.title
-} as ThemeConfig
+import { toRefs } from 'vue'
 
 /**
  * @Author      gx12358
@@ -19,26 +10,26 @@ const layoutThemeConfig = {
  * @description store-global 全局属性
  */
 export interface GlobalState {
-  globalLayout: BasicLayoutProps;
   keepAlive: boolean;
   pageLoading: boolean;
   showProgressBar: boolean;
   disabledScrollTop: boolean;
 }
 
-export const useStoreGlobal = defineStore('global', () => {
-  const state = reactive<GlobalState>({
+type GlobalStoreValue = PiniaStoreValue<GlobalState, {
+  setValue: (value: Partial<GlobalState>) => void
+}>
+
+export const useStoreGlobal = defineStore<'global', GlobalStoreValue>('global', () => {
+  const [ state, setValue ] = useReactiveState<GlobalState>({
     keepAlive: true,
     pageLoading: false,
     showProgressBar: true,
-    disabledScrollTop: false,
-    globalLayout: {
-      logo,
-      ...handleThemeConfig({ ...layoutThemeConfig, primaryColor: theme.colorPrimary })
-    }
+    disabledScrollTop: false
   })
 
   return {
-    state
+    ...toRefs(state),
+    setValue
   }
 })

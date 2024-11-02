@@ -2,7 +2,7 @@ declare interface DefaultResult<T> {
   code: number;
   msg?: string;
   message?: string;
-  data?: T;
+  data: T;
 }
 
 declare type ResponseResult<T = any, R = undefined> = R extends undefined

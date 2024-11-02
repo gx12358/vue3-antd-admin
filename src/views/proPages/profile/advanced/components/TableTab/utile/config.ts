@@ -59,8 +59,6 @@ export const columns: ProColumnsType = [
 ]
 
 export const defaultTableState: ProTableProps = {
-  options: false,
-  showIndex: false,
   bordered: false,
   pagination: { pageSize: 5 }
 }

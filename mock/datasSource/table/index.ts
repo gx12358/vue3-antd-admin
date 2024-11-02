@@ -1,11 +1,12 @@
-import mockjs from 'mockjs'
-import { getMockRandowList, getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, initContent } from '@gx-mock/util/table'
+import { getMockRandowList, getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 
 export interface TableRecord {
+  id: number;
   name: string;
   title: string;
   author: string;

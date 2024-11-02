@@ -1,3 +1,4 @@
+import type { PageState } from '@gx-design-vue/pro-table'
 import type { MaybeRef, Ref } from 'vue'
 import useRequest from '@gx-admin/hooks/core/useRequest'
 import { defaultSettings } from '@gx-config'
@@ -22,7 +23,12 @@ export default function <T, R = any>(serve: any, options: {
   const stopWatchParams = ref(false)
   const list = ref<T[]>([])
 
-  const state = reactive({
+  const state = reactive<{
+    init: boolean;
+    isMore: boolean;
+    y: number;
+    oldPageState: PageState;
+  }>({
     init: false,
     isMore: true,
     y: 0,
@@ -32,19 +38,16 @@ export default function <T, R = any>(serve: any, options: {
     }
   })
 
-  const pageState = reactive({
+  const pageState = reactive<PageState>({
     pageNum: 1,
-    pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize
+    pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize || 10
   })
 
-  const { data, loading, refresh } = useRequest<PageResult<T>, R & {
-    pageNum: number;
-    pageSize: number;
-  }, T[]>(serve, {
+  const { data, loading, refresh } = useRequest<PageResult<T>, R & PageState, T[]>(serve, {
     params: computed(() => ({
       ...cloneDeep(options.otherParmas),
       ...pageState
-    })),
+    } as (R & PageState))),
     stopWatchParams,
     onAfterMutateData: (response) => {
       return options?.onAfterMutateData?.(response.list || []) || (response?.list || [])
@@ -85,9 +88,9 @@ export default function <T, R = any>(serve: any, options: {
       }
     })
 
-    let stopWatchBottom: Fn
+    let stopWatchBottom: Fn | null
 
-    let stopWatchScrollY: Fn
+    let stopWatchScrollY: Fn | null
 
     onMountedOrActivated(() => {
       if (stopWatchBottom)
@@ -120,7 +123,7 @@ export default function <T, R = any>(serve: any, options: {
   }
 
   onMountedOrActivated(() => {
-    scrollEl.value = document.querySelector(options?.scrollRoot || viewScrollRoot)
+    scrollEl.value = document.querySelector(options?.scrollRoot || viewScrollRoot) as HTMLElement
     stopWatchParams.value = false
   })
 

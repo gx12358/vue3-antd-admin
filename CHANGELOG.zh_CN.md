@@ -1,4 +1,32 @@
-## 3.0.4(2024-09.06)
+## 3.0.6(2024-11.02)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件**
+  - `@gx-desing-pro/pro-table` 优化 `useTable` `hooks` 的类型提示、并进行了重构
+  - `@gx-desing-pro/pro-layout` 
+    - `layout-token` 新增多个变量，方便用户自定义主题
+    - 修复多模式下的主题配色不生效问题
+    - 新增 `ProAppPage` 组件，简化系统使用
+  - `@gx-desing-pro/image` 
+    - 重构多个 `api` 方法
+    - `ImagePreview` 组件重构，样式调整
+  - 多个插件版本进行了升级
+
+### ✨ FIX
+
+- **Pro Table**
+  - 针对 `useTable` 的升级进行代码重构
+- **store**
+  - 使用 `useReactiveState` `hooks` 方法以及 `PiniaStoreValue` 类型，使 `useStore` 的类型提示更加准确
+- **useForm** 
+  - 将 `ant` 的 `useForm` 改为 `useProForm`，类型提示更加准确
+- **eslint**
+  - 使用 `@antfu/eslint-config` 插件，并将全局代码进行格式
+
+## 3.0.5(2024-09.06)
 
 ## 升级说明
 

@@ -14,61 +14,70 @@ Object.keys(modules).forEach((key) => {
   routeModuleList.push(...modList)
 })
 
+export const permissionRouters: AppRouteModule = {
+  path: '/exception',
+  name: 'Exception',
+  component: BlankLayout,
+  redirect: '/exception/403',
+  meta: {
+    hidden: true,
+    title: '错误页',
+    icon: 'error-warning-line'
+  },
+  children: [
+    {
+      path: '/exception/403',
+      name: 'Error403',
+      component: () => import('@/views/exception/403/index.vue'),
+      meta: {
+        hidden: true,
+        title: '403',
+        icon: 'error-warning-line'
+      }
+    },
+    {
+      path: '/exception/404',
+      name: 'Error404',
+      component: () => import('@/views/exception/404/index.vue'),
+      meta: {
+        hidden: true,
+        title: '404',
+        icon: 'error-warning-line'
+      }
+    }
+  ]
+}
+
 // 基本路由
 export const constantRoutes: AppRouteModule[] = [
   {
     path: '/user',
     component: UserLayout,
+    name: 'UserLayout',
     redirect: '/user/login',
     children: [
       {
         path: '/user/login',
         name: 'Login',
         meta: {
-          hideInMenu: true,
+          hidden: true,
           title: '登录'
         },
         component: () => import('@/views/user/login/index.vue')
       }
     ]
   },
-  {
-    path: '/exception',
-    name: 'Exception',
-    component: BlankLayout,
-    redirect: '/exception/403',
-    meta: {
-      hideInMenu: true,
-      title: '错误页',
-      icon: 'error-warning-line'
-    },
-    children: [
-      {
-        path: '/exception/403',
-        name: 'Error403',
-        component: () => import('@/views/exception/403/index.vue'),
-        meta: {
-          hideInMenu: true,
-          title: '403',
-          icon: 'error-warning-line'
-        }
-      },
-      {
-        path: '/exception/404',
-        name: 'Error404',
-        component: () => import('@/views/exception/404/index.vue'),
-        meta: {
-          hideInMenu: true,
-          title: '404',
-          icon: 'error-warning-line'
-        }
-      }
-    ]
-  }
+  permissionRouters
 ]
 
 // authentication为all（后端生成的路由）本地路由
 export const asyncRoutes: AppRouteModule[] = routeModuleList
+
+export const notFoundRoute: AppRouteModule = {
+  path: '/:path(.*)*',
+  name: 'NotFound',
+  redirect: '/exception/404'
+}
 
 // 自定义路由
 export const localRoutes: AppRouteModule[] = [
@@ -79,8 +88,5 @@ export const localRoutes: AppRouteModule[] = [
     redirect: '/workplace',
     children: routeModuleList
   },
-  {
-    path: '/:path(.*)*',
-    redirect: '/exception/404'
-  }
+  notFoundRoute
 ]

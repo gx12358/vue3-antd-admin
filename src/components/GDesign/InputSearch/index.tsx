@@ -8,9 +8,17 @@ const GInputSearch = defineComponent({
   name: 'GInputSearch',
   inheritAttrs: false,
   props: {
+    ...omit(inputProps(), [ 'value', 'onUpdate:value' ]),
     value: String as VuePropType<string>,
     onChange: Function as VuePropType<(value: any) => void>,
-    ...omit(inputProps(), [ 'onChange', 'value', 'onUpdate:value', 'onSearch' ])
+    placeholder: {
+      type: [ String, Number ] as VuePropType<string | number>,
+    },
+    allowClear: {
+      type: [ Boolean ] as VuePropType<boolean>,
+    },
+    inputPrefixCls: String,
+    enterButton: [ Function, Object, Array, String, Number ] as PropType<any>,
   },
   emits: [ 'update:value', 'change' ],
   setup(props, { emit, expose, slots }) {

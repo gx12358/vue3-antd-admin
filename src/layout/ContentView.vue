@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BasicLayoutProps, Meta } from '@gx-design-vue/pro-layout'
+import type { AppRouteModule, BasicLayoutProps, Meta } from '@gx-design-vue/pro-layout'
 import { PageTranstion } from '@gx-design-vue/pro-layout'
 import { computed, ref } from 'vue'
 import IframeView from '../views/Iframe/index.vue'
@@ -20,16 +20,16 @@ defineProps({
 const { global } = useStore()
 const router = useRouter()
 
-const keepliveRouterNames = ref([])
+const keepLiveRouterNames = ref([])
 
 const iframeSrc = computed(() => {
   const meta = router.currentRoute.value?.meta as Meta
-  return meta?.target && Number(meta?.targetStatus) === 0 ? meta?.target || '' : ''
+  return meta?.link && Number(meta?.linkStatus) === 0 ? meta?.link || '' : ''
 })
 
-watch(() => global.state.keepAlive, () => {
-  keepliveRouterNames.value = router.getRoutes()
-    .filter(item => global.state.keepAlive || (item.meta as Meta)?.keepAlive)
+watch(() => global.keepAlive, () => {
+  keepLiveRouterNames.value = (router.getRoutes() as AppRouteModule[])
+    .filter(item => global.keepAlive || (item.meta as Meta)?.keepAlive)
     .map(item => item.name)
 }, { immediate: true })
 </script>
@@ -39,7 +39,7 @@ watch(() => global.state.keepAlive, () => {
     <template #default="{ Component }">
       <PageTranstion v-bind="animate">
         <template v-if="reloadStatus">
-          <keep-alive :include="keepliveRouterNames">
+          <keep-alive :include="keepLiveRouterNames">
             <component :is="Component" />
           </keep-alive>
         </template>

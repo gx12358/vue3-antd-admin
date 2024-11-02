@@ -1,5 +1,5 @@
-import colors from 'picocolors'
 import type { PluginOption } from 'vite'
+import colors from 'picocolors'
 import { readPackageJSON } from 'pkg-types'
 
 import { getEnvConfig, rootPath } from '../../util'

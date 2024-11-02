@@ -1,6 +1,6 @@
+import { toChinesNum } from '@/utils/util'
 import dayjs from 'dayjs'
 import mockjs from 'mockjs'
-import { toChinesNum } from '@/utils/util'
 
 const { Random } = mockjs
 

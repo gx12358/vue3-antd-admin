@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-design-vue/pro-provider'
 import type { UserDetails } from '@gx-mock/config/user'
 import cityOptions from '@/assets/json/china.json'
 import { updateUserDetails } from '@/services/userCenter'
 import { isEmail, isPhone } from '@/utils/validate'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useForm } from '@gx-admin/hooks/system'
 import { GUpload } from '@gx-design/Upload'
+import { useProForm } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
 import { reactive } from 'vue'
 
@@ -21,7 +21,7 @@ const { run, loading } = useRequest(updateUserDetails, {
 const formState = reactive<UserFormState>({
   ...user.userInfo,
   adressCode: user.userInfo.provinceCode && user.userInfo.cityCode
-    ? [ user.userInfo.provinceCode, user.userInfo.cityCode, user.userInfo.districtCode ]
+    ? [ user.userInfo.provinceCode, user.userInfo.cityCode, user.userInfo.districtCode ] as string[]
     : []
 })
 
@@ -60,7 +60,7 @@ const ruleState = reactive<RulesState<UserFormState>>({
   ],
 })
 
-const { resetFields, validateInfos, validate } = useForm<UserFormState>(formState, ruleState)
+const { resetFields, validateInfos, validate } = useProForm<UserFormState>(formState, ruleState)
 
 watch(() => user.userInfo, state => Object.assign(formState, { ...state }), { deep: true })
 

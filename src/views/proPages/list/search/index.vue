@@ -6,9 +6,11 @@ import { provideSearchListContext } from './context'
 
 type ListType = 'articles' | 'projects' | 'applications'
 
+useDict('sys_common_category')
+
 const route = useRoute()
 const router = useRouter()
-const { dictState } = useDict('sys_common_category')
+const { dict } = useStore()
 
 const state = reactive({
   keyword: '',
@@ -21,7 +23,7 @@ const changeListType = (value: ListType) => {
   router.push({ path: '/proPage/list/search/' + value })
 }
 
-const classData: ComputedRef<TagsListItem[]> = computed(() => dictState.sys_common_category?.data?.map(item => ({
+const classData: ComputedRef<TagsListItem[]> = computed(() => dict.sys_common_category.data.map(item => ({
   label: item.dictLabel,
   value: item.dictValue as string
 })) || [])

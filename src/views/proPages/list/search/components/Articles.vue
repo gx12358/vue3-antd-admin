@@ -12,8 +12,9 @@ import { owners } from '../utils/config'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'
 
-const { dictState } = useDict('sys_common_author')
+useDict('sys_common_author')
 
+const { dict } = useStore()
 const { searchParams } = useSearchForm()
 const { loading: spinning } = useSearchListContext()
 
@@ -33,14 +34,14 @@ const {
 )
 
 const authorOptions = computed(() => [ owners ].concat(
-  dictState.sys_common_author?.data?.map(item => ({
+  dict.sys_common_author.data.map(item => ({
     label: item.dictLabel,
-    value: item.dictValue
-  })) || [] as any
+    value: item.dictValue as any
+  })) || []
 ))
-const authorFetchLoading = computed(() => dictState.sys_common_author?.loading === undefined
-  ? true
-  : dictState.sys_common_author?.loading)
+const authorFetchLoading = computed(() =>
+  dict.sys_common_author?.loading === undefined ? true : dict.sys_common_author?.loading
+)
 
 const filterOption = (input: string, option: { label: string; value: string; }) => {
   return option.label.toLowerCase().includes(input.toLowerCase())
@@ -109,7 +110,8 @@ watchEffect(() => {
             </div>
             <div class="flex items-center mt-16px">
               <a-avatar :src="item.avatar" size="small" />
-              <a class="ml-4px" :href="item.href">{{ item.owner }}</a> <span class="mx-4px">发布在</span> <a :href="item.href">{{ item.href }}</a>
+              <a class="ml-4px" :href="item.href">{{ item.owner }}</a>
+              <span class="mx-4px">发布在</span> <a :href="item.href">{{ item.href }}</a>
               <span class="ml-16px">{{ dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}</span>
             </div>
             <div class="mt-16px flex items-center text-hex-8c8c8c gap-16px">

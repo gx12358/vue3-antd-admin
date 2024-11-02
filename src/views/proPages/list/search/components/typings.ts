@@ -1,11 +1,11 @@
 export interface SearchState {
   pageNum?: number;
   pageSize?: number;
-  rate: string;
+  rate?: string;
   keyword?: string;
-  activeUser: string;
+  activeUser?: string;
   classList: string[];
-  authorList: string[];
+  authorList?: string[];
 }
 
 export interface TagsListItem {

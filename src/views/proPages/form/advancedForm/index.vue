@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProTableBodyCellProps, ProTableRef } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/form/advanced'
 import {
   addAdvancedFormTable,
@@ -10,16 +10,16 @@ import {
 } from '@/services/formCenter'
 import { handleOffsetTop } from '@/utils/util'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useForm } from '@gx-admin/hooks/system'
 import { defaultSettings } from '@gx-config'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
 import { useTable } from '@gx-design-vue/pro-table'
-import { hanndleField, scrollTo } from '@gx-design-vue/pro-utils'
+import { convertValueBoolean, hanndleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
-import { columns } from './utils/columns'
+import { ref } from 'vue'
+import { columns, type FormState } from './utils/columns'
 import { fieldLabels, rules } from './utils/config'
 
 const { viewScrollRoot } = defaultSettings
@@ -29,41 +29,35 @@ interface ErrorField {
   errors: string[]
 }
 
-interface FormState {
-  name: string;
-  url: string;
-  owner?: any;
-  approver?: any;
-  dateRange: any;
-  type?: any;
-  name2: string;
-  url2: string;
-  owner2?: any;
-  approver2?: any;
-  dateRange2?: any;
-  type2?: any;
-}
-
 const { user } = useStore()
 const { token } = useProConfigContext()
 
 const isMount = ref<boolean>(false)
 const tableRef = ref<ProTableRef>()
 
-const { dataSource, changeDataValue, reload, changeLoading } = useTable<TableRecord>(tableRef)
+const { dataSource, setData, reload, setLoading, tableState } = useTable<TableRecord, FormState>(tableRef, {
+  state: {
+    showLoading: false,
+    rowKey: 'id',
+    showIndex: false,
+    pagination: false,
+    columns
+  },
+  request: async (params) => {
+    const response = await getAdvancedFormTable<PageResult<TableRecord>>(params)
+    return {
+      success: !!response,
+      total: response.data?.totalCount || 0,
+      data: response?.data?.list || []
+    }
+  }
+})
 
 const state = reactive({
   editableData: {} as TableRecord,
   errorFields: [] as ErrorField[]
 })
-const tableState = reactive<ProTableProps>({
-  bordered: false,
-  options: false,
-  showLoading: false,
-  rowKey: 'id',
-  showIndex: false,
-  pagination: false
-})
+
 const formState = reactive<FormState>({
   name: '',
   url: '',
@@ -81,7 +75,7 @@ const formState = reactive<FormState>({
 
 const rulesRef = reactive({ ...rules })
 
-const { validate, validateInfos, resetFields } = useForm<FormState>(formState, rulesRef)
+const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, rulesRef)
 
 const { loading } = useRequest(getAdvancedForm, {
   params: {
@@ -116,7 +110,7 @@ const { loading } = useRequest(getAdvancedForm, {
           formState[i] = data[i] || undefined
           break
         default:
-          formState[i] = hanndleField(data[i], '').value
+          formState[i] = hanndleEmptyField(data[i], '').value
           break
       }
     }
@@ -127,15 +121,6 @@ onMounted(() => {
   isMount.value = true
 })
 
-const getTabelData: RequsetFunction<TableRecord> = async (params) => {
-  const response = await getAdvancedFormTable<PageResult<TableRecord>>(params)
-  return {
-    success: !!response,
-    total: response.data?.totalCount || 0,
-    data: response?.data?.list || []
-  }
-}
-
 const handelEdit = (key) => {
   state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))
 }
@@ -144,9 +129,9 @@ const handleSave = async (record: TableRecord) => {
   const response = await record.isMock
     ? addAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
     : updateAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
-  if (response) {
+  if (convertValueBoolean(response)) {
     message.success('操作成功')
-    await reload({ immediate: true })
+    await reload?.({ immediate: true })
     delete state.editableData[record.id]
   }
 }
@@ -157,25 +142,25 @@ const handleCancel = (key: number) => {
 
 const handleDelete = async (key: number) => {
   if (state.editableData[key]?.isMock) {
-    changeDataValue({ key: 'id', type: 'delete', params: { id: key } })
+    setData({ key: 'id', type: 'delete', record: { id: key } })
     delete state.editableData[key]
   } else {
-    changeLoading(true)
+    setLoading(true)
     const response = await deleteAdvancedFormTable({ id: key })
     if (response) {
       message.success('操作成功')
       await reload({ immediate: true })
       delete state.editableData[key]
     }
-    changeLoading(false)
+    setLoading(false)
   }
 }
 
 const handelTableAdd = () => {
   const key = dataSource.value.length + 1
-  changeDataValue({
+  setData({
     key: 'id',
-    params: {
+    record: {
       id: key,
       workId: '',
       name: '',
@@ -183,7 +168,7 @@ const handelTableAdd = () => {
       isMock: true,
       createTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
     },
-    type: 'add'
+    type: 'push'
   })
   nextTick(() => {
     state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))
@@ -394,8 +379,8 @@ const resetForm = () => {
           </a-row>
         </GProCard>
         <GProCard title="成员管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
-          <g-pro-table ref="tableRef" v-bind="tableState" :request="getTabelData" :columns="columns">
-            <template #bodyCell="{ column, record, text }: { column: ProColumnType, record: TableRecord, text: string }">
+          <g-pro-table ref="tableRef" v-bind="tableState">
+            <template #bodyCell="{ column, record, text }: ProTableBodyCellProps<TableRecord>">
               <template v-if="[ 'name', 'workId', 'department' ].includes(column.dataIndex as string)">
                 <div>
                   <a-input

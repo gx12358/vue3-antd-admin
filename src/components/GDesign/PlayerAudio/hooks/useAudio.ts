@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import { off, on } from '@gx-design-vue/pro-utils'
 import { onBeforeUnmount, onDeactivated, reactive } from 'vue'
 
-function useAudio(player: Ref<HTMLAudioElement>) {
+function useAudio(player: Ref<HTMLAudioElement | null>) {
   const eventRef = reactive({})
 
   function onEvent(el, event: string[], callback) {

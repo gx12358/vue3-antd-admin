@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-design-vue/pro-provider'
 import { getStepForm } from '@/services/formCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useForm } from '@gx-admin/hooks/system'
-import { hanndleField } from '@gx-design-vue/pro-utils'
+import { useProForm } from '@gx-design-vue/pro-provider'
+import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
 
 interface FormState {
   payAccount: string;
@@ -57,7 +57,7 @@ const rulesRef = reactive<Partial<RulesState<FormState>>>({
   ]
 })
 
-const { validate, validateInfos, resetFields } = useForm<FormState>(formState, rulesRef)
+const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, rulesRef)
 
 const { loading } = useRequest<FormState, { userId: number; }>(getStepForm, {
   params: {
@@ -67,10 +67,11 @@ const { loading } = useRequest<FormState, { userId: number; }>(getStepForm, {
     for (const i in formState) {
       switch (i) {
         case 'payAccount':
+          // @ts-ignore
           formState[i] = data[i] || undefined
           break
         default:
-          formState[i] = hanndleField(data[i], '').value
+          formState[i] = hanndleEmptyField(data[i], '').value
           break
       }
     }

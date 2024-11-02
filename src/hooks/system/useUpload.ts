@@ -9,11 +9,11 @@ export interface OssResponse {
 }
 
 export interface UploadConfig {
+  file: File;
+  type: 'image' | 'video';
   client?: any;
   name?: string;
   fullName?: string
-  file: File;
-  type: 'image' | 'video';
   checkpoint?: any;
   serverKey?: 'create' | 'content';
   progressCallback?: (progress: number, cpt: any) => void;
@@ -33,12 +33,7 @@ function handleOssResponse(data: any) {
   }
 }
 
-export type OssUpload = ({
-  client,
-  name,
-  file,
-  progressCallback
-}: UploadConfig) => Promise<OssResponse>
+export type OssUpload = (options: UploadConfig) => Promise<OssResponse>
 
 export function useUpload(): {
   simeUpload: ({ client, name, file }: UploadConfig) => Promise<OssResponse>;

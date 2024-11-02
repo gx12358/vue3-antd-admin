@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { useProForm } from '@gx-design-vue/pro-provider'
 import { cloneDeep } from 'lodash-es'
-import { useForm } from '@gx-admin/hooks/system'
+import { reactive, ref } from 'vue'
 
 const emits = defineEmits(['handleOk'])
 
@@ -12,12 +12,12 @@ const formItemLayout = {
   wrapperCol: { span: 21 }
 }
 
-const scrollRef = reactive({
+const formState = reactive({
   x: 1850,
   y: undefined
 })
 
-const { resetFields, validate, validateInfos } = useForm(scrollRef)
+const { resetFields, validate, validateInfos } = useProForm(formState)
 
 const resetModalState = () => {
   visible.value = false
@@ -31,7 +31,7 @@ const open = () => {
 const handleSubmit = () => {
   validate()
     .then(() => {
-      const params = cloneDeep(scrollRef)
+      const params = cloneDeep(formState)
       Object.keys(params).map((item) => {
         if (params[item]) {
           params[item] = Number(params[item])
@@ -67,7 +67,7 @@ defineExpose({
     <a-form v-bind="formItemLayout">
       <a-form-item label="x" v-bind="validateInfos.x">
         <a-input
-          v-model:value="scrollRef.x"
+          v-model:value="formState.x"
           style="width: 100%"
           placeholder="请输入横向x"
           allow-clear
@@ -75,7 +75,7 @@ defineExpose({
       </a-form-item>
       <a-form-item label="y" v-bind="validateInfos.y">
         <a-input
-          v-model:value="scrollRef.y"
+          v-model:value="formState.y"
           style="width: 100%"
           placeholder="请输入纵向y"
           allow-clear

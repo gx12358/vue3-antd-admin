@@ -1,7 +1,7 @@
-import mockjs from 'mockjs'
-import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, initContent } from '@gx-mock/util/table'
+import { getMockRequest } from '@gx-mock/util/utils'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 

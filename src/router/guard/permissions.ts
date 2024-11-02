@@ -50,7 +50,7 @@ export function createPermissionGuard(router: Router) {
         : await routeStore.setRoutes()
       if (routes?.length) {
         routes.forEach((route) => {
-          router.addRoute(route as RouteRecordRaw)
+          router.addRoute(route as unknown as RouteRecordRaw)
         })
 
         next({ path: to.fullPath, replace: true })

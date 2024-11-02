@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
-import { cloneDeep } from 'lodash-es'
-import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { initContent } from '@gx-mock/util/table'
+import { getMockRequest } from '@gx-mock/util/utils'
+import dayjs from 'dayjs'
+import { cloneDeep } from 'lodash-es'
 
 export type RulesListItem = {
   disabled?: boolean;
@@ -100,33 +100,36 @@ function getRule(params: RulesListSearchParams) {
 function postRule(body: Partial<RulesListItem>, type: 'delete' | 'add' | 'update') {
   const { name, desc, id, createTime } = body
   const i = Math.ceil(Math.random() * 10000)
-  const newRule: RulesListItem = {
+  const newRule: Partial<RulesListItem> = {
     id: dataSource.length,
     href: 'https://ant.design',
     avatar: [
       'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
       'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'
     ][i % 2],
-    name,
     owner: '曲丽丽',
-    desc,
     callNo: Math.floor(Math.random() * 1000),
     status: (Math.floor(Math.random() * 10) % 2).toString(),
     updateTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     progress: Math.ceil(Math.random() * 100)
   }
+  if (name) newRule.name = name
+  if (desc) newRule.desc = desc
   switch (type) {
     case 'delete':
       dataSource = dataSource.filter(item => id !== item.id)
       break
     case 'add':
-      dataSource.unshift(newRule)
+      dataSource.unshift(newRule as RulesListItem)
       break
     case 'update':
       dataSource = dataSource.map((item) => {
-        if (item.id === id)
-          return { ...item, desc, name, createTime }
+        if (item.id === id) {
+          if (name) item.name = name
+          if (desc) item.desc = desc
+          if (createTime) item.createTime = createTime || dayjs().format('YYYY-MM-DD HH:mm:ss')
+        }
         return item
       })
       break

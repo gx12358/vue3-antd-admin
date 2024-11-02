@@ -1,5 +1,5 @@
-import { getMockRequest } from '@gx-mock/util/utils'
 import { formState } from '@gx-mock/config/form'
+import { getMockRequest } from '@gx-mock/util/utils'
 
 export interface BasicFormState {
   title: string;

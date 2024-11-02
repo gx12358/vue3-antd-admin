@@ -1,7 +1,7 @@
-import { getMockRequest } from '@gx-mock/util/utils'
 import type { ListSearchParams } from '@gx-mock/util/table'
-import { handlePageList } from '@gx-mock/util/table'
 import { fakeList } from '@gx-mock/config/article'
+import { handlePageList } from '@gx-mock/util/table'
+import { getMockRequest } from '@gx-mock/util/utils'
 
 export interface Member {
   avatar: string;

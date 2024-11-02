@@ -67,6 +67,7 @@ declare global {
   const useStore: typeof import('../src/store/index')['useStore']
   const useStoreDict: typeof import('../src/store/index')['useStoreDict']
   const useStoreGlobal: typeof import('../src/store/index')['useStoreGlobal']
+  const useStoreLayout: typeof import('../src/store/index')['useStoreLayout']
   const useStoreOss: typeof import('../src/store/index')['useStoreOss']
   const useStorePermission: typeof import('../src/store/index')['useStorePermission']
   const useStoreRoutes: typeof import('../src/store/index')['useStoreRoutes']
@@ -81,6 +82,6 @@ declare global {
 // for type re-export
 declare global {
   // @ts-ignore
-  export type { Component, ComponentPublicInstance, ComputedRef, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, VNode, WritableComputedRef } from 'vue'
+  export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
 }

@@ -19,17 +19,17 @@ import { h, reactive, ref } from 'vue'
 
 const formRef = ref<ProFormRef>()
 
-const initValues = reactive<PublicFormState>({
+const initValues = reactive<Partial<PublicFormState>>({
   name: '',
   company: '',
-  count: null,
+  count: undefined,
   contract: '',
   createTime: [],
   useMode: undefined,
   unusedMode: undefined,
   phone: '',
   captcha: '',
-  id: null,
+  id: undefined,
   project: '',
   mangerName: '',
   area: [ 'zhejiang', 'hangzhou', 'xihu' ]

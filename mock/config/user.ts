@@ -1,5 +1,5 @@
-import mockjs from 'mockjs'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
+import mockjs from 'mockjs'
 import { groupList } from './group'
 import { permissions } from './permissions'
 

@@ -1,7 +1,7 @@
 import type { GImageProps } from '@gx-design-vue/image'
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { SlotsType } from 'vue'
-import { GImage, gImagePorps } from '@gx-design-vue/image'
+import { GImage, imagePorps } from '@gx-design-vue/image'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
 import { defineComponent } from 'vue'
 
@@ -16,7 +16,7 @@ export default defineComponent({
       type: String as VuePropType<string>,
       default: 'w-30px'
     },
-    ...gImagePorps
+    ...imagePorps
   },
   slots: Object as SlotsType<{
     placeholder: GImageProps['placeholder'];
@@ -24,7 +24,7 @@ export default defineComponent({
     renderHolder: WithFalse<CustomRender>;
   }>,
   setup(props, { slots, attrs }) {
-    const renderImage: () => any = () => (
+    const renderImage = () => (
       <div class={[ 'gx-image-slot', props.slotClass ]}>
         <img class={props.slotImageClass} src="/src/assets/public_images/placeholder.svg" alt="" />
       </div>

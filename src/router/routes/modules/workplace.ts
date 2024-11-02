@@ -5,9 +5,13 @@ const workplace: AppRouteModule = {
   name: 'Workplace',
   component: () => import('@/views/dashboard/workplace/index.vue'),
   meta: {
-    tagHidden: true,
-    hideInMenu: true,
-    homePage: 1,
+    order: 0,
+    iconFont: 'iconfont',
+    icon: 'gx-gongzuotai',
+    tabState: {
+      fixed: true
+    },
+    isHome: 1,
     title: '工作台'
   }
 }

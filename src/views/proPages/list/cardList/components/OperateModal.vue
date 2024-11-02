@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-design-vue/pro-provider'
 import type { CardListItemDataType } from '@gx-mock/datasSource/list/card'
 import GUpload from '@/components/GDesign/Upload'
 import { cardListOperate, getCardListDetails } from '@/services/listCenter'
-import { useForm } from '@gx-admin/hooks/system'
-import { hanndleField } from '@gx-design-vue/pro-utils'
+import { useProForm } from '@gx-design-vue/pro-provider'
+import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
 import { handleRandomImage } from '@gx-mock/util/utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
@@ -24,7 +24,7 @@ const skeletonLoading = ref(false)
 const userReadyFetch = ref(false)
 
 const formState = reactive<FormState>({
-  id: null,
+  id: undefined,
   title: '',
   avatar: '',
   description: ''
@@ -36,7 +36,7 @@ const ruleState = reactive<RulesState<FormState>>({
   description: [{ required: true, message: '请输入' }]
 })
 
-const { validate, validateInfos, resetFields } = useForm(formState, ruleState)
+const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
 
 const handleChange = (url: string[]) => {
   formState.avatar = url.join()
@@ -82,7 +82,7 @@ defineExpose({
               formState[key] = dayjs(response.data?.createTime)
               break
             default:
-              formState[key] = hanndleField(response?.data?.[key], '').value
+              formState[key] = hanndleEmptyField(response?.data?.[key], '').value
               break
           }
         }

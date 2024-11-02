@@ -13,10 +13,10 @@ const Progress = defineComponent({
 
     const { onEvent, removeAllEvent } = useAudio(context.player)
 
-    const input = ref<HTMLElement>()
-    const thumb = ref<HTMLElement>()
+    const input = ref<HTMLElement | null>(null)
+    const thumb = ref<HTMLElement | null>(null)
 
-    const _dragEl = ref<HTMLElement>()
+    const _dragEl = ref<HTMLElement | null>(null)
 
     const progress = ref(0)
     const bufferProgress = ref(0)
@@ -26,8 +26,9 @@ const Progress = defineComponent({
     const progressStyle = computed(() => {
       if (progress.value === 0 || progress.value === 100 || preOperationType.value === 'click') {
         return `${progress.value}%`
-      } else { return `calc(${progress.value}% - 6px)`
-}
+      } else {
+        return `calc(${progress.value}% - 6px)`
+      }
     })
 
     function timeUpdate() {
@@ -82,47 +83,50 @@ const Progress = defineComponent({
 
     const initDrag = (e) => {
       e.preventDefault()
-      preOperationType.value = 'move'
-      currentMoveType.value = 'start'
-      _dragEl.value = thumb.value
-      const maxVal = input.value.offsetWidth
-      let marginLeft = getComputedStyle(_dragEl.value, null).marginLeft.includes('px')
-        ? Number(getComputedStyle(_dragEl.value, null).marginLeft.split('px')[0])
-        : Number(getComputedStyle(_dragEl.value, null).marginLeft)
-      if (marginLeft) {
-        marginLeft = Number.parseFloat(`${marginLeft}`)
-      }
 
-      const coor = {
-        x: e.pageX - _dragEl.value.offsetLeft + marginLeft,
-        y: e.clientY - _dragEl.value.offsetTop,
-        maxLeft: maxVal
-      }
-
-      const move = function (ev) {
-        if (!_dragEl.value) {
-          return
+      if (thumb.value && input.value) {
+        preOperationType.value = 'move'
+        currentMoveType.value = 'start'
+        _dragEl.value = thumb.value
+        const maxVal = input.value.offsetWidth
+        let marginLeft = getComputedStyle(_dragEl.value, null).marginLeft.includes('px')
+          ? Number(getComputedStyle(_dragEl.value, null).marginLeft.split('px')[0])
+          : Number(getComputedStyle(_dragEl.value, null).marginLeft)
+        if (marginLeft) {
+          marginLeft = Number.parseFloat(`${marginLeft}`)
         }
-        currentMoveType.value = 'move'
-        const newCoor = drag(ev, _dragEl.value, coor)
-        if (newCoor) {
-          const left = newCoor.left
-          const val = Number(((left / maxVal) * 100 + 4.5).toFixed(2))
-          progress.value = val < 0 ? 0 : val > 100 ? 100 : val
-          const duration = context.player.value.duration || 0
-          context.player.value.currentTime = (val / 100) * duration
+
+        const coor = {
+          x: e.pageX - _dragEl.value.offsetLeft + marginLeft,
+          y: e.clientY - _dragEl.value.offsetTop,
+          maxLeft: maxVal
         }
-      }
 
-      const stopMove = function () {
-        _dragEl.value = null
-        currentMoveType.value = 'end'
-        document.removeEventListener('mousemove', move, false)
-        document.removeEventListener('mouseup', stopMove, false)
-      }
+        const move = function (ev) {
+          if (!_dragEl.value) {
+            return
+          }
+          currentMoveType.value = 'move'
+          const newCoor = drag(ev, _dragEl.value, coor)
+          if (newCoor) {
+            const left = newCoor.left
+            const val = Number(((left / maxVal) * 100 + 4.5).toFixed(2))
+            progress.value = val < 0 ? 0 : val > 100 ? 100 : val
+            const duration = context.player.value.duration || 0
+            context.player.value.currentTime = (val / 100) * duration
+          }
+        }
 
-      document.addEventListener('mousemove', move, false)
-      document.addEventListener('mouseup', stopMove, false)
+        const stopMove = function () {
+          _dragEl.value = null
+          currentMoveType.value = 'end'
+          document.removeEventListener('mousemove', move, false)
+          document.removeEventListener('mouseup', stopMove, false)
+        }
+
+        document.addEventListener('mousemove', move, false)
+        document.addEventListener('mouseup', stopMove, false)
+      }
     }
 
     const handleMouseDown = e => initDrag(e)

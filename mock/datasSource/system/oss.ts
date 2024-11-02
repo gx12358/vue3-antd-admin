@@ -1,5 +1,5 @@
-import dayjs from 'dayjs'
 import { checkBackDataFun, getRequestToken } from '@gx-mock/_util'
+import dayjs from 'dayjs'
 
 export default [
   {

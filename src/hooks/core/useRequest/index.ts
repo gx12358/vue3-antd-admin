@@ -1,5 +1,5 @@
 import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
-import type { MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
+import type { ComputedRef, MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { useThrottleFn } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
@@ -7,10 +7,12 @@ import { computed, isReactive, isRef, reactive, ref, watch } from 'vue'
 
 type DefaultToT<T, R> = R extends undefined ? T : R
 
-function useRequest<T, P = any, R = undefined, >(
+export type SearchParams <P extends object = Record<string, undefined>> = MaybeRef<P> | ComputedRef<P>
+
+function useRequest<T, P extends object = Record<string, undefined>, R = undefined, >(
   service: (opt: P, config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T>>,
   options: {
-    params?: MaybeRef<P>;
+    params?: SearchParams<P>;
     stopWatchParams?: MaybeRef<boolean>;
     defaultData?: DefaultToT<T, R>;
     requestConfig?: Partial<GAxiosOptions>;
@@ -27,15 +29,15 @@ function useRequest<T, P = any, R = undefined, >(
 ) {
   const [ loading, setLoading ] = useState(!!options.defaultLoading)
 
-  const data = ref<DefaultToT<T, R>>(options?.defaultData)
+  const data = ref<DefaultToT<T, R>>(options?.defaultData as DefaultToT<T, R>)
 
-  const state = reactive<{ params: MaybeRef<P> }>({
+  const state = reactive<{ params: P }>({
     params: (isRef(options.params) ? options.params?.value : options.params) || {} as P
   })
 
   const requestCancel: Partial<CancelOptions> = {
-    cancel: null,
-    cancelAll: null
+    cancel: undefined,
+    cancelAll: undefined
   }
 
   const ready = computed(() =>
@@ -45,7 +47,7 @@ function useRequest<T, P = any, R = undefined, >(
     isRef(options?.stopWatchParams) ? options?.stopWatchParams?.value : options?.stopWatchParams)
 
   const mergeParams = (opt?: P) => Object.assign(
-    state.params,
+    state.params as P,
     {
       ...(opt || {}), ...((isRef(options.params)
         ? options.params?.value as P

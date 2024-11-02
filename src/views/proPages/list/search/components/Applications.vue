@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProTableRef } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
+import type { SearchState } from './typings'
 import { getArticleList } from '@/services/listCenter'
 import { toConvertNumberShow } from '@/utils/util'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { GProTable, useTable } from '@gx-design-vue/pro-table'
+import { useTable } from '@gx-design-vue/pro-table'
 import { useSearchListContext } from '../context'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'
@@ -26,30 +27,28 @@ const state = reactive({
   }
 })
 
-const { loading } = useTable(tableRef)
-
-const tableState = reactive<Partial<ProTableProps>>({
-  rowKey: 'id',
-  options: false,
-  params: { ...searchParams },
-  pagination: {
-    current: 1,
-    pageSize: 8
+const { loading, tableState } = useTable<ListItemDataType, SearchState>(tableRef, {
+  state: {
+    rowKey: 'id',
+    params: { ...searchParams },
+    pagination: {
+      current: 1,
+      pageSize: 8
+    }
+  },
+  request: async (params) => {
+    const response = await getArticleList<PageResult<ListItemDataType>>(params)
+    return {
+      success: !!response,
+      data: response?.data?.list || [],
+      total: response?.data?.totalCount || 0
+    }
   }
 })
 
 watch(() => searchParams, () => {
   Object.assign(tableState.params, { ...searchParams })
 }, { deep: true })
-
-const getTableRequest: RequsetFunction<ListItemDataType> = async (params) => {
-  const response = await getArticleList<PageResult<ListItemDataType>>(params)
-  return {
-    success: !!response,
-    data: response?.data?.list || [],
-    total: response?.data?.totalCount || 0
-  }
-}
 
 watchEffect(() => {
   spinning.value = loading?.value
@@ -61,7 +60,7 @@ watchEffect(() => {
     <CommonSearch v-model:state="searchParams" :disabled="loading === undefined ? true : loading" />
   </GProCard>
   <GProCard class="mt-24px">
-    <GProTable ref="tableRef" v-bind="tableState" :request="getTableRequest">
+    <g-pro-table ref="tableRef" v-bind="tableState">
       <template #customRender="dataSource: ListItemDataType[]">
         <a-list
           row-key="id"
@@ -123,7 +122,7 @@ watchEffect(() => {
           </template>
         </a-list>
       </template>
-    </GProTable>
+    </g-pro-table>
   </GProCard>
 </template>
 

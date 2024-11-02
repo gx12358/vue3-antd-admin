@@ -1,6 +1,7 @@
 import type { ProColumnsType } from '@gx-design-vue/pro-table'
+import type { CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
 
-export const goodsColumns: ProColumnsType = [
+export const goodsColumns: ProColumnsType<Partial<CommodityRecord>> = [
   {
     title: '数量（件）',
     dataIndex: 'num',
@@ -15,7 +16,7 @@ export const goodsColumns: ProColumnsType = [
   }
 ]
 
-export const scheduleColumns: ProColumnsType = [
+export const scheduleColumns: ProColumnsType<Partial<ScheduleRecord>> = [
   {
     title: '时间',
     dataIndex: 'time',

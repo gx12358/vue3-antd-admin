@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-design-vue/pro-provider'
 import type { UserList } from '@gx-mock/config/user'
 import type { BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
 import type { Dayjs } from 'dayjs'
@@ -7,8 +7,8 @@ import Empty from '@/components/GlobalLayout/Empty/index.vue'
 import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
 import { getUserList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useForm } from '@gx-admin/hooks/system'
-import { hanndleField } from '@gx-design-vue/pro-utils'
+import { useProForm } from '@gx-design-vue/pro-provider'
+import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
@@ -16,7 +16,7 @@ import { reactive } from 'vue'
 
 type FormState = Partial<BasicListItemDataType> & {
   ownerId?: number;
-  createTimeDay?: Dayjs;
+  createTimeDay?: Dayjs | null;
 }
 
 const emit = defineEmits<{
@@ -30,12 +30,11 @@ const skeletonLoading = ref(false)
 const userReadyFetch = ref(false)
 
 const formState = reactive<FormState>({
-  id: null,
   title: '',
   createTime: null,
   createTimeDay: null,
   owner: '',
-  ownerId: null,
+  ownerId: undefined,
   subDescription: ''
 })
 
@@ -45,7 +44,7 @@ const ruleState = reactive<RulesState<FormState>>({
   ownerId: [ { required: true, message: '请选择任务负责人' } ]
 })
 
-const { validate, validateInfos, resetFields } = useForm(formState, ruleState)
+const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
 
 const { loading, data: userList } = useRequest<UserList[]>(getUserList, {
   manual: true,
@@ -67,7 +66,7 @@ const handleOk = () => {
       ...formState,
       createTime: dayjs(formState.createTimeDay).format('YYYY-MM-DD HH:mm:ss'),
       owner: userList.value.find(item => item.id === formState.ownerId)?.name
-    }, [ formState?.id ? '' : 'id', 'createTimeDay' ]))
+    }, 'createTimeDay'))
     
     if (response) {
       message.success('操作成功')
@@ -93,7 +92,7 @@ defineExpose({
               formState[key] = dayjs(response.data?.createTime)
               break
             default:
-              formState[key] = hanndleField(response?.data?.[key], '').value
+              formState[key] = hanndleEmptyField(response?.data?.[key], '').value
               break
           }
         }
@@ -125,7 +124,7 @@ defineExpose({
         />
       </a-form-item>
       <a-form-item label="任务名称" v-bind="validateInfos.createTimeDay">
-        <a-date-picker v-model:value="formState.createTimeDay" style="width: 100%" show-time />
+        <a-date-picker v-model:value="formState.createTimeDay as any" style="width: 100%" show-time />
       </a-form-item>
       <a-form-item label="任务负责人" v-bind="validateInfos.ownerId">
         <a-select

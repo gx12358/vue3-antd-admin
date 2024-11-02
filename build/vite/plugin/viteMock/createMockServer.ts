@@ -58,7 +58,7 @@ export async function requestMiddleware(opt: ViteMockOptions) {
       if (item.method && item.method.toUpperCase() !== req.method) {
         return false
       }
-      return pathToRegexp(item.url).test(reqUrl)
+      return pathToRegexp(item.url).regexp.test(reqUrl)
     })
 
     if (matchRequest) {
@@ -122,7 +122,7 @@ function createWatch(opt: ViteMockOptions, config: ResolvedConfig) {
     return
   }
 
-  const watchDir = []
+  const watchDir: any[] = []
   const exitsConfigPath = fs.existsSync(absConfigPath)
 
   exitsConfigPath && configPath ? watchDir.push(absConfigPath) : watchDir.push(absMockPath)
@@ -201,7 +201,7 @@ async function getMockConfig(opt: ViteMockOptions, config: ResolvedConfig) {
     })
   try {
     ret = []
-    const resolveModulePromiseList = []
+    const resolveModulePromiseList: any[] = []
 
     for (let index = 0; index < mockFiles.length; index++) {
       const mockFile = mockFiles[index]

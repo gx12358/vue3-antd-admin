@@ -1,7 +1,9 @@
+import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
 import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
+import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
-import { reactive, toRefs } from 'vue'
+import { toRefs } from 'vue'
 
 export interface ClientDetails {
   bucket?: string;
@@ -30,8 +32,14 @@ export interface OssInfoState {
   clientDetails: Partial<ClientDetails>;
 }
 
-export const useStoreOss = defineStore('oss', () => {
-  const state = reactive<OssInfoState>({
+type OssStoreValue = PiniaStoreValue<OssInfoState, {
+  clearOss: () => void;
+  queryOssToken: () => Promise<void>;
+  getOssToken: (params?: ClientDetails) => Promise<ClientDetails>;
+}>
+
+export const useStoreOss = defineStore<'oss', OssStoreValue>('oss', () => {
+  const [ state, setValue ] = useReactiveState<OssInfoState, OssInfoState>({
     ossInfos: {
       bucket: '',
       region: ''
@@ -41,54 +49,70 @@ export const useStoreOss = defineStore('oss', () => {
   })
 
   const initClient = () => {
-    state.ossClient = {
-      ...state.clientDetails,
-      ...state.ossInfos
-    }
+    setValue({
+      ossClient: {
+        ...state.clientDetails,
+        ...state.ossInfos
+      }
+    })
   }
+
   const queryOssToken = async () => {
     if (!state.ossInfos.bucket && !state.ossInfos.region) {
       const ossBucket: ResponseResult<{
         bucket: string;
         region: string;
       }> = await getUplaodInfos()
-      state.ossInfos.bucket = ossBucket.data?.bucket
-      state.ossInfos.region = ossBucket.data?.region
+      setValue({
+        ossInfos: {
+          bucket: ossBucket.data?.bucket,
+          region: ossBucket.data?.region
+        }
+      })
     }
     const response: ResponseResult<ClientDetails> = await getOssClient()
     if (response) {
       const details = response?.data || {}
       if (Object.keys(details).length) {
-        state.clientDetails = {
-          stsToken: details.securityToken,
-          accessKeyId: details.accessKeyId,
-          accessKeySecret: details.accessKeySecret,
-          expiration: details.expiration
-            ? dayjs(details.expiration).format('YYYY-MM-DD HH:mm:ss')
-            : dayjs().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss')
-        }
+        setValue({
+          clientDetails: {
+            stsToken: details.securityToken,
+            accessKeyId: details.accessKeyId,
+            accessKeySecret: details.accessKeySecret,
+            expiration: details.expiration
+              ? dayjs(details.expiration).format('YYYY-MM-DD HH:mm:ss')
+              : dayjs().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss')
+          }
+        })
         initClient()
       }
     }
   }
-  const handleExpired = (date: string) => {
+
+  const handleExpired = (date?: string) => {
+    if (!date) return false
     const endTime = dayjs(date).subtract(2, 'minute')
     return dayjs().isBefore(endTime)
   }
-  const getOssToken = async (params?: ClientDetails) => {
+
+  const getOssToken = async (params: ClientDetails = {}): Promise<ClientDetails> => {
     if (state.clientDetails.stsToken && handleExpired(state.clientDetails.expiration)) {
-      return { ...state.clientDetails, ...(params || {}) }
+      return { ...state.clientDetails, ...params }
     }
     await queryOssToken()
-    return { ...state.clientDetails, ...(params || {}) }
+    return { ...state.clientDetails, ...params }
   }
+
   const clearOss = () => {
-    state.ossClient = {}
-    state.clientDetails = {}
+    setValue({
+      ossClient: {},
+      clientDetails: {},
+    })
   }
 
   return {
     ...toRefs(state),
+    setValue,
     clearOss,
     getOssToken,
     queryOssToken

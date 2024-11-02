@@ -67,7 +67,9 @@ const xhtInstance: XhtInstance = {
       if (config.isMock) {
         config.url = `${mockPrefixUrl}${config.url}`
       } else {
-        config.url = `${typeViteEnv('VITE_BASE_URL')}${isDev ? requestPrefix || '' : ''}${config.url}`
+        config.url = `${typeViteEnv('VITE_BASE_URL')}${isDev()
+          ? requestPrefix || ''
+          : ''}${config.url}`
       }
     }
 
@@ -80,8 +82,15 @@ const xhtInstance: XhtInstance = {
   requestInterceptors: (config) => {
     const user = useStoreUser()
     const carryToken = isBoolean(config.carryToken) ? config.carryToken : true
-    if (user.accessToken && carryToken)
-      config.headers[tokenName] = user.accessToken
+    if (user.accessToken && carryToken) {
+      if (config.headers) {
+        config.headers[tokenName] = user.accessToken
+      } else {
+        config.headers = {
+          [tokenName]: user.accessToken
+        }
+      }
+    }
     return config
   },
 
@@ -99,7 +108,7 @@ const xhtInstance: XhtInstance = {
     const { response } = error
     let errorMessage = error.message || ''
     if (error.response && error.response.data) {
-      const { status } = response
+      const { status = 404 } = response || {}
       handleCode(status, errorMessage)
       return Promise.resolve(false)
     } else {
@@ -139,6 +148,7 @@ function createXhr(opt?: Partial<GAxiosOptions>) {
   })
 }
 
-const request: <T = any, R = undefined>(opt?: GAxiosOptions) => Promise<ResponseResult<T, R>> = opt => createXhr().request(opt)
+const request: <T = any, R = undefined>(opt?: GAxiosOptions) => Promise<ResponseResult<T, R>> = opt => createXhr()
+  .request(opt)
 
 export default request

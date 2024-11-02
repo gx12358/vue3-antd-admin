@@ -1,6 +1,34 @@
-## 3.0.4(2024-09.06)
+## 3.0.6 (2024-11-02)
 
-## 升级说明
+## Upgrade instructions
+
+### ✨ CHORE
+
+- **Plugins**
+  - `@gx-design-pro/pro-table` optimized type hints for the `useTable` hooks and refactored.
+  - `@gx-design-pro/pro-layout`
+    - Added multiple variables to `layout-token` for easier theme customization.
+    - Fixed theme color issues not applying in multimode.
+    - Introduced the `ProAppPage` component to simplify system usage.
+  - `@gx-design-pro/image`
+    - Refactored several API methods.
+    - Redesigned the `ImagePreview` component with style adjustments.
+  - Updated versions of multiple plugins.
+
+### ✨ FIX
+
+- **Pro Table**
+  - Refactored code in response to the `useTable` upgrade.
+- **Store**
+  - Used the `useReactiveState` hooks method and `PiniaStoreValue` type to improve type hints for `useStore`.
+- **useForm**
+  - Changed `ant`'s `useForm` to `useProForm` for improved type hints.
+- **ESLint**
+  - Adopted the `@antfu/eslint-config` plugin and formatted the global code.
+
+## 3.0.5(2024-09.06)
+
+## Upgrade instructions
 
 ### ✨ CHORE
 
@@ -18,7 +46,7 @@
 
 ## 3.0.4(2024-07.01)
 
-## 升级说明
+## Upgrade instructions
 
 ### ✨ CHORE
 

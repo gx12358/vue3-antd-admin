@@ -1,6 +1,6 @@
 <script setup lang="ts" name="TableList">
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
-import type { RulesListItem, RulesListSearchParams } from '@gx-mock/datasSource/list/rule'
+import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
+import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { deleteRules, getRulesList } from '@/services/listCenter'
 import { useTable } from '@gx-design-vue/pro-table'
@@ -14,21 +14,34 @@ const isMounted = useMounted()
 
 const operate = ref()
 const preview = ref()
-const tableRef = ref<ProTableRef>()
+const tableRef = ref()
 
-const { selectedKey, changeLoading, reload } = useTable<RulesListItem>(tableRef)
-
-const tableState = reactive<ProTableProps>({
-  headerTitle: '查询表格',
-  columns,
-  bordered: false,
-  showIndex: false,
-  rowKey: 'id',
-  pagination: {
-    pageSize: 20
+const { selectedKey, setLoading, reload, tableState } = useTable<RulesListItem>(tableRef, {
+  state: {
+    headerTitle: '查询表格',
+    columns,
+    bordered: false,
+    showIndex: false,
+    rowKey: 'id',
+    pagination: {
+      pageSize: 20
+    },
+    rowSelection: {
+      selectedRowKeys: []
+    }
   },
-  rowSelection: {
-    selectedRowKeys: []
+  request: async (params, sorter: SorterResult) => {
+    const response = await getRulesList<PageResult<RulesListItem>>({
+      ...params,
+      sortOrder: sorter?.order,
+      sortField: sorter?.columnKey
+    })
+    
+    return {
+      success: !!response,
+      total: response.data?.totalCount,
+      data: response?.data?.list || []
+    }
   }
 })
 
@@ -36,37 +49,20 @@ onActivated(() => {
   reload?.()
 })
 
-const getTableData: RequsetFunction<RulesListItem, RulesListSearchParams> = async (
-  params,
-  sorter: SorterResult
-) => {
-  const response = await getRulesList<PageResult<RulesListItem>>({
-    ...params,
-    sortOrder: sorter?.order || '',
-    sortField: sorter?.columnKey
-  })
-  
-  return {
-    success: !!response,
-    total: response.data?.totalCount,
-    data: response?.data?.list || []
-  }
-}
-
 const removeTableRule = async (id: number) => {
-  changeLoading(true)
+  setLoading(true)
   const response = await deleteRules({ id })
   if (response) {
     message.success('操作成功！')
     await reload({ immediate: true, removeKeys: [ id ] })
   }
-  changeLoading(false)
+  setLoading(false)
 }
 </script>
 
 <template>
   <g-pro-page-container>
-    <g-pro-table ref="tableRef" v-bind="tableState" :request="getTableData">
+    <g-pro-table ref="tableRef" v-bind="tableState">
       <template #headerCell="{ column }">
         <template v-if="column.dataIndex === 'name'">
           规则名称
@@ -83,7 +79,7 @@ const removeTableRule = async (id: number) => {
           新建
         </a-button>
       </template>
-      <template #bodyCell="{ column, record }: { column: ProColumnType, record: RulesListItem }">
+      <template #bodyCell="{ column, record }: ProTableBodyCellProps<RulesListItem>">
         <template v-if="column.dataIndex === 'name'">
           <a v-if="record.name" @click="preview?.open(record)">{{ record.name }}</a>
           <template v-else>
@@ -117,7 +113,7 @@ const removeTableRule = async (id: number) => {
           <span>{{ selectedKey.length }}</span>
           <span>项</span>
         </div>
-        <a @click="tableState.rowSelection.selectedRowKeys = []">取消选择</a>
+        <a @click="tableState.rowSelection && (tableState.rowSelection.selectedRowKeys = [])">取消选择</a>
       </div>
     </Teleport>
     <OperateModal ref="operate" @ok="reload" />

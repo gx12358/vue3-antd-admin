@@ -1,12 +1,12 @@
-import dayjs from 'dayjs'
-import mockjs from 'mockjs'
-import { groupList } from '@gx-mock/config/group'
 import type { GroupListItem } from '@gx-mock/datasSource/group'
 import type { ListItemDataType } from '@gx-mock/datasSource/list'
-import { getArraryList, getMockRequest } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
-import { compareToMaxTime, handlePageList, initContent } from '@gx-mock/util/table'
 import { fakeList } from '@gx-mock/config/article'
+import { groupList } from '@gx-mock/config/group'
+import { compareToMaxTime, handlePageList, initContent } from '@gx-mock/util/table'
+import { getArraryList, getMockRequest } from '@gx-mock/util/utils'
+import dayjs from 'dayjs'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 

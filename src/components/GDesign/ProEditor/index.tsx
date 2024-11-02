@@ -1,4 +1,4 @@
-import type { EditorEvent, RawEditorSettings, Editor as TinyMCEEditor } from 'tinymce'
+import type { EditorEvent, RawEditorOptions, Editor as TinyMCEEditor } from 'tinymce'
 import type { Ref } from 'vue'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
@@ -40,12 +40,12 @@ const Editor = defineComponent({
       suffixCls: 'editor',
       isPor: true
     })
-    let conf = props.init ? { ...(props.init || {}) as RawEditorSettings } : {}
+    let conf = props.init ? { ...(props.init || {}) as RawEditorOptions } : {}
     const { disabled, modelValue, tagName } = toRefs(props)
     const element: Ref<Element | null> = ref(null)
     let vueEditor: any = null
     const elementId: string = props.id || uuid('tiny-vue')
-    const inlineEditor: boolean = (props.init && (props.init as RawEditorSettings)?.inline) || props.inline
+    const inlineEditor: boolean = (props.init && (props.init as RawEditorOptions)?.inline) || props.inline
     const modelBind = !!ctx.attrs['onUpdate:modelValue']
     let mounting = true
     const initialValue: string = props.initialValue ? props.initialValue : ''
@@ -64,7 +64,7 @@ const Editor = defineComponent({
         branding: false,
         readonly: props.disabled,
         selector: `#${elementId}`,
-        plugins: mergePlugins(conf.plugins, props.plugins),
+        plugins: mergePlugins(conf.plugins as any, props.plugins),
         toolbar: props.toolbar || conf.toolbar,
         inline: inlineEditor,
         setup: (editor: TinyMCEEditor) => {
@@ -76,7 +76,7 @@ const Editor = defineComponent({
             conf.setup(editor)
           }
         }
-      }
+      } as RawEditorOptions
       if (isTextarea(element.value)) {
         element.value.style.visibility = ''
       }
@@ -115,7 +115,7 @@ const Editor = defineComponent({
         getTinymce()?.remove(vueEditor)
       })
     }
-    const rerender = (init: RawEditorSettings) => {
+    const rerender = (init: RawEditorOptions) => {
       cache = vueEditor.getContent()
       getTinymce()?.remove(vueEditor)
       conf = { ...conf, ...init }

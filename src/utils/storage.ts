@@ -2,7 +2,7 @@ import { Decrypt, Encrypt } from '@/utils/crypto'
 import { isPro, typeViteEnv } from '@/utils/env'
 import { isJSONStr } from '@/utils/validate'
 import { defaultSettings } from '@gx-config'
-import { isObject } from '@gx-design-vue/pro-utils'
+import { isNumber, isObject, isString } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
 
 const { shortName } = defaultSettings
@@ -38,27 +38,37 @@ export function getStorageKey(key: string, originKey?: boolean) {
  */
 export function getStorage({
   key,
-  encryption = true,
-  type = 'localStorage',
-  originKey
-}: { key: string, encryption?: boolean, type?: SettingConfig['storage'], originKey?: boolean }) {
-  const storageValue = type === 'localStorage'
-    ? localStorage.getItem(getStorageKey(key, originKey)) : type === 'sessionStorage'
-      ? sessionStorage.getItem(getStorageKey(key, originKey))
-      : getCookie(
-        getStorageKey(key, originKey))
+  originKey,
+  type = 'local',
+  encryption = true
+}: {
+  key: string;
+  encryption?: boolean;
+  type?: 'local' | 'cookie' | 'session';
+  originKey?: boolean;
+}) {
+  const storageValue = type === 'local'
+    ? localStorage.getItem(getStorageKey(key, originKey))
+    : type === 'session' ? sessionStorage.getItem(getStorageKey(key, originKey)) : getCookie(
+      getStorageKey(
+        key,
+        originKey
+      ))
   const result: string | LocalResult = storageValue
-    ? isEncryption(encryption) ? Decrypt(storageValue) : handleStorageValue(storageValue) : ''
+    ? isEncryption(encryption) ? Decrypt(storageValue) : handleStorageValue(storageValue)
+    : ''
   if (result && isObject(result)) {
     if (result.expired) {
       const expiredStatus = dayjs().diff(dayjs(result.time)) >= result.expired
       if (expiredStatus) {
-        removeStorage(key, type)
+        removeStorage({ key, originKey, type })
         return ''
       }
     }
+  } else if (result && isString(result)) {
+    return isJSONStr(result) ? result : ''
   }
-  return result?.['value'] || result || ''
+  return typeof result === 'string' ? result : result?.['value'] || result || ''
 }
 
 /**
@@ -72,26 +82,27 @@ export function setStorage({
   value,
   expired,
   originKey,
-  encryption = true,
-  type = 'local'
+  type = 'local',
+  encryption = true
 }: {
   key: string;
   value: any;
   originKey?: boolean;
   expired?: number;
   encryption?: boolean;
-  type?: string;
+  type?: 'local' | 'cookie' | 'session';
 }) {
   const result: LocalResult = originKey ? value : {
     value,
     time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     expired: expired || 0
   }
-  const storageValue = isEncryption(encryption) ? Encrypt(JSON.stringify(result)) : JSON.stringify(
-    result)
-  if (type === 'local')
-    localStorage.setItem(getStorageKey(key, originKey), storageValue)
-  sessionStorage.setItem(getStorageKey(key, originKey), storageValue)
+  const storageValue = isEncryption(encryption)
+    ? Encrypt(JSON.stringify(result))
+    : isString(result) || isNumber(result) ? result : JSON.stringify(result)
+  if (type === 'local') localStorage.setItem(getStorageKey(key, originKey), storageValue)
+  else if (type === 'cookie') setCookie(getStorageKey(key, originKey), storageValue)
+  else sessionStorage.setItem(getStorageKey(key, originKey), storageValue)
 }
 
 /**
@@ -100,10 +111,18 @@ export function setStorage({
  * @lastTime    2019/12/3
  * @description 删除Storage
  */
-export function removeStorage(key: string, type = 'local', originKey?: boolean) {
-  if (type === 'local')
-    localStorage.removeItem(getStorageKey(key, originKey))
-  sessionStorage.removeItem(getStorageKey(key, originKey))
+export function removeStorage({
+  key,
+  originKey,
+  type = 'local'
+}: {
+  key: string;
+  originKey?: boolean;
+  type?: 'local' | 'cookie' | 'session';
+}) {
+  if (type === 'local') localStorage.removeItem(getStorageKey(key, originKey))
+  else if (type === 'cookie') delCookie(getStorageKey(key, originKey))
+  else sessionStorage.removeItem(getStorageKey(key, originKey))
 }
 
 /**

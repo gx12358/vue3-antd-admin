@@ -19,7 +19,7 @@ const GPlayerAudio = defineComponent({
       suffixCls: 'audio'
     })
 
-    const player = ref<HTMLAudioElement>()
+    const player = ref<HTMLAudioElement | null>(null)
     const loading = ref(false)
     const isError = ref(false)
     const isPlaying = ref(false)
@@ -32,7 +32,7 @@ const GPlayerAudio = defineComponent({
       return props.src as string
     })
 
-    const audioInfo: ComputedRef<AudioSource> = computed(() => {
+    const audioInfo = computed<AudioSource | null>(() => {
       if (isArray(props.src))
         return (props.src as AudioSource[])?.[0] || null
       return null
@@ -59,11 +59,11 @@ const GPlayerAudio = defineComponent({
     })
 
     const play = () => {
-      player.value.play()
+      if (player.value) player.value.play()
     }
 
     const pause = () => {
-      player.value.pause()
+      if (player.value) player.value.pause()
     }
 
     const changePlayOrPause = () => {

@@ -15,7 +15,7 @@ export class AxiosCanceler {
   constructor(ignoreCancel?: boolean) {
     this.pendingMap = new Map<string, Canceler>()
 
-    this.ignoreCancelToken = ignoreCancel
+    this.ignoreCancelToken = !!ignoreCancel
   }
 
   /**

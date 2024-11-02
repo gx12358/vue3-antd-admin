@@ -15,7 +15,7 @@ const LayoutMap = new Map<string, any>()
 LayoutMap.set('BasicLayout', BasicLayout)
 LayoutMap.set('IframeView', IframeView)
 
-let dynamicViewsModules: Record<string, () => Promise<Recordable>>
+let dynamicViewsModules: Record<string, () => Promise<Record<string, any>>>
 
 /**
  * @Author      gx12358
@@ -41,7 +41,7 @@ function asyncImportRoute(component: string) {
 }
 
 function dynamicImport(
-  dynamicViewsModules: Record<string, () => Promise<Recordable>>,
+  dynamicViewsModules: Record<string, () => Promise<Record<string, any>>>,
   component: string
 ) {
   const keys = Object.keys(dynamicViewsModules)
@@ -82,7 +82,7 @@ function dynamicImport(
  */
 export function getRootMenu(rows: MenuDataItem[]): MenuDataItem[] {
   let menus: MenuDataItem[] = []
-  if (getMaxFloor(cloneDeep(rows)) > 1) {
+  if (getMaxFloor(rows) > 1) {
     menus = buildMenu(rows)
   } else {
     buildtree(rows, menus, 0)
@@ -91,11 +91,12 @@ export function getRootMenu(rows: MenuDataItem[]): MenuDataItem[] {
   rootRouter[0].children.push({
     key: 'externalLink',
     path: '/externalLink',
+    name: 'ExternalLink',
+    hidden: true,
     meta: {
       title: '外链地址'
-    },
-    hidden: true
-  } as MenuDataItem)
+    }
+  })
   return cloneDeep(rootRouter)
 }
 
@@ -111,38 +112,39 @@ export const generator = (routerMap: MenuDataItem[], parent?: AppRouteModule) =>
     const currentRouter: AppRouteModule = {
       // 路由地址 动态拼接生成如 /dashboard/workplace
       path: parentPath
-        ? `${parent.path === '/' ? '' : parentPath}/${item.path}`
+        ? `${parent?.path === '/' ? '' : parentPath}/${item.path}`
         : `/${item.path}`,
       // 路由名称，建议唯一
       name: item.name || '',
       // 该路由对应页面的 组件 优先根据组件名或者key从constantRouterComponents获取，没有则通过组件名地址查询
       component: item.component
-        ? (LayoutMap.get(item.component || item.key) || asyncImportRoute(item.component))
+        ? (LayoutMap.get(item.component || item.key as string) || asyncImportRoute(item.component))
         : undefined,
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       redirect: item.redirect,
       meta: {
+        order: item.order,
         title: item.title || '',
-        tagFixed: item.tagFixed as boolean,
-        tagHidden: item.tagHidden as boolean,
-        icon: item.icon || undefined,
-        homePage: item.homePage || 0,
-        iconType: item.iconType || undefined,
+        menuType: item.menuType,
+        tabState: item.tabState,
+        icon: item.icon || '',
+        isHome: item.isHome || 0,
+        iconFont: item.iconFont || '',
+        hidden: item.hidden,
+        hideChildren: item.hidden,
         hideInMenu: item.hideInMenu || false,
         hideChildrenInMenu: item.hideChildrenInMenu || false,
-        target: item.target,
+        link: item.link,
         keepAlive: item.keepAlive,
-        targetStatus: item.targetStatus,
-        animateDisabled: item.animateDisabled,
-        currenFulltPath: item.currenFulltPath
+        linkStatus: item.linkStatus,
+        menuSelectKey: item.menuSelectKey,
+        animateDisabled: item.animateDisabled
       }
     }
     // 为了防止出现后端返回结果不规范，处理有可能出现拼接出两个 反斜杠
     if (!currentRouter.path.startsWith('http')) {
       currentRouter.path = currentRouter.path.replace('//', '/')
     }
-    // 重定向
-    item.redirect && (currentRouter.redirect = item.redirect)
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
       // Recursion
@@ -153,45 +155,49 @@ export const generator = (routerMap: MenuDataItem[], parent?: AppRouteModule) =>
 }
 
 function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
+  const meta: MenuDataItem = menuItem.meta as MenuDataItem ?? menuItem
   const {
+    link,
+    linkStatus = 0,
     title = '',
     menuType,
     icon = '',
-    iconType = 1, // 菜单图标类型 0:本地 1:自定义 2:图片
-    tagFixed = '1', // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
-    tagHidden = '0', // 标签栏显示状态（隐藏的路由是否显示在标签栏中（只有标签栏为显示转态才生效））0:显示 1:隐藏
-    homePageFlag = 0, // 是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
-    isFrame = '1', // 是否外链 0:是 1:否
+    menuSelectKey,
+    order,
+    iconFont,
+    tabState, // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
+    isHome = 0, // 是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
     keepAlive = false,
-    animateDisabled = false,
-    redirect,
-    currenFulltPath,
-    outLinkType = 0 // 外链类型（选择是系统内则以iframe形式在系统内部展示，否则跳转新页面打开） 0:系统内 1:系统外
-  } = menuItem.meta ?? menuItem
+    hidden = false,
+    hideChildren = false,
+    hideInMenu = false,
+    hideChildrenInMenu = false,
+    animateDisabled = false
+  } = meta
   return {
-    title,
-    name: menuItem.name || title,
-    key: menuItem.name || title,
+    key: menuItem.name,
+    name: menuItem.name,
+    path: menuItem.path,
+    disabled: menuItem.disabled || false,
+    redirect: menuItem.redirect,
+    component: menuItem.component,
+
     icon,
+    title,
+    order,
     keepAlive,
     menuType,
-    iconType: iconType || 1,
-    hideInMenu: !!menuItem.hidden,
-    hideChildrenInMenu: !!menuItem.hideChildrenInMenu,
-    homePage: homePageFlag,
-    path: menuItem.path && menuItem.path.length > 0
-      ? menuItem.path
-      : undefined,
-    component: menuItem.component,
-    redirect: redirect === 'noRedirect'
-      ? ''
-      : redirect,
+    iconFont,
+    hidden,
+    hideInMenu,
+    hideChildren,
+    menuSelectKey,
+    hideChildrenInMenu,
+    isHome,
     animateDisabled,
-    currenFulltPath,
-    tagFixed: tagFixed === '0',
-    tagHidden: tagHidden === '1',
-    target: isFrame === '0' ? menuItem.target : '',
-    targetStatus: outLinkType || 0
+    tabState,
+    link,
+    linkStatus
   }
 }
 
@@ -201,7 +207,7 @@ function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
  * @lastTime    2021/5/14
  * @description 将后台树形结构菜单数据添加后修改属性（具体修改看后台返回值）
  */
-export function buildMenu(list: MenuDataItem[]) {
+export function buildMenu(list: MenuDataItem[]): MenuDataItem[] {
   return list.map((muenuItem) => {
     return { ...handleMenuParams(muenuItem), children: buildMenu(muenuItem.children || []) }
   })
@@ -216,13 +222,13 @@ export function buildMenu(list: MenuDataItem[]) {
 export function buildtree(
   rootMenu: MenuDataItem[],
   menuList: MenuDataItem[],
-  parentId: string | number
+  parentId?: string | number
 ) {
   rootMenu.forEach((muenuItem) => {
     if (muenuItem.parentId === parentId) {
       const child: MenuDataItem = { ...handleMenuParams(muenuItem), children: [] }
-      buildtree(rootMenu, child.children, muenuItem.menuId)
-      if (child.children.length === 0) {
+      buildtree(rootMenu, child.children as MenuDataItem[], muenuItem.menuId)
+      if (child?.children?.length === 0) {
         delete child.children
       }
       menuList.push(child)

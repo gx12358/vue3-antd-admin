@@ -1,6 +1,6 @@
-import { cloneDeep } from 'lodash-es'
-import { getMockRequest } from '@gx-mock/util/utils'
 import { authorList, categoryList, commonStatus } from '@gx-mock/config/dict'
+import { getMockRequest } from '@gx-mock/util/utils'
+import { cloneDeep } from 'lodash-es'
 
 export default [
   getMockRequest({

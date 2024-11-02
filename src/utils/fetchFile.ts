@@ -27,7 +27,9 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
       duration: 0
     })
   }
-  const opations: RequestInit = {
+  const opations: Omit<RequestInit, 'headers'> & {
+    headers: Record<string, any>
+  } = {
     method: options.method,
     headers: {
       'Content-Type': 'application/json',
@@ -50,7 +52,7 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
   const fileName = options.name
     ? options.name
     : response.headers.get('content-disposition')
-      ? response.headers.get('content-disposition').split(';')[1].split('=')[1]
+      ? response.headers.get('content-disposition')?.split?.(';')?.[1]?.split?.('=')?.[1] || ''
       : ''
   const blobResponse = await response.blob()
   if (blobResponse) {

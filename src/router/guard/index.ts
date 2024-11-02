@@ -1,9 +1,9 @@
 import type { MenuDataItem } from '@gx-design-vue/pro-layout'
 import type { Router } from 'vue-router'
+import { useStoreGlobal } from '@/store'
 import getPageTitle from '@/utils/pageTitle'
 import { scrollToContainer } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
-import NProgress from 'nprogress'
 import { createPermissionGuard } from './permissions'
 import { createStateGuard } from './stateGuard'
 
@@ -21,22 +21,18 @@ export function setupRouterGuard(router: Router) {
 export function createPageGuard(router: Router) {
   router.afterEach((to) => {
     const { meta } = to as MenuDataItem
-    document.title = getPageTitle(meta.title || '')
+    document.title = getPageTitle(meta?.title || '')
   })
 }
 
 export function createPageLoadingGuard(router: Router) {
   const global = useStoreGlobal()
-  const { globalLayout } = toRefs(global.state)
 
   const loadedPaths = new Set<string>()
 
   router.beforeEach(async (to) => {
-    if (
-      globalLayout.value.layout !== 'wide'
-      && !loadedPaths.has(to.path)
-      && !routesWhiteList.includes(to.path)
-    ) {
+    if (!loadedPaths.has(to.path) && !routesWhiteList.includes(to.path)) {
+      global.setValue({ pageLoading: true })
       loadedPaths.add(to.path)
     }
 
@@ -44,8 +40,7 @@ export function createPageLoadingGuard(router: Router) {
   })
 
   router.afterEach((_) => {
-    setTimeout(() => {
-    }, globalLayout.value.layout === 'wide' ? 0 : 200)
+    global.setValue({ pageLoading: false })
   })
 }
 
@@ -53,19 +48,19 @@ export function createScrollGuard(router: Router) {
   const global = useStoreGlobal()
 
   router.afterEach((_) => {
-    !global.state.disabledScrollTop && scrollToContainer({ count: 0 })
+    !global.disabledScrollTop && scrollToContainer({ count: 0 })
   })
 }
 
 export function createProgressGuard(router: Router) {
   const global = useStoreGlobal()
   router.beforeEach(() => {
-    if (global.state.showProgressBar)
-      NProgress.start()
-    return true
+    if (global.showProgressBar)
+      // NProgress.start()
+      return true
   })
 
   router.afterEach(() => {
-    NProgress.done()
+    // NProgress.done()
   })
 }

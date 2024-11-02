@@ -1,14 +1,15 @@
+import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
 import type { UserDetails, UserInfo } from '@gx-mock/config/user'
 import { getUserInfo, login, logout } from '@/services/userCenter'
 import { getAccessToken, removeAccessToken, setAccessToken } from '@/utils/accessToken'
 import { timeFix } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
-import { isObject } from '@gx-design-vue/pro-utils'
+import { useReactiveState } from '@gx-design-vue/pro-hooks'
+import { convertValueBoolean, isObject } from '@gx-design-vue/pro-utils'
 import { defaultUser } from '@gx-mock/config/user'
 import { notification } from 'ant-design-vue'
-import { cloneDeep } from 'lodash-es'
 import { defineStore } from 'pinia'
-import { reactive, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { useStorePermission } from './permission'
 import { useStoreRoutes } from './routes'
 
@@ -19,22 +20,22 @@ export interface UserState {
   userInfo: UserDetails;
 }
 
-type UserStateKey = keyof UserState
+type UserStoreValue = PiniaStoreValue<UserState, {
+  resetPermissions: () => void
+  setValue: (value: Partial<UserState>) => void
+  userLogut: () => Promise<void>
+  checkUserPremission: () => Promise<boolean>
+  userLogin: (params: any) => Promise<boolean>
+}>
 
-export const useStoreUser = defineStore('user', () => {
+export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
   const routes = useStoreRoutes()
-  const auth = useStorePermission()
+  const permission = useStorePermission()
 
-  const state = reactive<UserState>({
+  const [ state, setValue ] = useReactiveState<UserState>({
     accessToken: getAccessToken(),
     userInfo: {} as UserDetails
   })
-
-  const userDetails = computed<UserDetails>(() => state.userInfo)
-
-  const setState: (params: Partial<Record<UserStateKey, UserState[UserStateKey]>>) => void = (params) => {
-    Object.assign(state, params)
-  }
 
   /**
    * @Author      gx12358
@@ -43,12 +44,10 @@ export const useStoreUser = defineStore('user', () => {
    * @description 登录拦截放行时，设置虚拟角色
    */
   const setVirtualUserInfo = () => {
-    auth.changeValue('admin', true)
-    auth.changeValue('role', defaultUser.roles)
-    auth.changeValue('ability', defaultUser.permissions)
-    setState({
-      userInfo: defaultUser.user as UserDetails
-    })
+    permission.setValue({ admin: true })
+    permission.setValue({ role: defaultUser.roles })
+    permission.setValue({ role: defaultUser.permissions })
+    setValue({ userInfo: defaultUser.user as UserDetails })
   }
 
   /**
@@ -57,12 +56,13 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/1/11
    * @description 登录
    */
-  const userLogin = async (params): Promise<boolean> => {
+  const userLogin = async (params: any): Promise<boolean> => {
     const response: ResponseResult<{ expiresIn: number; }> = await login(params)
+    // @ts-ignore
     const accessToken = response?.data?.[tokenName]
     if (accessToken) {
       const expiresIn = response?.data?.expiresIn
-      state.accessToken = accessToken
+      setValue({ accessToken })
       setAccessToken(accessToken, expiresIn ? expiresIn * 60 * 1000 : 0)
       return true
     }
@@ -74,12 +74,10 @@ export const useStoreUser = defineStore('user', () => {
     const { user, roles, permissions } = response?.data || {} as UserInfo
     if (response && user && isObject(user)) {
       if (user.userName && roles && Array.isArray(roles)) {
-        auth.changeValue('role', roles)
-        auth.changeValue('ability', permissions)
+        permission.setValue({ role: roles })
+        permission.setValue({ ability: permissions })
 
-        setState({
-          userInfo: cloneDeep(user)
-        })
+        setValue({ userInfo: { ...user } })
         notification.success({
           message: `欢迎登录${state.userInfo?.userName}`,
           description: `${timeFix()}！`
@@ -98,16 +96,16 @@ export const useStoreUser = defineStore('user', () => {
     if (loginInterception)
       await updateUserInfo()
     else setVirtualUserInfo()
-    return Object.keys(state.userInfo).length
+    return convertValueBoolean(state?.userInfo)
   }
 
   const resetPermissions = () => {
-    state.accessToken = ''
+    setValue({ accessToken: '' })
     removeAccessToken()
-    auth.changeValue('admin', false)
-    auth.changeValue('role', [])
-    auth.changeValue('ability', [])
-    routes.resetRoute()
+    permission.setValue({ admin: false })
+    permission.setValue({ role: [] })
+    permission.setValue({ role: [] })
+    routes.setValue({ routes: [] })
   }
 
   /**
@@ -123,10 +121,9 @@ export const useStoreUser = defineStore('user', () => {
 
   return {
     ...toRefs(state),
-    userDetails,
     userLogin,
     userLogut,
-    setState,
+    setValue,
     resetPermissions,
     checkUserPremission
   }

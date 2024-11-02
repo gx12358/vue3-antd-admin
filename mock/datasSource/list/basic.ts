@@ -1,9 +1,9 @@
-import mockjs from 'mockjs'
-import dayjs from 'dayjs'
-import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
-import { otherAccountList } from '@gx-mock/config/user'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
+import { otherAccountList } from '@gx-mock/config/user'
 import { handlePageList, initContent, postDataSource } from '@gx-mock/util/table'
+import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
+import dayjs from 'dayjs'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 
@@ -135,7 +135,7 @@ export default [
     method: 'get',
     timeout: 200,
     callback: ({ query }) => {
-      return dataSource.find(el => el.id === query.id)
+      return dataSource.find(el => el.id === query.id) || null
     }
   }),
   getMockRequest<Partial<BasicListItemDataType>>({

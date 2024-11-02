@@ -18,6 +18,5 @@ export const defauleState: FormState = {
   template: '0',
   type: '0',
   createTime: '',
-  frequency: 'month',
-  createTimeDay: null,
+  frequency: 'month'
 }

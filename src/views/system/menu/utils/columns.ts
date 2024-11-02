@@ -1,6 +1,9 @@
+import type { AppRouteModule } from '@gx-design-vue/pro-layout'
 import type { ProColumnsType } from '@gx-design-vue/pro-table'
 
-export const columns: ProColumnsType = [
+export interface SearchConfig { title: string }
+
+export const columns: ProColumnsType<AppRouteModule, SearchConfig> = [
   {
     title: '权限名称',
     ellipsis: true,

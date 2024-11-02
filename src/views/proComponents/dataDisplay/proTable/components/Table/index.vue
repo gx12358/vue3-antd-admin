@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
+import type { SearchParams } from './typings'
 import { doDelete, getTableList } from '@/services/tableCenter'
 import { useDict } from '@gx-admin/hooks/system'
-import { useTable } from '@gx-design-vue/pro-table'
+import { type CustomRenderResult, useTable } from '@gx-design-vue/pro-table'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
 import OperationModal from './components/OperationModal.vue'
 import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
 import ScrollModal from './components/ScrollModal.vue'
-import columns from './utils/columns'
+import { columns } from './utils/columns'
 
-const { dictState } = useDict([ 'sys_common_status' ])
+const [ dictState ] = useDict([ 'sys_common_status' ])
 
-const operationRef = ref(null)
-const scrollModalRef = ref(null)
-const scrollBreakpointModalRef = ref(null)
-
-const tableRef = ref<ProTableRef>()
-
-const { changeLoading, reload } = useTable(tableRef)
+const tableRef = ref()
+const operationRef = ref()
+const scrollModalRef = ref()
+const scrollBreakpointModalRef = ref()
 
 const state = reactive({
   inputSearchRef: '',
@@ -29,64 +26,72 @@ const state = reactive({
   showScroll: true,
   showScrollBreakpoint: false,
   tableData: [] as TableRecord[],
-  selectedRowKeys: [],
-  selectedRowItems: []
+  selectedRowKeys: [] as any[],
+  selectedRowItems: [] as TableRecord[]
 })
 
-const onSelectChange = (keys, items) => {
-  state.selectedRowKeys = keys
-  state.selectedRowItems = items
-}
-
-const tableConfig = reactive<Omit<ProTableProps, 'options'> & { options: boolean }>({
-  align: 'center',
-  polling: 2000,
-  options: true,
-  titleTip: true,
-  bordered: true,
-  showIndex: true,
-  autoScroll: true,
-  neverScroll: false,
-  scrollBreakpoint: 'xl',
-  draggabled: true,
-  waitRequest: true,
-  params: {
-    adress: '',
-    age: ''
-  },
-  search: { showSearch: true },
-  searchMap: [
-    {
-      name: 'status',
-      valueType: 'select',
-      placeholder: '请选择操作状态',
-      loading: true,
-      valueEnum: []
+const { tableState, reload, setLoading } = useTable<TableRecord, SearchParams>(tableRef, {
+  state: {
+    polling: 2000,
+    options: true,
+    titleTip: true,
+    showIndex: true,
+    autoScroll: true,
+    neverScroll: false,
+    scrollBreakpoint: 'xl',
+    draggabled: true,
+    waitRequest: true,
+    params: {
+      adress: ''
     },
-    {
-      name: 'date',
-      valueType: 'date',
-      placeholder: '请选择'
-    }
-  ],
-  columns: columns.index,
-  rowSelection: {
-    onChange: onSelectChange
+    search: { showSearch: true },
+    searchMap: [
+      {
+        name: 'status',
+        valueType: 'select',
+        placeholder: '请选择操作状态',
+        loading: true,
+        valueEnum: []
+      },
+      {
+        name: 'date',
+        valueType: 'date',
+        placeholder: '请选择'
+      }
+    ],
+    columns,
+    rowSelection: {
+      onChange: (keys, items) => {
+        state.selectedRowKeys = keys
+        state.selectedRowItems = items
+      }
+    },
+    rowKey: 'id',
+    scroll: { x: 1850 }
   },
-  rowKey: 'id',
-  scroll: { x: 1850 }
+  request: async (params) => {
+    const response = await getTableList<PageResult<TableRecord>>(params)
+    state.tableData = deepCopy(response?.data?.list || [])
+    return {
+      data: deepCopy(response?.data?.list || []),
+      success: !!response,
+      total: response?.data?.totalCount || 0
+    }
+  }
 })
 
 watch(
-  () => dictState.sys_common_status,
-  (data) => {
-    tableConfig.searchMap[0].loading = !!data?.loading
-    tableConfig.searchMap[0].valueEnum = data?.data?.map((item) => {
-      return {
-        text: item.dictLabel,
-        value: item.dictValue
-      } as any
-    }) || []
+  () => dictState.value.sys_common_status,
+  (val) => {
+    if (tableState.searchMap) {
+      tableState.searchMap[0].loading = val.loading
+      tableState.searchMap[0].valueEnum = val?.data.map((item) => {
+        return {
+          text: item.dictLabel,
+          value: item.dictValue
+        }
+      })
+    }
   },
   {
     deep: true,
@@ -97,7 +102,7 @@ watch(
 watch(
   () => state.showScroll,
   () => {
-    state.showScroll = !!tableConfig.scroll
+    state.showScroll = !!tableState.scroll
   },
   {
     deep: true,
@@ -106,14 +111,14 @@ watch(
 )
 
 watch(
-  () => tableConfig.autoScroll,
+  () => tableState.autoScroll,
   (value) => {
     if (value) {
       state.showScrollBreakpoint = true
-      tableConfig.scrollBreakpoint = 'xl'
+      tableState.scrollBreakpoint = 'xl'
     } else {
       state.showScrollBreakpoint = false
-      tableConfig.scrollBreakpoint = undefined
+      tableState.scrollBreakpoint = undefined
     }
   },
   {
@@ -123,20 +128,20 @@ watch(
 )
 
 watch(
-  () => tableConfig.neverScroll,
+  () => tableState.neverScroll,
   (value) => {
     if (value) {
       state.showScroll = false
       state.showScrollBreakpoint = false
-      tableConfig.scroll = undefined
-      tableConfig.autoScroll = false
-      tableConfig.scrollBreakpoint = undefined
+      tableState.scroll = undefined
+      tableState.autoScroll = false
+      tableState.scrollBreakpoint = undefined
     } else {
       state.showScroll = true
       state.showScrollBreakpoint = true
-      tableConfig.scroll = { x: 1850 }
-      tableConfig.autoScroll = true
-      tableConfig.scrollBreakpoint = 'xl'
+      tableState.scroll = { x: 1850 }
+      tableState.autoScroll = true
+      tableState.scrollBreakpoint = 'xl'
     }
   },
   {
@@ -147,76 +152,58 @@ watch(
 
 onMounted(() => {
   setTimeout(() => {
-    tableConfig.searchMap[0]['initialValue'] = '0'
-    tableConfig.waitRequest = false
+    if (tableState.searchMap) {
+      tableState.searchMap[0]['initialValue'] = '0'
+    }
+    tableState.waitRequest = false
   }, 200)
   setTimeout(() => {
-    tableConfig.polling = undefined
+    tableState.polling = undefined
   }, 1000)
 })
 
-const getTableData: RequsetFunction<TableRecord> = async (params) => {
-  const response = await getTableList<PageResult<TableRecord>>(params)
-  state.tableData = deepCopy(response?.data?.list || [])
-  return {
-    data: deepCopy(response?.data?.list || []),
-    success: !!response,
-    total: response?.data?.totalCount || 0
-  }
-}
-
 const handlePolling = () => {
-  if (tableConfig.polling) {
-    tableConfig.polling = undefined
+  if (tableState.polling) {
+    tableState.polling = undefined
     return
   }
-  tableConfig.polling = 2000
+  tableState.polling = 2000
 }
 
 const changeScroll = (value) => {
   if (value) {
-    tableConfig.scroll = { x: 1850 }
-    scrollModalRef.value.open()
+    tableState.scroll = { x: 1850 }
+    scrollModalRef.value?.open()
   } else {
-    tableConfig.scroll = undefined
+    tableState.scroll = undefined
   }
 }
 
 const handleScroll = (params) => {
-  tableConfig.scroll = params
+  tableState.scroll = params
 }
 
 const changeScrollBreakpoint = (value) => {
   if (value) {
-    tableConfig.scrollBreakpoint = 'xl'
-    scrollBreakpointModalRef.value.open(tableConfig.scrollBreakpoint)
+    tableState.scrollBreakpoint = 'xl'
+    scrollBreakpointModalRef.value.open(tableState.scrollBreakpoint)
   }
 }
 
 const handleScrollBreakpoint = (params) => {
-  tableConfig.scrollBreakpoint = params
+  tableState.scrollBreakpoint = params
 }
 
-const onReset = () => {
-  tableConfig.params = {
-    adress: '',
-    age: ''
-  }
-}
+const onReset = () => tableState.params.adress = ''
 
-const onSearchReset = () => {
-  tableConfig.params = {
-    adress: '',
-    age: ''
-  }
-}
+const onSearchReset = () => onReset()
 
 const batchOperation = (key) => {
   message.success(`你点击了${key.domEvent.target.textContent}`)
 }
 
 const removeTable = async () => {
-  changeLoading(true)
+  setLoading(true)
   const response = await doDelete({
     ids: state.selectedRowKeys.join()
   })
@@ -224,7 +211,7 @@ const removeTable = async () => {
     message.success('操作成功！')
     reload({ immediate: true, removeKeys: state.selectedRowKeys })
   }
-  changeLoading(false)
+  setLoading(false)
 }
 </script>
 
@@ -250,7 +237,7 @@ const removeTable = async () => {
       </template>
       <a-switch
         v-model:checked="state.showScroll"
-        :disabled="tableConfig.neverScroll"
+        :disabled="tableState.neverScroll"
         @change="changeScroll"
       />
     </a-form-item>
@@ -263,7 +250,7 @@ const removeTable = async () => {
           <info-circle-outlined class="ml-5px" />
         </a-tooltip>
       </template>
-      <a-switch v-model:checked="tableConfig.autoScroll" :disabled="tableConfig.neverScroll" />
+      <a-switch v-model:checked="tableState.autoScroll" :disabled="tableState.neverScroll" />
     </a-form-item>
     <a-form-item>
       <template #label>
@@ -274,12 +261,12 @@ const removeTable = async () => {
       </template>
       <a-switch
         v-model:checked="state.showScrollBreakpoint"
-        :disabled="tableConfig.neverScroll || !tableConfig.autoScroll"
+        :disabled="tableState.neverScroll || !tableState.autoScroll"
         @change="changeScrollBreakpoint"
       />
     </a-form-item>
     <a-form-item label="NeverScroll">
-      <a-switch v-model:checked="tableConfig.neverScroll" />
+      <a-switch v-model:checked="tableState.neverScroll" />
     </a-form-item>
     <a-form-item>
       <template #label>
@@ -291,10 +278,10 @@ const removeTable = async () => {
       <a-switch v-model:checked="state.showOptionsExtra" />
     </a-form-item>
     <a-form-item label="Options">
-      <a-switch v-model:checked="tableConfig.options" />
+      <a-switch v-model:checked="tableState.options as boolean" />
     </a-form-item>
     <a-form-item label="Draggabled">
-      <a-switch v-model:checked="tableConfig.draggabled" />
+      <a-switch v-model:checked="tableState.draggabled" />
     </a-form-item>
     <a-form-item>
       <template #label>
@@ -303,13 +290,13 @@ const removeTable = async () => {
           <InfoCircleOutlined class="ml-5px" />
         </a-tooltip>
       </template>
-      <a-switch v-model:checked="tableConfig.showIndex" />
+      <a-switch v-model:checked="tableState.showIndex" />
     </a-form-item>
     <a-form-item label="Bordered">
-      <a-switch v-model:checked="tableConfig.bordered" />
+      <a-switch v-model:checked="tableState.bordered" />
     </a-form-item>
     <a-form-item label="Align">
-      <a-radio-group v-model:value="tableConfig.align">
+      <a-radio-group v-model:value="tableState.align">
         <a-radio-button value="left">
           left
         </a-radio-button>
@@ -324,12 +311,11 @@ const removeTable = async () => {
   </a-form>
   <g-pro-table
     ref="tableRef"
-    v-bind="tableConfig"
-    :request="getTableData"
+    v-bind="tableState"
     @reset="onReset"
     @search-reset="onSearchReset"
   >
-    <template v-if="state.showCustomize" #customRender="dataScouce">
+    <template v-if="state.showCustomize" #customRender="{ dataSource } : CustomRenderResult<TableRecord>">
       <a-list
         row-key="id"
         :grid="{
@@ -341,9 +327,9 @@ const removeTable = async () => {
           xl: 4,
           xxl: 5,
         }"
-        :data-source="dataScouce"
+        :data-source="dataSource"
       >
-        <template #renderItem="{ item }">
+        <template #renderItem="{ item }: { item: TableRecord }">
           <a-list-item>
             <a-card hoverable>
               <template #cover>
@@ -381,9 +367,9 @@ const removeTable = async () => {
         新建
       </a-button>
       <a-button key="button" type="primary" @click="handlePolling">
-        <loading-outlined v-if="tableConfig.polling" />
+        <loading-outlined v-if="tableState.polling" />
         <reload-outlined v-else />
-        {{ tableConfig.polling ? '停止轮询' : '开始轮询' }}
+        {{ tableState.polling ? '停止轮询' : '开始轮询' }}
       </a-button>
       <a-button
         v-if="state.selectedRowKeys.length > 0"
@@ -415,14 +401,14 @@ const removeTable = async () => {
       </a-dropdown>
     </template>
     <template #search>
-      <a-input
-        v-model:value="tableConfig.params.age"
+      <a-input-number
+        v-model:value="tableState.params.age"
         allow-clear
         placeholder="请输入年龄"
         style="width: 100%"
       />
       <a-input
-        v-model:value="tableConfig.params.adress"
+        v-model:value="tableState.params.adress"
         allow-clear
         placeholder="请选择地址"
         style="width: 100%"

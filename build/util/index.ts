@@ -77,6 +77,7 @@ export function fileExists(f: string) {
   try {
     fs.accessSync(f, fs.constants.W_OK)
     return true
+    // eslint-disable-next-line unused-imports/no-unused-vars
   } catch (error) {
     return false
   }

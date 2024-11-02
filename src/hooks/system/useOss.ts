@@ -7,10 +7,10 @@ import OSS from 'ali-oss'
 import { cloneDeep } from 'lodash-es'
 
 export function useOss() {
-  const store = useStore()
+  const { oss } = useStore()
 
   async function createClent(params?: ClientDetails): Promise<any> {
-    const details = await store.oss.getOssToken(params)
+    const details = await oss.getOssToken(params)
     return new OSS(details)
   }
 
@@ -40,15 +40,17 @@ export function useOss() {
     key?: string | string[];
   }) {
     for (let i = 0; i < data.length; i += 1) {
-      if (isArray(type)) {
-        for (let a = 0; a < (type as string[]).length; a += 1) {
+      if (isArray(type) && type) {
+        for (let a = 0; a < type.length; a += 1) {
           let ossViewUrl = data[i][type[a]]
           if (!checkURL(data[i][type[a]])) {
             ossViewUrl = await getSignUrl({
               name: data[i][type[a]]
             })
           }
-          data[i][key[a] || 'ossViewUrl'] = ossViewUrl
+          if (key) {
+            data[i][key[a] || 'ossViewUrl'] = ossViewUrl
+          }
         }
       } else if (type) {
         let ossViewUrl = data[i][type as string]
@@ -86,9 +88,7 @@ export function useOss() {
     if (response) {
       const url = file instanceof File ? file.name : file
       const infos = response.data
-      name = `${checkFileType(url) === '1'
-        ? infos.pictureUrl1
-        : infos.videoUrl}.${getFileSuffix(url)}`
+      name = `${checkFileType(url) === '1' ? infos?.pictureUrl1 : infos?.videoUrl}.${getFileSuffix(url)}`
     }
     return name
   }

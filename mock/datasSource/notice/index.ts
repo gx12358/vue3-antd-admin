@@ -1,6 +1,6 @@
+import { getMockRequest } from '@gx-mock/util/utils'
 import dayjs from 'dayjs'
 import mockjs from 'mockjs'
-import { getMockRequest } from '@gx-mock/util/utils'
 
 const { Random } = mockjs
 

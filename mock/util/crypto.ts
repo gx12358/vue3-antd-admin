@@ -1,6 +1,6 @@
+import Base64 from '@/utils/crypto/base64'
 import { isJSONStr } from '@/utils/validate'
 import { isArray, isObject } from '@gx-design-vue/pro-utils'
-import Base64 from '@/utils/crypto/base64'
 
 const cryptoBase64 = new Base64()
 

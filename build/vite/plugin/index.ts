@@ -1,22 +1,22 @@
 import type { PluginOption } from 'vite'
 
+import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import Unocss from 'unocss/vite'
+
 import VueDevTools from 'vite-plugin-vue-devtools'
-import legacy from '@vitejs/plugin-legacy'
 
 import vueSetupExtend from 'vite-plugin-vue-setup-extend'
 
-import Unocss from 'unocss/vite'
-
-import { configPwaConfig } from './pwa'
-import { configHtmlPlugin } from './html'
-import { configMockPlugin } from './mock'
-import viteNotice from './viteNotice'
+import { createAppConfigPlugin } from './appConfig'
 import { createAutoImport } from './autoImport'
 import { configCompressPlugin } from './compress'
-import { createAppConfigPlugin } from './appConfig'
+import { configHtmlPlugin } from './html'
+import { configMockPlugin } from './mock'
+import { configPwaConfig } from './pwa'
 import { configVisualizerConfig } from './visualizer'
+import viteNotice from './viteNotice'
 
 export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const {
@@ -39,7 +39,9 @@ export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   // vite-plugin-app-info
   vitePlugins.push(await createAppConfigPlugin({ isBuild }))
   // vite-plugin-vue-devtools
-  vitePlugins.push(VueDevTools() as any)
+  vitePlugins.push(VueDevTools({
+    launchEditor: 'webstorm'
+  }))
   // vite-plugin-windicss
   vitePlugins.push(Unocss())
   // vite-plugin-vue-setup-extend

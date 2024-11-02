@@ -61,13 +61,13 @@ const previewList = [
           fit="cover"
           class="w-100px"
           src="https://aliyuncdn.antdv.com/vue.png"
-          :preview-src-list="previewList"
+          :preview-urls="previewList"
         />
         <g-image
           fit="cover"
           class="w-100px"
           src="https://aliyuncdn.antdv.com/logo.png"
-          :preview-src-list="previewList"
+          :preview-urls="previewList"
         />
       </div>
       <div>

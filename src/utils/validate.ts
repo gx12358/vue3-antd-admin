@@ -91,6 +91,14 @@ export function isPort(value) {
  * @param value
  * @returns {boolean}
  */
+export function isPhone(
+  value: string,
+  backReg?: false,
+): boolean
+export function isPhone(
+  value: string,
+  backReg?: true,
+): RegExp
 export function isPhone(value = '', backReg?: boolean) {
   const reg = /^1\d{10}$/
   return backReg ? reg : reg.test(value)
@@ -113,6 +121,14 @@ export function isIdCard(value) {
  * @param value
  * @returns {boolean}
  */
+export function isEmail(
+  value: string,
+  backReg?: false,
+): boolean
+export function isEmail(
+  value: string,
+  backReg?: true,
+): RegExp
 export function isEmail(value = '', backReg?: boolean) {
   const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
   return backReg ? reg : reg.test(value)

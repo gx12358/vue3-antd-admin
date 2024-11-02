@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import type { ProTableProps, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
-import type {
-  BasicCountState,
-  BasicListItemDataType,
-  BasicSearchParmas
-} from '@gx-mock/datasSource/list/basic'
+import type { ProTableRef } from '@gx-design-vue/pro-table'
+import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/datasSource/list/basic'
 import type { CountState } from './utils/config'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
@@ -13,7 +9,6 @@ import { GProCard } from '@gx-design-vue/pro-card'
 import { useTable } from '@gx-design-vue/pro-table'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
-import { Teleport } from 'vue'
 import OperateModal from './components/OperateModal.vue'
 import { defaultCountState } from './utils/config'
 
@@ -23,20 +18,29 @@ const operate = ref()
 const tableRef = ref<ProTableRef>()
 
 const countState = reactive<CountState>({ ...defaultCountState })
-const tableState = reactive<Omit<ProTableProps, 'params'> & { params: BasicSearchParmas }>({
-  params: {
-    status: 'all',
-    title: ''
-  },
-  pagination: {
-    pageSize: 5
-  },
-  columns: [],
-  options: false,
-  showLoading: false
-})
 
-const { reload, changeLoading } = useTable(tableRef)
+const { reload, setLoading, tableState } = useTable<BasicListItemDataType, BasicSearchParmas>(tableRef, {
+  state: {
+    params: {
+      status: 'all',
+      title: ''
+    },
+    pagination: {
+      pageSize: 5
+    },
+    columns: [],
+    showLoading: false
+  },
+  request: async (params) => {
+    const response = await getBasicList<PageResult<BasicListItemDataType>>(params)
+    
+    return {
+      data: response?.data?.list || [],
+      total: response?.data?.totalCount || 0,
+      success: !!response
+    }
+  }
+})
 
 const { loading } = useRequest<BasicCountState>(getBasicCount, {
   onSuccess: (data) => {
@@ -49,29 +53,19 @@ const { loading } = useRequest<BasicCountState>(getBasicCount, {
   }
 })
 
-const getList: RequsetFunction<BasicListItemDataType, BasicSearchParmas> = async (params) => {
-  const response = await getBasicList<PageResult<BasicListItemDataType>>(params)
-
-  return {
-    data: response?.data?.list || [],
-    total: response?.data?.totalCount || 0,
-    success: !!response
-  }
-}
-
 const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => {
   switch (key) {
     case 'delete':
       globalConfirm({
         content: '是否确认删除？',
         async onOk() {
-          changeLoading(false)
+          setLoading(false)
           const response = await deleteBasicList({ id: record.id })
           if (response) {
             message.success('操作成功')
             await reload({ immediate: true, removeKeys: [record.id] })
           }
-          changeLoading(false)
+          setLoading(false)
         }
       })
       break
@@ -118,8 +112,8 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
           <g-input-search v-model:value="tableState.params.title" placeholder="请输入" allow-clear />
         </div>
       </template>
-      <g-pro-table ref="tableRef" v-bind="tableState" :request="getList">
-        <template #customRender="dataSource">
+      <g-pro-table ref="tableRef" v-bind="tableState">
+        <template #customRender="{ dataSource }">
           <a-list size="large" row-key="id" :loading="loading" :data-source="dataSource">
             <template #renderItem="{ item }: { item: BasicListItemDataType }">
               <a-list-item>

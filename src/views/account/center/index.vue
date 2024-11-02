@@ -32,7 +32,6 @@ const route = useRoute()
 const router = useRouter()
 const { token } = useProConfigContext()
 const col = useMediaQuery()
-const { globalLayout, disabledScrollTop, showProgressBar } = toRefs(global.state)
 
 const ready = ref(false)
 
@@ -59,16 +58,18 @@ const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
 
 const contentHeight = computed(() => {
   const herderHeight = token.value.layout?.header?.heightLayoutHeader
-  const tabsHeight = globalLayout.value?.showTabsBar ? '62px' : '0px'
-  const pageHeaderHieght = globalLayout.value?.pageHeaderRender === false ? '0px' : '46px'
+  const tabsHeight = global.globalLayout?.showTabsBar ? '62px' : '0px'
+  const pageHeaderHieght = global.globalLayout?.pageContainerProps?.pageHeaderRender === false ? '0px' : '46px'
   return isMobile.value ? undefined : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
 })
 
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
 
 onActivated(() => {
-  disabledScrollTop.value = true
-  showProgressBar.value = false
+  global.setValue({
+    disabledScrollTop: true,
+    showProgressBar: true
+  })
   ready.value = true
 })
 
@@ -78,8 +79,10 @@ const changeRouter = (value: TabsKey) => {
 
 onBeforeRouteLeave((to) => {
   if (!to.fullPath.includes('/account/center/')) {
-    showProgressBar.value = true
-    disabledScrollTop.value = false
+    global.setValue({
+      disabledScrollTop: false,
+      showProgressBar: true
+    })
   }
 })
 
@@ -101,29 +104,29 @@ provideAccountCenterContext({
         class="card-left"
       >
         <div class="flex flex-col justify-center items-center mb-24px">
-          <g-admin-image fit="cover" class="w-104px h-104px rd-50% mb-20px" :src="user.userDetails.avatar" />
-          <span class="mb-4px text-rgba-[0-0-0-0.88] font-500 text-20px leading-28px">{{ user.userDetails.userName }}</span>
-          <span>{{ user.userDetails.signature }}</span>
+          <g-admin-image fit="cover" class="w-104px h-104px rd-50% mb-20px" :src="user.userInfo.avatar" />
+          <span class="mb-4px text-rgba-[0-0-0-0.88] font-500 text-20px leading-28px">{{ user.userInfo.userName }}</span>
+          <span>{{ user.userInfo.signature }}</span>
         </div>
         <div class="flex flex-col gap-8px">
           <div class="pl-26px relative">
             <contacts-outlined class="mr-8px" />
-            <span>{{ user.userDetails.levelName }}</span>
+            <span>{{ user.userInfo.levelName }}</span>
           </div>
           <div class="pl-26px relative">
             <cluster-outlined class="mr-8px" />
-            <span>{{ user.userDetails.group?.title }}</span>
+            <span>{{ user.userInfo.group?.title }}</span>
           </div>
           <div class="pl-26px relative">
             <home-outlined class="mr-8px" />
-            <span>{{ user.userDetails.address }}</span>
+            <span>{{ user.userInfo.address }}</span>
           </div>
         </div>
         <a-divider dashed />
         <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">
           标签
         </div>
-        <TagList :tags="user.userDetails.tags?.split(',') || []" />
+        <TagList :tags="user.userInfo.tags?.split(',') || []" />
         <a-divider dashed />
         <GProCard :body-style="{ padding: 0 }" :loading="loading" class="group-card">
           <div class="mb-12px font-500 text-rgba-[0-0-0-0.88]">

@@ -1,7 +1,7 @@
-import mockjs from 'mockjs'
-import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
 import type { ListItem, ListSearchParams } from '@gx-mock/util/table'
 import { handlePageList, initContent, postDataSource } from '@gx-mock/util/table'
+import { getMockRequest, handleRandomImage } from '@gx-mock/util/utils'
+import mockjs from 'mockjs'
 
 const { Random } = mockjs
 
@@ -50,7 +50,7 @@ export default [
     method: 'get',
     timeout: 200,
     callback: ({ query }) => {
-      return dataSource.find(el => el.id === query.id)
+      return dataSource.find(el => el.id === query.id) || null
     }
   }),
   getMockRequest<Partial<CardListItemDataType>>({

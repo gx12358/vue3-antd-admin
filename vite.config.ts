@@ -1,11 +1,11 @@
 import type { ConfigEnv, UserConfig } from 'vite'
-import { loadEnv } from 'vite'
-import dayjs from 'dayjs'
 import autoprefixer from 'autoprefixer'
+import dayjs from 'dayjs'
+import { loadEnv } from 'vite'
 
 import { generateModifyVars } from './build/generate/generateModifyVars'
-import { pathResolve, wrapperEnv } from './build/util'
 import createRollupOptions from './build/rollupOptions'
+import { pathResolve, wrapperEnv } from './build/util'
 import { createVitePlugins } from './build/vite/plugin'
 
 import { createProxy, defaultSettings } from './config'

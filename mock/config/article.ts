@@ -1,5 +1,5 @@
-import mockjs from 'mockjs'
 import type { ListItemDataType } from '../datasSource/list'
+import mockjs from 'mockjs'
 import { authorList } from '../config/dict'
 import { handleRandomImage } from '../util/utils'
 

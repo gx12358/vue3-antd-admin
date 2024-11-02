@@ -1,26 +1,29 @@
 <script setup lang="ts">
-import type { ProSearchMap, ProTableRef, RequsetFunction } from '@gx-design-vue/pro-table'
+import type { ProSearchMap } from '@gx-design-vue/pro-table'
 import type { TableRecord } from '@gx-mock/datasSource/table'
+import type { SearchParams } from '../typings'
 import { getTableList } from '@/services/tableCenter'
+import { useDict } from '@gx-admin/hooks/system'
+import { useTable } from '@gx-design-vue/pro-table'
 import { deepCopy } from '@gx-design-vue/pro-utils'
-import { reactive, ref } from 'vue'
-import columns from '../utils/columns'
+import { reactive, ref, watch } from 'vue'
+import { operationModal } from '../utils/columns'
 
-const store = useStore()
+const [ dictState, getDict ] = useDict('sys_common_status')
 
-const tableRef = ref<ProTableRef>()
+const tableRef = ref()
 const visible = ref(false)
 const isFail = ref(false)
 const spinning = ref(false)
 const waitRequest = ref(true)
 const skeletonLoading = ref(false)
-const tableData = ref<TableRecord[]>([])
 const searchMap = ref<ProSearchMap[]>([
   {
     name: 'status',
     valueType: 'select',
     placeholder: '请选择操作状态',
-    loading: true,
+    loading: false,
+    initialValue: '0',
     valueEnum: []
   },
   {
@@ -35,15 +38,41 @@ const params = reactive({
   age: ''
 })
 
-const getTableData: RequsetFunction<TableRecord> = async (params) => {
-  const response = await getTableList<PageResult<TableRecord>>(params)
-  tableData.value = deepCopy(response?.data?.list || [])
-  return {
-    data: deepCopy(response?.data?.list || []),
-    success: !!response,
-    total: response.data?.totalCount || 0
+const { tableState } = useTable<TableRecord, SearchParams>(tableRef, {
+  state: {
+    options: false,
+    modalScroll: true,
+    columns: operationModal
+  },
+  request: async (params) => {
+    const response = await getTableList<PageResult<TableRecord>>(params)
+    return {
+      data: deepCopy(response?.data?.list || []),
+      success: !!response,
+      total: response.data?.totalCount || 0
+    }
   }
-}
+})
+
+watch(
+  () => dictState.value.sys_common_status,
+  (val) => {
+    if (searchMap.value) {
+      const loading = val.loading
+      searchMap.value[0].loading = loading
+      searchMap.value[0].valueEnum = loading ? [] : val.data.map((item) => {
+        return {
+          text: item.dictLabel,
+          value: item.dictValue
+        }
+      })
+    }
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
 
 const resetModalState = () => {
   visible.value = false
@@ -52,20 +81,12 @@ const resetModalState = () => {
   skeletonLoading.value = false
 }
 
-const open = (type: string) => {
+const open = () => {
+  getDict(true)
   visible.value = true
-  searchMap.value[0].loading = true
-  searchMap.value[0].valueEnum = store.dict.data[type].map((item) => {
-    return {
-      text: item.dictLabel,
-      value: item.dictValue
-    }
-  })
-  searchMap.value[0]['initialValue'] = '0'
-  searchMap.value[0].loading = false
   setTimeout(() => {
     waitRequest.value = false
-  }, 500)
+  }, 200)
 }
 
 const onReset = () => {
@@ -100,13 +121,8 @@ defineExpose({
   >
     <g-pro-table
       ref="tableRef"
-      align="center"
-      :options="false"
-      modal-scroll
+      v-bind="tableState"
       :search-map="searchMap"
-      :wait-request="waitRequest"
-      :columns="columns.operationModal"
-      :request="getTableData"
       @reset="onReset"
     >
       <template #headerCell="{ column }">

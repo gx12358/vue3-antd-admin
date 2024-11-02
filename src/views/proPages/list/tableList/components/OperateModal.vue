@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-admin/hooks/system'
+import type { RulesState } from '@gx-design-vue/pro-provider'
 import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
 import type { Dayjs } from 'dayjs'
 import { addRules, updateRules } from '@/services/listCenter'
-import { useForm } from '@gx-admin/hooks/system'
+import { useProForm } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
@@ -60,7 +60,7 @@ const ruleState = reactive<Partial<RulesState<FormState>>>({
   ]
 })
 
-const { validateInfos, validate, resetFields, clearValidate } = useForm(formState, ruleState)
+const { validateInfos, validate, resetFields, clearValidate } = useProForm(formState, ruleState)
 
 const changeStep = (type: 'next' | 'back') => {
   if (type === 'next') {
