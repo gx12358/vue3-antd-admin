@@ -9,10 +9,10 @@ export function getRequestToken({ headers }: MockResponse<any, any>): string | u
   return headers?.[tokenName.toLowerCase()]
 }
 
-export const checkBackDataFun = (token, config?: Partial<ResponseResult> | Function) => {
-  const configData: Partial<ResponseResult> = isFunction(config) ? (config as Function)?.() : config
+export const checkBackDataFun = (token, config?: Partial<ResponseResult> | Fn) => {
+  const configData: Partial<ResponseResult> = isFunction(config) ? (config as Fn)?.() : config
   let code = 200
-  let msg = ''
+  let msg: string | undefined = ''
   let data: any
   if (isObject(configData)) {
     code = configData?.code || 200
@@ -24,10 +24,10 @@ export const checkBackDataFun = (token, config?: Partial<ResponseResult> | Funct
 
   const invaiteToken = checkToken(token)
 
-  const result: ResponseResult = {
+  const result = {
     ...(invaiteToken ? { data } : {}),
     code: invaiteToken ? code : 401,
     msg: invaiteToken ? msg || code ? 'success' : 'Request failed' : 'Invalid token!'
-  }
+  } as ResponseResult
   return result
 }

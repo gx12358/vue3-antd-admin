@@ -38,7 +38,7 @@ export function createProdMockServer(mockList: any[]) {
   for (const { url, method, response, timeout } of mockList) {
     __setupMock__(timeout)
     Mock.mock(
-      pathToRegexp(url, { end: false }),
+      pathToRegexp(url, undefined, { end: false }),
       method || 'get',
       __XHR2ExpressReqWrapper__(response)
     )

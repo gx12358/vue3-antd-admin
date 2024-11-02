@@ -58,7 +58,7 @@ export async function requestMiddleware(opt: ViteMockOptions) {
       if (item.method && item.method.toUpperCase() !== req.method) {
         return false
       }
-      return pathToRegexp(item.url).regexp.test(reqUrl)
+      return pathToRegexp(item.url).test(reqUrl)
     })
 
     if (matchRequest) {

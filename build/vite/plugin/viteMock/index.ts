@@ -59,6 +59,7 @@ export function viteMockServe(opt: ViteMockOptions = {}): Plugin {
       const { injectCode = '' } = opt
 
       return {
+        // @ts-ignore
         map: needSourcemap ? this.getCombinedSourcemap() : null,
         code: `${code}\n${injectCode}`
       }

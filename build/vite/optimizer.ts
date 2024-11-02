@@ -6,6 +6,10 @@ const vendorLibs: { match: string[]; output: string }[] = [
     output: 'ant-design-vue',
   },
   {
+    match: ['echarts'],
+    output: 'echarts',
+  },
+  {
     match: ['@gx-design-vue/pro-table'],
     output: 'pro-table',
   },

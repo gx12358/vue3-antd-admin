@@ -37,11 +37,6 @@ const settingConfig: SettingConfig = {
       name: 'dayjs',
       globalName: 'dayjs',
       path: 'dayjs.min.js'
-    },
-    {
-      name: 'echarts',
-      globalName: 'echarts',
-      path: 'echarts.min.js'
     }
   ],
   // 开启proxy
