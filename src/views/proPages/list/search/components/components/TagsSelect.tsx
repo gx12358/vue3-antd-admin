@@ -51,6 +51,7 @@ const TagsSelect = defineComponent({
         return props.value as string[]
       if (props.selectType === 'radio')
         return [ props.value as string ]
+      return []
     }
 
     const [ checkValue, changeCheckList ] = useMergedState<string[]>(handleCheckValue, {

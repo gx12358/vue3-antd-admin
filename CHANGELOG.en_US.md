@@ -1,3 +1,54 @@
+## 3.0.7 (2025-01-02)
+
+## Upgrade Notes
+
+### ✨ CHORE
+
+- **Plugins**
+  - Updated `@gx-design-vue/***` to the latest version
+  - Upgraded `vite` and related plugins to the latest versions
+
+### ✨ REFACTOR
+
+- **Build Directory**
+  - Refactored to `internal/vite-config` for easier migration to `pnpm-workspace` in the future
+  - Removed less frequently used plugins like `vite-plugin-pwa`
+- **Mock**
+  - Removed `mock`, `viteMock`, and related plugins
+  - Added `vite-plugin-fake-server` and `@faker-js/faker` plugins, with `mock` now using `faker`
+  - Refactored `mock`, including usage methods and local token validation
+- **config/default/defaultSettings.ts**
+  - Consolidated and reorganized parameters
+- **Pro Layout (`@gx-design-vue/pro-layout`)**
+  - Adjusted `props` parameters to align with the refactored `@gx-design-vue/pro-layout` plugin
+- **src/store**
+  - Removed `PiniaStoreValue` type; added `omitEmpty` parameter to `useReactiveState` for merging purposes
+
+### ✨ FIX
+
+- **Pro Table**
+  - Refactored code to accommodate `useTable` upgrades
+  - Adjusted `props` parameters to align with the refactored `@gx-design-vue/pro-table` plugin
+- **utils/request**
+  - Added the `VITE_PROXY_PREFIX` prefix to `baseUrl`
+- **utils/accessToken**
+  - Token storage no longer uses concatenated names
+- **utils/storage**
+  - Fixed an issue where `getStorage` returned empty values despite having data
+- **eslint**
+  - Adopted the `@antfu/eslint-config` plugin and formatted global code accordingly
+
+### ✨ TYPES
+
+- **types/mock.d.ts**
+  - Refactored types to support the `@faker-js/faker` plugin
+- **SettingConfig**
+  - Refactored the `SettingConfig` type
+- **ViteEnv**
+  - Added `VITE_PROXY_PREFIX` and `VITE_IS_MOCK` environment variables
+- **system.d.ts**
+  - Consolidated plugin types into `system.d.ts`
+
 ## 3.0.6 (2024-11-02)
 
 ## Upgrade instructions

@@ -1,6 +1,6 @@
 <script setup lang="ts" name="AccountCenter">
-import type { GroupListItem } from '@gx-mock/datasSource/group'
-import type { TabsKey } from '@gx-mock/datasSource/user/account'
+import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
+import type { TabsKey } from '@gx-mock/routers/user/account.fake'
 import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
@@ -43,24 +43,31 @@ const { data: groupData, loading } = useRequest<GroupListItem[]>(getAccountGroup
   ready
 })
 
-const { data: countData, loading: countLoading } = useRequest<Record<TabsKey, number>>(getAccountCount, {
-  defaultData: {
-    articles: 0,
-    applications: 0,
-    projects: 0
-  },
-  manual: true,
-  defaultLoading: true,
-  ready
-})
+const { data: countData, loading: countLoading } = useRequest<Record<TabsKey, number>>(
+  getAccountCount,
+  {
+    defaultData: {
+      articles: 0,
+      applications: 0,
+      projects: 0
+    },
+    manual: true,
+    defaultLoading: true,
+    ready
+  }
+)
 
 const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
 
 const contentHeight = computed(() => {
   const herderHeight = token.value.layout?.header?.heightLayoutHeader
   const tabsHeight = global.globalLayout?.showTabsBar ? '62px' : '0px'
-  const pageHeaderHieght = global.globalLayout?.pageContainerProps?.pageHeaderRender === false ? '0px' : '46px'
-  return isMobile.value ? undefined : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
+  const pageHeaderHieght = global.globalLayout?.pageContainerProps?.pageHeaderRender === false
+    ? '0px'
+    : '46px'
+  return isMobile.value
+    ? undefined
+    : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
 })
 
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
@@ -90,7 +97,7 @@ provideAccountCenterContext({
   activeKey,
   isMobile,
   countLoading,
-  contentHeight,
+  contentHeight
 })
 </script>
 
@@ -178,15 +185,18 @@ provideAccountCenterContext({
   position: sticky;
   top: (48 + 24 + 62px);
 }
+
 .card-right {
   &:deep(.ant-tabs-nav) {
     margin-bottom: 0;
     padding: 0 16px;
   }
+  
   &:deep(.gx-pro-card-body) {
     padding: v-bind(cardRightBodyHeight);
   }
 }
+
 .group-card {
   &:deep(.gx-pro-card-loading-content) {
     padding: 0 !important;

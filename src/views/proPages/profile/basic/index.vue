@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import type { ProColumnsType, ProTableBodyCellProps } from '@gx-design-vue/pro-table'
-import type { BasicDetails, CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
+import type {
+  BasicDetails,
+  CommodityRecord,
+  ScheduleRecord
+} from '@gx-mock/routers/profile/basic.fake'
+import useProTabel from '@/hooks/web/useProTabel'
 import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useTable } from '@gx-design-vue/pro-table'
 import dayjs from 'dayjs'
 import { goodsColumns, scheduleColumns } from './utils/columns'
 import { defaultSTableState, descriptionsState, statusState } from './utils/config'
@@ -12,21 +15,21 @@ const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic,
   defaultData: {}
 })
 
-const commodityRef = ref()
 const scheduleRef = ref()
+const commodityRef = ref()
 
-const commodityState = useTable<Partial<CommodityRecord>>(commodityRef, {
+const commodityState = useProTabel<Partial<CommodityRecord>>(commodityRef, {
   state: {
-    ...defaultSTableState,
+    ...defaultSTableState as any,
     headerTitle: '退货商品',
     loading: true,
     dataSource: []
   }
 })
 
-const scheduleState = useTable<Partial<ScheduleRecord>>(scheduleRef, {
+const scheduleState = useProTabel<Partial<ScheduleRecord>>(scheduleRef, {
   state: {
-    ...defaultSTableState,
+    ...defaultSTableState as any,
     headerTitle: '退货进度',
     dataSource: [],
     loading: true,

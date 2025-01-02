@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-import type { RadarRecord } from '@gx-mock/datasSource/dataChart'
-import type { GroupListItem } from '@gx-mock/datasSource/group'
-import type { MailNoticeListItem } from '@gx-mock/datasSource/notice'
-import type { ProjectHomeCount, ProjectListItem } from '@gx-mock/datasSource/project'
-import type { ListSearchParams } from '@gx-mock/util/table'
+import type { RadarRecord } from '@gx-mock/routers/dataChart/index.fake'
+import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
+import type { MailNoticeListItem } from '@gx-mock/routers/notice/index.fake'
+import type { ProjectHomeCount, ProjectListItem } from '@gx-mock/routers/project/index.fake'
+import type { ListSearchParams } from '@gx-mock/utils/table'
 import { getRadarData } from '@/services/dataCenter'
 import { getGroupTopList } from '@/services/groupCenter'
 import { getMailNotice } from '@/services/mailCenter'
 import { getProjectList, getProjectNums } from '@/services/projectCenter'
-import { timeFix, toChinesNum } from '@/utils/util'
+import { timeFix } from '@/utils/util'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useThemeStyle } from '@gx-admin/hooks/web'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { compareArray } from '@gx-design-vue/pro-utils'
+import { compareArray, toChinesNum } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
 import { reactive } from 'vue'
@@ -66,7 +66,7 @@ const {
       pageSize: 6
     },
     defaultData: [],
-    onAfterMutateData: data => data.list,
+    onAfterMutateData: data => data.data.list,
     defaultLoading: true
   }
 )
@@ -154,7 +154,7 @@ watch(radarList, (val) => {
       <div class="text-hidden-1 text-20px leading-32px font-600">
         {{ currentRoute.meta?.title }}
       </div>
-      <div class="flex items-center justify-between mt-12px flex-wrap">
+      <div class="flex items-center justify-between mt-12px flex-wrap gap-20px">
         <div class="flex gap-24px lt-md:w-full">
           <a-avatar class="rd-50% w-70px h-70px overflow-hidden" style="flex-shrink: 0" :src="user.userInfo.avatar" />
           <div class="flex flex-col py-10px justify-between gap-10px">
@@ -166,7 +166,7 @@ watch(radarList, (val) => {
             </div>
           </div>
         </div>
-        <div v-if="Object.keys(projectCount).length" class="flex items-center gap-32px lt-md:w-full lt-md:mt-20px">
+        <div v-if="Object.keys(projectCount || {}).length" class="flex items-center gap-32px lt-md:w-full lt-md:mt-20px">
           <div class="statistic_item">
             <a-statistic title="项目数" :value="projectCount.projectNum" />
           </div>

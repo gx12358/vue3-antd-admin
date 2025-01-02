@@ -68,6 +68,7 @@ declare module 'vue' {
     ATypographyParagraph: typeof import('ant-design-vue/es')['TypographyParagraph']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     ATypographyTitle: typeof import('ant-design-vue/es')['TypographyTitle']
+    AuthGroup: typeof import('./../src/components/GlobalLayout/AuthGroup/index.vue')['default']
     CloseCircleOutlined: typeof import('@ant-design/icons-vue')['CloseCircleOutlined']
     ClusterOutlined: typeof import('@ant-design/icons-vue')['ClusterOutlined']
     ContactsOutlined: typeof import('@ant-design/icons-vue')['ContactsOutlined']

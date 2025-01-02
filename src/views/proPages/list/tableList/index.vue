@@ -1,9 +1,8 @@
 <script setup lang="ts" name="TableList">
-import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
-import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
+import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
+import useProTabel from '@/hooks/web/useProTabel'
 import { deleteRules, getRulesList } from '@/services/listCenter'
-import { useTable } from '@gx-design-vue/pro-table'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import OperateModal from './components/OperateModal.vue'
@@ -16,12 +15,10 @@ const operate = ref()
 const preview = ref()
 const tableRef = ref()
 
-const { selectedKey, setLoading, reload, tableState } = useTable<RulesListItem>(tableRef, {
+const { selectedKeys, setLoading, reload, tableState } = useProTabel<RulesListItem>(tableRef, {
   state: {
     headerTitle: '查询表格',
     columns,
-    bordered: false,
-    showIndex: false,
     rowKey: 'id',
     pagination: {
       pageSize: 20
@@ -106,11 +103,11 @@ const removeTableRule = async (id: number) => {
         </template>
       </template>
     </g-pro-table>
-    <Teleport v-if="isMounted && selectedKey?.length" to=".gx-pro-table-list-toolbar">
+    <Teleport v-if="isMounted && selectedKeys?.length" to=".gx-pro-table-list-toolbar">
       <div class="mb-16px px-24px py-12px bg-rgba-[0-0-0-0.02] rd-6px flex items-center justify-between">
         <div class="flex gap-8px text-rgba-[0-0-0-0.45]">
           <span>已选择</span>
-          <span>{{ selectedKey.length }}</span>
+          <span>{{ selectedKeys.length }}</span>
           <span>项</span>
         </div>
         <a @click="tableState.rowSelection && (tableState.rowSelection.selectedRowKeys = [])">取消选择</a>

@@ -1,4 +1,4 @@
-import type { BasicCountState } from '@gx-mock/datasSource/list/basic'
+import type { BasicCountState } from '@gx-mock/routers/list/basic.fake'
 
 export type CountState = Record<keyof BasicCountState, { name: string; unit: string; count: number }>
 

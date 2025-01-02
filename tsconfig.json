@@ -23,11 +23,13 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["src/*"],
+      "@gx-mock": ["mock/index.ts"],
       "@gx-mock/*": ["mock/*"],
       "@gx-config": ["config/index.ts"],
       "@gx-vuex": ["src/store/index.ts"],
       "@gx-admin/hooks/*": ["src/hooks/*"],
-      "@gx-design/*": ["src/components/GDesign/*"]
+      "@gx-design/*": ["src/components/GDesign/*"],
+      "@gx-admin/vite-config/*": ["internal/vite-config/*"],
     }
   },
   "include": [
@@ -39,10 +41,11 @@
     "src/**/*.vue",
     "types/*.d.ts",
     "types/*.ts",
-    "build/**/*.ts",
-    "build/**/*.d.ts",
+    "internal/**/*.ts",
+    "internal/**/*.d.ts",
+    "mock/*.ts",
     "mock/**/*.ts",
     "vite.config.ts"
   ],
-  "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js", ".history", "unocss.config.ts"]
+  "exclude": ["node_modules", "dist", "**/*.js"]
 }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { GProField, type ProFieldFCMode } from '@gx-design-vue/pro-field'
 import dayjs from 'dayjs'
-import { ref } from 'vue'
 
 const state = ref<ProFieldFCMode>('read')
 const plain = ref(false)

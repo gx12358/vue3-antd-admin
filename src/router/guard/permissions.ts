@@ -1,7 +1,9 @@
 import type { Router, RouteRecordRaw } from 'vue-router'
+import { usePermissions } from '@gx-admin/hooks/system'
 import { defaultSettings } from '@gx-config'
+import { isArray } from '@gx-design-vue/pro-utils'
 
-const { authentication, loginInterception, recordRoute, routesWhiteList } = defaultSettings
+const { authentication, loginInterception, recordRoute, routesWhiteList } = defaultSettings.system
 
 export function createPermissionGuard(router: Router) {
   const userStore = useStoreUser()
@@ -21,45 +23,56 @@ export function createPermissionGuard(router: Router) {
       if (!token) {
         userStore.resetPermissions()
         if (recordRoute) {
-          next({ path: '/user/login', query: { redirect: to.path }, replace: true })
+          next({ path: '/user/login', query: { redirect: to.fullPath }, replace: true })
         } else {
           next({ path: '/user/login', replace: true })
         }
         return
       }
 
-      const hasRoles = permissionStore.role.length > 0
+      const hasRoles = permissionStore.role
+
       if (hasRoles) {
-        next()
+        if (isArray(hasRoles) && hasRoles.length > 0) {
+          const meta = to.meta as SystemMenuMeta
+          if (meta.permissions) {
+            const { permission } = usePermissions(meta.permissions, 'some')
+            if (permission.value) {
+              next()
+            } else {
+              next({ path: '/exception/403', replace: true })
+            }
+          } else {
+            next()
+          }
+        } else {
+          next({ path: '/exception/403', replace: true })
+        }
         return
       }
 
-      const checkUserPremission = await userStore.checkUserPremission()
-      if (!checkUserPremission) {
+      const status = await userStore.checkUserPremission()
+      if (status === 1) {
+        const routes = authentication === 'all'
+          ? await routeStore.setAllRoutes()
+          : await routeStore.setRoutes()
+        if (routes?.length) {
+          routes.forEach((route) => {
+            router.addRoute(route as unknown as RouteRecordRaw)
+          })
+          next({ ...to, replace: true })
+          return
+        }
+      } else {
         userStore.resetPermissions()
         if (recordRoute) {
-          next({ path: '/user/login', query: { redirect: to.path }, replace: true })
+          next({ path: '/user/login', query: { redirect: to.fullPath }, replace: true })
         } else {
           next({ path: '/user/login', replace: true })
         }
         return
       }
-
-      const routes = authentication === 'all'
-        ? await routeStore.setAllRoutes()
-        : await routeStore.setRoutes()
-      if (routes?.length) {
-        routes.forEach((route) => {
-          router.addRoute(route as unknown as RouteRecordRaw)
-        })
-
-        next({ path: to.fullPath, replace: true })
-        return
-      }
-
-      next({ path: '/exception/403', replace: true })
     }
-
     next()
   })
 }

@@ -8,7 +8,7 @@ import { useScroll } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
 import { computed, isRef, reactive, ref } from 'vue'
 
-const { viewScrollRoot } = defaultSettings
+const { viewScrollRoot } = defaultSettings.system
 
 export default function <T, R = any>(serve: any, options: {
   fetchNextType: 'scroll' | 'button';
@@ -43,29 +43,32 @@ export default function <T, R = any>(serve: any, options: {
     pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize || 10
   })
 
-  const { data, loading, refresh } = useRequest<PageResult<T>, R & PageState, T[]>(serve, {
-    params: computed(() => ({
-      ...cloneDeep(options.otherParmas),
-      ...pageState
-    } as (R & PageState))),
-    stopWatchParams,
-    onAfterMutateData: (response) => {
-      return options?.onAfterMutateData?.(response.list || []) || (response?.list || [])
-    },
-    onBefore: (params) => {
-      if (params?.pageNum === 1) {
-        const reloadClear = isBoolean(options?.reloadClear) ? options?.reloadClear : true
-        if (reloadClear)
-          list.value = []
-        state.init = false
+  const { loading, refresh } = useRequest<PageResult<T>, R & PageState, T[]>(
+    serve,
+    {
+      params: computed(() => ({
+        ...cloneDeep(options.otherParmas),
+        ...pageState
+      } as (R & PageState))),
+      stopWatchParams,
+      onAfterMutateData: (response) => {
+        return options?.onAfterMutateData?.(response.data.list || []) || (response.data?.list || [])
+      },
+      onBefore: (params) => {
+        if (params?.pageNum === 1) {
+          const reloadClear = isBoolean(options?.reloadClear) ? options?.reloadClear : true
+          if (reloadClear)
+            list.value = []
+          state.init = false
+        }
+      },
+      onSuccess: (data, response) => {
+        list.value = pageState?.pageNum === 1 ? data : [ ...list.value as unknown as T[], ...data ]
+        state.isMore = list.value.length < (response.data.totalCount || 0)
+        state.init = true
       }
-    },
-    onSuccess: (response) => {
-      list.value = pageState?.pageNum === 1 ? data.value as unknown as any[] : unref(list).concat(data.value)
-      state.isMore = unref(list).length < (response.totalCount || 0)
-      state.init = true
     }
-  })
+  )
 
   const hasEmpty = computed(() => state.init && unref(list).length === 0)
   const initLoading = computed(() => !state.init && loading.value)

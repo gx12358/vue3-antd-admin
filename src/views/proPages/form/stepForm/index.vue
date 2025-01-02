@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-design-vue/pro-provider'
 import { getStepForm } from '@/services/formCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
@@ -59,7 +58,7 @@ const rulesRef = reactive<Partial<RulesState<FormState>>>({
 
 const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, rulesRef)
 
-const { loading } = useRequest<FormState, { userId: number; }>(getStepForm, {
+const { loading } = useRequest<FormState, { userId?: number; }>(getStepForm, {
   params: {
     userId: user.userInfo.userId
   },

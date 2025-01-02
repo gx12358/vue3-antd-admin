@@ -14,10 +14,11 @@ import {
   getFileSuffix,
   getMediaInfos,
   getPrefixCls,
-  getRandomNumber,
   getSlot,
   getSlotVNode,
-  getVideoCoverPicture
+  getVideoCoverPicture,
+  isBoolean,
+  isObject
 } from '@gx-design-vue/pro-utils'
 import { message, Upload } from 'ant-design-vue'
 import { cloneDeep, pick } from 'lodash-es'
@@ -32,7 +33,6 @@ import {
   unref
 } from 'vue'
 import MaterialView from '../MaterialView'
-import ImageEditorModal from './components/ImageEditorModal'
 import UploadCard from './components/UploadCard'
 import { useUploadData } from './hooks/useUploadData'
 import { proUploadProps } from './props'
@@ -49,11 +49,12 @@ const GUpload = defineComponent({
   slots: Object as SlotsType<{
     default: any;
     fallback: any;
+    wordExtra: any;
     placeholder: any;
     customOperationRender: any;
     triggerRender: GUploadProps['triggerRender'];
   }>,
-  emits: [ 'request', 'deleteBefore', 'errorRequest', 'change', 'downLoad', 'openFileDialog' ],
+  emits: [ 'request', 'deleteBefore', 'errorRequest', 'change', 'changeDownloadLoading', 'openFileDialog' ],
   setup(props, { emit, attrs, slots }) {
     const baseClassName = getPrefixCls({
       suffixCls: 'upload'
@@ -184,7 +185,7 @@ const GUpload = defineComponent({
       if (props.request) {
         const response = await props.request(file, uuid)
         if (response.code === 0) {
-          return response.previewUrl
+          return response.previewUrl || response.url
         } else {
           emit('errorRequest', response)
         }
@@ -401,37 +402,6 @@ const GUpload = defineComponent({
       }
     }
 
-    const handleEditOk = async (base64Url: string, params: { suffix: string; uid: string }) => {
-      changeDataValue(
-        params.uid,
-        {
-          progress: 0,
-          uploadStatus: 'active',
-          uploadLoading: true
-        }
-      )
-
-      const { width, height } = await getMediaInfos({
-        fileType: '1',
-        url: base64Url
-      })
-      const file: File = dataURLtoFile(
-        base64Url,
-        `${getRandomNumber().uuid(5)}.${params.suffix}`
-      )
-      const sizeSolt = (file.size / 1024 / 1024).toFixed(2)
-      changeDataValue(
-        params.uid,
-        {
-          width,
-          height,
-          sizeSolt,
-          size: file.size
-        }
-      )
-      requestUpload(file, params.uid)
-    }
-
     provideUploadContext({
       uploadList: getDataValueRef
     })
@@ -442,13 +412,24 @@ const GUpload = defineComponent({
       previewConfig.visible = true
     }
 
-    const downLoad = async (url) => {
-      emit('downLoad', true)
-      await download({
-        url,
-        direct: true
-      })
-      emit('downLoad', false)
+    const downLoad = async (record: MaterialListItem) => {
+      const url = isBoolean(props.downloadProps)
+        ? record.previewUrl
+        : props.downloadProps?.useLocal
+          ? record.localPreviewUrl
+          : record.previewUrl
+      const name = isObject(props.downloadProps) && props.downloadProps?.useFileName
+        ? record.name
+        : undefined
+      if (url) {
+        emit('changeDownloadLoading', true)
+        await download({
+          url,
+          name,
+          direct: true
+        })
+        emit('changeDownloadLoading', false)
+      }
     }
 
     const watermark = async (uuid, type) => {
@@ -496,7 +477,7 @@ const GUpload = defineComponent({
         customRequest={e => uploadHttp(e)}
         disabled={props.disabled}
         maxCount={1}
-        accept={props.accept}
+        accept={props.accept || undefined}
         multiple={props.multiple}
         showUploadList={false}
         name="file"
@@ -526,11 +507,12 @@ const GUpload = defineComponent({
             <div
               class={{
                 [`${baseClassName}-button`]: true,
+                [`${props.triggerClass}`]: !!props.triggerClass,
                 [`${baseClassName}-button-disabled`]: props.disabled,
                 [`${baseClassName}-button-circle`]: props.shape === 'circle'
               }}
               onClick={() => props.onOpenFileDialog?.()}
-              style={props.cardStyle}
+              style={props.triggerStyle}
             >
               {triggerIconRender ? triggerIconRender?.() : <PlusOutlined />}
             </div>
@@ -551,7 +533,7 @@ const GUpload = defineComponent({
         props,
         'placeholder'
       )
-      const customOperationRender = getSlot<GUploadProps['customOperationRender']>(
+      const customOperationRender = getSlot<any>(
         slots,
         props,
         'customOperationRender'
@@ -577,7 +559,7 @@ const GUpload = defineComponent({
                   root={uploadCard.value}
                   onView={(type, url) => view(type, url)}
                   onDelete={uuid => deleteFile(uuid)}
-                  onDownload={url => downLoad(url)}
+                  onDownload={downLoad}
                   onWaterMark={(uuid, type) => watermark(uuid, type)}
                   onMediaCropper={mediaCropper}
                 />
@@ -586,7 +568,6 @@ const GUpload = defineComponent({
             </div>
             {wordExtraRender && <div class={`${baseClassName}-word-extra`}>{wordExtraRender}</div>}
           </div>
-          <ImageEditorModal ref={imageEditor} onOk={handleEditOk} />
           <MaterialView
             {...previewConfig}
             onChange={visible => (previewConfig.visible = visible)}

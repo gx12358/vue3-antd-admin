@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { AppRouteModule } from '@gx-design-vue/pro-layout'
 import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
+import useProTabel from '@/hooks/web/useProTabel'
 import { getMenuList } from '@/services/systemCenter'
-import { useTable } from '@gx-design-vue/pro-table'
 import { treeData } from '@gx-design-vue/pro-utils'
 import { columns, type SearchConfig } from './utils/columns'
 
@@ -16,18 +15,17 @@ const state = reactive({
 
 const tableRef = ref()
 
-const { tableState } = useTable<AppRouteModule, SearchConfig>(tableRef, {
+const { tableState } = useProTabel<SystemMenuItem, SearchConfig>(tableRef, {
   state: {
     columns,
-    draggabled: true,
     rowKey: 'menuId'
   },
   request: async () => {
-    const response = await getMenuList<AppRouteModule[], { total: number }>()
+    const response = await getMenuList<SystemMenuItem[], { total: number }>()
     
     return {
       success: !!response,
-      data: treeData(response.data || [], 'menuId') as AppRouteModule[],
+      data: treeData(response.data || [], { id: 'menuId' }),
       total: response?.total || 0
     }
   }
@@ -36,13 +34,13 @@ const { tableState } = useTable<AppRouteModule, SearchConfig>(tableRef, {
 
 <template>
   <g-pro-page-container>
-    <g-pro-table v-bind="tableState">
-      <template #bodyCell="{ column, text, record }: ProTableBodyCellProps<AppRouteModule>">
+    <g-pro-table v-bind="tableState" ref="tableRef">
+      <template #bodyCell="{ column, text, record }: ProTableBodyCellProps<SystemMenuItem>">
         <template v-if="column.dataIndex === 'menuType'">
           {{ state.menuTypeList[text] || '-' }}
         </template>
         <template v-if="column.dataIndex === 'hidden'">
-          {{ record.hidden ? '隐藏' : '显示' }}
+          {{ record.meta?.hidden ? '隐藏' : '显示' }}
         </template>
       </template>
     </g-pro-table>

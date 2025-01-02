@@ -4,7 +4,7 @@ import { defaultSettings } from '@gx-config'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { constantRoutes } from './routes'
 
-const { routerMode } = defaultSettings
+const { routerMode } = defaultSettings.system
 
 function handleRouterMode() {
   switch (routerMode) {

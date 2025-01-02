@@ -1,6 +1,6 @@
 import type { ProColumnsType, ProTableProps } from '@gx-design-vue/pro-table'
-import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
-import type { ListSearchParams } from '@gx-mock/util/table'
+import type { AdvancedTableRecord } from '@gx-mock/routers/profile/advanced.fake'
+import type { ListSearchParams } from '@gx-mock/utils/table'
 import { getAdvancedTable1, getAdvancedTable2, getAdvancedTable3 } from '@/services/profileCenter'
 
 export type TabsStateActiveKey = 'table1' | 'table2' | 'table3'
@@ -26,7 +26,7 @@ export const tabPaneState: TabPaneStateRecord[] = [
     name: '操作日志三',
     key: 'table3',
     request: getAdvancedTable3
-  },
+  }
 ]
 
 export const columns: ProColumnsType = [
@@ -78,5 +78,5 @@ export const statusState: Record<AdvancedTableRecord['status'], {
   reject: {
     status: 'error',
     text: '驳回'
-  },
+  }
 }

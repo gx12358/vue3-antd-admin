@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ListItemDataType } from '@gx-mock/datasSource/list'
+import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
 import { getArticleList } from '@/services/listCenter'
 import { GProCard } from '@gx-design-vue/pro-card'
@@ -29,7 +29,7 @@ const tableRef = ref()
 const { loading, tableState } = useTable<ListItemDataType, SearchState>(tableRef, {
   state: {
     rowKey: 'id',
-    params: { ...searchParams },
+    params: { ...toRaw(searchParams) },
     pagination: {
       current: 1,
       pageSize: 8
@@ -79,7 +79,9 @@ watchEffect(() => {
                   {{ item.description }}
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class=" text-rgba-[0-0-0-0.65] text-12px">{{ dayjs(item.createdAt).fromNow() }}</span>
+                  <span class=" text-rgba-[0-0-0-0.65] text-12px">
+                    {{ dayjs(item.createdAt).fromNow() }}
+                  </span>
                   
                   <a-avatar-group size="small" :max-count="4">
                     <template v-for="member in item.members" :key="member.id">

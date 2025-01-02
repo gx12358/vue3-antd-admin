@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ProFormRef } from '@gx-design-vue/pro-form'
-import type { BasicFormState } from '@gx-mock/datasSource/form'
+import type { BasicFormState } from '@gx-mock/routers/form/index.fake'
 import type { RangePickerProps } from 'ant-design-vue/es/date-picker/dayjs'
 import type { Dayjs } from 'dayjs'
 import { submitForm } from '@/services/formCenter'
@@ -10,7 +10,7 @@ import {
   GProFormDigit,
   GProFormRadioGroup,
   GProFormText,
-  GProFormTextArea,
+  GProFormTextArea
 } from '@gx-design-vue/pro-form'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
@@ -65,7 +65,7 @@ const handleFinish = async (params: FormState) => {
   const response = await submitForm({
     ...omit(params, 'timeRange'),
     startTime: params.timeRange?.[0] ? dayjs(params.timeRange?.[0]).format('YYYY-MM-DD') : '',
-    endTime: params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : '',
+    endTime: params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : ''
   } as BasicFormState)
   
   if (response) {

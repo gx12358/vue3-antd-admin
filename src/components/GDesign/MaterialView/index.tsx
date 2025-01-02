@@ -1,16 +1,16 @@
 import type { ExtractPropTypes } from 'vue'
 import Nodata from '@/assets/public_images/nodata.svg'
-import PlayerAudio from '@gx-design/PlayerAudio'
-import GPlayerVideo from '@gx-design/PlayerVideo'
 import { ImagePreview } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import {
+  fileTypes,
   getFileSuffix,
   getPrefixCls,
-  globalConfig,
   isArray,
   isString
 } from '@gx-design-vue/pro-utils'
+import PlayerAudio from '@gx-design/PlayerAudio'
+import GPlayerVideo from '@gx-design/PlayerVideo'
 import { Empty } from 'ant-design-vue'
 import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
@@ -41,6 +41,7 @@ export default defineComponent({
     const getModalTitle = computed(() => (props.type === '2' ? '音频播放' : '视频播放'))
 
     const getViewUrl = computed(() => {
+      if (!props.url) return []
       if (props.type === '1' && isString(props.url)) {
         return [ props.url ]
       }
@@ -56,9 +57,9 @@ export default defineComponent({
       }
       const fileSuffix = getFileSuffix(getViewUrl.value as string)
       if (props.type === '2') {
-        return globalConfig.audioAllowType.includes(fileSuffix.toLowerCase())
+        return fileTypes.audioAllowType.includes(fileSuffix.toLowerCase())
       }
-      return globalConfig.videoAllowType.includes(fileSuffix.toLowerCase())
+      return fileTypes.videoAllowType.includes(fileSuffix.toLowerCase())
     })
 
     const getClassName = computed(() => {
@@ -161,7 +162,7 @@ export default defineComponent({
         >
           {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
-              {showViewer.value && props.type === '1' && (
+              {showViewer.value && (
                 <ImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
               )}
               <GProModal

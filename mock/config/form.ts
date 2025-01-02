@@ -1,7 +1,5 @@
 import type { Dayjs } from 'dayjs'
-import mockjs from 'mockjs'
-
-const { Random } = mockjs
+import { faker, fakerZH_CN } from '@faker-js/faker'
 
 export interface PublicFormState {
   id?: string;
@@ -20,13 +18,13 @@ export interface PublicFormState {
 }
 
 export const formState: Partial<PublicFormState> = {
-  id: Random?.guid(),
-  name: Random.cname(),
-  company: Random.cname(),
-  contract: Random.cname(),
-  captcha: Random.cname(),
-  project: Random.cname(),
-  mangerName: Random.cname(),
-  phone: '183****7521',
-  count: Random.integer(10, 100),
+  id: faker.string.nanoid(),
+  name: fakerZH_CN.person.fullName(),
+  company: fakerZH_CN.person.fullName(),
+  contract: fakerZH_CN.person.fullName(),
+  captcha: fakerZH_CN.person.fullName(),
+  project: fakerZH_CN.person.fullName(),
+  mangerName: fakerZH_CN.person.fullName(),
+  phone: fakerZH_CN.phone.number(),
+  count: faker.number.int({ min: 10, max: 100 }),
 }

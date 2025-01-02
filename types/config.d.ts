@@ -6,36 +6,52 @@ declare interface CdnModuleList {
 }
 
 declare interface SettingConfig {
-  publicPath: string;
-  outputDir: string;
-  assetsDir: string;
-  title: string;
-  shortName: string;
-  titleSeparator: string;
-  titleReverse: boolean;
-  waterMark: boolean;
-  waterMarkTitle: string;
-  viewScrollRoot: string;
-  useCdn: boolean;
-  cdnUrl: string;
-  cdnModules: CdnModuleList[];
-  useProxy: boolean;
-  requestPrefix: string;
-  proxyTarget: string | Record<string, any>;
-  mockPrefixUrl?: string;
-  devPort: number;
-  copyright: string;
-  keepAliveMaxNum: number;
-  routerMode: string;
-  routesWhiteList: string[];
-  tokenName: string;
-  tokenTableName: string;
-  storage: 'localStorage' | 'sessionStorage' | 'cookie';
-  recordRoute: boolean;
-  loginInterception: boolean;
-  loginRSA: boolean;
-  authentication: 'all' | 'front';
-  checkMockToken: boolean;
+  servive: {
+    port: number;
+  };
+  build: {
+    publicPath: string;
+    outputDir: string;
+    assetsDir: string;
+  };
+  system: {
+    title: string;
+    shortName: string;
+    titleSeparator: string;
+    titleReverse: boolean;
+    waterMark: {
+      use: boolean;
+      content: string;
+    };
+    viewScrollRoot: string;
+    copyright: string;
+    keepAliveMaxNum: number;
+    routerMode: string;
+    routesWhiteList: string[];
+    recordRoute: boolean;
+    loginInterception: boolean;
+    loginRSA: boolean;
+    authentication: 'all' | 'front';
+  };
+  cdn: {
+    use: boolean;
+    url: string;
+    modules?: CdnModuleList[]
+  };
+  proxy: {
+    use: boolean;
+    target: string | Record<string, any>;
+  };
+  mock: {
+    prefix: string;
+    // 0 校验是否有token值 1 校验是否有token值且token时有效的（mock用户） -1 不校验
+    checkToken: -1 | 0 | 1;
+  };
+  token: {
+    name: string;
+    storage: 'localStorage' | 'sessionStorage' | 'cookie';
+    storageName: string;
+  };
 }
 
 declare interface NetworkConfig {

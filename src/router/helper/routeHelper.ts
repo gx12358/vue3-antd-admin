@@ -158,13 +158,13 @@ function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
   const meta: MenuDataItem = menuItem.meta as MenuDataItem ?? menuItem
   const {
     link,
-    linkStatus = 0,
+    linkStatus,
     title = '',
     menuType,
     icon = '',
     menuSelectKey,
     order,
-    iconFont,
+    iconFont = 'iconfont',
     tabState, // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
     isHome = 0, // 是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
     keepAlive = false,

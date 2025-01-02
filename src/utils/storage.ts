@@ -1,11 +1,7 @@
-import { Decrypt, Encrypt } from '@/utils/crypto'
-import { isPro, typeViteEnv } from '@/utils/env'
-import { isJSONStr } from '@/utils/validate'
-import { defaultSettings } from '@gx-config'
-import { isNumber, isObject, isString } from '@gx-design-vue/pro-utils'
+import { isJSONStr, isNumber, isObject, isString } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
-
-const { shortName } = defaultSettings
+import { Decrypt, Encrypt } from './crypto'
+import { isPro, typeViteEnv } from './env'
 
 function isEncryption(status: boolean) {
   return isPro() ? status : false
@@ -25,7 +21,7 @@ function handleStorageValue(value: string) {
  */
 export function getStorageKey(key: string, originKey?: boolean) {
   const { pkg } = __APP_INFO__
-  return originKey ? key : `${shortName}_${pkg.version}_${typeViteEnv('VITE_APP_ENV') === 'dev'
+  return originKey ? key : `${pkg.name}_${pkg.version}_${typeViteEnv('VITE_APP_ENV') === 'dev'
     ? 'development'
     : typeViteEnv('VITE_USE_MODE')}_${key}`
 }
@@ -66,7 +62,7 @@ export function getStorage({
       }
     }
   } else if (result && isString(result)) {
-    return isJSONStr(result) ? result : ''
+    return isJSONStr(result) ? JSON.parse(result) : result
   }
   return typeof result === 'string' ? result : result?.['value'] || result || ''
 }

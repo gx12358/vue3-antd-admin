@@ -1,34 +1,47 @@
 import type { Ref } from 'vue'
-import { isArray, isObject, isString } from '@gx-design-vue/pro-utils'
+import { isArray, isBoolean, isFunction, isString } from '@gx-design-vue/pro-utils'
 import { ref } from 'vue'
 
-export function usePermissions(): {
-  permission: Ref<boolean | object>;
-  hasPermission: (value: object | string | string[]) => void
+export function usePermissions(rootValue?: any, rootType?: 'some' | 'all'): {
+  permission: Ref<boolean | object>
+  hasPermission: (value: object | string | string[], type?: 'some' | 'all') => boolean
 } {
   const { permission } = useStore()
   const all_permission = ref('*:*:*')
   const permissionRef = ref<object | boolean>({})
 
-  function hasPermission(value: object | string | string[]) {
-    if (value && isObject(value) && Object.keys(value).length > 0) {
-      Object.keys(value).map((item) => {
-        let isExist = true
-        const permissionFlag = value[item]
-        const hasPermissions = permission.ability.some((el) => {
-          return all_permission.value === el || permissionFlag.includes(el)
-        })
-        if (!hasPermissions) {
-          isExist = false
+  function hasPermission(value: any, type: 'some' | 'all' = 'some') {
+    let hasAuth = false
+    if (value) {
+      const admin = permission.ability.includes(all_permission.value)
+      if (admin) {
+        hasAuth = true
+        permissionRef.value = true
+      } else if (isString(value)) {
+        permissionRef.value = permission.ability.includes(value)
+        hasAuth = permission.ability.includes(value)
+      } else if (isArray(value)) {
+        if (type === 'some') {
+          const stringAuth = value.filter(key => isString(key)).some(key => permission.ability.includes(key))
+          const fnAuth = value.filter(fn => isFunction(fn)).some(fn => !!fn())
+          const boolAuth = value.filter(fn => isBoolean(fn)).some(fn => fn)
+          permissionRef.value = stringAuth || fnAuth || boolAuth
+          hasAuth = stringAuth || fnAuth || boolAuth
+        } else if (type === 'all') {
+          const stringAuth = value.filter(key => isString(key)).every(key => permission.ability.includes(key))
+          const fnAuth = value.filter(fn => isFunction(fn)).every(fn => !!fn())
+          const boolAuth = value.filter(fn => isBoolean(fn)).every(fn => fn)
+          permissionRef.value = stringAuth && fnAuth && boolAuth
+          hasAuth = stringAuth && fnAuth && boolAuth
         }
-        permissionRef.value[item] = isExist
-        return item
-      })
-    } else if (isString(value) || isArray(value)) {
-      permissionRef.value = permission.ability.some((el) => {
-        return all_permission.value === el || (value as string[]).includes(el)
-      })
+      }
     }
+
+    return hasAuth
+  }
+
+  if (rootValue) {
+    hasPermission(rootValue, rootType)
   }
 
   return {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
+import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 
 const emit = defineEmits<{
   (e: 'update', state: RulesListItem): void

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { ProTableRef } from '@gx-design-vue/pro-table'
-import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/datasSource/list/basic'
+import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/routers/list/basic.fake'
 import type { CountState } from './utils/config'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import useProTabel from '@/hooks/web/useProTabel'
 import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { useTable } from '@gx-design-vue/pro-table'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import OperateModal from './components/OperateModal.vue'
@@ -14,12 +13,12 @@ import { defaultCountState } from './utils/config'
 
 const isMount = useMounted()
 
-const operate = ref()
-const tableRef = ref<ProTableRef>()
+const operate = useTemplateRef<InstanceType<typeof OperateModal>>('operate')
+const tableRef = ref()
 
 const countState = reactive<CountState>({ ...defaultCountState })
 
-const { reload, setLoading, tableState } = useTable<BasicListItemDataType, BasicSearchParmas>(tableRef, {
+const { reload, setLoading, tableState } = useProTabel<BasicListItemDataType, BasicSearchParmas>(tableRef, {
   state: {
     params: {
       status: 'all',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ProTableBodyCellProps, ProTableRef } from '@gx-design-vue/pro-table'
-import type { TableRecord } from '@gx-mock/datasSource/form/advanced'
+import type { FormState } from './typings'
+import useProTabel from '@/hooks/web/useProTabel'
 import {
   addAdvancedFormTable,
   deleteAdvancedFormTable,
@@ -13,16 +13,15 @@ import { useRequest } from '@gx-admin/hooks/core'
 import { defaultSettings } from '@gx-config'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
-import { useTable } from '@gx-design-vue/pro-table'
 import { convertValueBoolean, hanndleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
 import { ref } from 'vue'
-import { columns, type FormState } from './utils/columns'
+import { columns } from './utils/columns'
 import { fieldLabels, rules } from './utils/config'
 
-const { viewScrollRoot } = defaultSettings
+const { viewScrollRoot } = defaultSettings.system
 
 interface ErrorField {
   name: string
@@ -32,29 +31,38 @@ interface ErrorField {
 const { user } = useStore()
 const { token } = useProConfigContext()
 
-const isMount = ref<boolean>(false)
-const tableRef = ref<ProTableRef>()
+const tableRef = ref()
+const isMount = ref(false)
 
-const { dataSource, setData, reload, setLoading, tableState } = useTable<TableRecord, FormState>(tableRef, {
-  state: {
-    showLoading: false,
-    rowKey: 'id',
-    showIndex: false,
-    pagination: false,
-    columns
-  },
-  request: async (params) => {
-    const response = await getAdvancedFormTable<PageResult<TableRecord>>(params)
-    return {
-      success: !!response,
-      total: response.data?.totalCount || 0,
-      data: response?.data?.list || []
+const {
+  dataSource,
+  setData,
+  reload,
+  setLoading,
+  tableState
+} = useProTabel<TableRecord<FormState>, FormState>(
+  tableRef,
+  {
+    state: {
+      showLoading: false,
+      rowKey: 'id',
+      showIndex: false,
+      pagination: false,
+      columns
+    },
+    request: async (params) => {
+      const response = await getAdvancedFormTable<PageResult<TableRecord<FormState>>>(params)
+      return {
+        success: !!response,
+        total: response.data?.totalCount || 0,
+        data: response?.data?.list || []
+      }
     }
   }
-})
+)
 
 const state = reactive({
-  editableData: {} as TableRecord,
+  editableData: {} as TableRecord<FormState>,
   errorFields: [] as ErrorField[]
 })
 
@@ -125,14 +133,14 @@ const handelEdit = (key) => {
   state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))
 }
 
-const handleSave = async (record: TableRecord) => {
+const handleSave = async (record: TableRecord<FormState>) => {
   const response = await record.isMock
     ? addAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
     : updateAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
   if (convertValueBoolean(response)) {
     message.success('操作成功')
     await reload?.({ immediate: true })
-    delete state.editableData[record.id]
+    record.id && (delete state.editableData[record.id])
   }
 }
 
@@ -380,7 +388,7 @@ const resetForm = () => {
         </GProCard>
         <GProCard title="成员管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
           <g-pro-table ref="tableRef" v-bind="tableState">
-            <template #bodyCell="{ column, record, text }: ProTableBodyCellProps<TableRecord>">
+            <template #bodyCell="{ column, record, text }: ProTableBodyCellProps<TableRecord<FormState>>">
               <template v-if="[ 'name', 'workId', 'department' ].includes(column.dataIndex as string)">
                 <div>
                   <a-input

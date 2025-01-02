@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ProTableRef } from '@gx-design-vue/pro-table'
-import type { AdvancedTableRecord } from '@gx-mock/datasSource/profile/advanced'
-import type { ListSearchParams } from '@gx-mock/util/table'
+import type { AdvancedTableRecord } from '@gx-mock/routers/profile/advanced.fake'
+import type { ListSearchParams } from '@gx-mock/utils/table'
 import type { TabPaneStateRecord, TabsStateActiveKey } from './utile/config'
-import { useTable } from '@gx-design-vue/pro-table'
+import useProTabel from '@/hooks/web/useProTabel'
 import { useAdvancedContext } from '../../context'
 import { columns, statusState } from './utile/config'
 
@@ -19,10 +19,9 @@ const { showTableLoading } = useAdvancedContext()
 
 const tableRef = ref<ProTableRef>()
 
-const { reload, tableState } = useTable<AdvancedTableRecord, ListSearchParams>(tableRef, {
+const { reload, tableState } = useProTabel<AdvancedTableRecord, ListSearchParams>(tableRef, {
   state: {
     columns,
-    bordered: false,
     pagination: { pageSize: 5 }
   },
   request: async (params) => {

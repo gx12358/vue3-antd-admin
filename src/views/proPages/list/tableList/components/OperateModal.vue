@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-design-vue/pro-provider'
-import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
+import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { Dayjs } from 'dayjs'
 import { addRules, updateRules } from '@/services/listCenter'
 import { useProForm } from '@gx-design-vue/pro-provider'
@@ -86,7 +85,7 @@ const handleOk = () => {
     if (operateType.value === 'update') {
       formState.createTime = dayjs(formState.createTimeDay)
         .format('YYYY-MM-DD HH:mm:ss')
-}
+    }
     const fetchFun = operateType.value === 'add' ? addRules : updateRules
     const response = await fetchFun({ ...omit(formState, 'createTimeDay') })
     

@@ -24,5 +24,8 @@ VITE_USE_PWA = false
 # 是否为打包后的文件提供传统浏览器兼容性支持
 VITE_LEGACY = false
 
+# proxy 代理的api 前缀
+VITE_PROXY_PREFIX = /proApi
+
 # api前缀
 VITE_BASE_URL=/mock-server

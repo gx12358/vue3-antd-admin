@@ -1,20 +1,6 @@
-import { toChinesNum } from '@/utils/util'
+import { faker, fakerZH_CN } from '@faker-js/faker'
+import { toChinesNum } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
-import mockjs from 'mockjs'
-
-const { Random } = mockjs
-
-export type DictType = 'sys_common_status' | 'sys_common_category' | 'sys_common_author'
-
-export interface DictRecord {
-  dictType: DictType;
-  dictValue: string | number;
-  dictSort: number;
-  dictCode: number;
-  dictLabel: string;
-  createTime: string;
-  remark?: string;
-}
 
 export const categoryList: DictRecord[] = Array.from({ length: 12 }).map((_, key) => {
   return {
@@ -45,8 +31,8 @@ export const authorList: DictRecord[] = Array.from({ length: 8 }).map((_, key) =
     dictSort: key,
     dictValue: `${key}`,
     dictCode: key + 1,
-    dictLabel: Random.cname(),
-    remark: Random.cname(),
+    dictLabel: fakerZH_CN.person.fullName(),
+    remark: faker.lorem.text(),
     dictType: 'sys_common_author',
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
   }

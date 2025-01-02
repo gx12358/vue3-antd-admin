@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
-import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import usePageContent from '@/hooks/web/usePageContent'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
-import { ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
   frameSrc: string;
@@ -10,8 +9,7 @@ const props = withDefaults(defineProps<{
   frameSrc: ''
 })
 
-const { layout } = useStore()
-const { token } = useProConfigContext()
+const { count } = usePageContent()
 
 const prefixCls = getPrefixCls({
   suffixCls: 'iframe-page',
@@ -21,17 +19,10 @@ const prefixCls = getPrefixCls({
 const frameRef = ref<HTMLIFrameElement>()
 const loading = ref(true)
 
-const publicHeight = computed(
-  () =>
-    (token.value.layout?.header?.heightLayoutHeader || 0) + 24 * 2 + (
-      layout.settings.showTabsBar ? layout.settings.fixedTabsBar ? 62 : 46 : 0
-    )
-)
-
-const frameStyle = reactive({
-  height: `${window.innerHeight - publicHeight.value}px`,
+const frameStyle = reactive<CSSProperties>({
+  height: `${window.innerHeight - count.value}px`,
   borderRadius: '8px'
-} as CSSProperties)
+})
 
 watch(
   () => props.frameSrc,
@@ -44,7 +35,7 @@ watch(
   }
 )
 
-const calcHeight = () => (frameStyle.height = `${window.innerHeight - publicHeight.value}px`)
+const calcHeight = () => (frameStyle.height = `${window.innerHeight - count.value}px`)
 
 onMounted(() => {
   window.addEventListener('resize', calcHeight)

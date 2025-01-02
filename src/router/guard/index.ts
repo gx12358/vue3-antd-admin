@@ -7,7 +7,7 @@ import { defaultSettings } from '@gx-config'
 import { createPermissionGuard } from './permissions'
 import { createStateGuard } from './stateGuard'
 
-const { routesWhiteList } = defaultSettings
+const { routesWhiteList } = defaultSettings.system
 
 export function setupRouterGuard(router: Router) {
   createPageGuard(router)

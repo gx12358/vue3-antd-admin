@@ -8,7 +8,6 @@ export default antFuEslint({
   markdown: true,
   ignores: [
     'src/assets/**/*.js',
-    'build/vite/plugin/viteMock',
     'public',
     'tsconfig.*.json',
     'tsconfig.json'
@@ -16,7 +15,11 @@ export default antFuEslint({
 }, {
   rules: {
     'curly': 0,
+    'vue/eqeqeq': 0,
     'no-console': 0,
+    'vue/no-unused-refs': 0,
+    'no-template-curly-in-string': 0,
+    'vue/prop-name-casing': 0,
     'vue/html-comment-content-spacing': 0,
     'style/indent-binary-ops': 0,
     'antfu/if-newline': 0,

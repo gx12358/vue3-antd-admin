@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { ListItemDataType } from '@gx-mock/datasSource/list'
+import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
+import useProTabel from '@/hooks/web/useProTabel'
 import { getArticleList } from '@/services/listCenter'
 import { toConvertNumberShow } from '@/utils/util'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { type CustomRenderResult, useTable } from '@gx-design-vue/pro-table'
 import { useSearchListContext } from '../context'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'
@@ -26,10 +26,10 @@ const state = reactive({
   }
 })
 
-const { loading, tableState } = useTable<ListItemDataType, SearchState>(tableRef, {
+const { loading, tableState } = useProTabel<ListItemDataType, SearchState>(tableRef, {
   state: {
     rowKey: 'id',
-    params: { ...searchParams },
+    params: { ...toRaw(searchParams) },
     pagination: {
       current: 1,
       pageSize: 8
@@ -81,7 +81,8 @@ watchEffect(() => {
                           活跃用户
                         </div>
                         <div class="text-24px leading-32px">
-                          {{ toConvertNumberShow(item.activeUser, { showStr: false }).numberValue }}<span class="ml-2px text-14px relative top-[-2px]">万</span>
+                          {{ toConvertNumberShow(item.activeUser, { showStr: false }).numberValue }}
+                          <span class="ml-2px text-14px relative top-[-2px]">万</span>
                         </div>
                       </div>
                       <div class="flex flex-col gap-4px">
@@ -89,7 +90,8 @@ watchEffect(() => {
                           新增用户
                         </div>
                         <div class="text-24px leading-32px">
-                          {{ toConvertNumberShow(item.newUser, { showStr: false }).numberValue }}<span class="ml-2px text-14px relative top-[-2px]">万</span>
+                          {{ toConvertNumberShow(item.newUser, { showStr: false }).numberValue }}
+                          <span class="ml-2px text-14px relative top-[-2px]">万</span>
                         </div>
                       </div>
                     </div>

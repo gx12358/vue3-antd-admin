@@ -2,8 +2,8 @@ import request from '@/utils/request'
 
 export * from './account'
 
-export function login(data) {
-  return request({
+export function login<T, D>(data) {
+  return request<T, D>({
     url: '/user/login',
     method: 'post',
     data,

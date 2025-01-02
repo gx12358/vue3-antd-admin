@@ -1,5 +1,4 @@
-import type { RulesState } from '@gx-design-vue/pro-provider'
-import type { FormState } from './columns'
+import type { FormState } from '../typings'
 
 export const fieldLabels = {
   name: '仓库名',

@@ -1,5 +1,4 @@
-import { isJSONStr } from '@/utils/validate'
-import { isArray, isObject } from '@gx-design-vue/pro-utils'
+import { isArray, isJSONStr, isObject } from '@gx-design-vue/pro-utils'
 import CryptoProJS from 'crypto-js'
 import * as CryptoJS from 'crypto-js/core'
 import 'crypto-js/enc-utf8'

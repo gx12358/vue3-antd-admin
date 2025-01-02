@@ -4,13 +4,23 @@ import { PropTypes } from '@/utils'
 
 export const cardSize: CSSProperties = { width: '104px', height: '104px' }
 
+export interface ExtraMaterialListItem extends MaterialListItem {
+  [key: string]: any;
+}
+
 export const proUploadProps = {
   fit: {
     type: String as VuePropType<'cover' | 'contain' | 'fill' | 'none'>,
     default: 'cover'
   },
   cardClassName: PropTypes.string,
-  cardStyle: {
+  triggerClass: PropTypes.string,
+  cardItemClass: PropTypes.string,
+  triggerStyle: {
+    type: Object as VuePropType<CSSProperties>,
+    default: () => ({ ...cardSize })
+  },
+  cardItemStyle: {
     type: Object as VuePropType<CSSProperties>,
     default: () => ({ ...cardSize })
   },
@@ -39,9 +49,15 @@ export const proUploadProps = {
     type: Boolean as VuePropType<boolean>,
     default: true
   },
-  limit: PropTypes.number.def(15),
+  limit: {
+    type: Number as VuePropType<number>,
+    default: 15
+  },
   // 限制素材类型
-  accept: PropTypes.string.def([ 'image/jpeg', 'image/png', 'image/jpg' ].join()),
+  accept: {
+    type: [ String ] as VuePropType<string | null>,
+    default: [ 'image/jpeg', 'image/png', 'image/jpg' ].join()
+  },
   fileType: PropTypes.array.def([ 'jpeg', 'png', 'jpg' ]),
   // 限制素材时长 （针对视频，音频类型）
   fileDuration: PropTypes.number,
@@ -57,16 +73,31 @@ export const proUploadProps = {
     default: true
   },
   // 是否展示删除按钮
-  showDelete: PropTypes.bool.def(true),
+  showDelete: {
+    type: Boolean as VuePropType<boolean>,
+    default: true
+  },
   // 是否展示下载按钮
-  showDownload: PropTypes.bool.def(true),
+  downloadProps: {
+    type: [ Boolean, Object ] as VuePropType<boolean | {
+      useLocal?: boolean;
+      useFileName?: boolean;
+    }>,
+    default: false
+  },
   // 是否展示预览按钮
-  showPreview: PropTypes.bool.def(true),
+  showPreview: {
+    type: Boolean as VuePropType<boolean>,
+    default: undefined
+  },
   // 是否展示进度条
-  progress: PropTypes.bool.def(true),
+  progress: {
+    type: Boolean as VuePropType<boolean>,
+    default: undefined
+  },
   // 额外添加参数
   dataExtraInfo: {
-    type: Array as VuePropType<any[]>,
+    type: Array as VuePropType<ExtraMaterialListItem[]>,
     default: () => []
   },
   bindValue: PropTypes.bool,
@@ -89,10 +120,10 @@ export const proUploadProps = {
     type: [ Function, Boolean ] as VuePropType<WithFalse<(view: Fn, download: Fn, remove: Fn) => CustomRender>>,
     default: () => undefined
   },
-  request: Function as VuePropType<(file: File, id: string, record?: MaterialListItem) => Promise<{ code: number; url: string; previewUrl: string }>>,
+  request: Function as VuePropType<(file: File, id: string, record?: MaterialListItem) => Promise<{ code: number; url: string; previewUrl?: string }>>,
   waterChange: PropTypes.func,
   onOpenFileDialog: PropTypes.func,
-  downLoad: PropTypes.func,
+  onChangeDownloadLoading: Function as VuePropType<(loading: boolean) => void>,
   change: PropTypes.func,
   errorRequest: PropTypes.func,
   deleteBefore: PropTypes.func,

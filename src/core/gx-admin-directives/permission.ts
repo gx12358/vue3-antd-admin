@@ -1,27 +1,37 @@
-import type { App, Directive, DirectiveBinding } from 'vue'
+import type { App, DirectiveBinding } from 'vue'
 
 import { usePermissions } from '@gx-admin/hooks/system'
 
-function isAuth(el: Element, binding: any) {
+function isAuth(el: HTMLElement, binding: any, type: 'all' | 'some', showText = false) {
   const { permission, hasPermission } = usePermissions()
 
   const value = binding.value
   if (value) {
-    hasPermission(value)
-    if (!permission.value) el.parentNode?.removeChild(el)
+    hasPermission(value, type)
+    if (!permission.value) {
+      if (showText) {
+        el.outerHTML = `<span>无权限按钮</span>`
+      } else {
+        el.remove()
+      }
+    }
   }
 }
 
-const mounted = (el: Element, binding: DirectiveBinding) => {
-  isAuth(el, binding)
-}
-
-const authDirective: Directive = {
-  mounted
-}
-
 export function setupPermissionDirective(app: App) {
-  app.directive('auth', authDirective)
+  app.directive('auth', {
+    mounted: (el: HTMLElement, binding: DirectiveBinding) => {
+      isAuth(el, binding, 'some')
+    }
+  })
+  app.directive('auth-text', {
+    mounted: (el: HTMLElement, binding: DirectiveBinding) => {
+      isAuth(el, binding, 'some', true)
+    }
+  })
+  app.directive('all-auth', {
+    mounted: (el: HTMLElement, binding: DirectiveBinding) => {
+      isAuth(el, binding, 'all')
+    }
+  })
 }
-
-export default authDirective

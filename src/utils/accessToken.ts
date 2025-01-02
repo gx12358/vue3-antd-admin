@@ -8,7 +8,7 @@ import {
 } from '@/utils/storage'
 import { defaultSettings } from '@gx-config'
 
-const { storage, tokenTableName } = defaultSettings
+const { storage, storageName } = defaultSettings.token
 
 /**
  * @Author      gx12358
@@ -19,16 +19,16 @@ const { storage, tokenTableName } = defaultSettings
 export function getAccessToken() {
   if (storage) {
     if (storage === 'localStorage') {
-      return getStorage({ key: tokenTableName })
+      return getStorage({ key: storageName, originKey: true })
     } else if (storage === 'sessionStorage') {
-      return getStorage({ key: tokenTableName, type: 'session' })
+      return getStorage({ key: storageName, type: 'session', originKey: true })
     } else if (storage === 'cookie') {
-      return getCookie(tokenTableName)
+      return getCookie(storageName)
     } else {
-      return getStorage({ key: tokenTableName })
+      return getStorage({ key: storageName, originKey: true })
     }
   } else {
-    return getStorage({ key: tokenTableName })
+    return getStorage({ key: storageName, originKey: true })
   }
 }
 
@@ -42,29 +42,33 @@ export function setAccessToken(accessToken: string, expired?: number) {
   if (storage) {
     if (storage === 'localStorage') {
       return setStorage({
-        key: tokenTableName,
+        key: storageName,
+        originKey: true,
         value: accessToken,
         expired
       })
     } else if (storage === 'sessionStorage') {
       return setStorage({
-        key: tokenTableName,
+        key: storageName,
+        originKey: true,
         value: accessToken,
         expired,
         type: 'session'
       })
     } else if (storage === 'cookie') {
-      return setCookie(tokenTableName, accessToken, expired)
+      return setCookie(storageName, accessToken, expired)
     } else {
       return setStorage({
-        key: tokenTableName,
+        key: storageName,
+        originKey: true,
         value: accessToken,
         expired
       })
     }
   } else {
     return setStorage({
-      key: tokenTableName,
+      key: storageName,
+      originKey: true,
       value: accessToken,
       expired
     })
@@ -79,15 +83,15 @@ export function setAccessToken(accessToken: string, expired?: number) {
 export function removeAccessToken() {
   if (storage) {
     if (storage === 'localStorage') {
-      return removeStorage({ key: tokenTableName })
+      return removeStorage({ key: storageName, originKey: true })
     } else if (storage === 'sessionStorage') {
-      return removeStorage({ key: tokenTableName, type: 'session' })
+      return removeStorage({ key: storageName, type: 'session', originKey: true })
     } else if (storage === 'cookie') {
-      return delCookie(tokenTableName)
+      return delCookie(storageName)
     } else {
-      return removeStorage({ key: tokenTableName })
+      return removeStorage({ key: storageName, originKey: true })
     }
   } else {
-    return removeStorage({ key: tokenTableName })
+    return removeStorage({ key: storageName, originKey: true })
   }
 }

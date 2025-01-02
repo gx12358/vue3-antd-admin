@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ProSearchMap } from '@gx-design-vue/pro-table'
-import type { TableRecord } from '@gx-mock/datasSource/table'
+import type { TableRecord } from '@gx-mock/routers/table/index.fake'
 import type { SearchParams } from '../typings'
 import { getTableList } from '@/services/tableCenter'
 import { useDict } from '@gx-admin/hooks/system'
@@ -9,7 +9,7 @@ import { deepCopy } from '@gx-design-vue/pro-utils'
 import { reactive, ref, watch } from 'vue'
 import { operationModal } from '../utils/columns'
 
-const [ dictState, getDict ] = useDict('sys_common_status')
+const { dictState, getDict } = useDict('sys_common_status')
 
 const tableRef = ref()
 const visible = ref(false)

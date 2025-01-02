@@ -22,7 +22,7 @@ export default defineComponent({
       const myChart = echarts.init(chartDom)
       const option = {
         legend: {
-          data: ['个人', '团队', '部门']
+          data: [ '个人', '团队', '部门' ]
         },
         radar: {
           indicator
@@ -34,7 +34,7 @@ export default defineComponent({
           }
         ]
       }
-
+      
       option && myChart.setOption(option)
     }
     watch(

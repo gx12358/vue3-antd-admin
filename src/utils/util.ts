@@ -1,5 +1,6 @@
 import { defaultSettings } from '@gx-config'
-import { isFunction, isNumber, isObject, scrollTo } from '@gx-design-vue/pro-utils'
+import { getRandomNumber, isFunction, isNumber, isObject, scrollTo } from '@gx-design-vue/pro-utils'
+import { message } from 'ant-design-vue'
 import { h } from 'vue'
 
 export interface NumberToShow {
@@ -8,7 +9,7 @@ export interface NumberToShow {
   joinStr: string;
 }
 
-const { viewScrollRoot } = defaultSettings
+const { viewScrollRoot } = defaultSettings.system
 
 export const TransformVNode = (props: { node: any; class?: string }) => {
   return h(isFunction(props.node) ? props.node?.(props.class) : props.node)
@@ -167,35 +168,41 @@ export function toConvertNumberShow(
   }
 }
 
-/**
- * @Author      gx12358
- * @DateTime    2022/8/4
- * @lastTime    2022/8/4
- * @description 数字转中文
- */
-export function toChinesNum(num: number) {
-  num = num || 0
-  const changeNum = [ '零', '一', '二', '三', '四', '五', '六', '七', '八', '九' ]
-  const unit = [ '', '十', '百', '千', '万' ]
-  num = Number.parseInt(`${num}`)
-  const getWan = (temp) => {
-    const strArr = temp.toString().split('').reverse()
-    let newNum = ''
-    for (let i = 0; i < strArr.length; i++) {
-      newNum = (i === 0 && strArr[i] === '0'
-        ? ''
-        : i > 0 && strArr[i] === '0' && strArr[i - 1] === '0'
-          ? ''
-          : (num < 20 && i > 0 ? '' : changeNum[strArr[i]]) + (strArr[i] === '0'
-          ? unit[0]
-          : unit[i])) + newNum
+export function handleCopy(codeStr: string) {
+  const textArea = document.createElement('textarea')
+  textArea.style.position = 'absolute'
+  textArea.style.opacity = '0'
+  textArea.value = codeStr
+  document.body.appendChild(textArea)
+  textArea.select()
+  document.execCommand('copy')
+  document.body.removeChild(textArea)
+  message.success('复制成功')
+}
+
+export function treeAntDataNode<T = any, D = SystemDataNode>(
+  data: T[],
+  fieldNames?: { value?: keyof T; label?: keyof T; children?: keyof T }
+): D[] {
+  const value = fieldNames?.value || 'id'
+  const label = fieldNames?.label || 'label'
+  const children = fieldNames?.children || 'children'
+  return data.map((item: any) => {
+    return {
+      ...item,
+      id: item[value],
+      key: item[value],
+      value: item[value],
+      label: item[label],
+      title: item[label],
+      children: item[children] && item[children].length > 0 ? treeAntDataNode(
+        item[children],
+        fieldNames
+      ) : []
     }
-    return newNum
-  }
-  const overWan = Math.floor(num / 10000)
-  let noWan: any = num % 10000
-  if (noWan.toString().length < 4) {
-    noWan = '0' + noWan
-  }
-  return overWan ? getWan(overWan) + '万' + getWan(noWan) : getWan(num)
+  })
+}
+
+export function handleRandomImage(width = 50, height = 50) {
+  return `https://picsum.photos/${width}/${height}?random=${getRandomNumber().uuid(10)}`
 }

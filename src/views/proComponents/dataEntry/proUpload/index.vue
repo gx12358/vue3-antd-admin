@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import GUpload, { type GUploadProps } from '@gx-design/Upload'
 import { dataURLtoBlob, getBase64, getBlobUrl } from '@gx-design-vue/pro-utils'
+import GUpload, { type GUploadProps } from '@gx-design/Upload'
 import { computed } from 'vue'
 
 const { user } = useStore()
@@ -22,7 +22,7 @@ const uploadHttps: GUploadProps['request'] = async (file) => {
         resolve({
           code: 0,
           url: getBlobUrl(dataURLtoBlob(res)),
-          previewUrl: getBlobUrl(dataURLtoBlob(res)),
+          previewUrl: getBlobUrl(dataURLtoBlob(res))
         })
       }, 1000)
     })

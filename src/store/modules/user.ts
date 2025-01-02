@@ -1,41 +1,34 @@
-import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
-import type { UserDetails, UserInfo } from '@gx-mock/config/user'
 import { getUserInfo, login, logout } from '@/services/userCenter'
 import { getAccessToken, removeAccessToken, setAccessToken } from '@/utils/accessToken'
 import { timeFix } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
-import { convertValueBoolean, isObject } from '@gx-design-vue/pro-utils'
-import { defaultUser } from '@gx-mock/config/user'
+import { isArray, isNumber, isObject } from '@gx-design-vue/pro-utils'
 import { notification } from 'ant-design-vue'
 import { defineStore } from 'pinia'
-import { toRefs } from 'vue'
+import { useStoreDict } from './dict'
 import { useStorePermission } from './permission'
 import { useStoreRoutes } from './routes'
 
-const { tokenName, loginInterception } = defaultSettings
+const { loginInterception } = defaultSettings.system
 
 export interface UserState {
   accessToken: string;
   userInfo: UserDetails;
 }
 
-type UserStoreValue = PiniaStoreValue<UserState, {
-  resetPermissions: () => void
-  setValue: (value: Partial<UserState>) => void
-  userLogut: () => Promise<void>
-  checkUserPremission: () => Promise<boolean>
-  userLogin: (params: any) => Promise<boolean>
-}>
+// 0 返回登录页 1 成功 2 返回注册页
+export type CheckUserStatus = 0 | 1 | 2
 
-export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
+export const useStoreUser = defineStore('user', () => {
+  const dict = useStoreDict()
   const routes = useStoreRoutes()
   const permission = useStorePermission()
 
   const [ state, setValue ] = useReactiveState<UserState>({
     accessToken: getAccessToken(),
     userInfo: {} as UserDetails
-  })
+  }, { omitNil: false, omitEmpty: false })
 
   /**
    * @Author      gx12358
@@ -43,11 +36,8 @@ export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
    * @lastTime    2022/1/11
    * @description 登录拦截放行时，设置虚拟角色
    */
-  const setVirtualUserInfo = () => {
-    permission.setValue({ admin: true })
-    permission.setValue({ role: defaultUser.roles })
-    permission.setValue({ role: defaultUser.permissions })
-    setValue({ userInfo: defaultUser.user as UserDetails })
+  const setVirtualUserInfo = (): CheckUserStatus => {
+    return 1
   }
 
   /**
@@ -57,33 +47,37 @@ export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
    * @description 登录
    */
   const userLogin = async (params: any): Promise<boolean> => {
-    const response: ResponseResult<{ expiresIn: number; }> = await login(params)
-    // @ts-ignore
-    const accessToken = response?.data?.[tokenName]
-    if (accessToken) {
-      const expiresIn = response?.data?.expiresIn
-      setValue({ accessToken })
-      setAccessToken(accessToken, expiresIn ? expiresIn * 60 * 1000 : 0)
-      return true
+    const response: ResponseResult<{ token: string; expiresIn: number }> = await login(params)
+    if (response) {
+      const accessToken = response.data?.token
+      if (accessToken) {
+        setValue({ accessToken })
+        setAccessToken(accessToken, response.data?.expiresIn ? response.data?.expiresIn * 60 * 1000 : 0)
+        return true
+      }
     }
+
     return false
   }
 
-  const updateUserInfo = async () => {
-    const response: ResponseResult<UserInfo> = await getUserInfo()
-    const { user, roles, permissions } = response?.data || {} as UserInfo
+  const updateUserInfo = async (): Promise<CheckUserStatus> => {
+    let status: CheckUserStatus = 0
+    const response: ResponseResult<null, UserInfo> = await getUserInfo()
+    const { user, roles, permissions } = response || {} as UserInfo
     if (response && user && isObject(user)) {
-      if (user.userName && roles && Array.isArray(roles)) {
-        permission.setValue({ role: roles })
-        permission.setValue({ ability: permissions })
-
+      if (isNumber(user.userId) && roles && isArray(roles)) {
+        status = 1
+        permission.setValue({ admin: user.admin, role: roles, ability: permissions })
         setValue({ userInfo: { ...user } })
-        notification.success({
-          message: `欢迎登录${state.userInfo?.userName}`,
-          description: `${timeFix()}！`
-        })
+        setTimeout(() => {
+          notification.success({
+            message: `欢迎登录${state.userInfo.value?.nickName}`,
+            description: `${timeFix()}！`
+          })
+        }, 200)
       }
     }
+    return status
   }
 
   /**
@@ -92,19 +86,23 @@ export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
    * @lastTime    2022/1/11
    * @description 获取用户信息
    */
-  const checkUserPremission = async () => {
-    if (loginInterception)
-      await updateUserInfo()
-    else setVirtualUserInfo()
-    return convertValueBoolean(state?.userInfo)
+  const checkUserPremission = async (): Promise<CheckUserStatus> => {
+    let status: CheckUserStatus = 0
+    permission.setValue({ isRelogin: true })
+    if (loginInterception) {
+      status = await updateUserInfo()
+    } else {
+      status = setVirtualUserInfo()
+    }
+    permission.setValue({ isRelogin: false })
+    return status
   }
 
   const resetPermissions = () => {
-    setValue({ accessToken: '' })
     removeAccessToken()
-    permission.setValue({ admin: false })
-    permission.setValue({ role: [] })
-    permission.setValue({ role: [] })
+    setValue({ accessToken: '', userInfo: {} })
+    dict.clear()
+    permission.setValue({ admin: false, role: undefined, ability: [] })
     routes.setValue({ routes: [] })
   }
 
@@ -120,7 +118,7 @@ export const useStoreUser = defineStore<'user', UserStoreValue>('user', () => {
   }
 
   return {
-    ...toRefs(state),
+    ...state,
     userLogin,
     userLogut,
     setValue,

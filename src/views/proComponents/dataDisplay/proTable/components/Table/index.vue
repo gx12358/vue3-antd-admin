@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { TableRecord } from '@gx-mock/datasSource/table'
-import type { SearchParams } from './typings'
+import type { MockTableRecord, SearchParams } from './typings'
+import useProTabel from '@/hooks/web/useProTabel'
 import { doDelete, getTableList } from '@/services/tableCenter'
 import { useDict } from '@gx-admin/hooks/system'
-import { type CustomRenderResult, useTable } from '@gx-design-vue/pro-table'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
@@ -12,12 +11,12 @@ import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
 import ScrollModal from './components/ScrollModal.vue'
 import { columns } from './utils/columns'
 
-const [ dictState ] = useDict([ 'sys_common_status' ])
+const { dictState } = useDict([ 'sys_common_status' ])
 
 const tableRef = ref()
-const operationRef = ref()
-const scrollModalRef = ref()
-const scrollBreakpointModalRef = ref()
+const operationRef = useTemplateRef<InstanceType<typeof OperationModal>>('operationRef')
+const scrollModalRef = useTemplateRef<InstanceType<typeof ScrollModal>>('scrollModalRef')
+const scrollBreakpointModalRef = useTemplateRef<InstanceType<typeof ScrollBreakpointModal >>('scrollBreakpointModalRef')
 
 const state = reactive({
   inputSearchRef: '',
@@ -25,60 +24,62 @@ const state = reactive({
   showOptionsExtra: false,
   showScroll: true,
   showScrollBreakpoint: false,
-  tableData: [] as TableRecord[],
+  tableData: [] as TableRecord<MockTableRecord>[],
   selectedRowKeys: [] as any[],
-  selectedRowItems: [] as TableRecord[]
+  selectedRowItems: [] as TableRecord<MockTableRecord>[]
 })
 
-const { tableState, reload, setLoading } = useTable<TableRecord, SearchParams>(tableRef, {
-  state: {
-    polling: 2000,
-    options: true,
-    titleTip: true,
-    showIndex: true,
-    autoScroll: true,
-    neverScroll: false,
-    scrollBreakpoint: 'xl',
-    draggabled: true,
-    waitRequest: true,
-    params: {
-      adress: ''
-    },
-    search: { showSearch: true },
-    searchMap: [
-      {
-        name: 'status',
-        valueType: 'select',
-        placeholder: '请选择操作状态',
-        loading: true,
-        valueEnum: []
+const { tableState, reload, setLoading } = useProTabel<TableRecord<MockTableRecord>, SearchParams>(
+  tableRef,
+  {
+    state: {
+      polling: 2000,
+      options: true,
+      titleTip: true,
+      showIndex: true,
+      autoScroll: true,
+      neverScroll: false,
+      scrollBreakpoint: 'xl',
+      draggabled: true,
+      waitRequest: true,
+      params: {
+        adress: ''
       },
-      {
-        name: 'date',
-        valueType: 'date',
-        placeholder: '请选择'
-      }
-    ],
-    columns,
-    rowSelection: {
-      onChange: (keys, items) => {
-        state.selectedRowKeys = keys
-        state.selectedRowItems = items
-      }
+      searchMap: [
+        {
+          name: 'status',
+          valueType: 'select',
+          placeholder: '请选择操作状态',
+          loading: true,
+          valueEnum: []
+        },
+        {
+          name: 'date',
+          valueType: 'date',
+          placeholder: '请选择'
+        }
+      ],
+      columns,
+      rowSelection: {
+        onChange: (keys, items) => {
+          state.selectedRowKeys = keys
+          state.selectedRowItems = items
+        }
+      },
+      rowKey: 'id',
+      scroll: { x: 1850 }
     },
-    rowKey: 'id',
-    scroll: { x: 1850 }
-  },
-  request: async (params) => {
-    const response = await getTableList<PageResult<TableRecord>>(params)
-    state.tableData = deepCopy(response?.data?.list || [])
-    return {
-      data: deepCopy(response?.data?.list || []),
-      success: !!response,
-      total: response?.data?.totalCount || 0
+    request: async (params) => {
+      const response = await getTableList<PageResult<TableRecord<MockTableRecord>>>(params)
+      state.tableData = deepCopy(response?.data?.list || [])
+      return {
+        data: deepCopy(response?.data?.list || []),
+        success: !!response,
+        total: response?.data?.totalCount || 0
+      }
     }
   }
-})
+)
 
 watch(
   () => dictState.value.sys_common_status,
@@ -186,7 +187,7 @@ const handleScroll = (params) => {
 const changeScrollBreakpoint = (value) => {
   if (value) {
     tableState.scrollBreakpoint = 'xl'
-    scrollBreakpointModalRef.value.open(tableState.scrollBreakpoint)
+    scrollBreakpointModalRef.value?.open(tableState.scrollBreakpoint)
   }
 }
 
@@ -315,7 +316,7 @@ const removeTable = async () => {
     @reset="onReset"
     @search-reset="onSearchReset"
   >
-    <template v-if="state.showCustomize" #customRender="{ dataSource } : CustomRenderResult<TableRecord>">
+    <template v-if="state.showCustomize" #customRender="{ dataSource } : CustomRenderResult<TableRecord<MockTableRecord>>">
       <a-list
         row-key="id"
         :grid="{
@@ -329,7 +330,7 @@ const removeTable = async () => {
         }"
         :data-source="dataSource"
       >
-        <template #renderItem="{ item }: { item: TableRecord }">
+        <template #renderItem="{ item }: { item: TableRecord<MockTableRecord> }">
           <a-list-item>
             <a-card hoverable>
               <template #cover>
@@ -363,7 +364,7 @@ const removeTable = async () => {
       <div>高级列表</div>
     </template>
     <template #toolBarBtn>
-      <a-button key="button" type="primary" @click="operationRef?.open('sys_common_status')">
+      <a-button key="button" type="primary" @click="operationRef?.open()">
         新建
       </a-button>
       <a-button key="button" type="primary" @click="handlePolling">

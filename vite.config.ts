@@ -3,16 +3,16 @@ import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
 import { loadEnv } from 'vite'
 
-import { generateModifyVars } from './build/generate/generateModifyVars'
-import createRollupOptions from './build/rollupOptions'
-import { pathResolve, wrapperEnv } from './build/util'
-import { createVitePlugins } from './build/vite/plugin'
-
 import { createProxy, defaultSettings } from './config'
+import { generateModifyVars } from './internal/vite-config/generate/generateModifyVars'
+import createRollupOptions from './internal/vite-config/rollupOptions'
+import { pathResolve, wrapperEnv } from './internal/vite-config/util'
+
+import { createVitePlugins } from './internal/vite-config/vite/plugin'
 
 import pkg from './package.json'
 
-const { publicPath, outputDir, assetsDir, devPort, useCdn, useProxy } = defaultSettings
+const { proxy, cdn, build, servive } = defaultSettings
 
 const { dependencies, devDependencies, name, version } = pkg
 
@@ -31,18 +31,22 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env)
 
-  const { VITE_DROP_CONSOLE, VITE_APP_ENV, VITE_BASE_URL } = viteEnv
+  const { VITE_DROP_CONSOLE, VITE_APP_ENV, VITE_PROXY_PREFIX } = viteEnv
 
   const isBuild = command === 'build'
 
   return {
-    base: publicPath,
+    base: build.publicPath,
     root,
     resolve: {
       alias: [
         {
           find: '@',
           replacement: pathResolve('src') + '/'
+        },
+        {
+          find: '@gx-mock',
+          replacement: pathResolve('mock') + '/index.ts'
         },
         {
           find: '@gx-mock',
@@ -69,17 +73,24 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
     server: {
       open: false,
       host: true,
-      port: devPort,
-      proxy: useProxy ? createProxy(VITE_BASE_URL)[VITE_APP_ENV] : {}
+      port: servive.port,
+      warmup: {
+        // 预热文件
+        clientFiles: [
+          './index.html',
+          './src/{views,layout,router,store,components}/*',
+        ],
+      },
+      proxy: proxy.use ? createProxy(VITE_PROXY_PREFIX)[VITE_APP_ENV] : {}
     },
     esbuild: {
       drop: VITE_DROP_CONSOLE ? [ 'console', 'debugger' ] : []
     },
     build: {
-      outDir: outputDir,
-      assetsDir,
+      outDir: build.outputDir,
+      assetsDir: build.assetsDir,
       chunkSizeWarningLimit: 4000,
-      rollupOptions: createRollupOptions(useCdn) as any
+      rollupOptions: createRollupOptions(cdn.use) as any
     },
     define: {
       __INTLIFY_PROD_DEVTOOLS__: false,

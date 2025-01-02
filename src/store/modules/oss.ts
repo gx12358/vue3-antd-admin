@@ -1,9 +1,7 @@
-import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
 import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
-import { toRefs } from 'vue'
 
 export interface ClientDetails {
   bucket?: string;
@@ -32,14 +30,8 @@ export interface OssInfoState {
   clientDetails: Partial<ClientDetails>;
 }
 
-type OssStoreValue = PiniaStoreValue<OssInfoState, {
-  clearOss: () => void;
-  queryOssToken: () => Promise<void>;
-  getOssToken: (params?: ClientDetails) => Promise<ClientDetails>;
-}>
-
-export const useStoreOss = defineStore<'oss', OssStoreValue>('oss', () => {
-  const [ state, setValue ] = useReactiveState<OssInfoState, OssInfoState>({
+export const useStoreOss = defineStore('oss', () => {
+  const [ state, setValue ] = useReactiveState<OssInfoState>({
     ossInfos: {
       bucket: '',
       region: ''
@@ -58,7 +50,7 @@ export const useStoreOss = defineStore<'oss', OssStoreValue>('oss', () => {
   }
 
   const queryOssToken = async () => {
-    if (!state.ossInfos.bucket && !state.ossInfos.region) {
+    if (!state.ossInfos.value.bucket && !state.ossInfos.value.region) {
       const ossBucket: ResponseResult<{
         bucket: string;
         region: string;
@@ -96,7 +88,7 @@ export const useStoreOss = defineStore<'oss', OssStoreValue>('oss', () => {
   }
 
   const getOssToken = async (params: ClientDetails = {}): Promise<ClientDetails> => {
-    if (state.clientDetails.stsToken && handleExpired(state.clientDetails.expiration)) {
+    if (state.clientDetails.value.stsToken && handleExpired(state.clientDetails.value.expiration)) {
       return { ...state.clientDetails, ...params }
     }
     await queryOssToken()
@@ -106,12 +98,12 @@ export const useStoreOss = defineStore<'oss', OssStoreValue>('oss', () => {
   const clearOss = () => {
     setValue({
       ossClient: {},
-      clientDetails: {},
+      clientDetails: {}
     })
   }
 
   return {
-    ...toRefs(state),
+    ...state,
     setValue,
     clearOss,
     getOssToken,

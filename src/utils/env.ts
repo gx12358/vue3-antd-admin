@@ -22,10 +22,10 @@ export function isPro(): boolean {
  * @Author      gx12358
  * @DateTime    2022/4/1
  * @lastTime    2022/4/1
- * @description 环境：非本地开发环境
+ * @description 环境：非开发环境
  */
 export function isBuild(): boolean {
-  return typeViteEnv('VITE_NODE_ENV') === 'production'
+  return typeViteEnv('VITE_APP_ENV') !== 'dev'
 }
 
 /**

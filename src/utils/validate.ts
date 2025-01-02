@@ -202,29 +202,6 @@ export function isRTSP(value) {
   return reg.test(value) || reg1.test(value) || reg2.test(value)
 }
 
-/**
- * @Author      gaoxiang
- * @DateTime    2020/11/4
- * @lastTime    2020/11/4
- * @description 判断是否是JSON字符串
- */
-export function isJSONStr(str: any) {
-  if (typeof str === 'string') {
-    try {
-      const obj = JSON.parse(str)
-      if (typeof obj === 'object' && obj) {
-        return true
-      } else {
-        return false
-      }
-      // eslint-disable-next-line unused-imports/no-unused-vars
-    } catch (e) {
-      return false
-    }
-  }
-  return false
-}
-
 export function checkURL(URL) {
   const str = URL
   // eslint-disable-next-line regexp/strict

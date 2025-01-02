@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-design-vue/pro-provider'
 import type { UserList } from '@gx-mock/config/user'
-import type { BasicListItemDataType } from '@gx-mock/datasSource/list/basic'
+import type { BasicListItemDataType } from '@gx-mock/routers/list/basic.fake'
 import type { Dayjs } from 'dayjs'
 import Empty from '@/components/GlobalLayout/Empty/index.vue'
 import { basicListOperate, getBasicListDetails } from '@/services/listCenter'

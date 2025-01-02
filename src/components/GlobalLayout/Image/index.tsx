@@ -3,6 +3,7 @@ import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { SlotsType } from 'vue'
 import { GImage, imagePorps } from '@gx-design-vue/image'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
+import { omit } from 'lodash-es'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -38,7 +39,7 @@ export default defineComponent({
         <GImage
           class={attrs.class || ''}
           style={attrs.style}
-          {...props}
+          {...omit(props, [ 'slotImageClass', 'slotClass' ])}
           fallback={fallbackSlot || renderHolder || renderImage()}
           placeholder={placeholderSlot || renderHolder || renderImage()}
         />

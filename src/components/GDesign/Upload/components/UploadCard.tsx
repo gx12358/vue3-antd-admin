@@ -1,4 +1,5 @@
 import type { FunctionalComponent as FC, Ref } from 'vue'
+import type { MaterialListItem } from '../typings'
 import type { GUploadProps } from '../Upload'
 import Image from '@/components/GlobalLayout/Image'
 import Spin from '@/components/GlobalLayout/Spin'
@@ -14,7 +15,7 @@ type UploadCardProps = GUploadProps & {
   baseClassName: string;
   onView: (type, url) => void
   onDelete: (idName) => void
-  onDownload: (url) => void
+  onDownload: (record: MaterialListItem) => void
   onWaterMark: (idName, type) => void
   onMediaCropper: (name, info?: { file: File; url: string }) => void
 }
@@ -31,7 +32,7 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
   }
 
   const renderMaterial = (record) => {
-    const imageStyle = { ...(props.imageStyle || props.cardStyle || {}) }
+    const imageStyle = { ...(props.imageStyle || props.cardItemStyle || {}) }
     const { fallback, placeholder } = props
 
     let show
@@ -120,8 +121,9 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
             overlay={renderExtraMenu(item)}
           >
             <div
-              style={props.cardStyle}
+              style={props.cardItemStyle}
               class={{
+                [`${props.cardItemClass}`]: !!props.cardItemClass,
                 [`${baseClassName}-card-item`]: true,
                 [`${baseClassName}-card-item-circle`]: props.shape === 'circle'
               }}
@@ -158,7 +160,7 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
                     (props.customOperationRender as any)?.(
                       item,
                       () => onView(item.type, item.previewUrl),
-                      () => onDownload(item.previewUrl),
+                      () => onDownload(item),
                       () => onDelete(item.id)
                     ) || (
                       <div class={`${baseClassName}-card-item-wrapper-icons`}>
@@ -166,8 +168,8 @@ const UploadCard: FC<UploadCardProps> = (props: UploadCardProps) => {
                           {item.allowPlay && item.url && item.type !== '4' && props.showPreview && (
                             <EyeOutlined onClick={() => onView(item.type, item.previewUrl)} />
                           )}
-                          {item.allowPlay && item.url && props.showDownload && (
-                            <CloudDownloadOutlined onClick={() => onDownload(item.previewUrl)} />
+                          {item.allowPlay && item.url && props.downloadProps !== false && (
+                            <CloudDownloadOutlined onClick={() => onDownload(item)} />
                           )}
                           {props.showDelete && !props.disabled && (
                             <DeleteOutlined onClick={() => onDelete(item.id)} />

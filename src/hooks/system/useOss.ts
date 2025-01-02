@@ -88,7 +88,8 @@ export function useOss() {
     if (response) {
       const url = file instanceof File ? file.name : file
       const infos = response.data
-      name = `${checkFileType(url) === '1' ? infos?.pictureUrl1 : infos?.videoUrl}.${getFileSuffix(url)}`
+      name = `${checkFileType(url) === '1' ? infos?.pictureUrl1 : infos?.videoUrl}.${getFileSuffix(
+        url)}`
     }
     return name
   }

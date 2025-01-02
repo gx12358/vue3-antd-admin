@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ListGridType } from 'ant-design-vue/es/list'
 import { getArticlesList } from '@/services/projectCenter'
-import { Teleport } from 'vue'
 import { useAccountCenterContext } from '../../context'
 import useChildState, { type ListRecord } from '../../hooks/useChildState'
 import PullRefresh from './PullRefresh.vue'
@@ -9,7 +8,7 @@ import PullRefresh from './PullRefresh.vue'
 defineProps<{
   serve: (data: any) => Promise<ResponseResult>;
   grid?: ListGridType;
-  listStyle?: CSSObject;
+  listStyle?: CSSProperties;
 }>()
 
 const {

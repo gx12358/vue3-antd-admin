@@ -1,16 +1,19 @@
-import type { GroupListItem } from '@gx-mock/datasSource/group'
-import { handleRandomImage } from '@gx-mock/util/utils'
+import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
+import { faker, fakerZH_CN } from '@faker-js/faker'
 import dayjs from 'dayjs'
-import mockjs from 'mockjs'
-
-const { Random } = mockjs
 
 export const groupList: GroupListItem[] = Array.from({ length: 20 }).map((_, key) => {
   return {
     id: key + 1,
-    icon: handleRandomImage(),
-    title: Random.ctitle(5, 10),
-    creatTime: dayjs().subtract(Random.integer(1, 10), 'day').format('YYYY-MM-DD HH:mm:ss'),
-    joinNum: Random.integer(1, 100)
+    icon: faker.image.avatar(),
+    title: fakerZH_CN.book.title(),
+    creatTime: dayjs().subtract(faker.number.int({
+      min: 0,
+      max: 10
+    }), 'day').format('YYYY-MM-DD HH:mm:ss'),
+    joinNum: faker.number.int({
+      min: 10,
+      max: 100
+    })
   }
 })

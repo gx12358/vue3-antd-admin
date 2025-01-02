@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TableRecord } from '@gx-mock/datasSource/table'
 import { getTableList } from '@/services/tableCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { cloneDeep } from 'lodash-es'
@@ -13,8 +12,8 @@ const paramsState = reactive({
 })
 
 const { data, loading, run, cancel, params } = useRequest<
-  PageResult<TableRecord>,
-  typeof paramsState, PageResult<TableRecord>
+  PageResult<TableRecord<any>>,
+  typeof paramsState, PageResult<TableRecord<any>>
 >(getTableList, {
   params: paramsState,
   ready,

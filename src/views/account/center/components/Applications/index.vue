@@ -6,7 +6,7 @@ import WrapScroll from '../Layout/WrapScroll.vue'
 </script>
 
 <template>
-  <WrapScroll :serve="getArticlesList" :grid="{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }" :listStyle="{ paddingBlock: '24px' }">
+  <WrapScroll :serve="getArticlesList" :grid="{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }" :list-style="{ paddingBlock: '24px' }">
     <template #renderItem="{ item }: { item: ListRecord }">
       <GProCard hoverable :body-style="{ padding: '16px 20px' }" bordered>
         <div class="flex items-center gap-16px">

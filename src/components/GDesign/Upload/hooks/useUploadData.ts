@@ -43,11 +43,11 @@ export function useUploadData(state: {
       return item?.url || ''
     })
     for (let i = 0; i < newUploadList.length; i += 1) {
-      if (dataValue.value.length > state.limit.value - 1)
+      if (dataValue.value.length > (state.limit.value || 15) - 1)
         return
       const url = isString(newUploadList[i]) ? newUploadList[i] : (newUploadList[i]?.url || '')
-      const type = newUploadList[i]?.type || checkFileType(url)
-      const coverImg = state.coverDataList.value[i] || ''
+      const type = newUploadList[i]?.type || checkFileType(url, '1')
+      const coverImg = state.coverDataList?.value?.[i] || ''
       const otherParams = isString(newUploadList[i]) ? {} : omit(newUploadList[i], 'url')
       dataValue.value.push({
         id: url,

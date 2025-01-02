@@ -22,7 +22,7 @@ const menuMap: Record<menuKey, any> = {
   notification: {
     name: '新消息通知',
     components: Notification
-  },
+  }
 }
 
 const activeKey = ref<menuKey>('base')

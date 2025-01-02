@@ -1,7 +1,5 @@
-import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
-import { toRefs } from 'vue'
 
 /**
  * @Author      gx12358
@@ -16,11 +14,7 @@ export interface GlobalState {
   disabledScrollTop: boolean;
 }
 
-type GlobalStoreValue = PiniaStoreValue<GlobalState, {
-  setValue: (value: Partial<GlobalState>) => void
-}>
-
-export const useStoreGlobal = defineStore<'global', GlobalStoreValue>('global', () => {
+export const useStoreGlobal = defineStore('global', () => {
   const [ state, setValue ] = useReactiveState<GlobalState>({
     keepAlive: true,
     pageLoading: false,
@@ -29,7 +23,7 @@ export const useStoreGlobal = defineStore<'global', GlobalStoreValue>('global', 
   })
 
   return {
-    ...toRefs(state),
+    ...state,
     setValue
   }
 })

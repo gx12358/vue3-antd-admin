@@ -1,25 +1,23 @@
-import type { PiniaStoreValue } from '@gx-design-vue/pro-hooks'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
-import { toRefs } from 'vue'
 
-export type PermissionState = {
+export interface PermissionState {
   admin: boolean
-  role: string[]
+  isRelogin: boolean
+  role: string[] | undefined
   ability: string[]
 }
 
-type PermissionStore = PiniaStoreValue<PermissionState>
-
-export const useStorePermission = defineStore<'permission', PermissionStore>('permission', () => {
+export const useStorePermission = defineStore('permission', () => {
   const [ state, setValue ] = useReactiveState<PermissionState>({
     admin: false,
-    role: [],
+    isRelogin: false,
+    role: undefined,
     ability: []
-  })
+  }, { omitNil: false, omitEmpty: false })
 
   return {
-    ...toRefs(state),
+    ...state,
     setValue
   }
 })

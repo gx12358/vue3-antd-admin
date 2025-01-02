@@ -1,10 +1,13 @@
 import type { DictState } from '@/store/modules/dict'
-import type { DictRecord, DictType } from '@gx-mock/config/dict'
 import { getDicts } from '@/services/systemCenter'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
 
-export function useDict(dictTypes: DictType | DictType[]): [ ComputedRef<DictState>, (enforce?: boolean) => Promise<void> ] {
+export function useDict(dictTypes?: DictType | DictType[], wait?: boolean): {
+  dictState: ComputedRef<DictState>
+  getDict: (enforce?: boolean) => Promise<void>
+  findDict: (type: DictType, value: any, key?: keyof DictRecord) => DictRecord | undefined
+} {
   const { dict } = useStore()
 
   const dictValue = computed<Partial<DictState>>(() => {
@@ -57,9 +60,18 @@ export function useDict(dictTypes: DictType | DictType[]): [ ComputedRef<DictSta
     }
   }
 
+  function findDict(type: DictType, value: any, key?: keyof DictRecord): DictRecord | undefined {
+    return dictValue.value[type]?.data.find(item => item[key || 'dictValue'] === value)
+  }
+
   onMountedOrActivated(() => {
+    if (wait) return
     getDict()
   })
 
-  return [ dictValue as unknown as ComputedRef<DictState>, getDict ]
+  return {
+    dictState: dictValue as any,
+    getDict,
+    findDict
+  }
 }

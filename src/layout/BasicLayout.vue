@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import type { MergerSettingsType } from '@gx-design-vue/pro-layout'
+import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import type { BaseLayoutDesignToken, ProLayoutConfig } from '@gx-design-vue/pro-provider'
 import { appList } from '@/common'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import {
-  AppsLogoList,
-  GProLayout,
-  PageLock,
-  RightContent,
-  SettingDrawer,
-  useLayoutMenu
-} from '@gx-design-vue/pro-layout'
+import { useThemeStyle } from '@/hooks/web'
+import { GProLayout, PageLock, RightContent, useLayoutMenu } from '@gx-design-vue/pro-layout'
 import { useRouter } from 'vue-router'
 import ProContent from './ContentView.vue'
 
@@ -19,28 +13,47 @@ const { layout, user } = useStore()
 const router = useRouter()
 
 const collapsed = ref(false)
-const reloadStatus = ref(true)
 
-const { breadcrumbRouters, matchedKeys, menuState } = useLayoutMenu()
+const { breadcrumbRouters, matchedKeys, menuData } = useLayoutMenu({})
 
-const handleReload = () => {
-  reloadStatus.value = false
-  setTimeout(() => {
-    reloadStatus.value = true
-  }, 200)
-}
+watch([
+  () => router.currentRoute.value?.meta?.hidden,
+  () => layout.config.settings.layout
+], ([ val ]) => {
+  layout.setValue({
+    config: {
+      settings: { siderWidth: val ? 0 : undefined }
+    }
+  })
+}, { immediate: true })
 
-const tabsChange = (_routers: any) => {
-  // console.log(_routers)
-}
+const color = useThemeStyle({
+  colorError: 'colorError',
+  colorErrorHover: 'colorErrorHover'
+})
 
-const changeSettings = (value: MergerSettingsType<ProLayoutConfig>) => {
-  layout.setValue({ settings: value })
+watchEffect(() => {
+  const htmlEl = document.querySelector('html')
+  if (htmlEl) {
+    color.colorError && htmlEl.style.setProperty('--gx-color-error', color.colorError)
+    color.colorErrorHover && htmlEl.style.setProperty(
+      '--gx-color-error-hover',
+      color.colorErrorHover
+    )
+  }
+})
+
+const changeSettings = (value: Partial<ProLayoutConfig>) => {
+  layout.setValue({
+    config: {
+      settings: value
+    }
+  })
 }
 
 const changeLayoutTheme = (value: Partial<BaseLayoutDesignToken>) => {
   layout.setValue({
-    settings: {
+    config: {
       token: {
         layout: value
       }
@@ -66,19 +79,19 @@ const userLogout = (callBack: Fn) => {
 
 <template>
   <GProLayout
+    :ref="val => layout.proLayoutRef = val as unknown as ProLayoutExpose"
     v-model:collapsed="collapsed"
     v-model:selected-keys="matchedKeys.selectedKeys"
     v-model:open-keys="matchedKeys.openKeys"
-    v-bind="{ ...layout.settings, ...menuState }"
+    v-bind="layout.config"
+    :route="menuData"
     :breadcrumb="{ routes: breadcrumbRouters }"
-    @tabs-change="tabsChange"
-    @reload-page="handleReload"
     @menu-header-click="() => router.push('/')"
   >
     <template #appLogoListRender>
       <AppsLogoList :app-list="appList" />
     </template>
-    <template v-if="layout.settings.layout === 'wide'" #menuHeaderRender>
+    <template v-if="layout.config.settings.layout === 'wide'" #menuHeaderRender>
       <div class="text-center">
         额外元素
       </div>
@@ -89,11 +102,11 @@ const userLogout = (callBack: Fn) => {
     <template #pageLockRender>
       <PageLock :avatar="user.userInfo.avatar" :name="user.userInfo.nickName" />
     </template>
-    <ProContent :animate="layout.settings.animate" :reload-status="reloadStatus" />
+    <ProContent />
     <SettingDrawer
       weakmode
       show-progress
-      :settings="layout.settings"
+      :settings="layout.config.settings"
       @change="changeSettings"
       @layout-change="changeLayoutTheme"
     />

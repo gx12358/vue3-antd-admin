@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-design-vue/pro-provider'
-import type { UserDetails } from '@gx-mock/config/user'
 import cityOptions from '@/assets/json/china.json'
 import { updateUserDetails } from '@/services/userCenter'
 import { isEmail, isPhone } from '@/utils/validate'
 import { useRequest } from '@gx-admin/hooks/core'
-import { GUpload } from '@gx-design/Upload'
 import { useProForm } from '@gx-design-vue/pro-provider'
+import { GUpload } from '@gx-design/Upload'
 import { message } from 'ant-design-vue'
 import { reactive } from 'vue'
 
@@ -51,7 +49,7 @@ const ruleState = reactive<RulesState<UserFormState>>({
       message: '请输入个人简介！'
     }
   ],
-  phone: [
+  phonenumber: [
     {
       required: true,
       pattern: isPhone('', true),
@@ -103,15 +101,15 @@ const submitInfos = () => {
           <a-form-item v-bind="validateInfos.email" label="邮箱">
             <a-input v-model:value="formState.email" type="email" allow-clear placeholder="请输入邮箱" />
           </a-form-item>
-          <a-form-item v-bind="validateInfos.phone" label="联系电话">
-            <a-input v-model:value="formState.phone" :maxlength="11" show-count type="number" allow-clear placeholder="请输入联系电话" />
+          <a-form-item v-bind="validateInfos.phonenumber" label="联系电话">
+            <a-input v-model:value="formState.phonenumber" :maxlength="11" show-count type="number" allow-clear placeholder="请输入联系电话" />
           </a-form-item>
         </div>
         <div class="flex-main">
           <a-form-item v-bind="validateInfos.avatar" label="头像">
             <GUpload
               :limit="1"
-              :data-list="[ formState.avatar ]"
+              :data-list="[ formState.avatar || '' ]"
               :progress="false"
               :card-style="{ width: '144px', height: '144px' }"
               show-editor

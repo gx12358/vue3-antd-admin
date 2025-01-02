@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProCardProps } from '@gx-design-vue/pro-card'
+import type { TabsProps } from 'ant-design-vue'
 import type { TabsStateActiveKey } from './utile/config'
 import { GProCard, GProCardTabPane } from '@gx-design-vue/pro-card'
 import { getCurrentInstance, reactive } from 'vue'
@@ -8,13 +8,13 @@ import { tabPaneState } from './utile/config'
 
 const instance = getCurrentInstance()
 
-const tabsState = reactive<Omit<ProCardProps['tabs'], 'activeKey'> & { activeKey: TabsStateActiveKey }>({
+const tabsState = reactive<Omit<TabsProps, 'activeKey'> & { activeKey: TabsStateActiveKey }>({
   activeKey: 'table1',
-  onChange: (key: TabsStateActiveKey) => {
+  onChange: (key: any) => {
     tabsState.activeKey = key
-
+    
     nextTick(() => {
-      const tableRef = instance.refs?.[`tableRef_${key}`]?.[0] as any
+      const tableRef = instance?.refs?.[`tableRef_${key}`]?.[0] as any
       tableRef && tableRef?.reload?.()
     })
   }

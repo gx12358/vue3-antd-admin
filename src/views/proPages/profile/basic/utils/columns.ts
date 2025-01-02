@@ -1,5 +1,4 @@
-import type { ProColumnsType } from '@gx-design-vue/pro-table'
-import type { CommodityRecord, ScheduleRecord } from '@gx-mock/datasSource/profile/basic'
+import type { CommodityRecord, ScheduleRecord } from '@gx-mock/routers/profile/basic.fake'
 
 export const goodsColumns: ProColumnsType<Partial<CommodityRecord>> = [
   {

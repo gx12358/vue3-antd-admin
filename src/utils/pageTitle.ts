@@ -1,6 +1,6 @@
 import { defaultSettings } from '@gx-config'
 
-const { title, titleReverse, titleSeparator } = defaultSettings
+const { title, titleReverse, titleSeparator } = defaultSettings.system
 
 /**
  * @Author      gx12358

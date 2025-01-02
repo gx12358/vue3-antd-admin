@@ -1,6 +1,7 @@
 import { useProAppContext } from '@gx-design-vue/pro-app'
 import { Spin } from 'ant-design-vue'
 import { spinProps } from 'ant-design-vue/es/spin'
+import { omit } from 'lodash-es'
 import { defineComponent, h } from 'vue'
 
 export default defineComponent({
@@ -20,7 +21,7 @@ export default defineComponent({
       return (
         <Spin
           class={attrs?.class}
-          {...props}
+          {...omit(props, [ 'iconStyle' ])}
           indicator={props.indicator || indicatorRender}
           v-slots={slots}
         />

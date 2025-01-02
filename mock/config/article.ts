@@ -1,9 +1,7 @@
-import type { ListItemDataType } from '../datasSource/list'
-import mockjs from 'mockjs'
+import type { ListItemDataType } from '../routers/list/index.fake'
+import { faker, fakerZH_CN } from '@faker-js/faker'
+import { handleRandomImage } from '@gx-mock/utils/util'
 import { authorList } from '../config/dict'
-import { handleRandomImage } from '../util/utils'
-
-const { Random } = mockjs
 
 export function fakeList<T = undefined>(
   count: number,
@@ -14,7 +12,7 @@ export function fakeList<T = undefined>(
     list.push({
       id: `fake-list-${Math.random().toString(36).slice(2, 6)}${i}`,
       owner: authorList.map(item => item.dictLabel)[i % authorList.length],
-      title: Random.ctitle(),
+      title: faker.book.title(),
       avatar: handleRandomImage(50, 50),
       cover: handleRandomImage(300, 200),
       status: [ 'active', 'exception', 'normal' ][i % 3] as | 'normal' | 'exception' | 'active' | 'success',
@@ -23,28 +21,28 @@ export function fakeList<T = undefined>(
       href: 'https://next.antdv.com',
       updatedAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).getTime(),
       createdAt: new Date(new Date().getTime() - 1000 * 60 * 60 * 2 * i).getTime(),
-      subDescription: Random.cparagraph(2, Random.integer(6, 10)),
-      description: Random.cparagraph(2, Random.integer(6, 10)),
+      subDescription: faker.lorem.paragraph(1),
+      description: faker.lorem.paragraphs(2),
       activeUser: Math.ceil(Math.random() * 100),
       newUser: Math.ceil(Math.random() * 1000 + 1000),
       star: Math.ceil(Math.random() * 100 + 100),
       like: Math.ceil(Math.random() * 100 + 100),
       message: Math.ceil(Math.random() * 10) + 10,
-      content: Random.cparagraph(),
+      content: faker.lorem.paragraphs(),
       members: [
         {
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/ZiESqWwCXBRQoaPONSJe.png',
-          name: '曲丽丽',
+          name: fakerZH_CN.person.fullName(),
+          avatar: faker.image.avatar(),
           id: 'member1'
         },
         {
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/tBOxZPlITHqwlGjsJWaF.png',
-          name: '王昭君',
+          name: fakerZH_CN.person.fullName(),
+          avatar: faker.image.avatar(),
           id: 'member2'
         },
         {
-          avatar: 'https://gw.alipayobjects.com/zos/rmsportal/sBxjgqiuHMGRkIjqlQCd.png',
-          name: '董娜娜',
+          name: fakerZH_CN.person.fullName(),
+          avatar: faker.image.avatar(),
           id: 'member3'
         }
       ],

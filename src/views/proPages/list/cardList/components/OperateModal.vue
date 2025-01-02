@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { RulesState } from '@gx-design-vue/pro-provider'
-import type { CardListItemDataType } from '@gx-mock/datasSource/list/card'
+import type { CardListItemDataType } from '@gx-mock/routers/list/card.fake'
 import GUpload from '@/components/GDesign/Upload'
 import { cardListOperate, getCardListDetails } from '@/services/listCenter'
+import { handleRandomImage } from '@/utils/util'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
-import { handleRandomImage } from '@gx-mock/util/utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
@@ -31,9 +30,9 @@ const formState = reactive<FormState>({
 })
 
 const ruleState = reactive<RulesState<FormState>>({
-  title: [{ required: true, message: '请输入' }],
-  avatar: [{ required: true, message: '请上传' }],
-  description: [{ required: true, message: '请输入' }]
+  title: [ { required: true, message: '请输入' } ],
+  avatar: [ { required: true, message: '请上传' } ],
+  description: [ { required: true, message: '请输入' } ]
 })
 
 const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
@@ -55,15 +54,15 @@ const handleOk = () => {
     spinning.value = true
     const response = await cardListOperate(omit(
       { ...formState, avatar: handleRandomImage(100, 100) },
-      [formState?.id ? '' : 'id']
+      [ formState?.id ? '' : 'id' ]
     ))
-
+    
     if (response) {
       message.success('操作成功')
       emit('ok')
       handleCancel()
     }
-
+    
     spinning.value = false
   })
 }
@@ -95,8 +94,15 @@ defineExpose({
 
 <template>
   <g-pro-modal
-    full-spin type="normal" :width="640" :open="open" :spinning="spinning"
-    :skeleton-loading="skeletonLoading" :title="formState.id ? '任务编辑' : '任务新增'" @ok="handleOk" @cancel="handleCancel"
+    full-spin
+    type="normal"
+    :width="640"
+    :open="open"
+    :spinning="spinning"
+    :skeleton-loading="skeletonLoading"
+    :title="formState.id ? '任务编辑' : '任务新增'"
+    @ok="handleOk"
+    @cancel="handleCancel"
   >
     <a-form :colon="false" :wrapper-col="{ span: 20 }" :label-col="{ span: 4 }">
       <a-form-item label="名称" v-bind="validateInfos.title">

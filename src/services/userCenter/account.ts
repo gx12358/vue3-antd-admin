@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-export function getUserInfo() {
-  return request({
+export function getUserInfo<T, D = undefined>() {
+  return request<T, D>({
     url: '/user/queryUserDetail',
     method: 'get',
     isMock: true

@@ -1,3 +1,49 @@
+## 3.0.7(2025-01.02)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件**
+  - `@gx-design-vue/***` 升级最新版本
+  - `vite` 等插件升级到最新版本
+
+### ✨ REFACTOR
+
+- **build 目录**
+  - 重构到 `internal/vite-config`, 方便后期改为 `pnpm-workspace`
+  - 去除 `vite-plugin-pwa` 等不常用插件
+- **mock**
+  - 去除 `mock` 、 `viteMock` 等相关插件
+  - 新增 `vite-plugin-fake-server` 、 `@faker-js/faker` 插件, `mock` 改为 `faker`
+  - `mock` 重构，包括使用方法、本地token检验等
+- **config/default/defaultSettings.ts**
+  - 参数进行归纳调整
+- **Pro Layout(`@gx-design-vue/pro-layout`)**
+  - `props` 参数重新调整，适配重构后的 `@gx-design-vue/pro-layout` 插件
+- **src/store**
+  - `PiniaStoreValue` 类型去除, `useReactiveState` 新增 `omitEmpty` 等参数，用于合并
+
+### ✨ FIX
+
+- **Pro Table**
+  - 针对 `useTable` 的升级进行代码重构
+  - `props` 参数重新调整，适配重构后的 `@gx-design-vue/pro-table` 插件
+- **utils/request**
+  - `baseUrl` 新增 `VITE_PROXY_PREFIX` 前缀
+- **utils/accessToken**
+  - `token` 存储名称不在使用合并名称
+- **utils/storage**
+  - 修复 `getStorage` 方法返回有值的情况下返回空的问题
+- **eslint**
+  - 使用 `@antfu/eslint-config` 插件，并将全局代码进行格式
+
+### ✨ TYPES
+  - `types/mock.d.ts` 类型重构, 适配 `@faker-js/faker` 插件类型
+  - 重构 `SettingConfig` 类型
+  - `ViteEnv` 新增 `VITE_PROXY_PREFIX` 、`VITE_IS_MOCK` 环境变量
+  - 新增 `system.d.ts`, 插件类型统一归纳到 `system.d`
+
 ## 3.0.6(2024-11.02)
 
 ## 升级说明

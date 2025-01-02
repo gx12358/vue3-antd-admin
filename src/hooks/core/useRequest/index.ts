@@ -1,16 +1,19 @@
 import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
 import type { ComputedRef, MaybeRef, Ref, UnwrapRef, WatchSource } from 'vue'
 import { useState } from '@gx-design-vue/pro-hooks'
+import { deepMerge, isObject } from '@gx-design-vue/pro-utils'
 import { useThrottleFn } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
 import { computed, isReactive, isRef, reactive, ref, watch } from 'vue'
 
 type DefaultToT<T, R> = R extends undefined ? T : R
 
-export type SearchParams <P extends object = Record<string, undefined>> = MaybeRef<P> | ComputedRef<P>
+type RequestResponse<T> = T extends ResponseResult ? T : ResponseResult<T>
 
-function useRequest<T, P extends object = Record<string, undefined>, R = undefined, >(
-  service: (opt: P, config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T>>,
+export type SearchParams<P = Record<string, undefined>> = MaybeRef<P> | ComputedRef<P>
+
+function useRequest<T, P = Record<string, any>, R = undefined>(
+  service: (opt: P, config?: Partial<GAxiosOptions>) => Promise<RequestResponse<T>>,
   options: {
     params?: SearchParams<P>;
     stopWatchParams?: MaybeRef<boolean>;
@@ -20,13 +23,15 @@ function useRequest<T, P extends object = Record<string, undefined>, R = undefin
     defaultLoading?: boolean;
     ready?: Ref<boolean>;
     onBefore?: (params: P) => void;
-    onSuccess?: (res: T) => void;
-    onAfterMutateData?: (data: T) => Promise<DefaultToT<T, R>> | DefaultToT<T, R>;
+    onSuccess?: (data: DefaultToT<T, R>, response: RequestResponse<T>) => void;
+    onFinal?: () => void;
+    onAfterMutateData?: (response: RequestResponse<T>) => Promise<DefaultToT<T, R>> | DefaultToT<T, R>;
     debounceInterval?: number;
     refreshDeps?: WatchSource[];
     refreshDepsAction?: () => Promise<any>;
   } = {}
 ) {
+  const [ init, setInit ] = useState<boolean>(false)
   const [ loading, setLoading ] = useState(!!options.defaultLoading)
 
   const data = ref<DefaultToT<T, R>>(options?.defaultData as DefaultToT<T, R>)
@@ -46,18 +51,32 @@ function useRequest<T, P extends object = Record<string, undefined>, R = undefin
   const stopWatchParams = computed(() =>
     isRef(options?.stopWatchParams) ? options?.stopWatchParams?.value : options?.stopWatchParams)
 
-  const mergeParams = (opt?: P) => Object.assign(
-    state.params as P,
-    {
-      ...(opt || {}), ...((isRef(options.params)
-        ? options.params?.value as P
-        : options.params) || {})
+  const mergeParams = (opt?: P) => {
+    if (opt && isObject(opt)) {
+      return deepMerge(
+        cloneDeep(state.params) as any,
+        cloneDeep({
+          ...((isRef(options.params)
+            ? options.params?.value as P
+            : options.params) || {}),
+          ...(opt || {})
+        }),
+        {
+          omitEmpty: false,
+          omitNil: false
+        }
+      ) as UnwrapRef<P>
     }
-  ) as UnwrapRef<P>
+
+    if (opt) {
+      state.params = opt as any
+    }
+    return state.params
+  }
 
   const query = async (opt?: P) => {
     setLoading(true)
-    state.params = mergeParams()
+    state.params = mergeParams(opt)
     options.onBefore && options.onBefore?.(unref(state.params) as P)
     const requestConfig: Partial<GAxiosOptions> = {
       ...(options.requestConfig || {
@@ -66,16 +85,19 @@ function useRequest<T, P extends object = Record<string, undefined>, R = undefin
         }
       })
     }
-    const response: ResponseResult<T> = await service(mergeParams(opt) as P, requestConfig)
+    const response: RequestResponse<T> = await service(mergeParams(opt) as P, requestConfig)
     if (response) {
       data.value = options?.onAfterMutateData
-        ? await options?.onAfterMutateData?.(cloneDeep(response.data))
+        ? await options?.onAfterMutateData?.(response)
         : cloneDeep(response.data) as any
 
-      options.onSuccess && options.onSuccess?.(response.data)
+      options.onSuccess && options.onSuccess?.(data.value, response)
     }
 
+    options.onFinal && options.onFinal?.()
+
     setLoading(false)
+    setInit(true)
   }
 
   const run = useThrottleFn<(opt?: P) => Promise<void>>(query, options.debounceInterval || 50)
@@ -96,11 +118,10 @@ function useRequest<T, P extends object = Record<string, undefined>, R = undefin
       deep: true
     })
   }
-
   if ((isReactive(options.params) || isRef(options.params))) {
-    watch(() => isRef(options.params) ? options.params?.value : options.params, () => {
+    watch(() => isRef(options.params) ? options.params?.value : options.params, (params) => {
       if (!stopWatchParams.value)
-        query()
+        query(params)
     }, { deep: true })
   }
 
@@ -111,6 +132,7 @@ function useRequest<T, P extends object = Record<string, undefined>, R = undefin
     refresh,
     data,
     loading,
+    init,
     params: computed(() => state.params),
     cancel: requestCancel.cancel,
     cancelAll: requestCancel.cancelAll

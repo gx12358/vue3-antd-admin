@@ -1,5 +1,5 @@
-import type { ProTableProps } from '@gx-design-vue/pro-table'
-import type { BasicDetails } from '@gx-mock/datasSource/profile/basic'
+import type { BaseTableState } from '@gx-design-vue/pro-table'
+import type { BasicDetails } from '@gx-mock/routers/profile/basic.fake'
 
 export const descriptionsState: {
   name: string;
@@ -11,7 +11,7 @@ export const descriptionsState: {
       pickNum: '取货单号',
       status: '状态',
       saleNum: '销售单号',
-      orderNum: '子订单',
+      orderNum: '子订单'
     }
   },
   {
@@ -23,15 +23,15 @@ export const descriptionsState: {
       adress: '取货地址',
       remark: '备注'
     }
-  },
+  }
 ]
 
 export const statusState: Record<BasicDetails['status'], string> = {
   success: '已取货',
-  dispatch: '已派件',
+  dispatch: '已派件'
 }
 
-export const defaultSTableState: ProTableProps = {
+export const defaultSTableState: BaseTableState = {
   options: false,
   bordered: false,
   pagination: false,

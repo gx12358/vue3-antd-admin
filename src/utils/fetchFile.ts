@@ -4,7 +4,7 @@ import { tansParams } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
 import { message } from 'ant-design-vue'
 
-const { tokenName } = defaultSettings
+const { token } = defaultSettings
 
 export interface DownLoadRequestConfig<D = any> {
   url: string;
@@ -16,6 +16,7 @@ export interface DownLoadRequestConfig<D = any> {
   direct?: boolean; // 是否直接使用url进行请求
   read?: boolean; // 返回下载地址，不下载
   showTip?: boolean; // 展示下载中字样
+  isZip?: boolean; // 展示下载中字样
 }
 
 export default async function fetchFile(options: DownLoadRequestConfig): Promise<boolean | string> {
@@ -39,7 +40,7 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
   if (!options.direct)
     options.url = `${typeViteEnv('VITE_BASE_URL')}${options.url}`
   if (user.accessToken && !options.direct)
-    opations.headers[tokenName] = `${user.accessToken}`
+    opations.headers[token.name] = `${user.accessToken}`
   if (options.params) {
     let url = options.url + '?' + tansParams(options.params)
     url = url.slice(0, -1)
@@ -48,32 +49,44 @@ export default async function fetchFile(options: DownLoadRequestConfig): Promise
   if (options.method === 'post' && options.data) {
     opations.body = JSON.stringify(options.data)
   }
-  const response = await fetch(options.url, opations)
-  const fileName = options.name
-    ? options.name
-    : response.headers.get('content-disposition')
-      ? response.headers.get('content-disposition')?.split?.(';')?.[1]?.split?.('=')?.[1] || ''
-      : ''
-  const blobResponse = await response.blob()
-  if (blobResponse) {
-    const a = window.document.createElement('a')
-    const downUrl = window.URL.createObjectURL(blobResponse)
-    if (options.read)
-      return downUrl
-    a.href = downUrl
-    a.download = `${decodeURI(fileName)}`
-    a.click()
-    if (options.showTip) {
-      message.success({
-        content: `下载成功`,
-        key: 'updatable'
-      })
+  try {
+    const response = await fetch(options.url, opations)
+    const fileName = options.name
+      ? options.name
+      : response.headers.get('content-disposition')
+        ? response.headers.get('content-disposition')?.split?.(';')?.[1]?.split?.('=')?.[1] || ''
+        : ''
+    let blobResponse = await response.blob()
+    if (options.isZip) blobResponse = new Blob([blobResponse], { type: 'application/zip' })
+    if (blobResponse) {
+      const a = window.document.createElement('a')
+      const downUrl = window.URL.createObjectURL(blobResponse)
+      if (options.read)
+        return downUrl
+      a.href = downUrl
+      a.download = `${decodeURI(fileName)}`
+      a.click()
+      if (options.showTip) {
+        message.success({
+          content: `下载成功`,
+          key: 'updatable'
+        })
+      }
+      window.URL.revokeObjectURL(downUrl)
+      return true
+    } else {
+      if (options.showTip) {
+        message.error({
+          content: `下载失败`,
+          key: 'updatable'
+        })
+      }
+      return false
     }
-    window.URL.revokeObjectURL(downUrl)
-    return true
-  } else {
+  } catch (e) {
+    console.error(e)
     if (options.showTip) {
-      message.success({
+      message.error({
         content: `下载失败`,
         key: 'updatable'
       })

@@ -82,7 +82,7 @@ const handleSubmit = async (value) => {
           <p>GX Pro Admin 是一套基于</p>
           vue（{{ state.dependencies.vue }}） + ant-design-vue（{{
             state.dependencies['ant-design-vue']
-          }}） 开发的一套后台系统1111
+          }}） 开发的一套后台系统
         </template>
         <GProFormText
           name="userName"

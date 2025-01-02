@@ -1,5 +1,4 @@
-import type { ProColumnsType } from '@gx-design-vue/pro-table'
-import type { RulesListItem } from '@gx-mock/datasSource/list/rule'
+import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 
 export const columns: ProColumnsType<RulesListItem> = [
   {
@@ -8,7 +7,7 @@ export const columns: ProColumnsType<RulesListItem> = [
       name: 'name',
       valueType: 'text',
       placeholder: '请输入规则名称'
-    },
+    }
   },
   {
     title: '描述',
@@ -22,7 +21,7 @@ export const columns: ProColumnsType<RulesListItem> = [
   {
     title: '服务调用次数',
     dataIndex: 'callNo',
-    sorter: true,
+    sorter: true
   },
   {
     title: '状态',
@@ -32,24 +31,24 @@ export const columns: ProColumnsType<RulesListItem> = [
       valueEnum: [
         {
           text: '关闭',
-          value: '0',
+          value: '0'
         },
         {
           text: '运行中',
-          value: '1',
+          value: '1'
         },
         {
           text: '已上线',
-          value: '2',
+          value: '2'
         },
         {
           text: '异常',
-          value: '3',
+          value: '3'
         }
       ],
       placeholder: '请选择状态'
     },
-    dataIndex: 'status',
+    dataIndex: 'status'
   },
   {
     title: '上次调度时间',
@@ -68,6 +67,6 @@ export const columns: ProColumnsType<RulesListItem> = [
   {
     title: '操作',
     width: 180,
-    dataIndex: 'action',
+    dataIndex: 'action'
   }
 ]

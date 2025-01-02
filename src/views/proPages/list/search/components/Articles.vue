@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ListItemDataType } from '@gx-mock/datasSource/list'
+import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
 import Empty from '@/components/GlobalLayout/Empty/index.vue'
 import { getArticleList } from '@/services/listCenter'
@@ -12,9 +12,8 @@ import { owners } from '../utils/config'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'
 
-useDict('sys_common_author')
+const { dictState } = useDict('sys_common_author')
 
-const { dict } = useStore()
 const { searchParams } = useSearchForm()
 const { loading: spinning } = useSearchListContext()
 
@@ -34,13 +33,15 @@ const {
 )
 
 const authorOptions = computed(() => [ owners ].concat(
-  dict.sys_common_author.data.map(item => ({
+  dictState.value.sys_common_author.data.map(item => ({
     label: item.dictLabel,
     value: item.dictValue as any
   })) || []
 ))
 const authorFetchLoading = computed(() =>
-  dict.sys_common_author?.loading === undefined ? true : dict.sys_common_author?.loading
+  dictState.value.sys_common_author?.loading === undefined
+    ? true
+    : dictState.value.sys_common_author?.loading
 )
 
 const filterOption = (input: string, option: { label: string; value: string; }) => {
