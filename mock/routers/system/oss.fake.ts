@@ -1,5 +1,5 @@
-import { createMockRoute } from '@gx-mock'
 import dayjs from 'dayjs'
+import { createMockRoute } from '../../../mock'
 
 export default createMockRoute([
   {

@@ -1,13 +1,13 @@
-import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
-import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
-import type { ListItem, ListSearchParams } from '@gx-mock/utils/table'
+import type { GroupListItem } from '../../routers/group/index.fake'
+import type { ListItemDataType } from '../../routers/list/index.fake'
+import type { ListItem, ListSearchParams } from '../../utils/table'
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { fakeList } from '@gx-mock/config/article'
-import { groupList } from '@gx-mock/config/group'
-import { compareToMaxTime, handlePageList, initContent } from '@gx-mock/utils/table'
-import { getArraryList, mockNumber } from '@gx-mock/utils/util'
 import dayjs from 'dayjs'
+import { createMockRoute } from '../../../mock'
+import { fakeList } from '../../config/article'
+import { groupList } from '../../config/group'
+import { compareToMaxTime, handlePageList, initContent } from '../../utils/table'
+import { getArraryList, mockNumber } from '../../utils/util'
 
 export interface ProjectHomeCount {
   projectNum: number;
@@ -25,7 +25,7 @@ export type ProjectListItem = ListItem & {
   group: GroupListItem;
 }
 
-interface ExtraAccountListRecorrd {tags: string}
+interface ExtraAccountListRecorrd { tags: string }
 
 export type AccountListRecord = ListItemDataType<ExtraAccountListRecorrd>
 

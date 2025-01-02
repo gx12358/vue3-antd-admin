@@ -1,8 +1,8 @@
-import type { ListSearchParams } from '@gx-mock/utils/table'
+import type { ListSearchParams } from '../../utils/table'
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { handlePageList, initContent } from '@gx-mock/utils/table'
-import { getMockRandowList, handleRandomImage, mockNumber } from '@gx-mock/utils/util'
+import { createMockRoute } from '../../../mock'
+import { handlePageList, initContent } from '../../utils/table'
+import { getMockRandowList, handleRandomImage, mockNumber } from '../../utils/util'
 
 export interface TableRecord {
   id: number;

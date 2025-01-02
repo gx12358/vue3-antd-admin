@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { defaultSettings } from '@gx-config'
 import { deepMerge, isObject } from '@gx-design-vue/pro-utils'
-import { tokenAccount, userList } from '@gx-mock/config/user'
-import userIds from '@gx-mock/config/user/id'
 import { toLower } from 'lodash-es'
+import { tokenAccount, userList } from '../config/user'
+import userIds from '../config/user/id'
 import { Decrypt, Encrypt } from './crypto'
 
 const { mock, token } = defaultSettings

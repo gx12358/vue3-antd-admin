@@ -1,9 +1,9 @@
-import { createMockRoute } from '@gx-mock'
-import { groupList } from '@gx-mock/config/group'
-import { otherAccountList, userList } from '@gx-mock/config/user'
-import { tokenByUserInfo } from '@gx-mock/utils/util'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
+import { createMockRoute } from '../../../mock'
+import { groupList } from '../../config/group'
+import { otherAccountList, userList } from '../../config/user'
+import { tokenByUserInfo } from '../../utils/util'
 
 export type TabsKey = 'articles' | 'projects' | 'applications'
 

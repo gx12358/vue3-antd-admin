@@ -1,10 +1,10 @@
-import type { ListItem, ListSearchParams } from '@gx-mock/utils/table'
+import type { ListItem, ListSearchParams } from '../../utils/table'
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { otherAccountList } from '@gx-mock/config/user'
-import { handlePageList, initContent, postDataSource } from '@gx-mock/utils/table'
-import { handleRandomImage } from '@gx-mock/utils/util'
 import dayjs from 'dayjs'
+import { createMockRoute } from '../../../mock'
+import { otherAccountList } from '../../config/user'
+import { handlePageList, initContent, postDataSource } from '../../utils/table'
+import { handleRandomImage } from '../../utils/util'
 
 export interface BasicCountState {
   needDone: number;

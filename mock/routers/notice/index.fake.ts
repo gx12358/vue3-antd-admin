@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { getArraryList } from '@gx-mock/utils/util'
 import dayjs from 'dayjs'
+import { createMockRoute } from '../../../mock'
+import { getArraryList } from '../../utils/util'
 
 export interface MailNoticeListItem {
   id: string;

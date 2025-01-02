@@ -1,4 +1,4 @@
-import { createMockRoute } from '@gx-mock'
+import { createMockRoute } from '../../../mock'
 
 export interface RadarRecord {
   name: string;

@@ -1,7 +1,7 @@
 import type { ListItemDataType } from '../routers/list/index.fake'
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { handleRandomImage } from '@gx-mock/utils/util'
 import { authorList } from '../config/dict'
+import { handleRandomImage } from '../utils/util'
 
 export function fakeList<T = undefined>(
   count: number,

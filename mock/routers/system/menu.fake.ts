@@ -1,5 +1,5 @@
-import { createMockRoute } from '@gx-mock'
-import { menuList } from '@gx-mock/config/menu'
+import { createMockRoute } from '../../../mock'
+import { menuList } from '../../config/menu'
 
 export default createMockRoute({
   url: '/menu/navigate',

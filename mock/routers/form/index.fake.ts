@@ -1,5 +1,5 @@
-import { createMockRoute } from '@gx-mock'
-import { formState } from '@gx-mock/config/form'
+import { createMockRoute } from '../../../mock'
+import { formState } from '../../config/form'
 
 export interface BasicFormState {
   title: string;

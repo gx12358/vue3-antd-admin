@@ -1,4 +1,4 @@
-import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
+import type { GroupListItem } from '../routers/group/index.fake'
 import { faker, fakerZH_CN } from '@faker-js/faker'
 import dayjs from 'dayjs'
 

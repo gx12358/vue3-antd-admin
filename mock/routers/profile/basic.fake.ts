@@ -1,9 +1,9 @@
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { otherAccountList } from '@gx-mock/config/user'
-import { initContent } from '@gx-mock/utils/table'
-import { mockNumber } from '@gx-mock/utils/util'
 import dayjs from 'dayjs'
+import { createMockRoute } from '../../../mock'
+import { otherAccountList } from '../../config/user'
+import { initContent } from '../../utils/table'
+import { mockNumber } from '../../utils/util'
 
 export interface BasicDetails {
   pickNum: number;

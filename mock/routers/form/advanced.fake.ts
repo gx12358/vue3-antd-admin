@@ -1,7 +1,7 @@
-import type { ListItem, ListSearchParams } from '@gx-mock/utils/table'
+import type { ListItem, ListSearchParams } from '../../utils/table'
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
-import { handlePageList, initContent } from '@gx-mock/utils/table'
+import { createMockRoute } from '../../../mock'
+import { handlePageList, initContent } from '../../utils/table'
 
 export type TableRecord = {
   workId: string;

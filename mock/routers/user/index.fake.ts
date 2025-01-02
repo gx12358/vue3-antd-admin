@@ -1,6 +1,6 @@
-import { createMockRoute } from '@gx-mock'
-import { accessTokens, accounts } from '@gx-mock/config/user'
-import { createrToken } from '@gx-mock/utils/util'
+import { createMockRoute } from '../../../mock'
+import { accessTokens, accounts } from '../../config/user'
+import { createrToken } from '../../utils/util'
 
 export default createMockRoute([
   {

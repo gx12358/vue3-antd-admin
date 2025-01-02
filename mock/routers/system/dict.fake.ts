@@ -1,6 +1,6 @@
-import { createMockRoute } from '@gx-mock'
-import { authorList, categoryList, commonStatus } from '@gx-mock/config/dict'
 import { cloneDeep } from 'lodash-es'
+import { createMockRoute } from '../../../mock'
+import { authorList, categoryList, commonStatus } from '../../config/dict'
 
 export default createMockRoute([
   {

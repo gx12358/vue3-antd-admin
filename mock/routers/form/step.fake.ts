@@ -1,5 +1,5 @@
 import { faker, fakerZH_CN } from '@faker-js/faker'
-import { createMockRoute } from '@gx-mock'
+import { createMockRoute } from '../../../mock'
 
 export default createMockRoute([
   {

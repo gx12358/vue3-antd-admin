@@ -1,6 +1,6 @@
 import { compareArray } from '@gx-design-vue/pro-utils'
-import { createMockRoute } from '@gx-mock'
-import { groupList } from '@gx-mock/config/group'
+import { createMockRoute } from '../../../mock'
+import { groupList } from '../../config/group'
 
 export interface GroupListItem {
   id: number;

@@ -53,7 +53,8 @@ export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   const useMock = isDev || VITE_USE_MOCK
   useMock && vitePlugins.push(vitePluginFakeServer({
     include: 'mock/routers',
-  }),)
+    enableProd: VITE_USE_MOCK
+  }))
 
   // rollup-plugin-visualizer
   vitePlugins.push(configVisualizerConfig())

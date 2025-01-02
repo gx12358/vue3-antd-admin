@@ -1,8 +1,8 @@
-import type { ListItem, ListSearchParams } from '@gx-mock/utils/table'
-import { createMockRoute } from '@gx-mock'
-import { initContent } from '@gx-mock/utils/table'
+import type { ListItem, ListSearchParams } from '../../utils/table'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
+import { createMockRoute } from '../../../mock'
+import { initContent } from '../../utils/table'
 
 export type RulesListItem = {
   disabled?: boolean;
