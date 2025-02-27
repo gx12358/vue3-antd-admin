@@ -67,6 +67,7 @@ declare global {
   }
 
   interface Window {
+    version: string;
     editorConfig: {
       isFirstRenderCropUpdated?: boolean
     };
