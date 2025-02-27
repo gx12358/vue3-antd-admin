@@ -1,13 +1,11 @@
 import usePageContent from './usePageContent'
-import useProTabel from './useProTabel'
+import useProTable from './useProTable'
 import useScrollPageList from './useScrollPageList'
-import useTabelState from './useTabelState'
-import useThemeStyle from './useThemeStyle'
+import useTableState from './useTableState'
 
 export {
   usePageContent,
-  useProTabel,
+  useProTable,
   useScrollPageList,
-  useTabelState,
-  useThemeStyle
+  useTableState,
 }

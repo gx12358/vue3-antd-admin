@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { AppRouteModule } from '@gx-design-vue/pro-layout'
 import type { RadarRecord } from '@gx-mock/routers/dataChart/index.fake'
 import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
 import type { MailNoticeListItem } from '@gx-mock/routers/notice/index.fake'
@@ -11,13 +10,21 @@ import { getMailNotice } from '@/services/mailCenter'
 import { getProjectList, getProjectNums } from '@/services/projectCenter'
 import { timeFix } from '@/utils/util'
 import { useRequest } from '@gx-admin/hooks/core'
-import { useThemeStyle } from '@gx-admin/hooks/web'
 import { GProCard } from '@gx-design-vue/pro-card'
+import { useTokenStyle } from '@gx-design-vue/pro-provider'
 import { compareArray, toChinesNum } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
 import { reactive } from 'vue'
 import Radar from './components/Radar.vue'
+
+defineOptions({
+  name: 'Workplace'
+})
+
+onActivated(() => {
+  console.log(222)
+})
 
 const { user } = useStore()
 const router = useRouter()
@@ -29,19 +36,19 @@ const state = reactive({
 
 const currentRoute = computed(() => router.currentRoute.value as AppRouteModule)
 
-const colorTextQuaternary = useThemeStyle({
+const colorTextQuaternary = useTokenStyle({
   color: 'colorTextQuaternary'
 })
 
-const colorBgSpotlight = useThemeStyle({
+const colorBgSpotlight = useTokenStyle({
   color: 'colorBgSpotlight'
 })
 
-const colorTextDescription = useThemeStyle({
+const colorTextDescription = useTokenStyle({
   color: 'colorTextDescription'
 })
 
-const colorFillContent = useThemeStyle({
+const colorFillContent = useTokenStyle({
   borderColor: 'colorFillContent'
 })
 
@@ -58,7 +65,7 @@ const { data: projectCount } = useRequest<Partial<ProjectHomeCount>>(
 const {
   loading: projectLoading,
   data: projectList
-} = useRequest<PageResult<ProjectListItem>, ListSearchParams, ProjectListItem[]>(
+} = useRequest<ProjectListItem[], ListSearchParams, PageResult<ProjectListItem>>(
   getProjectList,
   {
     params: {

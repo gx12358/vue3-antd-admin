@@ -7,7 +7,7 @@ import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
 import { getUserList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
-import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
+import { handleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
@@ -26,7 +26,7 @@ const open = ref(false)
 const spinning = ref(false)
 const skeletonLoading = ref(false)
 
-const userReadyFetch = ref(false)
+const useWaitFetch = ref(true)
 
 const formState = reactive<FormState>({
   title: '',
@@ -46,14 +46,13 @@ const ruleState = reactive<RulesState<FormState>>({
 const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
 
 const { loading, data: userList } = useRequest<UserList[]>(getUserList, {
-  manual: true,
-  ready: userReadyFetch
+  manual: useWaitFetch
 })
 
 const handleCancel = () => {
   resetFields()
   spinning.value = false
-  userReadyFetch.value = false
+  useWaitFetch.value = true
   skeletonLoading.value = false
   open.value = false
 }
@@ -80,7 +79,7 @@ const handleOk = () => {
 defineExpose({
   open: async (id?: number) => {
     open.value = true
-    userReadyFetch.value = true
+    useWaitFetch.value = false
     if (id) {
       skeletonLoading.value = true
       const response = await getBasicListDetails<BasicListItemDataType>({ id })
@@ -91,7 +90,7 @@ defineExpose({
               formState[key] = dayjs(response.data?.createTime)
               break
             default:
-              formState[key] = hanndleEmptyField(response?.data?.[key], '').value
+              formState[key] = handleEmptyField(response?.data?.[key], '').value
               break
           }
         }

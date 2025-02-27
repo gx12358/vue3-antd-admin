@@ -23,7 +23,7 @@ const {
   {
     fetchNextType: 'button',
     pageSize,
-    scrollBotomm: 124 + 24 * 2 + 200
+    scrollBottom: 124 + 24 * 2 + 200
   }
 )
 

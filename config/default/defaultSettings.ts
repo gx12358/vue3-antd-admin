@@ -36,7 +36,7 @@ const settingConfig: SettingConfig = {
     // front（前端导出路由）和 all（后端导出路由）两种方式
     authentication: 'all',
   },
-  servive: {
+  service: {
     // 开发环境端口号
     port: 9260,
   },

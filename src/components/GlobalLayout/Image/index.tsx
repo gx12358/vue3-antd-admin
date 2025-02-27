@@ -1,7 +1,7 @@
 import type { GImageProps } from '@gx-design-vue/image'
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { SlotsType } from 'vue'
-import { GImage, imagePorps } from '@gx-design-vue/image'
+import { GImage, imageProps } from '@gx-design-vue/image'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
 import { omit } from 'lodash-es'
 import { defineComponent } from 'vue'
@@ -17,7 +17,7 @@ export default defineComponent({
       type: String as VuePropType<string>,
       default: 'w-30px'
     },
-    ...imagePorps
+    ...imageProps
   },
   slots: Object as SlotsType<{
     placeholder: GImageProps['placeholder'];

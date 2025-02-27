@@ -1,9 +1,9 @@
-import type { MenuDataItem } from '@gx-design-vue/pro-layout'
 import type { Router } from 'vue-router'
 import { useStoreGlobal } from '@/store'
 import getPageTitle from '@/utils/pageTitle'
 import { scrollToContainer } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
+import NProgress from 'nprogress'
 import { createPermissionGuard } from './permissions'
 import { createStateGuard } from './stateGuard'
 
@@ -20,7 +20,7 @@ export function setupRouterGuard(router: Router) {
 
 export function createPageGuard(router: Router) {
   router.afterEach((to) => {
-    const { meta } = to as MenuDataItem
+    const { meta } = to as SystemMenuItem
     document.title = getPageTitle(meta?.title || '')
   })
 }
@@ -55,12 +55,13 @@ export function createScrollGuard(router: Router) {
 export function createProgressGuard(router: Router) {
   const global = useStoreGlobal()
   router.beforeEach(() => {
-    if (global.showProgressBar)
-      // NProgress.start()
-      return true
+    if (global.showProgressBar) {
+      NProgress.start()
+    }
+    return true
   })
 
   router.afterEach(() => {
-    // NProgress.done()
+    NProgress.done()
   })
 }

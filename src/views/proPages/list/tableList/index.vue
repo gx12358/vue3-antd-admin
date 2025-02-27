@@ -1,7 +1,7 @@
 <script setup lang="ts" name="TableList">
 import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
-import useProTabel from '@/hooks/web/useProTabel'
+import useProTable from '@/hooks/web/useProTable'
 import { deleteRules, getRulesList } from '@/services/listCenter'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
@@ -15,7 +15,7 @@ const operate = ref()
 const preview = ref()
 const tableRef = ref()
 
-const { selectedKeys, setLoading, reload, tableState } = useProTabel<RulesListItem>(tableRef, {
+const { selectedKeys, setLoading, reload, tableState } = useProTable<RulesListItem>(tableRef, {
   state: {
     headerTitle: '查询表格',
     columns,

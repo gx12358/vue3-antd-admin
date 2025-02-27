@@ -13,14 +13,14 @@ const { viewScrollRoot } = defaultSettings.system
 export default function <T, R = any>(serve: any, options: {
   fetchNextType: 'scroll' | 'button';
   pageSize?: MaybeRef<number>;
-  otherParmas?: R;
-  scrollBotomm?: number;
+  otherParams?: R;
+  scrollBottom?: number;
   scrollRoot?: string;
   reloadClear?: boolean;
   onAfterMutateData?: (list: T[]) => T[];
-} = { fetchNextType: 'scroll', scrollBotomm: 124 + 24 * 2 }) {
+} = { fetchNextType: 'scroll', scrollBottom: 124 + 24 * 2 }) {
   const scrollEl = ref<HTMLElement>()
-  const stopWatchParams = ref(false)
+  const watchParams = ref(true)
   const list = ref<T[]>([])
 
   const state = reactive<{
@@ -43,16 +43,18 @@ export default function <T, R = any>(serve: any, options: {
     pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize || 10
   })
 
-  const { loading, refresh } = useRequest<PageResult<T>, R & PageState, T[]>(
+  const { loading, refresh } = useRequest<T[], R & PageState, PageResult<T>>(
     serve,
     {
       params: computed(() => ({
-        ...cloneDeep(options.otherParmas),
+        ...cloneDeep(options.otherParams),
         ...pageState
       } as (R & PageState))),
-      stopWatchParams,
+      watchParams,
       onAfterMutateData: (response) => {
-        return options?.onAfterMutateData?.(response.data.list || []) || (response.data?.list || [])
+        return options?.onAfterMutateData
+          ? options?.onAfterMutateData?.(response.data.list || [])
+          : (response.data?.list || [])
       },
       onBefore: (params) => {
         if (params?.pageNum === 1) {
@@ -75,11 +77,11 @@ export default function <T, R = any>(serve: any, options: {
 
   if (options?.pageSize && isRef(options.pageSize)) {
     watch(() => (options.pageSize as Ref<number>)?.value, (val) => {
-      stopWatchParams.value = true
+      watchParams.value = false
       if (val)
         pageState.pageSize = val
       nextTick(() => {
-        stopWatchParams.value = false
+        watchParams.value = true
       })
     })
   }
@@ -87,7 +89,7 @@ export default function <T, R = any>(serve: any, options: {
   if (options.fetchNextType === 'scroll' && (options?.scrollRoot || viewScrollRoot)) {
     const { arrivedState, y } = useScroll(scrollEl, {
       offset: {
-        bottom: options?.scrollBotomm || 124 + 24 * 2
+        bottom: options?.scrollBottom || 124 + 24 * 2
       }
     })
 
@@ -127,14 +129,14 @@ export default function <T, R = any>(serve: any, options: {
 
   onMountedOrActivated(() => {
     scrollEl.value = document.querySelector(options?.scrollRoot || viewScrollRoot) as HTMLElement
-    stopWatchParams.value = false
+    watchParams.value = true
   })
 
   onDeactivated(() => {
-    stopWatchParams.value = true
+    watchParams.value = false
   })
 
-  watch(() => options.otherParmas, (val) => {
+  watch(() => options.otherParams, (val) => {
     if (val) {
       pageState.pageNum = 1
     }
@@ -143,7 +145,7 @@ export default function <T, R = any>(serve: any, options: {
   const handleNext = () => pageState.pageNum += 1
 
   const reloadList = (count?: number) => {
-    stopWatchParams.value = true
+    watchParams.value = false
     state.oldPageState = { ...pageState }
     pageState.pageNum = 1
     pageState.pageSize = count || list.value.length
@@ -151,7 +153,7 @@ export default function <T, R = any>(serve: any, options: {
 
     // 这里再返回之前的翻页顺序
     nextTick(() => {
-      stopWatchParams.value = false
+      watchParams.value = true
     })
   }
 

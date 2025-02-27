@@ -8,3 +8,13 @@ export function getRadarData(params) {
     params
   })
 }
+
+export function getHokksRequest(params, config) {
+  return request({
+    url: '/hooks/request',
+    method: 'get',
+    isMock: true,
+    params,
+    ...config
+  })
+}

@@ -38,10 +38,12 @@ export class AxiosCanceler {
    * @description: Clear all pending
    */
   removeAllPending() {
-    this.pendingMap.forEach((cancel) => {
-      cancel && isFunction(cancel) && cancel()
-    })
-    this.pendingMap.clear()
+    if (this.pendingMap) {
+      this.pendingMap.forEach((cancel) => {
+        cancel && isFunction(cancel) && cancel()
+      })
+      this.pendingMap.clear()
+    }
   }
 
   /**

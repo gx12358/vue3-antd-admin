@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { MaterialListItem } from '../typings'
 import type { GUploadProps } from '../Upload'
-import { checkFileType, generateVidoePicture, isString } from '@gx-design-vue/pro-utils'
+import { checkFileType, generateVideoPicture, isString } from '@gx-design-vue/pro-utils'
 import { cloneDeep, omit } from 'lodash-es'
 import { computed, ref, unref, watch } from 'vue'
 
@@ -64,7 +64,7 @@ export function useUploadData(state: {
       })
 
       if (!coverImg && type === '3') {
-        generateVidoePicture(url).then((coverUrl) => {
+        generateVideoPicture(url).then((coverUrl) => {
           changeDataValue(url, { coverImg: coverUrl })
         })
       }

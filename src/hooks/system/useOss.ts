@@ -9,7 +9,7 @@ import { cloneDeep } from 'lodash-es'
 export function useOss() {
   const { oss } = useStore()
 
-  async function createClent(params?: ClientDetails): Promise<any> {
+  async function createClient(params?: ClientDetails): Promise<any> {
     const details = await oss.getOssToken(params)
     return new OSS(details)
   }
@@ -30,7 +30,7 @@ export function useOss() {
     if (!name || checkURL(name)) {
       return name && process ? `${name}?x-oss-process=${process}` : name
     }
-    const ossClient = client || await createClent(params)
+    const ossClient = client || await createClient(params)
     return await ossClient.signatureUrl(name, { expires: expires || 7200, process })
   }
 
@@ -116,7 +116,7 @@ export function useOss() {
     getSignUrl,
     getUploadName,
     getArraySignUrl,
-    createClent,
+    createClient,
     getOssUploadName
   }
 }

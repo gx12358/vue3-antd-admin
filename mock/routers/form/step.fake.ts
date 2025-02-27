@@ -10,7 +10,7 @@ export default createMockRoute([
       payAccount: faker.internet.email(),
       receiverAccount: faker.internet.email(),
       receiverName: fakerZH_CN.person.fullName(),
-      amount: faker.number.int({ min: 100000, max: 50000 }),
+      amount: faker.number.int({ min: 1000, max: 2000 }),
       receiverMode: 'alipay'
     })
   }

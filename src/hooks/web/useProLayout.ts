@@ -1,4 +1,5 @@
-import { type ProLayoutExpose, useProLayout } from '@gx-design-vue/pro-layout'
+import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
+import { useProLayout } from '@gx-design-vue/pro-layout'
 import { computed } from 'vue'
 
 export default function () {

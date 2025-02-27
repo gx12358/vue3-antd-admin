@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
-import useProTabel from '@/hooks/web/useProTabel'
+import useProTable from '@/hooks/web/useProTable'
 import { getArticleList } from '@/services/listCenter'
 import { toConvertNumberShow } from '@/utils/util'
 import { GProCard } from '@gx-design-vue/pro-card'
@@ -26,7 +26,7 @@ const state = reactive({
   }
 })
 
-const { loading, tableState } = useProTabel<ListItemDataType, SearchState>(tableRef, {
+const { loading, tableState } = useProTable<ListItemDataType, SearchState>(tableRef, {
   state: {
     rowKey: 'id',
     params: { ...toRaw(searchParams) },

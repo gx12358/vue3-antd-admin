@@ -33,7 +33,7 @@ body,
   flex-direction: column;
   padding: 98px;
 }
-.page-loading-warp .page-loading-warp_mseeage {
+.page-loading-warp .page-loading-warp_message {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,10 +41,10 @@ body,
   gap: 15px;
   margin-top: 80px;
 }
-.page-loading-warp .page-loading-warp_mseeage .page-loading_title {
+.page-loading-warp .page-loading-warp_message .page-loading_title {
   font-size: 20px;
 }
-.page-loading-warp .page-loading-warp_mseeage .page-loading_sub_title {
+.page-loading-warp .page-loading-warp_message .page-loading_sub_title {
   color: #666;
   font-size: 16px;
 }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { AppRouteModule, Meta } from '@gx-design-vue/pro-layout'
 import { PageTranstion, useProLayoutContext } from '@gx-design-vue/pro-layout'
 import { computed, ref } from 'vue'
 import IframeView from '../views/Iframe/index.vue'
@@ -11,13 +10,13 @@ const { renderRouterView } = useProLayoutContext()
 const keepLiveRouterNames = ref<any[]>([])
 
 const iframeSrc = computed(() => {
-  const meta = router.currentRoute.value?.meta as Meta
+  const meta = router.currentRoute.value?.meta as SystemMenuMeta
   return meta?.link && Number(meta?.linkStatus) === 0 ? meta?.link || '' : ''
 })
 
 watch(() => global.keepAlive, () => {
   keepLiveRouterNames.value = (router.getRoutes() as AppRouteModule[])
-    .filter(item => global.keepAlive || (item.meta as Meta)?.keepAlive)
+    .filter(item => global.keepAlive || (item.meta as SystemMenuMeta)?.keepAlive)
     .map(item => item.name)
 }, { immediate: true })
 </script>

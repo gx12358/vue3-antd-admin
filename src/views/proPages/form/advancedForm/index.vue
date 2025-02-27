@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormState } from './typings'
-import useProTabel from '@/hooks/web/useProTabel'
+import useProTable from '@/hooks/web/useProTable'
 import {
   addAdvancedFormTable,
   deleteAdvancedFormTable,
@@ -13,7 +13,7 @@ import { useRequest } from '@gx-admin/hooks/core'
 import { defaultSettings } from '@gx-config'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
-import { convertValueBoolean, hanndleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
+import { convertValueBoolean, handleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
@@ -36,11 +36,11 @@ const isMount = ref(false)
 
 const {
   dataSource,
-  setData,
+  setDataValue,
   reload,
   setLoading,
   tableState
-} = useProTabel<TableRecord<FormState>, FormState>(
+} = useProTable<TableRecord<FormState>, FormState>(
   tableRef,
   {
     state: {
@@ -118,7 +118,7 @@ const { loading } = useRequest(getAdvancedForm, {
           formState[i] = data[i] || undefined
           break
         default:
-          formState[i] = hanndleEmptyField(data[i], '').value
+          formState[i] = handleEmptyField(data[i], '').value
           break
       }
     }
@@ -150,7 +150,7 @@ const handleCancel = (key: number) => {
 
 const handleDelete = async (key: number) => {
   if (state.editableData[key]?.isMock) {
-    setData({ key: 'id', type: 'delete', record: { id: key } })
+    setDataValue({ value: key, type: 'delete', params: { id: key } })
     delete state.editableData[key]
   } else {
     setLoading(true)
@@ -166,17 +166,15 @@ const handleDelete = async (key: number) => {
 
 const handelTableAdd = () => {
   const key = dataSource.value.length + 1
-  setData({
-    key: 'id',
-    record: {
+  setDataValue({
+    params: {
       id: key,
       workId: '',
       name: '',
       department: '',
       isMock: true,
       createTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
-    },
-    type: 'push'
+    }
   })
   nextTick(() => {
     state.editableData[key] = cloneDeep(dataSource.value.find(item => key === item.id))

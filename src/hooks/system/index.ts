@@ -5,7 +5,6 @@ import { useUpload } from './useUpload'
 
 export * from './useListUpload'
 
-
 export {
   useDict,
   useOss,

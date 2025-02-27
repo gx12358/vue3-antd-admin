@@ -4,7 +4,7 @@ import type {
   CommodityRecord,
   ScheduleRecord
 } from '@gx-mock/routers/profile/basic.fake'
-import useProTabel from '@/hooks/web/useProTabel'
+import useProTable from '@/hooks/web/useProTable'
 import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import dayjs from 'dayjs'
@@ -18,7 +18,7 @@ const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic,
 const scheduleRef = ref()
 const commodityRef = ref()
 
-const commodityState = useProTabel<Partial<CommodityRecord>>(commodityRef, {
+const commodityState = useProTable<Partial<CommodityRecord>>(commodityRef, {
   state: {
     ...defaultSTableState as any,
     headerTitle: '退货商品',
@@ -27,7 +27,7 @@ const commodityState = useProTabel<Partial<CommodityRecord>>(commodityRef, {
   }
 })
 
-const scheduleState = useProTabel<Partial<ScheduleRecord>>(scheduleRef, {
+const scheduleState = useProTable<Partial<ScheduleRecord>>(scheduleRef, {
   state: {
     ...defaultSTableState as any,
     headerTitle: '退货进度',

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { ProSearchMap } from '@gx-design-vue/pro-table'
-import type { TableRecord } from '@gx-mock/routers/table/index.fake'
-import type { SearchParams } from '../typings'
+import type { MockTableRecord, SearchParams } from '../typings'
+import { useDict } from '@/hooks/system'
 import { getTableList } from '@/services/tableCenter'
-import { useDict } from '@gx-admin/hooks/system'
 import { useTable } from '@gx-design-vue/pro-table'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { reactive, ref, watch } from 'vue'
@@ -38,14 +37,14 @@ const params = reactive({
   age: ''
 })
 
-const { tableState } = useTable<TableRecord, SearchParams>(tableRef, {
+const { tableState } = useTable<TableRecord<MockTableRecord>, SearchParams>(tableRef, {
   state: {
     options: false,
     modalScroll: true,
     columns: operationModal
   },
   request: async (params) => {
-    const response = await getTableList<PageResult<TableRecord>>(params)
+    const response = await getTableList<PageResult<TableRecord<MockTableRecord>>>(params)
     return {
       data: deepCopy(response?.data?.list || []),
       success: !!response,

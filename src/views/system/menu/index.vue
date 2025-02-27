@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
-import useProTabel from '@/hooks/web/useProTabel'
+import type { SearchConfig } from './utils/columns'
+import useProTable from '@/hooks/web/useProTable'
 import { getMenuList } from '@/services/systemCenter'
 import { treeData } from '@gx-design-vue/pro-utils'
-import { columns, type SearchConfig } from './utils/columns'
+import { columns } from './utils/columns'
 
 const state = reactive({
   menuTypeList: {
@@ -15,7 +16,7 @@ const state = reactive({
 
 const tableRef = ref()
 
-const { tableState } = useProTabel<SystemMenuItem, SearchConfig>(tableRef, {
+const { tableState } = useProTable<SystemMenuItem, SearchConfig>(tableRef, {
   state: {
     columns,
     rowKey: 'menuId'

@@ -7,6 +7,7 @@ import { isArray, isNumber, isObject } from '@gx-design-vue/pro-utils'
 import { notification } from 'ant-design-vue'
 import { defineStore } from 'pinia'
 import { useStoreDict } from './dict'
+import { useStoreGlobal } from './global'
 import { useStorePermission } from './permission'
 import { useStoreRoutes } from './routes'
 
@@ -23,6 +24,7 @@ export type CheckUserStatus = 0 | 1 | 2
 export const useStoreUser = defineStore('user', () => {
   const dict = useStoreDict()
   const routes = useStoreRoutes()
+  const global = useStoreGlobal()
   const permission = useStorePermission()
 
   const [ state, setValue ] = useReactiveState<UserState>({
@@ -86,15 +88,15 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/1/11
    * @description 获取用户信息
    */
-  const checkUserPremission = async (): Promise<CheckUserStatus> => {
+  const checkUserPermission = async (): Promise<CheckUserStatus> => {
     let status: CheckUserStatus = 0
-    permission.setValue({ isRelogin: true })
+    global.setValue({ isLoggingIn: true })
     if (loginInterception) {
       status = await updateUserInfo()
     } else {
       status = setVirtualUserInfo()
     }
-    permission.setValue({ isRelogin: false })
+    global.setValue({ isLoggingIn: false })
     return status
   }
 
@@ -112,7 +114,7 @@ export const useStoreUser = defineStore('user', () => {
    * @lastTime    2022/5/15
    * @description 用户退出登录
    */
-  const userLogut = async () => {
+  const userLogout = async () => {
     await logout()
     resetPermissions()
   }
@@ -120,9 +122,9 @@ export const useStoreUser = defineStore('user', () => {
   return {
     ...state,
     userLogin,
-    userLogut,
+    userLogout,
     setValue,
     resetPermissions,
-    checkUserPremission
+    checkUserPermission
   }
 })

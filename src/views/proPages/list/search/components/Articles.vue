@@ -27,8 +27,8 @@ const {
   getArticleList,
   {
     fetchNextType: 'scroll',
-    otherParmas: searchParams,
-    scrollBotomm: 124 + 24 * 2 + 200
+    otherParams: searchParams,
+    scrollBottom: 124 + 24 * 2 + 200
   }
 )
 

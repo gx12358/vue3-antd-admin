@@ -36,20 +36,20 @@ function handleOssResponse(data: any) {
 export type OssUpload = (options: UploadConfig) => Promise<OssResponse>
 
 export function useUpload(): {
-  simeUpload: ({ client, name, file }: UploadConfig) => Promise<OssResponse>;
+  quickUpload: ({ client, name, file }: UploadConfig) => Promise<OssResponse>;
   upload: OssUpload;
   resumeUpload: OssUpload;
 } {
-  const { createClent, getOssUploadName } = useOss()
+  const { createClient, getOssUploadName } = useOss()
 
-  function simeUpload({
+  function quickUpload({
     name,
     fullName,
     client,
     file
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClent()
+      const ossClient = client || await createClient()
       const ossName = await getOssUploadName({
         name,
         fullName,
@@ -94,7 +94,7 @@ export function useUpload(): {
     progressCallback
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClent()
+      const ossClient = client || await createClient()
       const ossName = await getOssUploadName({
         name,
         fullName,
@@ -144,7 +144,7 @@ export function useUpload(): {
     progressCallback
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClent()
+      const ossClient = client || await createClient()
       ossClient
         .multipartUpload(name, file, {
           checkpoint,
@@ -178,7 +178,7 @@ export function useUpload(): {
 
   return {
     upload,
-    simeUpload,
+    quickUpload,
     resumeUpload
   }
 }

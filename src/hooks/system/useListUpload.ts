@@ -3,7 +3,7 @@ import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import {
   checkFileType,
-  generateVidoePicture,
+  generateVideoPicture,
   getFileSuffix,
   getMediaInfos,
   getRandomNumber
@@ -77,7 +77,7 @@ function handleOssResponse(data: any) {
 }
 
 export function useListUpload(limit?: Ref<number>) {
-  const { createClent, getSignUrl, getOssUploadName } = useOss()
+  const { createClient, getSignUrl, getOssUploadName } = useOss()
 
   const dataList = ref<UploadItem[]>([])
 
@@ -137,7 +137,7 @@ export function useListUpload(limit?: Ref<number>) {
         duration
       })
       if (play) {
-        generateVidoePicture(URL.createObjectURL(file)).then((coverImage) => {
+        generateVideoPicture(URL.createObjectURL(file)).then((coverImage) => {
           changeListItem(key, {
             coverImage
           })
@@ -229,7 +229,7 @@ export function useListUpload(limit?: Ref<number>) {
     finalCallBack,
     progressCallback
   }: UploadConfig) => {
-    const ossClient = client || await createClent()
+    const ossClient = client || await createClient()
     const ossName = await getOssUploadName({
       name,
       fullName,
@@ -309,7 +309,7 @@ export function useListUpload(limit?: Ref<number>) {
     progressCallback
   }: UploadConfig) {
     const options = getListItem(uid)
-    const resumeClient = options?.ossClient || client || await createClent()
+    const resumeClient = options?.ossClient || client || await createClient()
     resumeClient
       .multipartUpload(name, file, {
         checkpoint: options?.checkpoint,

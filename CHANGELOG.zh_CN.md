@@ -1,3 +1,31 @@
+## 3.0.8 (2025-02-27)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件**
+  - `@gx-design-vue/***` 升级最新版本
+  - `vite` 等插件升级到最新版本
+
+### ✨ REFACTOR
+
+- **prettier、editorconfig**
+  - 去除 `prettier` `editorconfig` 插件，统一使用 `@antfu/eslint-config` 管理代码风格
+- **useRequest**
+  - 重构 `useRequest` 以提高性能和可维护性
+
+### ✨ FIX
+
+- **@gx-design-vue**
+  - 针对 `@gx-design-vue/***` 的升级进行代码重构
+
+### ✨ TYPES
+
+- `types/system.d.ts` `TableRecord` 类型调整
+- 全局系统菜单类型使用 `types/system.d.ts` `SystemMenuItem`
+- 全局系统路由类型使用 `types/system.d.ts` `AppRouteModule`
+
 ## 3.0.7(2025-01.02)
 
 ## 升级说明

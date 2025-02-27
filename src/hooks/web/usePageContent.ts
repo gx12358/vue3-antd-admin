@@ -7,7 +7,7 @@ export default function (h?: number) {
   const { token } = useProConfigContext()
 
   const count = computed(() => {
-    const header = token.value?.layout?.header?.heightLayoutHeader || layoutConfig.headerHeight || 48
+    const header = (token.value?.layout?.header?.heightLayoutHeader || layoutConfig.headerHeight || 48) as number
     const tabsRoute = 40
     const paddingBlockPageContainerContent = token.value?.layout?.pageContainer?.paddingBlockPageContainerContent || 20
 

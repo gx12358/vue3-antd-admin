@@ -6,7 +6,7 @@ declare interface CdnModuleList {
 }
 
 declare interface SettingConfig {
-  servive: {
+  service: {
     port: number;
   };
   build: {

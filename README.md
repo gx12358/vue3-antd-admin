@@ -5,12 +5,12 @@
 
 ## 简介
 
-GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0+`,`vite5`,`TypeScript`, `Ant Design Vue4.0+`， `Unocss`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
+GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0+`,`vite6`,`TypeScript`, `Ant Design Vue4.0+`， `Unocss`等主流技术开发，开箱即用的中后台前端解决方案，也可用于学习参考。
 如果大家喜欢的话，给个start！
 
 ## 特性
 
-- **最新技术栈**：使用 Vue3、vite5、ant-design-vue4、unocss 等前端前沿技术开发
+- **最新技术栈**：使用 Vue3、vite6、ant-design-vue4、unocss 等前端前沿技术开发
 - **TypeScript**: 应用程序级 JavaScript 的语言
 - **主题**：可配置定制化的主题
 - **Mock 数据** 内置 Mock 数据方案
@@ -30,18 +30,25 @@ GX Pro Admin 是一个免费开源的中后台模版。使用了最新的`vue3.0
 - [node](http://nodejs.org/) 和 [git](https://git-scm.com/) -项目开发环境
 - [Vite](https://vitejs.dev/) - 熟悉 vite 特性
 - [Vue3](https://v3.vuejs.org/) - 熟悉 Vue 基础语法
+- [Unocss](https://unocss.dev/guide/) - 熟悉`Unocss`基本写法
 - [TypeScript](https://www.typescriptlang.org/) - 熟悉`TypeScript`基本语法
-- [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
 - [Vue-Router-Next](https://next.router.vuejs.org/) - 熟悉 vue-router 基本使用
 - [Ant-Design-Vue](https://next.antdv.com/components/overview-cn/) - ui 基本使用
 - [Mock.js](https://github.com/nuysoft/Mock) - mockjs 基本语法
+- [Es6+](http://es6.ruanyifeng.com/) - 熟悉 es6 基本语法
 
 ## 安装使用
 
-- 获取项目代码
+- 获取项目全部代码
 
 ```bash
-git clone https://gitee.com/gx12358/vite-admin-pro
+git clone git@github.com:gx12358/vue3-antd-admin.git
+```
+
+- 获取项目精简代码
+
+```bash
+git clone git@github.com:gx12358/vue3-antd-admin-thin.git
 ```
 
 - 安装依赖
@@ -88,13 +95,13 @@ pnpm run build
 
 支持现代浏览器, 不支持 IE
 
-## 相关仓库
+## 参考项目
 
-如果这些插件对你有帮助，可以给一个 star 支持下
+如果觉得还可以的话，可以给个 star 支持下
 
-- [vite-plugin-html](https://github.com/anncwb/vite-plugin-html) - 用于 html 模版转换及压缩
-- [vite-plugin-compression](https://github.com/anncwb/vite-plugin-compression) - 用于打包输出.gz|.brotil 文件
-- [vite-plugin-svg-icons](https://github.com/anncwb/vite-plugin-svg-icons) - 用于快速生成 svg 雪碧图
+- [vue-vben-admin](https://www.vben.pro/)
+- [react-ant-design-pro](https://preview.pro.ant.design/dashboard/analysis)
+- [vue-pure-admin](https://pure-admin.github.io/vue-pure-admin/#/login)
 
 ## 维护者
 
@@ -102,9 +109,7 @@ pnpm run build
 
 ## 交流
 
-`Vue3-Antd-Admin` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发，同时也提供 QQ 交流群使用问题欢迎在群内提问。
-
-- QQ 群 `871430530`
+`Vue3-Antd-Admin` 是完全开源免费的项目，在帮助开发者更方便地进行中大型管理系统开发。
 
 ## License
 

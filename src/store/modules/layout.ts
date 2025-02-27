@@ -9,9 +9,9 @@ import { defineStore } from 'pinia'
 
 const { waterMark } = defaultSettings.system
 
-export const layoutConfig: ProLayoutConfig = {
+export const layoutConfig: Partial<ProLayoutConfig> = {
   ...themeConfig,
-  primaryColor: theme.colorPrimary as string
+  primaryColor: theme.colorPrimary
 }
 
 /**

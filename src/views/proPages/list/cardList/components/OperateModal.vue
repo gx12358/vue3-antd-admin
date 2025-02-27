@@ -4,7 +4,7 @@ import GUpload from '@/components/GDesign/Upload'
 import { cardListOperate, getCardListDetails } from '@/services/listCenter'
 import { handleRandomImage } from '@/utils/util'
 import { useProForm } from '@gx-design-vue/pro-provider'
-import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
+import { handleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
@@ -81,7 +81,7 @@ defineExpose({
               formState[key] = dayjs(response.data?.createTime)
               break
             default:
-              formState[key] = hanndleEmptyField(response?.data?.[key], '').value
+              formState[key] = handleEmptyField(response?.data?.[key], '').value
               break
           }
         }

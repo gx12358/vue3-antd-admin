@@ -2,7 +2,7 @@
 import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/routers/list/basic.fake'
 import type { CountState } from './utils/config'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import useProTabel from '@/hooks/web/useProTabel'
+import useProTable from '@/hooks/web/useProTable'
 import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
@@ -18,7 +18,7 @@ const tableRef = ref()
 
 const countState = reactive<CountState>({ ...defaultCountState })
 
-const { reload, setLoading, tableState } = useProTabel<BasicListItemDataType, BasicSearchParmas>(tableRef, {
+const { reload, setLoading, tableState } = useProTable<BasicListItemDataType, BasicSearchParmas>(tableRef, {
   state: {
     params: {
       status: 'all',

@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import type { CustomRenderResult } from '@gx-design-vue/pro-table'
 import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
 import { getArticleList } from '@/services/listCenter'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { type CustomRenderResult, useTable } from '@gx-design-vue/pro-table'
+import { useTable } from '@gx-design-vue/pro-table'
 import dayjs from 'dayjs'
 import { useSearchListContext } from '../context'
 import CommonSearch from './components/CommonSearch.vue'

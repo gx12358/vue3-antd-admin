@@ -1,6 +1,5 @@
-import type { AppRouteModule, MenuDataItem } from '@gx-design-vue/pro-layout'
-import { warning } from '@gx-design/utils'
 import { getMaxFloor } from '@gx-design-vue/pro-utils'
+import { warning } from '@gx-design/utils'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -23,7 +22,7 @@ let dynamicViewsModules: Record<string, () => Promise<Record<string, any>>>
  * @lastTime    2021/5/14
  * @description 根路由
  */
-const rootRouter: MenuDataItem[] = buildMenu([
+const rootRouter: SystemMenuItem[] = buildMenu([
   {
     path: '/',
     name: 'index',
@@ -80,12 +79,12 @@ function dynamicImport(
  * @lastTime    2021/5/14
  * @description 将后台树形数据菜单和本地菜单结合
  */
-export function getRootMenu(rows: MenuDataItem[]): MenuDataItem[] {
-  let menus: MenuDataItem[] = []
+export function getRootMenu(rows: SystemMenuItem[]): SystemMenuItem[] {
+  let menus: SystemMenuItem[] = []
   if (getMaxFloor(rows) > 1) {
     menus = buildMenu(rows)
   } else {
-    buildtree(rows, menus, 0)
+    buildTreeMenu(rows, menus, 0)
   }
   rootRouter[0].children = menus
   rootRouter[0].children.push({
@@ -106,8 +105,8 @@ export function getRootMenu(rows: MenuDataItem[]): MenuDataItem[] {
  * @lastTime    2021/5/14
  * @description 格式化 后端 结构信息并递归生成层级路由表
  */
-export const generator = (routerMap: MenuDataItem[], parent?: AppRouteModule) => {
-  return routerMap.map((item: MenuDataItem) => {
+export const generator = (routerMap: SystemMenuItem[], parent?: AppRouteModule) => {
+  return routerMap.map((item: SystemMenuItem) => {
     const parentPath = parent?.path || ''
     const currentRouter: AppRouteModule = {
       // 路由地址 动态拼接生成如 /dashboard/workplace
@@ -154,8 +153,8 @@ export const generator = (routerMap: MenuDataItem[], parent?: AppRouteModule) =>
   })
 }
 
-function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
-  const meta: MenuDataItem = menuItem.meta as MenuDataItem ?? menuItem
+function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
+  const meta: SystemMenuItem = menuItem.meta as SystemMenuItem ?? menuItem
   const {
     link,
     linkStatus,
@@ -207,7 +206,7 @@ function handleMenuParams(menuItem: MenuDataItem): MenuDataItem {
  * @lastTime    2021/5/14
  * @description 将后台树形结构菜单数据添加后修改属性（具体修改看后台返回值）
  */
-export function buildMenu(list: MenuDataItem[]): MenuDataItem[] {
+export function buildMenu(list: SystemMenuItem[]): SystemMenuItem[] {
   return list.map((muenuItem) => {
     return { ...handleMenuParams(muenuItem), children: buildMenu(muenuItem.children || []) }
   })
@@ -219,15 +218,15 @@ export function buildMenu(list: MenuDataItem[]): MenuDataItem[] {
  * @lastTime    2021/5/14
  * @description 将后台菜单数据变成树形结构（具体修改看后台返回值）
  */
-export function buildtree(
-  rootMenu: MenuDataItem[],
-  menuList: MenuDataItem[],
+export function buildTreeMenu(
+  rootMenu: SystemMenuItem[],
+  menuList: SystemMenuItem[],
   parentId?: string | number
 ) {
-  rootMenu.forEach((muenuItem) => {
-    if (muenuItem.parentId === parentId) {
-      const child: MenuDataItem = { ...handleMenuParams(muenuItem), children: [] }
-      buildtree(rootMenu, child.children as MenuDataItem[], muenuItem.menuId)
+  rootMenu.forEach((menuItem) => {
+    if (menuItem.parentId === parentId) {
+      const child: SystemMenuItem = { ...handleMenuParams(menuItem), children: [] }
+      buildTreeMenu(rootMenu, child.children as SystemMenuItem[], menuItem.menuId)
       if (child?.children?.length === 0) {
         delete child.children
       }

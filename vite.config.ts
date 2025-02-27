@@ -12,7 +12,7 @@ import { createVitePlugins } from './internal/vite-config/vite/plugin'
 
 import pkg from './package.json'
 
-const { proxy, cdn, build, servive } = defaultSettings
+const { proxy, cdn, build, service } = defaultSettings
 
 const { dependencies, devDependencies, name, version } = pkg
 
@@ -73,7 +73,7 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
     server: {
       open: false,
       host: true,
-      port: servive.port,
+      port: service.port,
       warmup: {
         // 预热文件
         clientFiles: [

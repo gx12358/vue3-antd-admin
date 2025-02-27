@@ -52,7 +52,7 @@ export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   // vite-plugin-mock
   const useMock = isDev || VITE_USE_MOCK
   useMock && vitePlugins.push(vitePluginFakeServer({
-    include: 'mock/routers',
+    include: 'mock',
     enableProd: VITE_USE_MOCK
   }))
 

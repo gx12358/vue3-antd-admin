@@ -1,5 +1,3 @@
-import type { AppRouteModule } from '@gx-design-vue/pro-layout'
-
 const workplace: AppRouteModule = {
   path: '/workplace',
   name: 'Workplace',

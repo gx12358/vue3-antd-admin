@@ -1,4 +1,3 @@
-import type { AppRouteModule } from '@gx-design-vue/pro-layout'
 import BasicLayout from '@/layout/BasicLayout.vue'
 import BlankLayout from '@/layout/BlankLayout.vue'
 import UserLayout from '@/layout/UserLayout.vue'

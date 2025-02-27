@@ -3,8 +3,9 @@ import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import type { BaseLayoutDesignToken, ProLayoutConfig } from '@gx-design-vue/pro-provider'
 import { appList } from '@/common'
 import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import { useThemeStyle } from '@/hooks/web'
-import { GProLayout, PageLock, RightContent, useLayoutMenu } from '@gx-design-vue/pro-layout'
+import { layoutConfig } from '@/store/modules/layout'
+import { AppsLogoList, GProLayout, PageLock, RightContent, SettingDrawer, useLayoutMenu } from '@gx-design-vue/pro-layout'
+import { useTokenCssVar } from '@gx-design-vue/pro-provider'
 import { useRouter } from 'vue-router'
 import ProContent from './ContentView.vue'
 
@@ -22,25 +23,15 @@ watch([
 ], ([ val ]) => {
   layout.setValue({
     config: {
-      settings: { siderWidth: val ? 0 : undefined }
+      settings: { siderWidth: val ? 0 : layoutConfig.siderWidth }
     }
   })
 }, { immediate: true })
 
-const color = useThemeStyle({
-  colorError: 'colorError',
-  colorErrorHover: 'colorErrorHover'
-})
-
-watchEffect(() => {
-  const htmlEl = document.querySelector('html')
-  if (htmlEl) {
-    color.colorError && htmlEl.style.setProperty('--gx-color-error', color.colorError)
-    color.colorErrorHover && htmlEl.style.setProperty(
-      '--gx-color-error-hover',
-      color.colorErrorHover
-    )
-  }
+useTokenCssVar({
+  colorSplit: '--gx-color-split',
+  colorError: '--gx-color-error',
+  colorErrorHover: '--gx-color-error',
 })
 
 const changeSettings = (value: Partial<ProLayoutConfig>) => {
@@ -68,7 +59,7 @@ const userLogout = (callBack: Fn) => {
     okText: '确认',
     cancelText: '取消',
     onOk: () => {
-      user.userLogut().then((_) => {}).finally(() => {
+      user.userLogout().then((_) => {}).finally(() => {
         router.push({ path: '/user' })
         callBack?.()
       })
@@ -86,7 +77,7 @@ const userLogout = (callBack: Fn) => {
     v-bind="layout.config"
     :route="menuData"
     :breadcrumb="{ routes: breadcrumbRouters }"
-    @menu-header-click="() => router.push('/')"
+    @logo-click="() => router.push('/')"
   >
     <template #appLogoListRender>
       <AppsLogoList :app-list="appList" />

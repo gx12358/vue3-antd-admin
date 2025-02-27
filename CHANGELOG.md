@@ -1,3 +1,31 @@
+## 3.0.8 (2025-02-27)
+
+## Upgrade Notes
+
+### ✨ CHORE
+
+- **Plugins**
+  - Upgraded `@gx-design-vue/***` to the latest version
+  - Upgraded plugins like `vite` to their latest versions
+
+### ✨ REFACTOR
+
+- **prettier, editorconfig**
+  - Removed `prettier` and `editorconfig` plugins, unified code style management using `@antfu/eslint-config`
+- **useRequest**
+  - Refactored `useRequest` to improve performance and maintainability
+
+### ✨ FIX
+
+- **@gx-design-vue**
+  - Refactored code to accommodate updates for `@gx-design-vue/***`
+
+### ✨ TYPES
+
+- Adjusted `TableRecord` type in `types/system.d.ts`
+- Used `types/system.d.ts` `SystemMenuItem` for global system menu type
+- Used `types/system.d.ts` `AppRouteModule` for global system route type
+
 ## 3.0.7 (2025-01-02)
 
 ## Upgrade Notes

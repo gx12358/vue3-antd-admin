@@ -51,7 +51,7 @@ export function createPermissionGuard(router: Router) {
         return
       }
 
-      const status = await userStore.checkUserPremission()
+      const status = await userStore.checkUserPermission()
       if (status === 1) {
         const routes = authentication === 'all'
           ? await routeStore.setAllRoutes()

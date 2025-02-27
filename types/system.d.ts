@@ -116,9 +116,15 @@ declare global {
     admin?: boolean
   }
 
-  interface TableRecord<T extends object> extends T {
-    id: number;
+  interface DefaultTableRecord {
+    id: any;
+    uuid: string;
+    createTime?: string | null;
   }
+
+  type TableRecord<T = undefined> = T extends undefined ? DefaultTableRecord : DefaultTableRecord & T
+
+  type UpdateTableRecord<T = undefined> = T extends undefined ? Partial<DefaultTableRecord> : Partial<DefaultTableRecord> & T
 
   interface SystemDataNode<Key = number> extends Omit<DataNode, 'children'> {
     id: Key;

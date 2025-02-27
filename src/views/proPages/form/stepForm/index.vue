@@ -2,7 +2,7 @@
 import { getStepForm } from '@/services/formCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
-import { hanndleEmptyField } from '@gx-design-vue/pro-utils'
+import { forInObject, handleEmptyField } from '@gx-design-vue/pro-utils'
 
 interface FormState {
   payAccount: string;
@@ -63,17 +63,16 @@ const { loading } = useRequest<FormState, { userId?: number; }>(getStepForm, {
     userId: user.userInfo.userId
   },
   onSuccess: (data) => {
-    for (const i in formState) {
-      switch (i) {
+    forInObject(formState, (key) => {
+      switch (key) {
         case 'payAccount':
-          // @ts-ignore
-          formState[i] = data[i] || undefined
+          formState[key] = data[key] || ''
           break
         default:
-          formState[i] = hanndleEmptyField(data[i], '').value
+          formState[key] = handleEmptyField(data[key], '').value
           break
       }
-    }
+    })
   }
 })
 

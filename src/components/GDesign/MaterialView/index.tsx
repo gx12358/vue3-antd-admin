@@ -1,6 +1,6 @@
 import type { ExtractPropTypes } from 'vue'
 import Nodata from '@/assets/public_images/nodata.svg'
-import { ImagePreview } from '@gx-design-vue/image'
+import { GImagePreview } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import {
   fileTypes,
@@ -163,7 +163,7 @@ export default defineComponent({
           {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
               {showViewer.value && (
-                <ImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
+                <GImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
               )}
               <GProModal
                 noStyle

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AdvancedDetails } from '@gx-mock/datasSource/profile/advanced'
+import type { AdvancedDetails } from '@gx-mock/routers/profile/advanced.fake'
 import { getAdvanced } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
