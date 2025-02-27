@@ -22,10 +22,6 @@ defineOptions({
   name: 'Workplace'
 })
 
-onActivated(() => {
-  console.log(222)
-})
-
 const { user } = useStore()
 const router = useRouter()
 

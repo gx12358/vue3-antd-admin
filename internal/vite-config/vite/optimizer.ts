@@ -10,6 +10,10 @@ const vendorLibs: { match: string[]; output: string }[] = [
     output: 'echarts',
   },
   {
+    match: ['ali-oss'],
+    output: 'ali-oss',
+  },
+  {
     match: ['@gx-design-vue/pro-layout'],
     output: 'pro-layout',
   },

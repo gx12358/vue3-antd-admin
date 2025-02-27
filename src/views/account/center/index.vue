@@ -27,20 +27,17 @@ const tabPaneState: {
   }
 ]
 
-const { global, user } = useStore()
+const { layout, user, global } = useStore()
 const route = useRoute()
 const router = useRouter()
 const { token } = useProConfigContext()
 const col = useMediaQuery()
 
-const ready = ref(false)
-
 const isMobile = computed(() => [ 'md', 'sm', 'xs' ].includes(col.value))
 
 const { data: groupData, loading } = useRequest<GroupListItem[]>(getAccountGroupList, {
   defaultData: [],
-  manual: true,
-  ready
+  pageActivated: true,
 })
 
 const { data: countData, loading: countLoading } = useRequest<Record<TabsKey, number>>(
@@ -51,9 +48,8 @@ const { data: countData, loading: countLoading } = useRequest<Record<TabsKey, nu
       applications: 0,
       projects: 0
     },
-    manual: true,
+    pageActivated: true,
     defaultLoading: true,
-    ready
   }
 )
 
@@ -61,13 +57,13 @@ const cardRightBodyHeight = computed(() => countLoading.value ? '16px 24px' : 0)
 
 const contentHeight = computed(() => {
   const herderHeight = token.value.layout?.header?.heightLayoutHeader
-  const tabsHeight = global.globalLayout?.showTabsBar ? '62px' : '0px'
-  const pageHeaderHieght = global.globalLayout?.pageContainerProps?.pageHeaderRender === false
+  const tabsHeight = layout.config?.settings?.showTabsBar ? '62px' : '0px'
+  const pageHeaderHeight = layout.config?.pageContainer?.pageHeaderRender === false
     ? '0px'
     : '46px'
   return isMobile.value
     ? undefined
-    : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHieght} - 54px - 48px)`
+    : `calc(100vh - ${herderHeight}px - ${tabsHeight} - ${pageHeaderHeight} - 54px - 48px)`
 })
 
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
@@ -77,7 +73,6 @@ onActivated(() => {
     disabledScrollTop: true,
     showProgressBar: true
   })
-  ready.value = true
 })
 
 const changeRouter = (value: TabsKey) => {

@@ -107,6 +107,9 @@ declare global {
     status?: string
     delFlag?: string
     loginIp?: string
+    signature?: string
+    tags?: string
+    levelName?: string
     loginDate?: string // ISO 8601 格式
     dept?: DepartBaseInfo
     roles?: RoleInfo[] // 根据具体结构可进一步定义
@@ -114,6 +117,9 @@ declare global {
     postIds?: number[]
     roleId?: number
     admin?: boolean
+    group?: {
+      title?: string
+    }
   }
 
   interface DefaultTableRecord {

@@ -44,7 +44,7 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
     pageActivated?: boolean;
     defaultLoading?: boolean;
     manual?: MaybeRef<boolean>;
-    onBefore?: (params: P) => P;
+    onBefore?: (params: P) => P | unknown;
     onSuccess?: (data: T, response: RequestResponse<DefaultToT<T, R>>) => void;
     onError?: (e: any) => void;
     onFinal?: () => void;
@@ -103,7 +103,8 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
     setLoading(true)
     state.params = mergeParams(opt) as unknown as UnwrapRef<P>
     if (options.onBefore) {
-      state.params = options.onBefore(cloneDeep(state.params) as P) as unknown as UnwrapRef<P>
+      const value = options.onBefore(cloneDeep(state.params) as P) as unknown as UnwrapRef<P>
+      if (value) state.params = value as unknown as UnwrapRef<P>
     }
     const requestConfig: Partial<GAxiosOptions> = {
       ...(options.requestConfig || {
