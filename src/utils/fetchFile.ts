@@ -1,8 +1,8 @@
 import type { Method } from 'axios'
-import { typeViteEnv } from '@/utils/env'
-import { tansParams } from '@/utils/util'
 import { defaultSettings } from '@gx-config'
 import { message } from 'ant-design-vue'
+import { typeViteEnv } from '@/utils/env'
+import { tansParams } from '@/utils/util'
 
 const { token } = defaultSettings
 

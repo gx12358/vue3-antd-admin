@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import cityOptions from '@/assets/json/china.json'
-import { updateUserDetails } from '@/services/userCenter'
-import { isEmail, isPhone } from '@/utils/validate'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { GUpload } from '@gx-design/Upload'
 import { message } from 'ant-design-vue'
 import { reactive } from 'vue'
+import cityOptions from '@/assets/json/china.json'
+import { updateUserDetails } from '@/services/userCenter'
+import { isEmail, isPhone } from '@/utils/validate'
 
 type UserFormState = UserDetails & { adressCode?: string[] }
 

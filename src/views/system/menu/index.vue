@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
 import type { SearchConfig } from './utils/columns'
+import { treeData } from '@gx-design-vue/pro-utils'
 import useProTable from '@/hooks/web/useProTable'
 import { getMenuList } from '@/services/systemCenter'
-import { treeData } from '@gx-design-vue/pro-utils'
 import { columns } from './utils/columns'
 
 const state = reactive({

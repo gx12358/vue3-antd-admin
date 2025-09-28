@@ -1,10 +1,10 @@
 <script setup lang="ts" name="TableList">
 import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
-import useProTable from '@/hooks/web/useProTable'
-import { deleteRules, getRulesList } from '@/services/listCenter'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
+import useProTable from '@/hooks/web/useProTable'
+import { deleteRules, getRulesList } from '@/services/listCenter'
 import OperateModal from './components/OperateModal.vue'
 import PreviewDrawer from './components/PreviewDrawer.vue'
 import { columns } from './utils/columns'

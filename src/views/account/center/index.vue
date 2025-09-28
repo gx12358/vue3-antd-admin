@@ -1,11 +1,11 @@
 <script setup lang="ts" name="AccountCenter">
 import type { GroupListItem } from '@gx-mock/routers/group/index.fake'
 import type { TabsKey } from '@gx-mock/routers/user/account.fake'
-import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
+import { getAccountCount, getAccountGroupList } from '@/services/userCenter'
 import TagList from './components/TagList.vue'
 import { provideAccountCenterContext } from './context'
 

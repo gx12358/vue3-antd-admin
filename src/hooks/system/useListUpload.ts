@@ -1,5 +1,4 @@
 import type { Ref } from 'vue'
-import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import {
   checkFileType,
@@ -11,6 +10,7 @@ import {
 import { cloneDeep } from 'lodash-es'
 import { createVNode, onMounted, ref } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
 import { useOss } from './useOss'
 
 export interface UploadItem {

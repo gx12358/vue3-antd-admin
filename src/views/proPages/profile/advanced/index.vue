@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { AdvancedDetails } from '@gx-mock/routers/profile/advanced.fake'
-import { getAdvanced } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
+import { getAdvanced } from '@/services/profileCenter'
 import TableTab from './components/TableTab/index.vue'
 import { provideAdvancedContext } from './context'
 import { statusState } from './utils/config'

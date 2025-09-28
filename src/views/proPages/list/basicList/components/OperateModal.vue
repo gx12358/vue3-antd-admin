@@ -2,9 +2,6 @@
 import type { UserList } from '@gx-mock/config/user'
 import type { BasicListItemDataType } from '@gx-mock/routers/list/basic.fake'
 import type { Dayjs } from 'dayjs'
-import Empty from '@/components/GlobalLayout/Empty/index.vue'
-import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
-import { getUserList } from '@/services/userCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { handleEmptyField } from '@gx-design-vue/pro-utils'
@@ -12,6 +9,9 @@ import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
 import { reactive } from 'vue'
+import Empty from '@/components/GlobalLayout/Empty/index.vue'
+import { basicListOperate, getBasicListDetails } from '@/services/listCenter'
+import { getUserList } from '@/services/userCenter'
 
 type FormState = Partial<BasicListItemDataType> & {
   ownerId?: number;

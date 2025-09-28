@@ -1,10 +1,10 @@
-import { generator, getRootMenu } from '@/router/helper/routeHelper'
-import { asyncRoutes, localRoutes, notFoundRoute } from '@/router/routes'
-import { getMenuList } from '@/services/systemCenter'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { AppRouteModule, getLastPath, MenuDataItem } from '@gx-design-vue/pro-layout'
 import { getLevelData } from '@gx-design-vue/pro-utils'
 import { defineStore } from 'pinia'
+import { generator, getRootMenu } from '@/router/helper/routeHelper'
+import { asyncRoutes, localRoutes, notFoundRoute } from '@/router/routes'
+import { getMenuList } from '@/services/systemCenter'
 
 /**
  * @Author      gx12358

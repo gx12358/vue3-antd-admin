@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import usePageContent from '@/hooks/web/usePageContent'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
 import { reactive, ref, watch } from 'vue'
+import usePageContent from '@/hooks/web/usePageContent'
 
 const props = withDefaults(defineProps<{
   frameSrc: string;

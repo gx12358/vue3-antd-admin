@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ProFormRef } from '@gx-design-vue/pro-form'
 import type { PublicFormState } from '@gx-mock/config/form'
-import { getFormDetails } from '@/services/formCenter'
 import { MailTwoTone } from '@ant-design/icons-vue'
 import {
   GProForm,
@@ -16,6 +15,7 @@ import {
 } from '@gx-design-vue/pro-form'
 import { message } from 'ant-design-vue'
 import { h, reactive, ref } from 'vue'
+import { getFormDetails } from '@/services/formCenter'
 
 const formRef = ref<ProFormRef>()
 

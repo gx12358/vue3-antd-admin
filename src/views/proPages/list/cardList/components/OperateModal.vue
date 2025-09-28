@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { CardListItemDataType } from '@gx-mock/routers/list/card.fake'
-import GUpload from '@/components/GDesign/Upload'
-import { cardListOperate, getCardListDetails } from '@/services/listCenter'
-import { handleRandomImage } from '@/utils/util'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { handleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
 import { reactive } from 'vue'
+import GUpload from '@/components/GDesign/Upload'
+import { cardListOperate, getCardListDetails } from '@/services/listCenter'
+import { handleRandomImage } from '@/utils/util'
 
 type FormState = Partial<CardListItemDataType>
 

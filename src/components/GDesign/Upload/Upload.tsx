@@ -1,9 +1,6 @@
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
 import type { MaterialListItem } from './typings'
-import { global } from '@/common'
-import { download } from '@/services/common'
-import { createFileName } from '@/utils/uploadFile'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import {
   checkFileType,
@@ -32,6 +29,9 @@ import {
   toRefs,
   unref
 } from 'vue'
+import { global } from '@/common'
+import { download } from '@/services/common'
+import { createFileName } from '@/utils/uploadFile'
 import MaterialView from '../MaterialView'
 import UploadCard from './components/UploadCard'
 import { useUploadData } from './hooks/useUploadData'

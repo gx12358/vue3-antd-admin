@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { GUploadProps } from '@gx-design/Upload'
 import { dataURLtoBlob, getBase64, getBlobUrl } from '@gx-design-vue/pro-utils'
-import GUpload, { type GUploadProps } from '@gx-design/Upload'
+import GUpload from '@gx-design/Upload'
 import { computed } from 'vue'
 
 const { user } = useStore()

@@ -9,12 +9,10 @@
   "package.json": ["prettier --cache --write"],
   "*.vue": [
     "prettier --write",
-    "eslint --cache --fix",
-    "stylelint --fix --allow-empty-input"
+    "eslint --cache --fix"
   ],
   "*.{css,scss,html}": [
-    "prettier --cache --ignore-unknown --write",
-    "stylelint --fix --allow-empty-input"
+    "prettier --cache --ignore-unknown --write"
   ],
   "*.md": ["prettier --cache --ignore-unknown --write"]
 }

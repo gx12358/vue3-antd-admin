@@ -3,7 +3,6 @@ import type { ProFormRef } from '@gx-design-vue/pro-form'
 import type { BasicFormState } from '@gx-mock/routers/form/index.fake'
 import type { RangePickerProps } from 'ant-design-vue/es/date-picker/dayjs'
 import type { Dayjs } from 'dayjs'
-import { submitForm } from '@/services/formCenter'
 import {
   GProForm,
   GProFormDateRangePicker,
@@ -17,6 +16,7 @@ import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
 import { reactive } from 'vue'
+import { submitForm } from '@/services/formCenter'
 
 type FormState = BasicFormState & {
   timeRange: Dayjs[]

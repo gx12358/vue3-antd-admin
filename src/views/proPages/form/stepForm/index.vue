@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getStepForm } from '@/services/formCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { forInObject, handleEmptyField } from '@gx-design-vue/pro-utils'
+import { getStepForm } from '@/services/formCenter'
 
 interface FormState {
   payAccount: string;

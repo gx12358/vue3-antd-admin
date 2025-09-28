@@ -1,8 +1,8 @@
-import type { NumberToShow } from '@/utils/util'
 import type { AccountListRecord } from '@gx-mock/routers/project/index.fake'
 import type { TabsKey } from '@gx-mock/routers/user/account.fake'
-import { scrollToContainer, toConvertNumberShow } from '@/utils/util'
+import type { NumberToShow } from '@/utils/util'
 import { useScrollPageList } from '@gx-admin/hooks/web'
+import { scrollToContainer, toConvertNumberShow } from '@/utils/util'
 import { useAccountCenterContext } from '../context'
 
 export type ListRecord = AccountListRecord & {

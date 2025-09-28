@@ -1,9 +1,9 @@
 import type { Router } from 'vue-router'
+import { defaultSettings } from '@gx-config'
+import NProgress from 'nprogress'
 import { useStoreGlobal } from '@/store'
 import getPageTitle from '@/utils/pageTitle'
 import { scrollToContainer } from '@/utils/util'
-import { defaultSettings } from '@gx-config'
-import NProgress from 'nprogress'
 import { createPermissionGuard } from './permissions'
 import { createStateGuard } from './stateGuard'
 

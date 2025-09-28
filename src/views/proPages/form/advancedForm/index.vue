@@ -1,14 +1,5 @@
 <script setup lang="ts">
 import type { FormState } from './typings'
-import useProTable from '@/hooks/web/useProTable'
-import {
-  addAdvancedFormTable,
-  deleteAdvancedFormTable,
-  getAdvancedForm,
-  getAdvancedFormTable,
-  updateAdvancedFormTable
-} from '@/services/formCenter'
-import { handleOffsetTop } from '@/utils/util'
 import { useRequest } from '@gx-admin/hooks/core'
 import { defaultSettings } from '@gx-config'
 import { GProCard } from '@gx-design-vue/pro-card'
@@ -18,6 +9,15 @@ import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
 import { ref } from 'vue'
+import useProTable from '@/hooks/web/useProTable'
+import {
+  addAdvancedFormTable,
+  deleteAdvancedFormTable,
+  getAdvancedForm,
+  getAdvancedFormTable,
+  updateAdvancedFormTable
+} from '@/services/formCenter'
+import { handleOffsetTop } from '@/utils/util'
 import { columns } from './utils/columns'
 import { fieldLabels, rules } from './utils/config'
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { CardListItemDataType, CardSearchParmas } from '@gx-mock/routers/list/card.fake'
-import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import { deleteCardList, getCardList } from '@/services/listCenter/card'
 import { useScrollPageList } from '@gx-admin/hooks/web'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { message } from 'ant-design-vue'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import { deleteCardList, getCardList } from '@/services/listCenter/card'
 import OperateModal from './components/OperateModal.vue'
 import { cardGridConfig } from './utils/config'
 

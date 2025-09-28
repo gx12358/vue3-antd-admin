@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { Dayjs } from 'dayjs'
-import { addRules, updateRules } from '@/services/listCenter'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
+import { addRules, updateRules } from '@/services/listCenter'
 import { defauleState } from '../utils/config'
 
 interface FormState {

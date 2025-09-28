@@ -1,12 +1,12 @@
 import type { FunctionalComponent as FC, Ref } from 'vue'
 import type { MaterialListItem } from '../typings'
 import type { GUploadProps } from '../Upload'
-import Image from '@/components/GlobalLayout/Image'
-import Spin from '@/components/GlobalLayout/Spin'
-import { isDev } from '@/utils/env'
 import { CloudDownloadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import { Dropdown, Menu, MenuItem, Progress } from 'ant-design-vue'
 import { computed, unref } from 'vue'
+import Image from '@/components/GlobalLayout/Image'
+import Spin from '@/components/GlobalLayout/Spin'
+import { isDev } from '@/utils/env'
 import { useUploadContext } from '../UploadContext'
 
 type UploadCardProps = GUploadProps & {

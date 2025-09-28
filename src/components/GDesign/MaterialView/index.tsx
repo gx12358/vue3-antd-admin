@@ -1,5 +1,4 @@
 import type { ExtractPropTypes } from 'vue'
-import Nodata from '@/assets/public_images/nodata.svg'
 import { GImagePreview } from '@gx-design-vue/image'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import {
@@ -14,6 +13,7 @@ import GPlayerVideo from '@gx-design/PlayerVideo'
 import { Empty } from 'ant-design-vue'
 import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
+import Nodata from '@/assets/public_images/nodata.svg'
 import { gMaterialViewProps } from './props'
 
 import './style.less'

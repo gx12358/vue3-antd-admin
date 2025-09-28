@@ -13,8 +13,8 @@ export interface MockResponse {
   headers: RequestHeater
 }
 
-export type MockResponseCallback =
-  | ((response: MockResponse, token?: string) => any)
+export type MockResponseCallback
+  = | ((response: MockResponse, token?: string) => any)
   | string | number | Recordable | any[] | null
 
 export type MockConfig = FakeRouteConfig & {

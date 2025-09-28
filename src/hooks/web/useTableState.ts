@@ -1,9 +1,9 @@
 import type { BaseTableState } from '@gx-design-vue/pro-table'
 import type { RecordType } from '@gx-design-vue/pro-utils'
-import { table } from '@/common'
 import { deepMerge } from '@gx-design-vue/pro-utils'
 import { cloneDeep } from 'lodash-es'
 import { reactive } from 'vue'
+import { table } from '@/common'
 
 const { defaultProps } = table
 

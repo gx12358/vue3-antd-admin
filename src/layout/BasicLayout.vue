@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import type { BaseLayoutDesignToken, ProLayoutConfig } from '@gx-design-vue/pro-provider'
-import { appList } from '@/common'
-import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import { layoutConfig } from '@/store/modules/layout'
 import { AppsLogoList, GProLayout, PageLock, RightContent, SettingDrawer, useLayoutMenu } from '@gx-design-vue/pro-layout'
 import { useTokenCssVar } from '@gx-design-vue/pro-provider'
 import { useRouter } from 'vue-router'
+import { appList } from '@/common'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import { layoutConfig } from '@/store/modules/layout'
 import ProContent from './ContentView.vue'
 
 const { layout, user } = useStore()

@@ -1,10 +1,10 @@
 import type { ClientDetails } from '@/store/modules/oss'
-import { getUplaodInfos } from '@/services/systemCenter'
-import { createFileName } from '@/utils/uploadFile'
-import { checkURL } from '@/utils/validate'
 import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'
 import OSS from 'ali-oss'
 import { cloneDeep } from 'lodash-es'
+import { getUplaodInfos } from '@/services/systemCenter'
+import { createFileName } from '@/utils/uploadFile'
+import { checkURL } from '@/utils/validate'
 
 export function useOss() {
   const { oss } = useStore()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { usePermissions } from '@/hooks/system'
 import { isArray, isString } from '@gx-design-vue/pro-utils'
+import { usePermissions } from '@/hooks/system'
 
 const props = defineProps<{
   auth: string | string[];

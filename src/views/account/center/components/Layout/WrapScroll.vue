@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ListGridType } from 'ant-design-vue/es/list'
+import type { ListRecord } from '../../hooks/useChildState'
 import { getArticlesList } from '@/services/projectCenter'
 import { useAccountCenterContext } from '../../context'
-import useChildState, { type ListRecord } from '../../hooks/useChildState'
+import useChildState from '../../hooks/useChildState'
 import PullRefresh from './PullRefresh.vue'
 
 defineProps<{

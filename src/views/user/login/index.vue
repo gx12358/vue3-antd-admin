@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Logo from '@/assets/logo.png'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { GProFormCheckbox, GProFormLogin, GProFormPassword, GProFormText } from '@gx-design-vue/pro-form'
 import { GlobalFooter } from '@gx-design-vue/pro-layout'
 import { h, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Logo from '@/assets/logo.png'
 
 interface UserState {
   userName: string

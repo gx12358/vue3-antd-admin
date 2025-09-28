@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { getHokksRequest } from '@/services/dataCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProField } from '@gx-design-vue/pro-field'
 import { ref } from 'vue'
+import { getHokksRequest } from '@/services/dataCenter'
 
 const count = ref(0)
 

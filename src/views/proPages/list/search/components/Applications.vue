@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ListItemDataType } from '@gx-mock/routers/list/index.fake'
 import type { SearchState } from './typings'
+import { GProCard } from '@gx-design-vue/pro-card'
 import useProTable from '@/hooks/web/useProTable'
 import { getArticleList } from '@/services/listCenter'
 import { toConvertNumberShow } from '@/utils/util'
-import { GProCard } from '@gx-design-vue/pro-card'
 import { useSearchListContext } from '../context'
 import CommonSearch from './components/CommonSearch.vue'
 import useSearchForm from './hooks/useSearchForm'

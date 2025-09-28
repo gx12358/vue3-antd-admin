@@ -1,3 +1,4 @@
+import { defaultSettings } from '@gx-config'
 import {
   delCookie,
   getCookie,
@@ -6,7 +7,6 @@ import {
   setCookie,
   setStorage
 } from '@/utils/storage'
-import { defaultSettings } from '@gx-config'
 
 const { storage, storageName } = defaultSettings.token
 

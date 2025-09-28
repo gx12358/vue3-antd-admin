@@ -4,10 +4,10 @@ import type {
   CommodityRecord,
   ScheduleRecord
 } from '@gx-mock/routers/profile/basic.fake'
-import useProTable from '@/hooks/web/useProTable'
-import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import dayjs from 'dayjs'
+import useProTable from '@/hooks/web/useProTable'
+import { getBasic, getBasicTable } from '@/services/profileCenter'
 import { goodsColumns, scheduleColumns } from './utils/columns'
 import { defaultSTableState, descriptionsState, statusState } from './utils/config'
 

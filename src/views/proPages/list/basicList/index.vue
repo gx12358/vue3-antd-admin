@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/routers/list/basic.fake'
 import type { CountState } from './utils/config'
-import { globalConfirm } from '@/components/GlobalLayout/Confirm'
-import useProTable from '@/hooks/web/useProTable'
-import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
+import { globalConfirm } from '@/components/GlobalLayout/Confirm'
+import useProTable from '@/hooks/web/useProTable'
+import { deleteBasicList, getBasicCount, getBasicList } from '@/services/listCenter'
 import OperateModal from './components/OperateModal.vue'
 import { defaultCountState } from './utils/config'
 

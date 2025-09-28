@@ -1,6 +1,6 @@
+import { message } from 'ant-design-vue'
 import { router } from '@/router'
 import { useStoreUser } from '@/store'
-import { message } from 'ant-design-vue'
 
 /**
  * @author gx12358 2539306317@qq.com

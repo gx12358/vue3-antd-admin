@@ -1,7 +1,7 @@
-import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
+import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
 
 export interface ClientDetails {
   bucket?: string;

@@ -1,7 +1,7 @@
 import type { DictState } from '@/store/modules/dict'
-import { getDicts } from '@/services/systemCenter'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
+import { getDicts } from '@/services/systemCenter'
 
 export function useDict(dictTypes?: DictType | DictType[], wait?: boolean): {
   dictState: ComputedRef<DictState>

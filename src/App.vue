@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import Empty from '@/components/GlobalLayout/Empty/index.vue'
-import { ProAppPage } from '@gx-design-vue/pro-layout'
-import ProConfigProvider from '@gx-design-vue/pro-provider'
+import { GProAppPage } from '@gx-design-vue/pro-layout'
+import { GProConfigProvider } from '@gx-design-vue/pro-provider'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import Empty from '@/components/GlobalLayout/Empty/index.vue'
 
 const indicator = h('i', {
   class: 'iconfont gx-jiazaizhong gx-admin-spin',
-  spin: true
+  spin: true,
 })
 
 const route = useRoute()
@@ -15,9 +15,11 @@ const { layout, global } = useStore()
 </script>
 
 <template>
-  <ProConfigProvider :locale="zhCN" :token="{ colorPrimary: layout.config.settings.primaryColor }">
-    <ProAppPage
-      :spinning="global.pageLoading && route.fullPath === '/'"
+  <GProConfigProvider :locale="zhCN" :token="{ colorPrimary: layout.config.settings.primaryColor }">
+    <GProAppPage
+      :spinning="{
+        loading: global.pageLoading && route.fullPath === '/',
+      }"
       :indicator="indicator"
       :spin-props="{ iconStyle: { fontSize: '40px' } }"
     >
@@ -25,8 +27,8 @@ const { layout, global } = useStore()
         <Empty />
       </template>
       <router-view />
-    </ProAppPage>
-  </ProConfigProvider>
+    </GProAppPage>
+  </GProConfigProvider>
 </template>
 
 <style scoped lang="less">

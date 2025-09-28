@@ -1,5 +1,5 @@
-import { currentMode, isDev } from '@/utils/env'
 import { defaultSettings } from '@gx-config'
+import { currentMode, isDev } from '@/utils/env'
 
 const { title } = defaultSettings.system
 

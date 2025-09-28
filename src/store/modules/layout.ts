@@ -1,11 +1,11 @@
 import type { BasicLayoutProps, ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import type { ProLayoutConfig } from '@gx-design-vue/pro-provider'
-import logo from '@/assets/logo.png'
 import { defaultSettings, theme } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { handleThemeConfig } from '@gx-design-vue/pro-layout'
 import { themeConfig } from '@gx-design-vue/pro-provider'
 import { defineStore } from 'pinia'
+import logo from '@/assets/logo.png'
 
 const { waterMark } = defaultSettings.system
 

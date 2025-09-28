@@ -1,6 +1,6 @@
-import { layoutConfig } from '@/store/modules/layout'
 import { unit, useProConfigContext } from '@gx-design-vue/pro-provider'
 import { useWindowSize } from '@vueuse/core'
+import { layoutConfig } from '@/store/modules/layout'
 
 export default function (h?: number) {
   const { height } = useWindowSize()

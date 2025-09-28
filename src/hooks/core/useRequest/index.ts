@@ -1,5 +1,5 @@
-import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
 import type { ComputedRef, MaybeRef, UnwrapRef, WatchSource } from 'vue'
+import type { CancelOptions, GAxiosOptions } from '@/utils/request/typings'
 import { useState } from '@gx-design-vue/pro-hooks'
 import { deepMerge, isArray, isObject } from '@gx-design-vue/pro-utils'
 import { useThrottleFn } from '@vueuse/core'

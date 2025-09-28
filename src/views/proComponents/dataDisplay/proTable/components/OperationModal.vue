@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { ProSearchMap } from '@gx-design-vue/pro-table'
 import type { MockTableRecord, SearchParams } from '../typings'
-import { useDict } from '@/hooks/system'
-import { getTableList } from '@/services/tableCenter'
 import { useTable } from '@gx-design-vue/pro-table'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { reactive, ref, watch } from 'vue'
+import { useDict } from '@/hooks/system'
+import { getTableList } from '@/services/tableCenter'
 import { operationModal } from '../utils/columns'
 
 const { dictState, getDict } = useDict('sys_common_status')
