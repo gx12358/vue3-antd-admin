@@ -531,7 +531,7 @@ const proPage: SystemMenuItem[] = [
         children: [
           {
             children: [],
-            component: 'IframeView',
+            component: 'IframeLayout',
             createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
             menuId: 42,
             title: 'antVue文档(内嵌)',

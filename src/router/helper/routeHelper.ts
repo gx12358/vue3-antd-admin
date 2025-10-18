@@ -167,7 +167,7 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     animateDisabled = false
   } = meta
 
-  const hasLink = menuItem.component === 'IframeView' || menuItem.component === 'IframeLayout'
+  const hasLink = menuItem.component === 'IframeLayout'
   const link = menuItem.link || (hasLink ? menuItem.path : '')
   const linkStatus = menuItem.linkStatus ?? (hasLink ? 1 : 0)
   return {
