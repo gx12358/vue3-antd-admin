@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useScrollRoot } from '@gx-admin/hooks/web'
 import { GProAppPage, ThemeContext } from '@gx-design-vue/pro-layout'
 import { GProConfigProvider } from '@gx-design-vue/pro-provider'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
@@ -12,6 +13,7 @@ const indicator = h(GIcon, {
 })
 
 const route = useRoute()
+const scrollRoot = useScrollRoot()
 
 const { theme, global } = useStore()
 </script>
@@ -22,10 +24,9 @@ const { theme, global } = useStore()
     :token="theme.token"
     :css-var="theme.cssVar"
     :dark="theme.isDark"
+    :get-popup-container="() => scrollRoot"
   >
-    <ThemeContext
-      v-model:theme="theme.theme"
-    >
+    <ThemeContext v-model:theme="theme.theme">
       <StyleGlobal />
       <GProAppPage
         :spinning="{

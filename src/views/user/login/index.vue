@@ -52,8 +52,8 @@ const loginType = reactive({
 })
 
 const userForm = reactive<UserState>({
-  username: userFormValue?.username || (isDev() ? 'admin' : ''),
-  password: userFormValue?.password || (isDev() ? 'gx.design' : '')
+  username: userFormValue?.username || (isDev() ? '' : ''),
+  password: userFormValue?.password || (isDev() ? '' : '')
 })
 
 const { validateInfos, validate } = useProForm(userForm, {
@@ -64,6 +64,13 @@ const { validateInfos, validate } = useProForm(userForm, {
 watch(() => route.fullPath, () => {
   redirect.value = (route.query?.redirect as string) || '/'
 }, { deep: true, immediate: true })
+
+function setAccount(type: 'admin') {
+  if (type === 'admin') {
+    userForm.username = 'admin'
+    userForm.password = 'gx.design'
+  }
+}
 
 const handleRoute = () => {
   return redirect.value === '/exception/404' || redirect.value === '/exception/403'
@@ -118,7 +125,7 @@ const handleSubmit = async () => {
         </div>
       </div>
     </div>
-    <div class="flex-col-center dark:bg-layout bg-background relative px-6 py-10 lg:flex-initial lg:px-8 min-h-full w-[34%] flex-1">
+    <div class="flex-col-center bg-background-container relative px-6 py-10 lg:flex-initial lg:px-8 min-h-full w-[34%] flex-1">
       <div class="mt-6 w-full sm:mx-auto md:max-w-md">
         <div class="mb-4 sm:mx-auto sm:w-full sm:max-w-md">
           <h2 class="text-foreground mb-3 text-2xl font-bold leading-9 tracking-tight lg:text-3xl">
@@ -133,7 +140,7 @@ const handleSubmit = async () => {
               size="large"
               allow-clear
               :prefix="userOutlined"
-              placeholder="请输入用户名:admin"
+              placeholder="请输入用户名"
             />
           </a-form-item>
           <a-form-item v-bind="validateInfos.password" name="password">
@@ -141,7 +148,8 @@ const handleSubmit = async () => {
               v-model:value="userForm.password"
               size="large"
               :prefix="lockOutlined"
-              placeholder="请输入密码:gx.design"
+              allow-clear
+              placeholder="请输入密码"
             />
           </a-form-item>
           <a-form-item>
@@ -158,6 +166,21 @@ const handleSubmit = async () => {
             </a-button>
           </a-form-item>
         </a-form>
+        <div class="flex-center mt-4">
+          <a-dropdown placement="bottom">
+            <div class="flex items-center gap-2 w-fit text-muted-foreground cursor-pointer">
+              <span>演示账号</span>
+              <team-outlined />
+            </div>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click.stop="setAccount('admin')">
+                  超级管理员
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </div>
       </div>
     </div>
   </div>
