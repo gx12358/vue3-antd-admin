@@ -1,7 +1,7 @@
 import { isArray, isBoolean, isFunction } from '@gx-design-vue/pro-utils'
 import { omit } from 'lodash-es'
-import { defineFakeRoute } from 'vite-plugin-fake-server/client'
 import { defaultSettings } from '../config'
+import { defineFakeRoute } from '../internal/vite-plugin/fake-server/client'
 import { checkBackDataFun, getToken } from './utils/util'
 
 const { mock } = defaultSettings

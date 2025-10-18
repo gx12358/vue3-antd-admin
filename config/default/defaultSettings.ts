@@ -29,7 +29,7 @@ const settingConfig: SettingConfig = {
     keepAliveMaxNum: 99,
     // 路由模式，可选值为 browser 或 hash
     router: {
-      mode: 'browser',
+      mode: 'hash',
       // 不经过token校验的路由
       whiteList: [ '/user/login', '/user/register', '/exception/404', '/exception/403' ],
       // token失效回退到登录页时是否记录本次的路由

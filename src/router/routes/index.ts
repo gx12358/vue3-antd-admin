@@ -1,7 +1,3 @@
-import BasicLayout from '@/layout/BasicLayout.vue'
-import BlankLayout from '@/layout/BlankLayout.vue'
-import UserLayout from '@/layout/UserLayout.vue'
-
 // import.meta.globEager() 直接引入所有的模块 Vite 独有的功能
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true })
 const routeModuleList: AppRouteModule[] = []
@@ -18,7 +14,7 @@ export const localRoutes: AppRouteModule[] = routeModuleList
 export const permissionRouters: AppRouteModule = {
   path: '/exception',
   name: 'Exception',
-  component: BlankLayout,
+  component: () => import('@/layout/BlankLayout.vue'),
   redirect: '/exception/403',
   meta: {
     hidden: true,
@@ -60,7 +56,7 @@ export const customRoutes: AppRouteModule[] = [
   {
     path: '/',
     name: '首页',
-    component: BasicLayout,
+    component: () => import('@/layout/BasicLayout.vue'),
     redirect: '/workplace',
     children: routeModuleList
   },
@@ -74,7 +70,7 @@ export const basicRoutes = (type: SystemRoutesAuth) => {
   return [
     {
       path: '/user',
-      component: UserLayout,
+      component: () => import('@/layout/UserLayout.vue'),
       name: 'UserLayout',
       redirect: '/user/login',
       children: [

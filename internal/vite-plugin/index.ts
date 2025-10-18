@@ -5,12 +5,12 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Unocss from 'unocss/vite'
 import TurboConsole from 'unplugin-turbo-console/vite'
-import { vitePluginFakeServer } from 'vite-plugin-fake-server'
 import vueDevtools from 'vite-plugin-vue-devtools'
-
 import { createAppConfigPlugin } from './appConfig'
+
 import { createAutoImport } from './autoImport'
 import { configCompressPlugin } from './compress'
+import { vitePluginFakeServer } from './fake-server'
 import { configHtmlPlugin } from './html'
 import { configVisualizerConfig } from './visualizer'
 import viteNotice from './viteNotice'
@@ -53,7 +53,6 @@ export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   useMock && vitePlugins.push(vitePluginFakeServer({
     logger: false,
     include: 'mock',
-    infixName: false,
     enableProd: VITE_USE_MOCK
   }))
 

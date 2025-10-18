@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GProEditor from '@/components/GlobalLayout/ProEditor/index.vue'
 
-const content = `<p>你好～</p>`
+const content = ref(`<p>你好～</p>`)
 </script>
 
 <template>

@@ -133,7 +133,7 @@ const handleSubmit = async () => {
               size="large"
               allow-clear
               :prefix="userOutlined"
-              placeholder="请输入用户名"
+              placeholder="请输入用户名:admin"
             />
           </a-form-item>
           <a-form-item v-bind="validateInfos.password" name="password">
@@ -141,7 +141,7 @@ const handleSubmit = async () => {
               v-model:value="userForm.password"
               size="large"
               :prefix="lockOutlined"
-              placeholder="请输入密码"
+              placeholder="请输入密码:gx.design"
             />
           </a-form-item>
           <a-form-item>
