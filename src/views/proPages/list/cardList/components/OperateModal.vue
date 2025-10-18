@@ -116,9 +116,13 @@ defineExpose({
           </a-tooltip>
         </template>
         <GUpload
-          :progress="false" :data-list="[{ url: formState.avatar, previewUrl: formState.avatar, type: '1' }]"
-          :limit="1" :disabled="false" :trigger-style="{ overflow: 'hidden', borderRadius: '4px' }"
-          :card-item-style="{ overflow: 'hidden', borderRadius: '4px' }" @change="handleChange"
+          :progress="false"
+          :data-list="[{ url: formState.avatar, previewUrl: formState.avatar, type: '1' }]"
+          :limit="1"
+          :disabled="false"
+          :trigger-style="{ overflow: 'hidden', borderRadius: '4px' }"
+          :card-item-style="{ overflow: 'hidden', borderRadius: '4px' }"
+          @change="handleChange"
         />
       </a-form-item>
       <a-form-item class="!mb-0" label="描述" v-bind="validateInfos.description">

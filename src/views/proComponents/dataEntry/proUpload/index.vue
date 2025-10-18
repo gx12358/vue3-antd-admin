@@ -6,7 +6,7 @@ import { computed } from 'vue'
 
 const { user } = useStore()
 
-const urlList = computed(() => [
+const urlList = computed<any[]>(() => [
   user.userInfo.avatar,
   {
     url: 'https://images.unsplash.com/photo-1652451635491-72dfaab20637?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1365&q=80',

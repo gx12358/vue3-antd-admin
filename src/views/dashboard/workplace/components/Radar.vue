@@ -6,7 +6,7 @@ export default defineComponent({
   name: 'Radar',
   props: {
     data: {
-      type: Array as VuePropType<any[]>,
+      type: Array as PropType<any[]>,
       default: () => {
         return []
       }

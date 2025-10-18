@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getUplaodInfos() {
+export function getUploadInfo() {
   return request({
     url: '/oss/token-picture-video/url',
     method: 'get',

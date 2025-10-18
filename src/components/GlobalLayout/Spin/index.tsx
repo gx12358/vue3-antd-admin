@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'vue'
 import { useProAppContext } from '@gx-design-vue/pro-app'
 import { Spin } from 'ant-design-vue'
 import { spinProps } from 'ant-design-vue/es/spin'
@@ -8,7 +9,7 @@ export default defineComponent({
   name: 'GSpin',
   inheritAttrs: true,
   props: {
-    iconStyle: Object as VuePropType<CSSProperties>,
+    iconStyle: Object as PropType<CSSProperties>,
     ...spinProps()
   },
   setup(props, { slots, attrs }) {

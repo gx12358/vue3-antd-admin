@@ -32,20 +32,20 @@ export function getStorageKey(key: string, originKey?: boolean) {
  * @lastTime    2019/12/3
  * @description 获取Storage
  */
-export function getStorage({
+export function getStorage<T = any>({
   key,
   originKey,
-  type = 'local',
+  type = 'localStorage',
   encryption = true
 }: {
   key: string;
   encryption?: boolean;
-  type?: 'local' | 'cookie' | 'session';
+  type?: LocalStorage;
   originKey?: boolean;
-}) {
-  const storageValue = type === 'local'
+}): T {
+  const storageValue = type === 'localStorage'
     ? localStorage.getItem(getStorageKey(key, originKey))
-    : type === 'session' ? sessionStorage.getItem(getStorageKey(key, originKey)) : getCookie(
+    : type === 'sessionStorage' ? sessionStorage.getItem(getStorageKey(key, originKey)) : getCookie(
       getStorageKey(
         key,
         originKey
@@ -58,13 +58,13 @@ export function getStorage({
       const expiredStatus = dayjs().diff(dayjs(result.time)) >= result.expired
       if (expiredStatus) {
         removeStorage({ key, originKey, type })
-        return ''
+        return '' as T
       }
     }
   } else if (result && isString(result)) {
-    return isJSONStr(result) ? JSON.parse(result) : result
+    return isJSONStr(result) ? JSON.parse(result) : result as T
   }
-  return typeof result === 'string' ? result : result?.['value'] || result || ''
+  return typeof result === 'string' ? result as T : result?.['value'] || result || ''
 }
 
 /**
@@ -78,7 +78,7 @@ export function setStorage({
   value,
   expired,
   originKey,
-  type = 'local',
+  type = 'localStorage',
   encryption = true
 }: {
   key: string;
@@ -86,7 +86,7 @@ export function setStorage({
   originKey?: boolean;
   expired?: number;
   encryption?: boolean;
-  type?: 'local' | 'cookie' | 'session';
+  type?: LocalStorage;
 }) {
   const result: LocalResult = originKey ? value : {
     value,
@@ -96,7 +96,7 @@ export function setStorage({
   const storageValue = isEncryption(encryption)
     ? Encrypt(JSON.stringify(result))
     : isString(result) || isNumber(result) ? result : JSON.stringify(result)
-  if (type === 'local') localStorage.setItem(getStorageKey(key, originKey), storageValue)
+  if (type === 'localStorage') localStorage.setItem(getStorageKey(key, originKey), storageValue)
   else if (type === 'cookie') setCookie(getStorageKey(key, originKey), storageValue)
   else sessionStorage.setItem(getStorageKey(key, originKey), storageValue)
 }
@@ -110,13 +110,13 @@ export function setStorage({
 export function removeStorage({
   key,
   originKey,
-  type = 'local'
+  type = 'localStorage'
 }: {
   key: string;
   originKey?: boolean;
-  type?: 'local' | 'cookie' | 'session';
+  type?: LocalStorage;
 }) {
-  if (type === 'local') localStorage.removeItem(getStorageKey(key, originKey))
+  if (type === 'localStorage') localStorage.removeItem(getStorageKey(key, originKey))
   else if (type === 'cookie') delCookie(getStorageKey(key, originKey))
   else sessionStorage.removeItem(getStorageKey(key, originKey))
 }

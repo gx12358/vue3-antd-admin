@@ -1,9 +1,9 @@
 export interface MaterialListItem {
-  id?: string;
+  id: string;
   url?: string;
   previewUrl?: string;
   localPreviewUrl?: string;
-  type?: string;
+  type?: '1' | '2' | '3' | '4';
   uploadLoading?: boolean;
   uploadStatus?: 'normal' | 'active' | 'success' | 'exception';
   file?: File;

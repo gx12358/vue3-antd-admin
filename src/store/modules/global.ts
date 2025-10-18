@@ -9,18 +9,14 @@ import { defineStore } from 'pinia'
  */
 export interface GlobalState {
   keepAlive: boolean;
-  isLoggingIn: boolean;
   pageLoading: boolean;
-  showProgressBar: boolean;
   disabledScrollTop: boolean;
 }
 
 export const useStoreGlobal = defineStore('global', () => {
   const [ state, setValue ] = useReactiveState<GlobalState>({
     keepAlive: true,
-    isLoggingIn: false,
     pageLoading: false,
-    showProgressBar: true,
     disabledScrollTop: false
   })
 

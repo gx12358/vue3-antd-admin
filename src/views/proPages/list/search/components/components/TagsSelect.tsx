@@ -17,25 +17,25 @@ const TagsSelect = defineComponent({
   inheritAttrs: false,
   name: 'TagsSelect',
   props: {
-    value: [ String, Array ] as VuePropType<string[] | string>,
+    value: [ String, Array ] as PropType<string[] | string>,
     data: {
-      type: Array as VuePropType<TagsListItem[]>,
+      type: Array as PropType<TagsListItem[]>,
       default: () => []
     },
     hideCheckAll: {
-      type: Boolean as VuePropType<boolean>,
+      type: Boolean as PropType<boolean>,
       default: false
     },
     expandable: {
-      type: Boolean as VuePropType<boolean>,
+      type: Boolean as PropType<boolean>,
       default: true
     },
     selectType: {
-      type: String as VuePropType<'checkbox' | 'radio'>,
+      type: String as PropType<'checkbox' | 'radio'>,
       default: 'checkbox'
     },
-    'onUpdate:value': Function as VuePropType<(value: string[] | string) => void>,
-    onChange: Function as VuePropType<(value: string[] | string) => void>
+    'onUpdate:value': Function as PropType<(value: string[] | string) => void>,
+    onChange: Function as PropType<(value: string[] | string) => void>
   },
   emits: [ 'update:value', 'change' ],
   setup(props, { emit }) {

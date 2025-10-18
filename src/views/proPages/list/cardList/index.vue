@@ -127,7 +127,7 @@ const handleDelete = (id) => {
     border-color: var(--gx-primary-color);
     
     .card-add-btn {
-      --at-apply: text-hex-main;
+      --at-apply: text-primary;
     }
   }
   

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { Color } from '@gx-design-vue/color-picker'
+import type { CSSProperties } from 'vue'
 import { GColorPicker } from '@gx-design-vue/color-picker'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
+import { message } from 'ant-design-vue'
 import { computed, reactive, ref } from 'vue'
+import { copyToClipboard } from '@/utils/util'
 
 const colSize = useMediaQuery()
 
@@ -40,6 +43,11 @@ const formState = reactive({
   zIndex: 10,
   rotate: -22
 })
+
+function copy() {
+  copyToClipboard(code.value)
+  message.success('复制成功')
+}
 </script>
 
 <template>
@@ -101,7 +109,7 @@ const formState = reactive({
                   如果要在图片中展示水印尝试调大右侧的 zIndex 滑块试试。
                 </h4>
                 <img
-                  src="/src/assets/public_images/watermark.svg"
+                  src="/src/assets/images/public/watermark.svg"
                   alt="示例图片"
                   :style="{ zIndex: 10, maxWidth: '100%', position: 'relative' }"
                 >
@@ -133,8 +141,11 @@ const formState = reactive({
               </a-form>
               <a-divider />
             </GProCard>
-            <a-typography-paragraph style="margin: 0 24px 0 24px" copyable class="gx-code-block">
+            <a-typography-paragraph style="margin: 0 24px 0 24px" class="relative">
               <pre>{{ code }}</pre>
+              <div class="absolute right-8px top-8px text-primary">
+                <copy-outlined @click="copy" />
+              </div>
             </a-typography-paragraph>
           </div>
         </GProCard>

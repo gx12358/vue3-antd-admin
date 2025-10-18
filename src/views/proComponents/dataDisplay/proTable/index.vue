@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { MockTableRecord, SearchParams } from './typings'
+import type { MockTableRecord, SearchConfig } from './typings'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
-import { useDict } from '@/hooks/system'
-import useProTable from '@/hooks/web/useProTable'
+import { useDict, useUpdateTableSearch } from '@/hooks/system'
+import { useProTable } from '@/hooks/web'
 import { doDelete, getTableList } from '@/services/tableCenter'
 import OperationModal from './components/OperationModal.vue'
 import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
@@ -13,7 +13,7 @@ import { columns } from './utils/columns'
 
 const emits = defineEmits([ 'changePageCard' ])
 
-const { dictState } = useDict([ 'sys_common_status' ])
+useDict([ 'sys_common_status' ])
 
 const tableRef = ref()
 const operationRef = useTemplateRef<InstanceType<typeof OperationModal>>('operationRef')
@@ -27,12 +27,12 @@ const state = reactive({
   showOptionsExtra: false,
   showScroll: true,
   showScrollBreakpoint: false,
-  tableData: [] as TableRecord<MockTableRecord>[],
+  tableData: [] as MockTableRecord[],
   selectedRowKeys: [] as any[],
-  selectedRowItems: [] as TableRecord<MockTableRecord>[]
+  selectedRowItems: [] as MockTableRecord[]
 })
 
-const { tableState, reload, setLoading } = useProTable<TableRecord<MockTableRecord>, SearchParams>(
+const { tableState, reload, setLoading, updateSearchMap } = useProTable<MockTableRecord, SearchConfig>(
   tableRef,
   {
     state: {
@@ -44,7 +44,7 @@ const { tableState, reload, setLoading } = useProTable<TableRecord<MockTableReco
       neverScroll: false,
       cardBordered: state.showCard,
       scrollBreakpoint: 'xl',
-      draggabled: true,
+      draggable: true,
       waitRequest: true,
       params: {
         adress: ''
@@ -85,24 +85,10 @@ const { tableState, reload, setLoading } = useProTable<TableRecord<MockTableReco
   }
 )
 
-watch(
-  () => dictState.value.sys_common_status,
-  (val) => {
-    if (tableState.searchMap) {
-      tableState.searchMap[0].loading = val.loading
-      tableState.searchMap[0].valueEnum = val?.data.map((item) => {
-        return {
-          text: item.dictLabel,
-          value: item.dictValue
-        }
-      })
-    }
-  },
-  {
-    deep: true,
-    immediate: true
-  }
-)
+useUpdateTableSearch<keyof MockTableRecord>('sys_common_status', {
+  key: 'status',
+  callback: updateSearchMap
+})
 
 watch(
   () => state.showScroll,
@@ -229,11 +215,11 @@ function changeTableCard(val: boolean) {
 <template>
   <g-pro-page-container :use-page-card="!state.showCard">
     <a-typography id="g-pro-table">
-      <a-typography-title :level="2" :style="{ color: '#454d64' }">
+      <a-typography-title :level="2">
         ProTable - 高级表格
       </a-typography-title>
     </a-typography>
-    <div class="bg-hex-fff mb-16px" :class="state.showCard ? 'p-20px pb-4px rd-6px' : 'bd-b-main'">
+    <div class="mb-16px" :class="state.showCard ? 'p-20px pb-4px rd-6px' : 'bd-b-split'">
       <a-form :class="[$style['pro-table']]" layout="inline">
         <a-form-item label="Table 和 Search 分割">
           <a-switch v-model:checked="state.showCard" @change="val => changeTableCard(!!val)" />
@@ -302,7 +288,7 @@ function changeTableCard(val: boolean) {
           <a-switch v-model:checked="tableState.options as boolean" />
         </a-form-item>
         <a-form-item label="Draggabled">
-          <a-switch v-model:checked="tableState.draggabled" />
+          <a-switch v-model:checked="tableState.draggable" />
         </a-form-item>
         <a-form-item>
           <template #label>

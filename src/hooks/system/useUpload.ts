@@ -1,21 +1,22 @@
+import type { OssUploadProps } from './useOss'
+import type { ClientDetails, OssMapKey, OssState } from '@/store/modules/oss'
 import { useOss } from './useOss'
 
 export interface OssResponse {
-  code: number;
+  code: 200 | 500;
   url?: string;
   name?: string;
   uploadId?: string;
+  previewUrl?: string;
   data?: any;
 }
 
-export interface UploadConfig {
+export interface UploadConfig extends Omit<OssUploadProps, 'file'> {
   file: File;
-  type: 'image' | 'video';
+  type?: OssMapKey;
   client?: any;
-  name?: string;
-  fullName?: string
   checkpoint?: any;
-  serverKey?: 'create' | 'content';
+  clientDetils?: ClientDetails & OssState;
   progressCallback?: (progress: number, cpt: any) => void;
 }
 
@@ -33,36 +34,50 @@ function handleOssResponse(data: any) {
   }
 }
 
+export function useOssPreview(type: OssMapKey = 'image', url: string, client?: OssState & ClientDetails) {
+  const { oss } = useStore()
+
+  let previewUrl = ''
+  if (client?.cdn || oss[type]?.cdn) {
+    previewUrl = `${client?.cdn || (oss[type]?.cdn)}/${url}`
+  }
+
+  return previewUrl
+}
+
 export type OssUpload = (options: UploadConfig) => Promise<OssResponse>
 
-export function useUpload(): {
-  quickUpload: ({ client, name, file }: UploadConfig) => Promise<OssResponse>;
-  upload: OssUpload;
-  resumeUpload: OssUpload;
-} {
+export function useUpload() {
   const { createClient, getOssUploadName } = useOss()
 
   function quickUpload({
     name,
     fullName,
     client,
-    file
+    file,
+    type = 'image',
+    clientDetils,
+    serverFn
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClient()
+      const ossClient = client || await createClient(type, clientDetils)
       const ossName = await getOssUploadName({
         name,
         fullName,
-        file
+        file,
+        serverFn
       })
       ossClient
         .put(ossName, file)
         .then((res: any) => {
           const originInfo = handleOssResponse(res?.res || {})
           if (originInfo.url) {
+            const previewUrl = useOssPreview(type, res.name, clientDetils)
+
             resolve({
-              code: 0,
+              code: 200,
               name: res.name,
+              previewUrl,
               ...originInfo
             })
           }
@@ -91,10 +106,12 @@ export function useUpload(): {
     fullName,
     client,
     file,
+    type = 'image',
+    clientDetils,
     progressCallback
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClient()
+      const ossClient = client || await createClient(type, clientDetils)
       const ossName = await getOssUploadName({
         name,
         fullName,
@@ -110,8 +127,11 @@ export function useUpload(): {
         .then((res) => {
           const originInfo = handleOssResponse(res?.res || {})
           if (originInfo.url) {
+            const previewUrl = useOssPreview(type, res.name, clientDetils)
+
             resolve({
-              code: 0,
+              code: 200,
+              previewUrl,
               name: res.name,
               ...originInfo
             })
@@ -140,11 +160,14 @@ export function useUpload(): {
     client,
     name,
     file,
+    type = 'image',
+    clientDetils,
     checkpoint,
     progressCallback
   }: UploadConfig) {
     return new Promise<OssResponse>(async (resolve) => {
-      const ossClient = client || await createClient()
+      const ossClient = client || await createClient(type, clientDetils)
+
       ossClient
         .multipartUpload(name, file, {
           checkpoint,
@@ -156,9 +179,12 @@ export function useUpload(): {
         .then((res) => {
           const originInfo = handleOssResponse(res?.res || {})
           if (originInfo.url) {
+            const previewUrl = useOssPreview(type, res.name, clientDetils)
+
             resolve({
-              code: 0,
+              code: 200,
               name: res.name,
+              previewUrl,
               ...originInfo
             })
           }

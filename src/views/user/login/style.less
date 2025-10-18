@@ -1,38 +1,31 @@
-.login-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: auto;
-  background: #f0f2f5;
-}
-
-.content {
-  flex: 1;
-  padding: 32px 0;
-}
-
-.icon {
-  margin-left: 8px;
-  font-size: 24px;
-  color: rgba(0, 0, 0, 0.2);
-  vertical-align: middle;
-  cursor: pointer;
-  transition: color 0.3s;
-
-  &:hover {
-    color: #1677ff;
+html[data-theme='light'] {
+  .login-background {
+    background: linear-gradient(154deg, #07070915 30%, hsl(var(--color-primary)/30%) 48%, #07070915 64%);
+    filter: blur(100px);
   }
 }
 
-@media (min-width: 768px) {
-  .login-container {
-    background-image: url(/src/assets/login_images/login_background.svg);
-    background-repeat: no-repeat;
-    background-position: center 110px;
-    background-size: 100%;
+html[data-theme='dark'] {
+  .login-background {
+    background: linear-gradient(154deg, #07070915 30%, hsl(var(--color-primary)/20%) 48%, #07070915 64%);
+    filter: blur(100px);
   }
+}
 
-  .content {
-    padding: 32px 0 24px;
+@keyframes float {
+  0% {
+    transform: translateY(0)
   }
+  
+  50% {
+    transform: translateY(-20px)
+  }
+  
+  to {
+    transform: translateY(0)
+  }
+}
+
+.animate-float {
+  animation: float 5s linear 0s infinite
 }

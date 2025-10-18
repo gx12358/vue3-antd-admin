@@ -6,7 +6,7 @@ import type { ProjectHomeCount, ProjectListItem } from '@gx-mock/routers/project
 import type { ListSearchParams } from '@gx-mock/utils/table'
 import { useRequest } from '@gx-admin/hooks/core'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { useTokenStyle } from '@gx-design-vue/pro-provider'
+import { FastColor, unit, useProConfigContext, useTokenStyle } from '@gx-design-vue/pro-provider'
 import { compareArray, toChinesNum } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
@@ -22,8 +22,9 @@ defineOptions({
   name: 'Workplace'
 })
 
-const { user } = useStore()
 const router = useRouter()
+const { user } = useStore()
+const { token } = useProConfigContext()
 
 const state = reactive({
   radarMaxCount: 10,
@@ -106,6 +107,28 @@ const { loading: groupLoading, data: groupList } = useRequest<GroupListItem[]>(
     defaultLoading: true
   }
 )
+
+const cardShadow = computed(() => {
+  return `
+    0 1px 2px -2px ${new FastColor('rgba(0, 0, 0, 0.16)').toRgbString()},
+    0 3px 6px 0 ${new FastColor('rgba(0, 0, 0, 0.12)').toRgbString()},
+    0 5px 12px 4px ${new FastColor('rgba(0, 0, 0, 0.09)').toRgbString()}
+  `
+})
+
+const boxShadow = computed(() => {
+  return `
+    ${unit(token.value.lineWidth)} 0 0 0 ${token.value.colorBorderSecondary},
+    0 ${unit(token.value.lineWidth)} 0 0 ${token.value.colorBorderSecondary},
+    ${unit(token.value.lineWidth)} ${unit(token.value.lineWidth)} 0 0 ${token.value.colorBorderSecondary},
+    ${unit(token.value.lineWidth)} 0 0 0 ${token.value.colorBorderSecondary} inset,
+    0 ${unit(token.value.lineWidth)} 0 0 ${token.value.colorBorderSecondary} inset
+  `
+})
+
+const transition = computed(() => {
+  return `all ${token.value.motionDurationMid}`
+})
 
 watch(radarList, (val) => {
   if (val.length) {
@@ -191,7 +214,7 @@ watch(radarList, (val) => {
           bordered
           header-bordered
           :loading="projectLoading"
-          :body-style="{ padding: 0, marginBlockStart: '-1px', marginInlineStart: '-1px' } as CSSProperties"
+          :body-style="{ padding: 0, marginBlockStart: '-1px', marginInlineStart: '-1px' }"
         >
           <template #extra>
             <a>全部项目</a>
@@ -279,5 +302,16 @@ watch(radarList, (val) => {
 </template>
 
 <style lang="less" scoped>
-@import "./style";
+.card-item {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: v-bind(boxShadow);
+  transition: v-bind(transition);
+  
+  &:hover {
+    position: relative;
+    z-index: 1;
+    box-shadow: v-bind(cardShadow);
+  }
+}
 </style>

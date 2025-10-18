@@ -1,13 +1,13 @@
 import type { Router } from 'vue-router'
 import { defaultSettings } from '@gx-config'
 import NProgress from 'nprogress'
-import { useStoreGlobal } from '@/store'
+import { useStoreGlobal, useStoreLayout } from '@/store'
 import getPageTitle from '@/utils/pageTitle'
 import { scrollToContainer } from '@/utils/util'
 import { createPermissionGuard } from './permissions'
 import { createStateGuard } from './stateGuard'
 
-const { routesWhiteList } = defaultSettings.system
+const { router: routerConfig } = defaultSettings.system
 
 export function setupRouterGuard(router: Router) {
   createPageGuard(router)
@@ -31,7 +31,7 @@ export function createPageLoadingGuard(router: Router) {
   const loadedPaths = new Set<string>()
 
   router.beforeEach(async (to) => {
-    if (!loadedPaths.has(to.path) && !routesWhiteList.includes(to.path)) {
+    if (!loadedPaths.has(to.path) && !routerConfig.whiteList.includes(to.path)) {
       global.setValue({ pageLoading: true })
       loadedPaths.add(to.path)
     }
@@ -53,9 +53,9 @@ export function createScrollGuard(router: Router) {
 }
 
 export function createProgressGuard(router: Router) {
-  const global = useStoreGlobal()
+  const layout = useStoreLayout()
   router.beforeEach(() => {
-    if (global.showProgressBar) {
+    if (layout.config.settings.progress) {
       NProgress.start()
     }
     return true

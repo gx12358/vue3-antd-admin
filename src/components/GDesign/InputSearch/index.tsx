@@ -1,3 +1,4 @@
+import type { SlotsType } from 'vue'
 import { getSlotVNode } from '@gx-design-vue/pro-utils'
 import { InputSearch } from 'ant-design-vue'
 import inputProps from 'ant-design-vue/es/input/inputProps'
@@ -9,17 +10,20 @@ const GInputSearch = defineComponent({
   inheritAttrs: false,
   props: {
     ...omit(inputProps(), [ 'value', 'onUpdate:value' ]),
-    value: String as VuePropType<string>,
-    onChange: Function as VuePropType<(value: any) => void>,
+    value: String as PropType<string>,
+    onChange: Function as PropType<(value: any) => void>,
     placeholder: {
-      type: [ String, Number ] as VuePropType<string | number>,
+      type: [ String, Number ] as PropType<string | number>,
     },
     allowClear: {
-      type: [ Boolean ] as VuePropType<boolean>,
+      type: [ Boolean ] as PropType<boolean>,
     },
     inputPrefixCls: String,
     enterButton: [ Function, Object, Array, String, Number ] as PropType<any>,
   },
+  slots: Object as SlotsType<{
+    enterButton(): void
+  }>,
   emits: [ 'update:value', 'change' ],
   setup(props, { emit, expose, slots }) {
     const searchValue = ref(props.value)
@@ -49,7 +53,7 @@ const GInputSearch = defineComponent({
     })
 
     return () => {
-      const enterButtonRender = getSlotVNode(slots, props, 'enterButton')
+      const enterButtonRender = getSlotVNode({ slots, props, key: 'enterButton' })
 
       return (
         <InputSearch

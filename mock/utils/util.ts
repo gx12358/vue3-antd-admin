@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
-import { defaultSettings } from '@gx-config'
 import { deepMerge, isObject } from '@gx-design-vue/pro-utils'
 import { toLower } from 'lodash-es'
+import { defaultSettings } from '../../config'
 import { tokenAccount, userList } from '../config/user'
 import userIds from '../config/user/id'
 import { Decrypt, Encrypt } from './crypto'

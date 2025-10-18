@@ -1,4 +1,4 @@
-import type { AppItemProps } from '@gx-design-vue/pro-layout'
+import type { AppItemProps } from '@gx-design-vue/pro-layout-components'
 
 export default [
   {

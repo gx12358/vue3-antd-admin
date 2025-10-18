@@ -1,22 +1,40 @@
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
+import { cloneDeep } from 'lodash-es'
 import { defineStore } from 'pinia'
-import { getOssClient, getUplaodInfos } from '@/services/systemCenter'
+import { getOssClient, getUploadInfo } from '@/services/systemCenter'
+
+export interface PublicOssUploadInfo {
+  pictureUrl1: string
+  voiceUrl: string
+  videoUrl: string
+  pictureCdn: string
+  videoCdn: string
+  pictureBucket: string
+  pictureRegion: string
+  videoBucket: string
+  videoRegion: string
+}
 
 export interface ClientDetails {
-  bucket?: string;
-  region?: string;
-  accessKeyId?: string;
-  accessKeySecret?: string;
-  stsToken?: string;
-  expiration?: string;
-  securityToken?: string;
+  bucket?: string
+  fullName?: string
+  region?: string
+  accessKeyId?: string
+  accessKeySecret?: string
+  stsToken?: string
+  expiration?: string
+  securityToken?: string
 }
 
-interface OssState {
-  bucket: string,
-  region: string,
+export interface OssState {
+  bucket?: string
+  region?: string
+  cdn?: string
+  path?: string
 }
+
+export type OssMapKey = 'image' | 'video'
 
 /**
  * @Author      gx12358
@@ -24,50 +42,57 @@ interface OssState {
  * @lastTime    2022/1/11
  * @description store-oss 数字字典
  */
-export interface OssInfoState {
-  ossInfos: OssState;
-  ossClient: Partial<ClientDetails>;
-  clientDetails: Partial<ClientDetails>;
+export type OssInfoState = Record<OssMapKey, ClientDetails & OssState>
+
+const defaultOssState: OssState = {
+  bucket: '',
+  region: '',
+  cdn: '',
+  path: ''
+}
+
+const defaultOss: OssInfoState = {
+  image: cloneDeep(defaultOssState),
+  video: cloneDeep(defaultOssState),
 }
 
 export const useStoreOss = defineStore('oss', () => {
-  const [ state, setValue ] = useReactiveState<OssInfoState>({
-    ossInfos: {
-      bucket: '',
-      region: ''
-    },
-    ossClient: {},
-    clientDetails: {}
-  })
-
-  const initClient = () => {
-    setValue({
-      ossClient: {
-        ...state.clientDetails,
-        ...state.ossInfos
-      }
-    })
-  }
+  const [ state, setValue ] = useReactiveState<OssInfoState>(cloneDeep(defaultOss))
 
   const queryOssToken = async () => {
-    if (!state.ossInfos.value.bucket && !state.ossInfos.value.region) {
-      const ossBucket: ResponseResult<{
-        bucket: string;
-        region: string;
-      }> = await getUplaodInfos()
-      setValue({
-        ossInfos: {
-          bucket: ossBucket.data?.bucket,
-          region: ossBucket.data?.region
-        }
-      })
-    }
-    const response: ResponseResult<ClientDetails> = await getOssClient()
-    if (response) {
-      const details = response?.data || {}
-      if (Object.keys(details).length) {
+    try {
+      if (!state.image.bucket || !state.video.bucket) {
+        const ossBucket: ResponseResult<PublicOssUploadInfo> = await getUploadInfo()
+        const {
+          videoBucket,
+          videoRegion,
+          videoCdn,
+          videoUrl,
+          pictureBucket,
+          pictureRegion,
+          pictureCdn,
+          pictureUrl1
+        } = ossBucket.data || {}
         setValue({
-          clientDetails: {
+          image: {
+            bucket: pictureBucket,
+            region: pictureRegion,
+            cdn: pictureCdn,
+            path: pictureUrl1
+          },
+          video: {
+            bucket: videoBucket,
+            region: videoRegion,
+            cdn: videoCdn,
+            path: videoUrl
+          }
+        })
+      }
+      const response: ResponseResult<ClientDetails> = await getOssClient()
+      if (response) {
+        const details = response?.data || {}
+        if (Object.keys(details).length) {
+          const client = {
             stsToken: details.securityToken,
             accessKeyId: details.accessKeyId,
             accessKeySecret: details.accessKeySecret,
@@ -75,10 +100,13 @@ export const useStoreOss = defineStore('oss', () => {
               ? dayjs(details.expiration).format('YYYY-MM-DD HH:mm:ss')
               : dayjs().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss')
           }
-        })
-        initClient()
+          setValue({
+            image: cloneDeep(client),
+            video: cloneDeep(client),
+          })
+        }
       }
-    }
+    } catch {}
   }
 
   const handleExpired = (date?: string) => {
@@ -87,23 +115,24 @@ export const useStoreOss = defineStore('oss', () => {
     return dayjs().isBefore(endTime)
   }
 
-  const getOssToken = async (params: ClientDetails = {}): Promise<ClientDetails> => {
-    if (state.clientDetails.value.stsToken && handleExpired(state.clientDetails.value.expiration)) {
-      return { ...state.clientDetails, ...params }
+  const getOssToken = async (type: OssMapKey, extraClient?: ClientDetails): Promise<ClientDetails> => {
+    let client = state[type]
+    if (client.stsToken && handleExpired(client.expiration)) {
+      return { ...client, ...extraClient }
     }
+
+    // 过期重新获取
     await queryOssToken()
-    return { ...state.clientDetails, ...params }
+    client = state[type]
+    return { ...client, ...extraClient }
   }
 
   const clearOss = () => {
-    setValue({
-      ossClient: {},
-      clientDetails: {}
-    })
+    setValue(cloneDeep(defaultOss))
   }
 
   return {
-    ...state,
+    ...toRefs(state),
     setValue,
     clearOss,
     getOssToken,

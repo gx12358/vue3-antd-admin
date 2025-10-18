@@ -16,6 +16,8 @@ declare module '*.vue' {
   export default component
 }
 
+declare module 'diagram-js/lib/navigation/movecanvas' {}
+
 declare module '*.tsx' {
   import Vue from 'compatible-vue'
 

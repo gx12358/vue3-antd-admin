@@ -1,5 +1,5 @@
 import { GScrollbars } from '@gx-design-vue/scrollbar'
-import { PageContainer } from '@gx-design-vue/pro-layout'
+import { GProPageContainer } from '@gx-design-vue/pro-layout'
 import { GProTable } from '@gx-design-vue/pro-table'
 import { GProModal } from '@gx-design-vue/pro-modal'
 import { GImage, GImagePreview } from '@gx-design-vue/image'
@@ -19,6 +19,6 @@ declare module '@vue/runtime-core' {
     GImageView: typeof GImagePreview
     GInputSearch: typeof InputSearch
     GMaterialView: typeof MaterialView
-    GProPageContainer: typeof PageContainer
+    GProPageContainer: typeof GProPageContainer
   }
 }

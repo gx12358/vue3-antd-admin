@@ -1,8 +1,18 @@
-.gx-admin-spin.gx-jiazaizhong {
+.gx-pro-app-page-blur>.ant-spin {
+  .ant-spin-dot {
+    font-size: 40px;
+    
+    .ant-spin-dot-item {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+.gx-admin-spin.gx-pro-spin {
   display: inline-block;
   width: auto;
   height: auto;
-  animation: loading-circle 1s infinite linear;
   color: inherit;
   line-height: 0;
   text-align: center;
@@ -14,10 +24,4 @@
 
 .ant-spin-spinning .ant-spin-text {
   margin-top: 10px;
-}
-
-@keyframes loading-circle {
-  100% {
-    transform: rotate(360deg);
-  }
 }

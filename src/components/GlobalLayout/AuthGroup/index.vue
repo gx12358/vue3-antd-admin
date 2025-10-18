@@ -8,9 +8,7 @@ const props = defineProps<{
   showEmpty?: boolean;
 }>()
 
-const auth = computed(() => isString(props.auth) ? [ props.auth ] : isArray(props.auth)
-  ? props.auth
-  : [])
+const auth = computed(() => isString(props.auth) ? [ props.auth ] : isArray(props.auth) ? props.auth : [])
 
 const { hasPermission } = usePermissions()
 </script>

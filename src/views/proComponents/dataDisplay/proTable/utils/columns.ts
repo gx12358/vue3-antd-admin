@@ -1,6 +1,6 @@
-import type { MockTableRecord, SearchParams } from '../typings'
+import type { MockTableRecord, SearchConfig } from '../typings'
 
-export const columns: ProColumnsType<TableRecord<MockTableRecord>, SearchParams> = [
+export const columns: ProColumnsType<TableRecord<MockTableRecord>, SearchConfig> = [
   {
     dataIndex: 'name',
     ellipsis: true,
@@ -41,7 +41,7 @@ export const columns: ProColumnsType<TableRecord<MockTableRecord>, SearchParams>
   }
 ]
 
-export const operationModal: ProColumnsType<TableRecord<MockTableRecord>, SearchParams> = [
+export const operationModal: ProColumnsType<TableRecord<MockTableRecord>, SearchConfig> = [
   {
     dataIndex: 'name',
     ellipsis: true,

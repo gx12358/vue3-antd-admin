@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import type { ProSearchMap } from '@gx-design-vue/pro-table'
 import type { MockTableRecord, SearchParams } from '../typings'
-import { useTable } from '@gx-design-vue/pro-table'
+import { useProTable } from '@gx-admin/hooks/web'
 import { deepCopy } from '@gx-design-vue/pro-utils'
-import { reactive, ref, watch } from 'vue'
-import { useDict } from '@/hooks/system'
+import { reactive, ref } from 'vue'
+import { useDict, useUpdateTableSearch } from '@/hooks/system'
 import { getTableList } from '@/services/tableCenter'
 import { operationModal } from '../utils/columns'
 
-const { dictState, getDict } = useDict('sys_common_status')
+const { getDict } = useDict('sys_common_status')
 
 const tableRef = ref()
 const visible = ref(false)
@@ -16,31 +15,32 @@ const isFail = ref(false)
 const spinning = ref(false)
 const waitRequest = ref(true)
 const skeletonLoading = ref(false)
-const searchMap = ref<ProSearchMap[]>([
-  {
-    name: 'status',
-    valueType: 'select',
-    placeholder: '请选择操作状态',
-    loading: false,
-    initialValue: '0',
-    valueEnum: []
-  },
-  {
-    name: 'date',
-    valueType: 'date',
-    placeholder: '请选择'
-  }
-])
 
 const params = reactive({
   adress: '',
   age: ''
 })
 
-const { tableState } = useTable<TableRecord<MockTableRecord>, SearchParams>(tableRef, {
+const { tableState, updateSearchMap } = useProTable<TableRecord<MockTableRecord>, SearchParams>(tableRef, {
   state: {
+    rowKey: 'id',
     options: false,
     modalScroll: true,
+    searchMap: [
+      {
+        name: 'status',
+        valueType: 'select',
+        placeholder: '请选择操作状态',
+        loading: false,
+        initialValue: '0',
+        valueEnum: []
+      },
+      {
+        name: 'date',
+        valueType: 'date',
+        placeholder: '请选择'
+      }
+    ],
     columns: operationModal
   },
   request: async (params) => {
@@ -53,25 +53,10 @@ const { tableState } = useTable<TableRecord<MockTableRecord>, SearchParams>(tabl
   }
 })
 
-watch(
-  () => dictState.value.sys_common_status,
-  (val) => {
-    if (searchMap.value) {
-      const loading = val.loading
-      searchMap.value[0].loading = loading
-      searchMap.value[0].valueEnum = loading ? [] : val.data.map((item) => {
-        return {
-          text: item.dictLabel,
-          value: item.dictValue
-        }
-      })
-    }
-  },
-  {
-    deep: true,
-    immediate: true
-  }
-)
+useUpdateTableSearch('sys_common_status', {
+  key: 'status',
+  callback: updateSearchMap
+})
 
 const resetModalState = () => {
   visible.value = false
@@ -121,7 +106,6 @@ defineExpose({
     <g-pro-table
       ref="tableRef"
       v-bind="tableState"
-      :search-map="searchMap"
       @reset="onReset"
     >
       <template #headerCell="{ column }">

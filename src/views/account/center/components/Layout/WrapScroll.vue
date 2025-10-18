@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ListGridType } from 'ant-design-vue/es/list'
+import type { CSSProperties } from 'vue'
 import type { ListRecord } from '../../hooks/useChildState'
 import { getArticlesList } from '@/services/projectCenter'
 import { useAccountCenterContext } from '../../context'

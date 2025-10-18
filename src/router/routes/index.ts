@@ -13,6 +13,8 @@ Object.keys(modules).forEach((key) => {
   routeModuleList.push(...modList)
 })
 
+export const localRoutes: AppRouteModule[] = routeModuleList
+
 export const permissionRouters: AppRouteModule = {
   path: '/exception',
   name: 'Exception',
@@ -47,31 +49,6 @@ export const permissionRouters: AppRouteModule = {
   ]
 }
 
-// 基本路由
-export const constantRoutes: AppRouteModule[] = [
-  {
-    path: '/user',
-    component: UserLayout,
-    name: 'UserLayout',
-    redirect: '/user/login',
-    children: [
-      {
-        path: '/user/login',
-        name: 'Login',
-        meta: {
-          hidden: true,
-          title: '登录'
-        },
-        component: () => import('@/views/user/login/index.vue')
-      }
-    ]
-  },
-  permissionRouters
-]
-
-// authentication为all（后端生成的路由）本地路由
-export const asyncRoutes: AppRouteModule[] = routeModuleList
-
 export const notFoundRoute: AppRouteModule = {
   path: '/:path(.*)*',
   name: 'NotFound',
@@ -79,7 +56,7 @@ export const notFoundRoute: AppRouteModule = {
 }
 
 // 自定义路由
-export const localRoutes: AppRouteModule[] = [
+export const customRoutes: AppRouteModule[] = [
   {
     path: '/',
     name: '首页',
@@ -89,3 +66,30 @@ export const localRoutes: AppRouteModule[] = [
   },
   notFoundRoute
 ]
+
+// 基本路由
+export const basicRoutes = (type: SystemRoutesAuth) => {
+  const routes = type === 'front' ? customRoutes : []
+
+  return [
+    {
+      path: '/user',
+      component: UserLayout,
+      name: 'UserLayout',
+      redirect: '/user/login',
+      children: [
+        {
+          path: '/user/login',
+          name: 'Login',
+          meta: {
+            hidden: true,
+            title: '登录'
+          },
+          component: () => import('@/views/user/login/index.vue')
+        }
+      ]
+    },
+    ...routes,
+    permissionRouters
+  ] as AppRouteModule[]
+}

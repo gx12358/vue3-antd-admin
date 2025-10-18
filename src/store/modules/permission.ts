@@ -15,7 +15,7 @@ export const useStorePermission = defineStore('permission', () => {
   }, { omitNil: false, omitEmpty: false })
 
   return {
-    ...state,
+    ...toRefs(state),
     setValue
   }
 })

@@ -51,7 +51,9 @@ export async function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   // vite-plugin-mock
   const useMock = isDev || VITE_USE_MOCK
   useMock && vitePlugins.push(vitePluginFakeServer({
+    logger: false,
     include: 'mock',
+    infixName: false,
     enableProd: VITE_USE_MOCK
   }))
 

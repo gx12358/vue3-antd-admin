@@ -7,29 +7,48 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
   />
-  <% for (var i in injectScript) { %>
-  <script type="text/javascript" src="<%= injectScript[i] %>"></script>
-  <% } %>
   <title><%= VUE_APP_TITLE %></title>
-  <link rel="icon" href="/resource/img/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/img/logo.png" type="image/x-icon" />
   <% for (var i in injectLink) { %>
   <link rel="stylesheet" type="text/css" href="<%= injectLink[i] %>" />
   <% } %>
-  <link rel="stylesheet" href="/resource/css/normalize.css">
-  <link rel="stylesheet" href="/resource/css/index.css">
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/index.css">
+  <% for (var i in injectScript) { %>
+  <script type="text/javascript" src="<%= injectScript[i] %>"></script>
+  <% } %>
+  <%- injectThemeScript %>
 </head>
 <body>
 <div id="app">
   <div class="gx-app-loading">
-    <div class="gx-app-title">
-      <img src="/resource/img/logo.png" alt="logo" />
-    </div>
     <div class="page-loading-warp">
-      <div class="gx-spin gx-spin-spinning">
-        <span class="gx-spin-dot gx-spin-dot-spin">
-          <svg t="1708486459357" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="983" width="40" height="40"><path d="M470.869333 9.130667c0-5.034667 4.096-9.130667 9.130667-9.130667h64c5.034667 0 9.130667 4.096 9.130667 9.130667v237.738666A9.130667 9.130667 0 0 1 544 256h-64a9.130667 9.130667 0 0 1-9.130667-9.130667V9.130667z" fill="#1677ff" p-id="984"></path><path d="M224 97.066667a9.130667 9.130667 0 0 1 3.328-12.501334l55.466667-32a9.130667 9.130667 0 0 1 12.458666 3.370667l118.869334 205.866667a9.130667 9.130667 0 0 1-3.370667 12.458666l-55.424 32a9.130667 9.130667 0 0 1-12.458667-3.328L224 97.066667z" fill="#1677ff" p-id="985"></path><path d="M55.893333 295.253333a9.130667 9.130667 0 0 1-3.328-12.501333l32-55.424a9.130667 9.130667 0 0 1 12.501334-3.328L302.933333 342.869333a9.130667 9.130667 0 0 1 3.328 12.458667l-32 55.466667a9.130667 9.130667 0 0 1-12.458666 3.328L55.893333 295.253333z" fill="#1677ff" p-id="986"></path><path d="M9.130667 553.130667A9.130667 9.130667 0 0 1 0 544v-64c0-5.034667 4.096-9.130667 9.130667-9.130667h237.738666c5.034667 0 9.130667 4.096 9.130667 9.130667v64a9.130667 9.130667 0 0 1-9.130667 9.130667H9.130667z" fill="#1677ff" p-id="987"></path><path d="M800 97.066667a9.130667 9.130667 0 0 0-3.328-12.501334l-55.466667-32a9.130667 9.130667 0 0 0-12.458666 3.370667l-118.869334 205.866667a9.130667 9.130667 0 0 0 3.370667 12.458666l55.424 32a9.130667 9.130667 0 0 0 12.458667-3.328l118.869333-205.866666z" fill="#1677ff" p-id="988"></path><path d="M968.106667 295.253333a9.130667 9.130667 0 0 0 3.328-12.501333l-32-55.424a9.130667 9.130667 0 0 0-12.501334-3.328L721.066667 342.869333a9.130667 9.130667 0 0 0-3.328 12.458667l32 55.466667c2.517333 4.352 8.106667 5.845333 12.458666 3.328L968.106667 295.253333z" fill="#1677ff" p-id="989"></path><path d="M1014.869333 553.130667A9.130667 9.130667 0 0 0 1024 544v-64a9.130667 9.130667 0 0 0-9.130667-9.130667h-237.738666a9.130667 9.130667 0 0 0-9.130667 9.130667v64c0 5.034667 4.096 9.130667 9.130667 9.130667h237.738666z" fill="#1677ff" p-id="990"></path><path d="M470.869333 1014.869333c0 5.034667 4.096 9.130667 9.130667 9.130667h64a9.130667 9.130667 0 0 0 9.130667-9.130667v-237.738666A9.130667 9.130667 0 0 0 544 768h-64a9.130667 9.130667 0 0 0-9.130667 9.130667v237.738666z" fill="#1677ff" p-id="991"></path><path d="M224 926.933333a9.130667 9.130667 0 0 0 3.328 12.501334l55.466667 32c4.352 2.517333 9.941333 1.024 12.458666-3.370667l118.869334-205.866667a9.130667 9.130667 0 0 0-3.370667-12.458666l-55.424-32a9.130667 9.130667 0 0 0-12.458667 3.328L224 926.933333z" fill="#1677ff" p-id="992"></path><path d="M55.893333 728.746667a9.130667 9.130667 0 0 0-3.328 12.501333l32 55.424c2.56 4.352 8.106667 5.845333 12.501334 3.328L302.933333 681.130667a9.130667 9.130667 0 0 0 3.328-12.458667l-32-55.466667a9.130667 9.130667 0 0 0-12.458666-3.328L55.893333 728.746667z" fill="#1677ff" p-id="993"></path><path d="M800 926.933333a9.130667 9.130667 0 0 1-3.328 12.501334l-55.466667 32a9.130667 9.130667 0 0 1-12.458666-3.370667l-118.869334-205.866667a9.130667 9.130667 0 0 1 3.370667-12.458666l55.424-32a9.130667 9.130667 0 0 1 12.458667 3.328l118.869333 205.866666z" fill="#1677ff" p-id="994"></path><path d="M968.106667 728.746667c4.352 2.517333 5.845333 8.106667 3.328 12.501333l-32 55.424a9.130667 9.130667 0 0 1-12.501334 3.328L721.066667 681.130667a9.130667 9.130667 0 0 1-3.328-12.458667l32-55.466667a9.130667 9.130667 0 0 1 12.458666-3.328l205.866667 118.869334z" fill="#1677ff" p-id="995"></path></svg>
-        </span>
-      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" class="spin-animation">
+        <rect width="9" height="9" x="1.5" y="1.5" fill="currentColor" rx="1">
+          <animate id="SVGvBHXGeBR" attributeName="x" begin="0;SVGBBjjneux.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5" />
+          <animate attributeName="y" begin="0;SVGBBjjneux.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5" />
+          <animate attributeName="width" begin="0;SVGBBjjneux.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+          <animate attributeName="height" begin="0;SVGBBjjneux.end+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+        </rect>
+        <rect width="9" height="9" x="13.5" y="1.5" fill="currentColor" rx="1">
+          <animate attributeName="x" begin="SVGvBHXGeBR.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5" />
+          <animate attributeName="y" begin="SVGvBHXGeBR.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5" />
+          <animate attributeName="width" begin="SVGvBHXGeBR.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+          <animate attributeName="height" begin="SVGvBHXGeBR.begin+0.15s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+        </rect>
+        <rect width="9" height="9" x="13.5" y="13.5" fill="currentColor" rx="1">
+          <animate attributeName="x" begin="SVGvBHXGeBR.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5" />
+          <animate attributeName="y" begin="SVGvBHXGeBR.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5" />
+          <animate attributeName="width" begin="SVGvBHXGeBR.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+          <animate attributeName="height" begin="SVGvBHXGeBR.begin+0.3s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+        </rect>
+        <rect width="9" height="9" x="1.5" y="13.5" fill="currentColor" rx="1">
+          <animate id="SVGBBjjneux" attributeName="x" begin="SVGvBHXGeBR.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="1.5;.5;1.5" />
+          <animate attributeName="y" begin="SVGvBHXGeBR.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="13.5;12.5;13.5" />
+          <animate attributeName="width" begin="SVGvBHXGeBR.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+          <animate attributeName="height" begin="SVGvBHXGeBR.begin+0.45s" dur="0.6s" keyTimes="0;.2;1" values="9;11;9" />
+        </rect>
+      </svg>
       <div class="page-loading-warp_message">
         <p class="page-loading_title">正在加载资源</p>
         <p class="page-loading_sub_title">初次加载资源可能需要较多时间，请耐心等候</p>
@@ -41,7 +60,7 @@
 <script>
   window.version = '<%= VUE_APP_VERSION %>';
 </script>
-<script type="text/javascript" src="/resource/js/filerobot-image-editor.min.js"></script>
-<script type="text/javascript" src="/resource/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/js/filerobot-image-editor.min.js"></script>
+<script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 </body>
 </html>

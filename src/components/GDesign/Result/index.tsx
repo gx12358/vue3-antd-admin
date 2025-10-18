@@ -1,9 +1,9 @@
+import Result403 from '@images/error/403.png'
+import Result404 from '@images/error/404.png'
+import ResultCloud from '@images/error/cloud.png'
 import { Col, Row } from 'ant-design-vue'
 import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import Result403 from '@/assets/error_images/403.png'
-import Result404 from '@/assets/error_images/404.png'
-import ResultCloud from '@/assets/error_images/cloud.png'
 
 import './style.less'
 
@@ -69,7 +69,7 @@ export default defineComponent({
     })
 
     const handleBackRouter = () => {
-      layout.proLayoutRef?.tabsComRef()?.close(route.name as string)
+      layout.proLayout?.tabsComRef()?.close(route.name as string)
       router.push({ path: backRouter.value })
       // if (routers.value?.length) { /* empty */ } else {
       //   store.user.resetPermissions()

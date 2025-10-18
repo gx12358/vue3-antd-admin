@@ -1,3 +1,58 @@
+## 3.1.0 (2025-10-18)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **插件升级**
+    - [@gx-design-vue/***] 系列组件升级到最新版本，并重构了相关代码
+    - [vue] 升级至 `^3.5.22`
+    - [vue-router] 升级至 `^4.6.3`
+    - [@antfu/eslint-config] 升级至 `^6.0.0`
+
+### ✨ REFACTOR
+
+- **配置结构优化**
+    - [defaultSettings.ts](/config/default/defaultSettings.ts) 中的配置项进行了重新组织和结构调整
+    - 新增 [theme](/public/js/tinymce/tinymce.d.ts#L1504-L1504) 主题配置项，支持系统主题模式切换
+    - [router](/src/router/index.ts#L22-L25) 配置项整合，包含 [mode](/public/js/tinymce/tinymce.d.ts#L2069-L2069)、`whiteList`、`recordRoute` 和 [auth](/src/components/GlobalLayout/AuthGroup/index.vue#L10-L10) 参数
+    - [token](/src/store/modules/user.ts#L14-L14) 存储配置优化，支持刷新令牌和存储类型配置
+- **构建系统重构**
+    - 移除了 `rollupOptions/optimizer.ts` 文件，优化了代码分割策略
+    - 使用 [rolldown] 替代 [rollup]，提升构建性能
+    - 重构了代码分割的 `groups` 配置
+- **CDN和资源管理**
+    - 移除了多个内部工具文件，简化了 CDN 管理逻辑
+    - 重构了 HTML 模板注入逻辑，支持主题 CSS 注入
+- **Mock系统优化**
+    - 调整了 [vite-plugin-fake-server]插件配置，关闭了日志输出
+    - 优化了 mock 路由路径命名规范，统一使用 kebab-case 命名
+
+### ✨ FEAT
+
+- **主题支持**
+    - 新增系统主题配置支持，可在 `data-theme` 属性中设置 `light` 或 `dark` 模式
+    - 支持系统自动检测用户偏好主题模式
+    - `ProLayout` 升级后，优化了主题色的搭配，重构了系统设置界面
+- **依赖增强**
+    - 新增 [color]依赖包，增强颜色处理能力
+
+### ✨ FIX
+
+- **路径和命名规范**
+    - 统一了路由路径命名规范，全部改为 kebab-case 格式
+    - 修正了多个组件路径和重定向路径
+- **登录**
+  - 
+    - 修正了登录接口参数名从 [userName](/mock/routers/profile/basic.fake.ts#L12-L12) 改为 [username](/src/views/user/login/index.vue#L12-L12)
+    - 统一了接口返回字段，使用 [message](/src/utils/request/checkStatus.ts#L33-L33) 替代 `msg`
+- **HTML模板**
+    - 优化了加载动画 SVG 图标
+    - 调整了资源文件引用路径
+- **组件升级适配**
+    - `ProTable` 使用 `hooks` 下的 `usePorTable` 替代 `ProTable` 原生方法 `useTable` 使其更适合项目使用
+    - 移除 `ProForm` `ProField` 组件，并去除相关组件的页面和代码
+
 ## 3.0.8 (2025-02-27)
 
 ## 升级说明

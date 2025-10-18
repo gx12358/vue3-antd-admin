@@ -1,14 +1,14 @@
-import { PropTypes } from '@/utils'
+import type { CSSProperties } from 'vue'
 
 export const gMaterialViewProps = {
-  type: PropTypes.string,
+  type: String as PropType<string>,
   url: {
-    type: [ String, Array ] as VuePropType<string | string[]>
+    type: [ String, Array ] as PropType<string | string[]>
   },
-  visible: PropTypes.bool,
-  playerStyle: PropTypes.style,
-  config: PropTypes.object,
+  visible: Boolean as PropType<boolean>,
+  playerStyle: Object as PropType<CSSProperties>,
+  config: Object as PropType<any>,
   onChange: {
-    type: Function as VuePropType<(visible: boolean) => void>
+    type: Function as PropType<(visible: boolean) => void>
   },
 }

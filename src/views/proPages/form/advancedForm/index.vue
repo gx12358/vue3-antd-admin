@@ -4,12 +4,13 @@ import { useRequest } from '@gx-admin/hooks/core'
 import { defaultSettings } from '@gx-config'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
-import { convertValueBoolean, handleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
+import { convertValueBoolean, forInObject, scrollTo } from '@gx-design-vue/pro-utils'
+import { useMounted } from '@vueuse/core'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
 import { ref } from 'vue'
-import useProTable from '@/hooks/web/useProTable'
+import { useProTable } from '@/hooks/web'
 import {
   addAdvancedFormTable,
   deleteAdvancedFormTable,
@@ -32,7 +33,8 @@ const { user } = useStore()
 const { token } = useProConfigContext()
 
 const tableRef = ref()
-const isMount = ref(false)
+const teport = ref(false)
+const mounted = useMounted()
 
 const {
   dataSource,
@@ -81,9 +83,7 @@ const formState = reactive<FormState>({
   type2: undefined
 })
 
-const rulesRef = reactive({ ...rules })
-
-const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, rulesRef)
+const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, reactive(rules))
 
 const { loading } = useRequest(getAdvancedForm, {
   params: {
@@ -91,42 +91,18 @@ const { loading } = useRequest(getAdvancedForm, {
   },
   onSuccess: (data) => {
     tableState.showLoading = true
-    for (const i in formState) {
-      switch (i) {
-        case 'owner':
-          formState[i] = data[i] || undefined
-          break
-        case 'approver':
-          formState[i] = data[i] || undefined
-          break
-        case 'type':
-          formState[i] = data[i] || undefined
-          break
-        case 'dateRange':
-          formState[i] = data[i] || []
-          break
-        case 'owner2':
-          formState[i] = data[i] || undefined
-          break
-        case 'approver2':
-          formState[i] = data[i] || undefined
-          break
-        case 'dateRange2':
-          formState[i] = data[i] || null
-          break
-        case 'type2':
-          formState[i] = data[i] || undefined
-          break
-        default:
-          formState[i] = handleEmptyField(data[i], '').value
-          break
-      }
-    }
+    forInObject(formState, (key) => {
+      formState[key] = data[key] ?? formState[key]
+    })
   }
 })
 
-onMounted(() => {
-  isMount.value = true
+onActivated(() => {
+  teport.value = true
+})
+
+onDeactivated(() => {
+  teport.value = false
 })
 
 const handelEdit = (key) => {
@@ -184,7 +160,7 @@ const handelTableAdd = () => {
 const scrollToField = (fieldKey: string) => {
   const labelNode = document.documentElement.querySelector(
     `label[title="${fieldLabels[fieldKey]}"]`
-  ) as HTMLInputElement
+  ) as HTMLElement
   if (labelNode) {
     scrollTo(handleOffsetTop(labelNode).top - 46 - 62, {
       getContainer: () => document.querySelector(viewScrollRoot) as HTMLInputElement,
@@ -204,6 +180,7 @@ const submitForm = () => {
     })
     .catch(({ errorFields }) => {
       state.errorFields = errorFields
+      scrollToField(state.errorFields?.[0]?.name)
     })
 }
 
@@ -425,10 +402,10 @@ const resetForm = () => {
         </GProCard>
       </div>
     </a-form>
-    <Teleport v-if="isMount" to=".ant-layout-has-sider>.ant-layout">
+    <Teleport v-if="mounted && teport" to=".ant-layout-has-sider>.ant-layout">
       <div class="mt-32px h-49px" />
     </Teleport>
-    <Teleport to="body">
+    <Teleport v-if="teport" to="body">
       <div class="footer-bar">
         <div class="flex items-center">
           <span

@@ -18,7 +18,7 @@ export function useUploadData(state: {
   watch(
     () => state.dataList.value,
     (data) => {
-      getDataList(data)
+      if (data) getDataList(data)
     },
     {
       deep: true,
@@ -26,7 +26,7 @@ export function useUploadData(state: {
     }
   )
 
-  async function getDataList(list) {
+  async function getDataList(list: (string | MaterialListItem)[]) {
     if (state.bindValue.value)
       dataValue.value = []
     const newUploadList = list.filter(item => state.bindValue.value
@@ -45,15 +45,17 @@ export function useUploadData(state: {
     for (let i = 0; i < newUploadList.length; i += 1) {
       if (dataValue.value.length > (state.limit.value || 15) - 1)
         return
-      const url = isString(newUploadList[i]) ? newUploadList[i] : (newUploadList[i]?.url || '')
-      const type = newUploadList[i]?.type || checkFileType(url, '1')
+
+      const row = isString(newUploadList[i]) ? {} as MaterialListItem : newUploadList[i] as MaterialListItem
+      const url = isString(newUploadList[i]) ? newUploadList[i] as string : row?.url || ''
+      const type = row?.type || checkFileType(url, '1')
       const coverImg = state.coverDataList?.value?.[i] || ''
-      const otherParams = isString(newUploadList[i]) ? {} : omit(newUploadList[i], 'url')
+      const otherParams = isString(newUploadList[i]) ? {} : omit(row, 'url')
       dataValue.value.push({
         id: url,
         url,
-        previewUrl: isString(newUploadList[i]) ? url : (newUploadList[i]?.previewUrl || url),
-        localPreviewUrl: isString(newUploadList[i]) ? url : (newUploadList[i]?.previewUrl || url),
+        previewUrl: isString(newUploadList[i]) ? url : (row?.previewUrl || url),
+        localPreviewUrl: isString(newUploadList[i]) ? url : (row?.previewUrl || url),
         progress: 100,
         uploadLoading: false,
         allowPlay: true,
@@ -61,7 +63,7 @@ export function useUploadData(state: {
         uploadStatus: 'success',
         ...otherParams,
         type
-      })
+      } as MaterialListItem)
 
       if (!coverImg && type === '3') {
         generateVideoPicture(url).then((coverUrl) => {
@@ -75,13 +77,13 @@ export function useUploadData(state: {
     dataValue.value = cloneDeep(list)
   }
 
-  function addDataValue(params: MaterialListItem) {
-    dataValue.value.push({ ...params })
+  function addDataValue(params: Partial<MaterialListItem>) {
+    dataValue.value.push({ ...params } as MaterialListItem)
   }
 
-  function changeDataValue(uid, params: MaterialListItem) {
+  function changeDataValue(id: MaterialListItem['id'], params: Partial<MaterialListItem>) {
     dataValue.value = dataValue.value.map((item) => {
-      if (item.id === uid) {
+      if (item.id === id) {
         return {
           ...item,
           ...params

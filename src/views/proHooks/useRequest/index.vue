@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useRequest } from '@gx-admin/hooks/core'
-import { GProField } from '@gx-design-vue/pro-field'
 import { ref } from 'vue'
 import { getHokksRequest } from '@/services/dataCenter'
 
@@ -44,32 +43,6 @@ onMounted(() => {
       </a-button>
       <span class="font-500 text-4 text-var-[gx-warning-color]">useRequest-请打开F12查看效果</span>
     </div>
-    <g-spin :spinning="loading">
-      <a-descriptions :column="{ md: 1, xl: 3, xxl: 2 }">
-        <a-descriptions-item label="params">
-          <GProField
-            value-type="code"
-            mode="read"
-            :text="JSON.stringify(params, undefined, 2)"
-          />
-        </a-descriptions-item>
-        <a-descriptions-item v-if="data" label="data">
-          <GProField
-            value-type="code"
-            mode="read"
-            :text="JSON.stringify(data, undefined, 2)"
-          />
-        </a-descriptions-item>
-      </a-descriptions>
-      <a-descriptions :column="1">
-        <a-descriptions-item label="response">
-          <GProField
-            value-type="code"
-            mode="read"
-            :text="JSON.stringify(result, undefined, 2)"
-          />
-        </a-descriptions-item>
-      </a-descriptions>
-    </g-spin>
+    <g-spin :spinning="loading" />
   </g-pro-page-container>
 </template>

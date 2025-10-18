@@ -1,5 +1,7 @@
-import { getArraryList } from '../../utils/util'
+const userIds = Array.from({ length: 4 }).map((_, key) => {
+  return {
+    id: key + 1
+  }
+})
 
-export default getArraryList(4, index => ({
-  id: index + 1
-}))
+export default userIds

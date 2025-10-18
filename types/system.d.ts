@@ -1,16 +1,27 @@
-import type { MenuDataItem, MenuMeta } from '@gx-design-vue/pro-layout'
+import type { BasicLayoutProps, MenuDataItem, MenuMeta } from '@gx-design-vue/pro-layout'
 import type { AppRouteModule as GProAppRouteModule } from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
 import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
 
 declare global {
-  interface LocalResult {
-    value: any;
+  // 存储本地类型
+  interface LocalResult<T = any> {
+    value: T;
     time: string;
     expired: number;
   }
 
+  // 扩展 ProLayout-settings 类型
+  type SystemLayoutConfig = BasicLayoutProps['settings'] & {
+    colorWeak?: boolean;
+    progress?: boolean;
+  }
+
+  // 系统数据字典 Key 类型
   type DictType = 'sys_common_status' | 'sys_common_category' | 'sys_common_author'
 
+  type DictStatus = 'error' | 'processing'
+
+  // 系统数据字典 Record 类型
   interface DictRecord {
     dictType?: DictType
     dictValue: string | number
@@ -31,6 +42,7 @@ declare global {
     status?: '0' | '1'
   }
 
+  // 系统角色信息 类型
   interface RoleInfo {
     createBy?: string;
     createTime?: string;
@@ -55,6 +67,7 @@ declare global {
     admin?: boolean;
   }
 
+  // 系统部门信息 类型
   interface DepartBaseInfo {
     createBy?: string;
     createTime?: string;
@@ -78,12 +91,14 @@ declare global {
     parentName?: string;
   }
 
+  // 系统用户信息 类型
   interface UserInfo {
     roles: string[];
     permissions: string[];
     user: UserDetails;
   }
 
+  // 系统用户详情 类型
   interface UserDetails {
     createBy?: string
     createTime?: string
@@ -132,26 +147,31 @@ declare global {
 
   type UpdateTableRecord<T = undefined> = T extends undefined ? Partial<DefaultTableRecord> : Partial<DefaultTableRecord> & T
 
+  // 扩展 ant-design-vue DataNode 类型
   interface SystemDataNode<Key = number> extends Omit<DataNode, 'children'> {
     id: Key;
     value: Key;
     children?: SystemDataNode[];
   }
 
+  // 扩展 SystemDataNode 类型 为 部门树状类型
   interface DeptTreeData extends Omit<SystemDataNode, 'children'> {
     deptType?: DepartBaseInfo['deptType'];
     children?: DeptTreeData[];
   }
 
+  // 扩展 MenuMeta 类型 为 菜单权限类型
   interface SystemMenuMeta extends MenuMeta {
     permissions?: string | string[]
   }
 
+  // 扩展 AppRouteModule 类型 为 系统路由 类型
   type AppRouteModule = Omit<GProAppRouteModule, 'meta' | 'children'> & {
     meta?: SystemMenuMeta;
     children?: AppRouteModule[]
   }
 
+  // 扩展 AppRouteModule 类型 为 系统菜单 类型
   interface SystemMenuItem extends Omit<MenuDataItem, 'children'> {
     children?: SystemMenuItem[]
   }

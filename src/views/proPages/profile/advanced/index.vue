@@ -157,7 +157,7 @@ provideAdvancedContext({
             <div class="stepDescription">
               <div>
                 周毛毛
-                <dingding-outlined class="text-hex-main ml-8px" />
+                <dingding-outlined class="text-primary ml-8px" />
               </div>
               <div><a>催一下</a></div>
             </div>

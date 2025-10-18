@@ -1,4 +1,4 @@
-import antDesign from './ant-design'
+ import antDesign from './ant-design'
 import gxAdminDesign from './gx-admin-design'
 import setupGlobDirectives from './gx-admin-directives'
 

@@ -34,7 +34,7 @@
             <div class="relative text-12px text-rgba-[0-0-0-0.85] text-center">
               <div class="mt-8px mb-4px">
                 <span>曲丽丽</span>
-                <dingding-outlined class="text-hex-main ml-8px" />
+                <dingding-outlined class="text-primary ml-8px" />
               </div>
               <div>2016-12-12 12:32</div>
             </div>
@@ -49,7 +49,7 @@
               <div class="mt-8px mb-4px">
                 <span>周毛毛</span>
                 <a>
-                  <dingding-outlined class="text-hex-main ml-8px" />
+                  <dingding-outlined class="text-primary ml-8px" />
                   <span>催一下</span>
                 </a>
               </div>

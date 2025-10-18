@@ -46,12 +46,12 @@ export interface XhtInstance {
   /**
    * @description: 请求失败处理
    */
-  requestCatchHook?: (e: Error) => boolean;
+  requestCatchHook?: (e: Error, options: Partial<GAxiosOptions>) => boolean;
 
   /**
    * @description: 请求之前的拦截器
    */
-  requestInterceptors?: (config: GAxiosOptions) => GAxiosOptions;
+  requestInterceptors?: (config: GAxiosOptions) => GAxiosOptions | Promise<GAxiosOptions>;
 
   /**
    * @description: 请求之后的拦截器
@@ -66,19 +66,25 @@ export interface XhtInstance {
   /**
    * @description: 请求之后的拦截器错误处理
    */
-  responseInterceptorsCatch?: (axiosInstance: GAxiosInstance, error: AxiosError) => void;
+  responseInterceptorsCatch?: (error: AxiosError) => Promise<any>;
 }
 
-export interface GAxiosOptions extends Omit<AxiosRequestConfig, 'headers' | 'method'> {
-  headers?: Record<string, any>;
+export interface GAxiosOptions extends Omit<AxiosRequestConfig, 'headers' | 'method' | 'url'> {
+  url: string;
   method: Method;
+  headers?: Record<string, any>;
+  body?: AxiosRequestConfig['data'];
   isMock?: boolean; // 是否是mock
+  originOptions?: Partial<GAxiosOptions>
   retry?: boolean; // 是否是重试接口
-  isReturnNativeResponse?: boolean; // 直接返回response，不作任何处理（包含响应值等基本信息）
+  needAllResponseContent?: boolean; // 直接返回response，不作任何处理（包含响应值等基本信息）
   customize?: boolean; // 直接返回response.data（接口返回值），错误不做统一提示
   carryToken?: boolean; // 是否携带token
   prefix?: string; // 接口自定义前缀
+  proxyUrl?: string;
+  baseUrl?: keyof ViteEnv | false; // api 前缀（个别接口有不同的gateway -- 环境变量控制）
   ignoreCancelToken?: boolean; // 忽略重复请求
+  ignoreErrorMessage?: boolean; // 错误信息不展示
   cancelKey?: string; // 取消请求key（用来需要请求）
   /**
    * @Author      gx12358
@@ -160,12 +166,12 @@ export enum RequestEnum {
   DELETE = 'DELETE',
 }
 
-/**
- * @description:  contentType
- */
-export enum ContentTypeEnum {
-  // json
-  JSON = 'application/json;charset=UTF-8',
-  // form-data qs
-  FORM_URLENCODED = 'application/x-www-form-urlencoded;charset=UTF-8',
+export const ContentType = {
+  json: 'application/json',
+  stream: 'text/event-stream',
+  audio: 'audio/mpeg',
+  form: 'application/x-www-form-urlencoded; charset=UTF-8',
+  download: 'application/octet-stream', // for download
+  downloadZip: 'application/zip', // for download
+  upload: 'multipart/form-data', // for upload
 }

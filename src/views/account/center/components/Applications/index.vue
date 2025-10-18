@@ -25,7 +25,7 @@ import WrapScroll from '../Layout/WrapScroll.vue'
             <div class="text-24px leading-32px">
               {{ item.activeUserObj.numberValue }}
               <span class="ml-[-2px] text-14px relative top-[-2px]">
-                {{ item.activeUserObj.countStr }}
+                {{ item.activeUserObj.unitStr }}
               </span>
             </div>
           </div>

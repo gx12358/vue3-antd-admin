@@ -1,4 +1,3 @@
-import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import { useProLayout } from '@gx-design-vue/pro-layout'
 import { computed } from 'vue'
 
@@ -6,7 +5,7 @@ export default function () {
   const router = useRouter()
   const { layout } = useStore()
 
-  const { tabsRouter } = useProLayout(computed(() => layout.proLayoutRef as ProLayoutExpose))
+  const { tabsRouter } = useProLayout(computed(() => layout.proLayout))
 
   const routerBack = (path: string) => {
     router.push({ path })

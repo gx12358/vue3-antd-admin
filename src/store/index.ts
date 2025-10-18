@@ -6,6 +6,7 @@ import { useStoreLayout } from './modules/layout'
 import { useStoreOss } from './modules/oss'
 import { useStorePermission } from './modules/permission'
 import { useStoreRoutes } from './modules/routes'
+import { useStoreTheme } from './modules/theme'
 import { useStoreUser } from './modules/user'
 
 export {
@@ -15,6 +16,7 @@ export {
   useStoreOss,
   useStorePermission,
   useStoreRoutes,
+  useStoreTheme,
   useStoreUser
 }
 
@@ -23,6 +25,7 @@ export function useStore() {
     oss: useStoreOss(),
     user: useStoreUser(),
     dict: useStoreDict(),
+    theme: useStoreTheme(),
     layout: useStoreLayout(),
     global: useStoreGlobal(),
     routes: useStoreRoutes(),

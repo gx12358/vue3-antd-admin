@@ -8,17 +8,17 @@ export default createMockRoute([
     method: 'post',
     carryToken: false,
     callback: ({ body }) => {
-      const { userName, password } = body
-      const accessToken = accessTokens[userName]
-      if (accounts[userName] !== password || !accessToken) {
+      const { username, password } = body
+      const accessToken = accessTokens[username]
+      if (accounts[username] !== password || !accessToken) {
         return {
           code: 500,
-          msg: '帐户或密码不正确。'
+          message: '帐户或密码不正确。'
         }
       }
       return {
         code: 200,
-        msg: 'success',
+        message: 'success',
         data: {
           token: createrToken(accessToken),
           expiresIn: 720
@@ -33,7 +33,7 @@ export default createMockRoute([
     callback: () => {
       return {
         code: 200,
-        msg: '模拟注册成功'
+        message: '模拟注册成功'
       }
     }
   },

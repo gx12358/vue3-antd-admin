@@ -29,7 +29,7 @@ export const useStoreDict = defineStore('dict', () => {
   }
 
   return {
-    ...state,
+    ...toRefs(state),
     setValue,
     clear
   }

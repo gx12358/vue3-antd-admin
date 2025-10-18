@@ -1,5 +1,4 @@
-import { getMaxFloor } from '@gx-design-vue/pro-utils'
-import { warning } from '@gx-design/utils'
+import { getMaxFloor, isNumber } from '@gx-design-vue/pro-utils'
 import { cloneDeep } from 'lodash-es'
 
 /**
@@ -58,13 +57,11 @@ function dynamicImport(
     const matchKey = matchKeys[0]
     return dynamicViewsModules[matchKey]
   } else if (matchKeys?.length > 1) {
-    warning(
-      true,
+    console.warn(
       '请不要在views文件夹下的同一层次目录中创建具有相同文件名的“.vue”和“.TSX”文件。这将导致动态导入失败'
     )
   } else {
-    warning(
-      true,
+    console.warn(
       '在src/views/下找不到`' + component + '.vue` 或 `' + component + '.tsx`, 请自行创建!'
     )
     return EXCEPTION_COMPONENT
@@ -124,10 +121,9 @@ export const generator = (routerMap: SystemMenuItem[], parent?: AppRouteModule) 
       meta: {
         order: item.order,
         title: item.title || '',
-        menuType: item.menuType,
+        menuType: item.menuType as any,
         tabState: item.tabState,
         icon: item.icon || '',
-        isHome: item.isHome || 0,
         iconFont: item.iconFont || '',
         hidden: item.hidden,
         hideChildren: item.hidden,
@@ -153,11 +149,9 @@ export const generator = (routerMap: SystemMenuItem[], parent?: AppRouteModule) 
   })
 }
 
-function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
+function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuItem {
   const meta: SystemMenuItem = menuItem.meta as SystemMenuItem ?? menuItem
   const {
-    link,
-    linkStatus,
     title = '',
     menuType,
     icon = '',
@@ -165,7 +159,6 @@ function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
     order,
     iconFont = 'iconfont',
     tabState, // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
-    isHome = 0, // 是否为主页（选择后为登录后跳转改地址，不选择默认跳转 /）0:否 1:是
     keepAlive = false,
     hidden = false,
     hideChildren = false,
@@ -173,17 +166,21 @@ function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
     hideChildrenInMenu = false,
     animateDisabled = false
   } = meta
+
+  const hasLink = menuItem.component === 'IframeView'
+  const link = menuItem.link || (hasLink ? menuItem.path : '')
+  const linkStatus = menuItem.linkStatus ?? (hasLink ? 1 : 0)
   return {
     key: menuItem.name,
     name: menuItem.name,
     path: menuItem.path,
     disabled: menuItem.disabled || false,
-    redirect: menuItem.redirect,
-    component: menuItem.component,
+    redirect: menuItem.redirect === 'noRedirect' ? '' : menuItem.redirect,
+    component: [ 'Layout', 'ParentView', 'ContentView' ].includes(menuItem.component as string) ? undefined : menuItem.component,
 
     icon,
     title,
-    order,
+    order: isNumber(order) ? order : sort || 0,
     keepAlive,
     menuType,
     iconFont,
@@ -192,7 +189,6 @@ function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
     hideChildren,
     menuSelectKey,
     hideChildrenInMenu,
-    isHome,
     animateDisabled,
     tabState,
     link,
@@ -207,8 +203,8 @@ function handleMenuParams(menuItem: SystemMenuItem): SystemMenuItem {
  * @description 将后台树形结构菜单数据添加后修改属性（具体修改看后台返回值）
  */
 export function buildMenu(list: SystemMenuItem[]): SystemMenuItem[] {
-  return list.map((muenuItem) => {
-    return { ...handleMenuParams(muenuItem), children: buildMenu(muenuItem.children || []) }
+  return list.map((menuItem, sort) => {
+    return { ...handleMenuParams(menuItem, sort), children: buildMenu(menuItem.children || []) }
   })
 }
 

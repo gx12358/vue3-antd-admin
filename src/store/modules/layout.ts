@@ -1,17 +1,19 @@
 import type { BasicLayoutProps, ProLayoutExpose } from '@gx-design-vue/pro-layout'
-import type { ProLayoutConfig } from '@gx-design-vue/pro-provider'
-import { defaultSettings, theme } from '@gx-config'
+import { defaultSettings as projectConfig } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
-import { handleThemeConfig } from '@gx-design-vue/pro-layout'
-import { themeConfig } from '@gx-design-vue/pro-provider'
+import { defaultSettings } from '@gx-design-vue/pro-layout'
 import { defineStore } from 'pinia'
-import logo from '@/assets/logo.png'
+import { ref, toRefs } from 'vue'
+import { useStoreTheme } from './theme'
 
-const { waterMark } = defaultSettings.system
+const { waterMark, title } = projectConfig.system
 
-export const layoutConfig: Partial<ProLayoutConfig> = {
-  ...themeConfig,
-  primaryColor: theme.colorPrimary
+export const layoutConfig: SystemLayoutConfig = {
+  ...defaultSettings,
+  title,
+  layout: 'side',
+  progress: true,
+  colorWeak: false
 }
 
 /**
@@ -20,26 +22,36 @@ export const layoutConfig: Partial<ProLayoutConfig> = {
  * @lastTime    2022/1/11
  * @description store-layout 全局属性
  */
+/**
+ * @Author      gx12358
+ * @DateTime    2022/1/11
+ * @lastTime    2022/1/11
+ * @description store-layout 全局属性
+ */
 export interface LayoutState {
-  config: BasicLayoutProps
+  config: Omit<BasicLayoutProps, 'settings'> & {
+    settings: SystemLayoutConfig
+  };
 }
 
 export const useStoreLayout = defineStore('layout', () => {
-  const proLayoutRef = ref<ProLayoutExpose>()
+  const storeTheme = useStoreTheme()
+
+  const proLayout = ref<ProLayoutExpose>()
 
   const [ state, setValue ] = useReactiveState<LayoutState>({
     config: {
-      logo,
-      dark: false,
-      footerRender: false,
+      logo: new URL('/img/logo.png', import.meta.url).href,
       waterMark: waterMark.use ? { content: waterMark.content } : false,
-      settings: handleThemeConfig(layoutConfig)
+      cssVar: storeTheme.cssVar,
+      token: storeTheme.token,
+      settings: layoutConfig,
     }
   })
 
   return {
-    ...state,
+    ...toRefs(state),
     setValue,
-    proLayoutRef
+    proLayout
   }
 })

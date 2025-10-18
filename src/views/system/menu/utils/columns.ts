@@ -1,6 +1,6 @@
 export interface SearchConfig { title: string }
 
-export const columns: ProColumnsType<AppRouteModule, SearchConfig> = [
+export const columns: ProColumnsType<SystemMenuItem, SearchConfig> = [
   {
     title: '权限名称',
     ellipsis: true,

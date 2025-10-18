@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { GProCard, GProCheckCard, GProCheckCardGroup } from '@gx-design-vue/pro-card'
-import { GProFormSwitch } from '@gx-design-vue/pro-form'
 
 const checkValue = ref('A')
 const checkValueArray = ref([ 'A' ])
+
+const enable = ref(true)
 </script>
 
 <template>
@@ -16,7 +17,7 @@ const checkValueArray = ref([ 'A' ])
         tooltip="这是提示"
       >
         <template #extra>
-          <GProFormSwitch name="Enable" no-style checked-children="启用" un-checked-children="禁用" />
+          <a-switch v-model:checked="enable" checked-children="启用" un-checked-children="禁用" />
         </template>
         <p>Card content</p>
         <p>Card content</p>

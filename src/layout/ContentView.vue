@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PageTranstion, useProLayoutContext } from '@gx-design-vue/pro-layout'
+import { GPageTransition, useProLayoutContext } from '@gx-design-vue/pro-layout'
 import { computed, ref } from 'vue'
 import IframeView from '../views/Iframe/index.vue'
 
@@ -24,13 +24,13 @@ watch(() => global.keepAlive, () => {
 <template>
   <router-view>
     <template #default="{ Component }">
-      <PageTranstion v-bind="layout.config.settings.animate">
+      <GPageTransition v-bind="layout.config.settings.animate">
         <template v-if="renderRouterView">
           <keep-alive :include="keepLiveRouterNames">
             <component :is="Component" />
           </keep-alive>
         </template>
-      </PageTranstion>
+      </GPageTransition>
     </template>
   </router-view>
   <IframeView v-if="iframeSrc" :frame-src="iframeSrc" />

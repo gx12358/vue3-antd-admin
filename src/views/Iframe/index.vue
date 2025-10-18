@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import type { CSSProperties } from 'vue'
 import { getPrefixCls } from '@gx-design-vue/pro-utils'
+import { useEventListener } from '@vueuse/core'
 import { reactive, ref, watch } from 'vue'
 import usePageContent from '@/hooks/web/usePageContent'
 
@@ -20,7 +22,7 @@ const frameRef = ref<HTMLIFrameElement>()
 const loading = ref(true)
 
 const frameStyle = reactive<CSSProperties>({
-  height: `${window.innerHeight - count.value}px`,
+  height: `${count.value}px`,
   borderRadius: '8px'
 })
 
@@ -35,15 +37,18 @@ watch(
   }
 )
 
-const calcHeight = () => (frameStyle.height = `${window.innerHeight - count.value}px`)
+watch(
+  () => count.value,
+  (_) => {
+    calcHeight()
+  }
+)
 
-onMounted(() => {
-  window.addEventListener('resize', calcHeight)
-})
+function calcHeight() {
+  frameStyle.height = `${window.innerHeight - count.value}px`
+}
 
-onUnmounted(() => {
-  window.removeEventListener('resize', calcHeight)
-})
+useEventListener('resize', calcHeight)
 
 const hideLoading = () => {
   loading.value = false

@@ -8,12 +8,10 @@ import {
   isArray,
   isString
 } from '@gx-design-vue/pro-utils'
-import PlayerAudio from '@gx-design/PlayerAudio'
-import GPlayerVideo from '@gx-design/PlayerVideo'
+import Nodata from '@images/public/nodata.svg'
 import { Empty } from 'ant-design-vue'
 import ResizeObserver from 'ant-design-vue/es/vc-resize-observer'
 import { computed, defineComponent, onDeactivated, onUnmounted, ref, watch } from 'vue'
-import Nodata from '@/assets/public_images/nodata.svg'
 import { gMaterialViewProps } from './props'
 
 import './style.less'
@@ -98,7 +96,7 @@ export default defineComponent({
     watch(
       () => props.visible,
       (visible) => {
-        showViewer.value = visible
+        showViewer.value = visible!
         if (visible) {
           openViewer()
         }
@@ -139,12 +137,8 @@ export default defineComponent({
             }
             class={`${baseClassName}-player`}
           >
-            {!spinning.value && !!getViewUrl.value && props.type === '2' && (
-              <PlayerAudio src={getViewUrl.value as string} />
-            )}
-            {!spinning.value && !!getViewUrl.value && props.type === '3' && (
-              <GPlayerVideo src={getViewUrl.value as string} />
-            )}
+            {!spinning.value && !!getViewUrl.value && props.type === '2' && null}
+            {!spinning.value && !!getViewUrl.value && props.type === '3' && null}
           </div>
         ) : (
           <Empty image={Nodata} description="该格式不支持在线播放" />
@@ -163,7 +157,7 @@ export default defineComponent({
           {props.type && getViewUrl.value && (
             <div class={getClassName.value}>
               {showViewer.value && (
-                <GImagePreview ref={imageViewerRef} previewUrls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
+                <GImagePreview ref={imageViewerRef} urls={getViewUrl.value as string[]} onClose={() => closeViewer()} />
               )}
               <GProModal
                 noStyle

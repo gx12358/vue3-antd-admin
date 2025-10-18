@@ -1,5 +1,3 @@
-// @ts-check
-
 /** @type {import("@commitlint/types").UserConfig} */
 export default {
   ignores: [commit => commit.includes('init')],

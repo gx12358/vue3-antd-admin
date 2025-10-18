@@ -23,7 +23,7 @@ const formState = reactive<UserFormState>({
     : []
 })
 
-const ruleState = reactive<RulesState<UserFormState>>({
+const { resetFields, validateInfos, validate } = useProForm<UserFormState>(formState, reactive({
   nickName: [
     {
       required: true,
@@ -56,9 +56,7 @@ const ruleState = reactive<RulesState<UserFormState>>({
       message: '请输入正确的联系电话！'
     }
   ],
-})
-
-const { resetFields, validateInfos, validate } = useProForm<UserFormState>(formState, ruleState)
+}))
 
 watch(() => user.userInfo, state => Object.assign(formState, { ...state }), { deep: true })
 

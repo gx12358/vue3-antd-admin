@@ -1,3 +1,58 @@
+## 3.1.0 (2025-10-18)
+
+## Upgrade Instructions
+
+### ✨ CHORE
+
+- **Plugin Upgrades**
+    - [@gx-design-vue/***] series components upgraded to the latest version, with related code refactored
+    - [vue] upgraded to `^3.5.22`
+    - [vue-router] upgraded to `^4.6.3`
+    - [@antfu/eslint-config] upgraded to `^6.0.0`
+
+### ✨ REFACTOR
+
+- **Configuration Structure Optimization**
+    - Reorganized and restructured configuration items in [defaultSettings.ts](/config/default/defaultSettings.ts)
+    - Added [theme](/public/js/tinymce/tinymce.d.ts#L1504-L1504) configuration item, supporting system theme mode switching
+    - Integrated [router](/src/router/index.ts#L22-L25) configuration items, including [mode](/public/js/tinymce/tinymce.d.ts#L2069-L2069), `whiteList`, `recordRoute` and [auth](/src/components/GlobalLayout/AuthGroup/index.vue#L10-L10) parameters
+    - Optimized [token](/src/store/modules/user.ts#L14-L14) storage configuration, supporting refresh tokens and storage type configuration
+- **Build System Refactoring**
+    - Removed `rollupOptions/optimizer.ts` file, optimized code splitting strategy
+    - Replaced [rollup] with [rolldown], improving build performance
+    - Refactored code splitting `groups` configuration
+- **CDN and Resource Management**
+    - Removed multiple internal tool files, simplified CDN management logic
+    - Refactored HTML template injection logic, supporting theme CSS injection
+- **Mock System Optimization**
+    - Adjusted [vite-plugin-fake-server] plugin configuration, disabled log output
+    - Optimized mock route path naming conventions, unified to use kebab-case naming
+
+### ✨ FEAT
+
+- **Theme Support**
+    - Added system theme configuration support, can set `light` or `dark` mode in `data-theme` attribute
+    - Supports automatic detection of user preferred theme mode
+    - After `ProLayout` upgrade, optimized theme color matching, refactored system settings interface
+- **Dependency Enhancement**
+    - Added [color] dependency package, enhanced color processing capabilities
+
+### ✨ FIX
+
+- **Path and Naming Conventions**
+    - Unified route path naming conventions, all changed to kebab-case format
+    - Corrected multiple component paths and redirect paths
+- **Login**
+  - 
+    - Corrected login interface parameter name from [userName](/mock/routers/profile/basic.fake.ts#L12-L12) to [username](/src/views/user/login/index.vue#L12-L12)
+    - Unified interface return fields, using [message](/src/utils/request/checkStatus.ts#L33-L33) instead of `msg`
+- **HTML Template**
+    - Optimized loading animation SVG icons
+    - Adjusted resource file reference paths
+- **Component Upgrade Adaptation**
+    - `ProTable` uses `usePorTable` from `hooks` instead of `ProTable` native method `useTable` to make it more suitable for project use
+    - Removed `ProForm` and `ProField` components, and removed related component pages and code
+
 ## 3.0.8 (2025-02-27)
 
 ## Upgrade Notes

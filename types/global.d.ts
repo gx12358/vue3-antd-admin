@@ -6,61 +6,58 @@ import type {
   ProTableBodyCellProps as GProTableBodyCellProps
 } from '@gx-design-vue/pro-table'
 import type { RecordType } from '@gx-design-vue/pro-utils'
-import type { PropType, CSSProperties as VueCSSProperties } from 'vue'
 
 declare global {
   const __APP_INFO__: {
     pkg: {
-      name: string;
-      version: string;
-      dependencies: Recordable<string>;
-      devDependencies: Recordable<string>;
-    };
-    lastBuildTime: string;
+      name: string
+      version: string
+      dependencies: Recordable<string>
+      devDependencies: Recordable<string>
+    }
+    lastBuildTime: string
   }
 
-  type ProAliasToken = DeepPartial<GProAliasToken>
-  type ProColumnType<DataValue = any, SearchParama = RecordType> = GProColumnType<
+  declare type LocalStorage = 'localStorage' | 'sessionStorage' | 'cookie'
+  declare type RulesState<D> = GRulesState<D>
+  declare type ProAliasToken = DeepPartial<GProAliasToken>
+  declare type ProColumnType<DataValue = any, SearchParama = RecordType> = GProColumnType<
     DataValue,
     SearchParama
   >
-  type ProColumnsType<DataValue = any, SearchParama = RecordType> = GProColumnsType<
+  declare type ProColumnsType<DataValue = any, SearchParama = RecordType> = GProColumnsType<
     DataValue,
     SearchParama
   >
-  type ProTableBodyCellProps<T = Record<string, any>> = GProTableBodyCellProps<T>
-  type CustomRenderResult<T = Record<string, any>> = GCustomRenderResult<T>
-  type RulesState<T> = GRulesState<T>
+  declare type ProTableBodyCellProps<T = Record<string, any>> = GProTableBodyCellProps<T>
+  declare type CustomRenderResult<T = Record<string, any>> = GCustomRenderResult<T>
 
-  // vue
-  type VuePropType<T> = PropType<T>
-  type CSSProperties = VueCSSProperties
+  declare type Recordable<T = any> = Record<string, T>
 
-  type Recordable<T = any> = Record<string, T>
-
-  interface Fn<T = any, R = T> {
-    (...arg: T[]): R;
+  declare interface Fn<T = any, R = T> {
+    (...arg: T[]): R
   }
 
-  interface ViteEnv {
-    VITE_PORT: number;
+  declare interface ViteEnv {
+    VITE_IP_ADRESS: string
     VITE_USE_MODE: 'development' | 'production' | 'pro'
     // proxy 配置
-    VITE_PROXY_PREFIX: string;
+    VITE_PROXY_PREFIX: string
     // 全局 mock 开关
     VITE_IS_MOCK: boolean
-    VITE_USE_MOCK: boolean;
-    VITE_NODE_ENV: 'development' | 'production';
-    VITE_USE_PWA: boolean;
-    VITE_BASE_URL: string;
+    VITE_USE_MOCK: boolean
+    VITE_NODE_ENV: 'development' | 'production'
+    VITE_USE_PWA: boolean
+    VITE_BASE_URL: string
+    VITE_UPLOAD_PATH: string
     VITE_APP_ENV: 'dev' | 'pro'
-    VUE_APP_VERSION: string;
-    VITE_PROXY: [ string, string ][];
-    VITE_DROP_CONSOLE: boolean;
-    VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none';
-    VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE: boolean;
-    VITE_LEGACY: boolean;
-    VITE_HOME_PAGE: string; // 主页
+    VUE_APP_VERSION: string
+    VITE_PROXY: [ string, string ][]
+    VITE_DROP_CONSOLE: boolean
+    VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none'
+    VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE: boolean
+    VITE_LEGACY: boolean
+    VITE_HOME_PAGE: string // 主页
     VITE_HOME_PAGE_DOC: string; // 系统文档
     VITE_GITHUB_PAGE: string; // github 地址
     VITE_GITEE_PAGE: string; // gitee 地址
@@ -70,7 +67,7 @@ declare global {
     version: string;
     editorConfig: {
       isFirstRenderCropUpdated?: boolean
-    };
+    }
     FilerobotImageEditor?: any
   }
 }

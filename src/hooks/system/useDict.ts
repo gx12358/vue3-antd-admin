@@ -3,14 +3,10 @@ import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
 import { getDicts } from '@/services/systemCenter'
 
-export function useDict(dictTypes?: DictType | DictType[], wait?: boolean): {
-  dictState: ComputedRef<DictState>
-  getDict: (enforce?: boolean) => Promise<void>
-  findDict: (type: DictType, value: any, key?: keyof DictRecord) => DictRecord | undefined
-} {
+export function useDict(dictTypes?: DictType | DictType[], wait?: boolean) {
   const { dict } = useStore()
 
-  const dictValue = computed<Partial<DictState>>(() => {
+  const dictValue = computed<DictState>(() => {
     if (typeof dictTypes === 'string') {
       return {
         [`${dictTypes}`]: dict[dictTypes]
@@ -23,10 +19,11 @@ export function useDict(dictTypes?: DictType | DictType[], wait?: boolean): {
       })
       return result
     }
-    return {}
+    return {} as any
   })
 
   async function getDict(enforce?: boolean) {
+    if (!dictTypes) return
     if (typeof dictTypes === 'string') {
       if (dict[dictTypes]?.loading) return
       if (enforce || !dict[dictTypes] || !dict[dictTypes]?.data?.length) {
@@ -64,14 +61,25 @@ export function useDict(dictTypes?: DictType | DictType[], wait?: boolean): {
     return dictValue.value[type]?.data.find(item => item[key || 'dictValue'] === value)
   }
 
+  function findDictStatus(type: DictType, value: any, key?: keyof DictRecord, trueCode?: any): DictStatus {
+    const record = findDict(type, value, key)
+    const successCode = [ 'Y', '0', 0 ]
+    const isSuccess = trueCode
+      ? record?.dictValue === trueCode
+      : successCode.includes(record?.dictValue || '')
+    if (isSuccess) return 'processing'
+    return 'error'
+  }
+
   onMountedOrActivated(() => {
     if (wait) return
     getDict()
   })
 
   return {
-    dictState: dictValue as any,
+    dictState: dictValue,
     getDict,
-    findDict
+    findDict,
+    findDictStatus
   }
 }

@@ -5,7 +5,7 @@ import axios from 'axios'
 import { cloneDeep } from 'lodash-es'
 import qs from 'qs'
 import { AxiosCanceler } from './axiosCancel'
-import { ContentTypeEnum, RequestEnum } from './typings'
+import { ContentType, RequestEnum } from './typings'
 
 /**
  * @Author      gx12358
@@ -17,8 +17,8 @@ export class GAxios {
   private axiosInstance: GAxiosInstance
   private readonly options: GAxiosOptions
 
-  constructor(options: GAxiosOptions) {
-    this.options = options
+  constructor(options: Partial<GAxiosOptions>) {
+    this.options = options as GAxiosOptions
     this.axiosInstance = axios.create(options) as GAxiosInstance
     this.setupInterceptors()
   }
@@ -36,7 +36,7 @@ export class GAxios {
 
     const axiosCanceler = new AxiosCanceler(this.options.ignoreCancelToken)
 
-    this.axiosInstance.interceptors.request.use<GAxiosOptions>((config) => {
+    this.axiosInstance.interceptors.request.use<GAxiosOptions>(async (config) => {
       const { cancelCallBackHook } = config
       axiosCanceler.addPending(config)
       if (cancelCallBackHook) {
@@ -47,7 +47,7 @@ export class GAxios {
         })
       }
       if (requestInterceptors && isFunction(requestInterceptors)) {
-        config = requestInterceptors(config)
+        config = await requestInterceptors(config)
       }
       return config
     }, undefined)
@@ -71,9 +71,7 @@ export class GAxios {
     responseInterceptorsCatch && isFunction(responseInterceptorsCatch) && this.axiosInstance.interceptors.response.use(
       undefined,
       (error) => {
-        axiosCanceler.removePending(error.config)
-
-        return responseInterceptorsCatch(this.axiosInstance, error)
+        return responseInterceptorsCatch(error)
       }
     )
   }
@@ -83,21 +81,24 @@ export class GAxios {
     const headers = config.headers || this.options.headers
     const contentType = headers?.['Content-Type'] || headers?.['content-type']
 
-    if (contentType !== ContentTypeEnum.FORM_URLENCODED || !Reflect.has(
-      config,
-      'data'
-    ) || config.method?.toUpperCase() === RequestEnum.GET) {
+    const hasBody = Reflect.has(config, 'data') || Reflect.has(config, 'body')
+
+    if (contentType !== ContentType.form || !hasBody || config.method?.toUpperCase() === RequestEnum.GET) {
       return config
     }
 
+    const body = config.data ?? config.body
+
     return {
       ...config,
-      data: qs.stringify(config.data, { arrayFormat: 'brackets' })
+      data: qs.stringify(body, { arrayFormat: 'brackets' })
     }
   }
 
-  request<T = ResponseResult | boolean>(config?: GAxiosOptions): Promise<T> {
+  request<T, R = undefined>(config?: Partial<GAxiosOptions>): Promise<ResponseResult<T, R>> {
     let conf = cloneDeep(config || {} as GAxiosOptions)
+
+    conf.originOptions = cloneDeep(config)
 
     const opt: GAxiosOptions = Object.assign({}, this.options, conf)
 
@@ -108,29 +109,30 @@ export class GAxios {
 
     conf = this.supportFormData(opt)
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.axiosInstance
         .request<any, GAxiosResponse>(conf)
         .then((res: GAxiosResponse) => {
           if (transformResponseHook && isFunction(transformResponseHook)) {
             try {
-              const ret = transformResponseHook(res, config || {})
-              resolve(ret)
+              const result = transformResponseHook(res, config || {})
+              resolve(result)
             } catch (error) {
               console.error('request-error', error)
-              resolve(false as unknown as Promise<T>)
+              reject(error)
               return
             }
             return
           }
-          resolve(res as unknown as Promise<T>)
+          resolve(res as unknown as Promise<ResponseResult<T, R>>)
         })
         .catch((e: Error | AxiosError) => {
           if (requestCatchHook && isFunction(requestCatchHook)) {
-            resolve(requestCatchHook(e) as any)
+            resolve(requestCatchHook(e, config as any) as any)
             return
           }
-          resolve(false as any)
+          console.error('request-error', e)
+          reject(e as any)
         })
     })
   }

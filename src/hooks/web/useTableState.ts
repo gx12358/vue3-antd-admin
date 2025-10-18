@@ -1,20 +1,56 @@
 import type { BaseTableState } from '@gx-design-vue/pro-table'
-import type { RecordType } from '@gx-design-vue/pro-utils'
-import { deepMerge } from '@gx-design-vue/pro-utils'
+import type { MaybeRef } from 'vue'
+import { deepMerge, isObject } from '@gx-design-vue/pro-utils'
+import { toReactive } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
-import { reactive } from 'vue'
 import { table } from '@/common'
 
 const { defaultProps } = table
 
-export default function <T extends object = RecordType, R extends object = RecordType>(
-  state: BaseTableState<T, R>
+export default function <T extends object = Record<string, any>, R extends object = Record<string, any>>(
+  state: MaybeRef<BaseTableState<T, R>>
 ): BaseTableState<T, R> {
-  const tableState = reactive(deepMerge<BaseTableState<T, R>>(
-    cloneDeep(defaultProps),
-    state as any,
+  const tableState = ref<BaseTableState<T, R>>(deepMerge(
+    cloneDeep(defaultProps as any),
+    getTableState(),
     { omitNil: false, omitEmpty: false }
-  ) as BaseTableState<T, R>)
+  ))
 
-  return tableState as unknown as BaseTableState<T, R>
+  if (state) {
+    if (isRef(state)) {
+      watch(() => state.value, () => {
+        updateTableState()
+      }, { deep: true })
+    } else if (isReactive(state)) {
+      watch(() => state, () => {
+        updateTableState()
+      }, { deep: true })
+    }
+  }
+
+  function getTableState(): BaseTableState<T, R> {
+    if (state) {
+      if (isRef(state) && isObject(state.value)) {
+        return cloneDeep({
+          ...state.value,
+          params: state.value?.params || {} as R
+        })
+      } else if (isObject(state) && !isRef(state)) {
+        return cloneDeep({
+          ...toRaw(state),
+          params: state?.params || {} as R
+        })
+      }
+    }
+    return {}
+  }
+
+  function updateTableState() {
+    tableState.value = deepMerge(tableState.value as any, getTableState(), {
+      omitNil: true,
+      omitEmpty: true
+    })
+  }
+
+  return toReactive(tableState) as unknown as BaseTableState<T, R>
 }

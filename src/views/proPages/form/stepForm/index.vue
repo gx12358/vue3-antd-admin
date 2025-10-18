@@ -28,7 +28,7 @@ const formState = reactive<FormState>({
   password: ''
 })
 
-const rulesRef = reactive<Partial<RulesState<FormState>>>({
+const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, {
   payAccount: [ { required: true, message: '请选择付款账户' } ],
   receiverMode: [ { required: true, message: '请选择付款账户' } ],
   receiverAccount: [
@@ -55,8 +55,6 @@ const rulesRef = reactive<Partial<RulesState<FormState>>>({
     }
   ]
 })
-
-const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, rulesRef)
 
 const { loading } = useRequest<FormState, { userId?: number; }>(getStepForm, {
   params: {
@@ -90,153 +88,161 @@ const onFinish = () => {
 
 <template>
   <g-pro-page-container :loading="loading">
-    <div class="steps-form">
-      <div class="steps-form-steps-container">
-        <a-steps v-model:current="current">
-          <a-step v-for="item in steps" :key="item" :title="item" />
-        </a-steps>
-      </div>
-      <div class="steps-form-container lt-sm:!min-w-full">
-        <div v-show="current === 0" class="steps-form-step">
-          <a-form layout="vertical">
-            <a-form-item label="付款账户" v-bind="validateInfos.payAccount">
-              <a-select
-                v-model:value="formState.payAccount"
-                style="width: 328px"
-                :options="[
-                  {
-                    value: 'ant-design@alipay.com',
-                    label: 'ant-design@alipay.com',
-                  },
-                ]"
-                placeholder="请选择付款账户"
-                allow-clear
-              />
-            </a-form-item>
-            <div class="mb-24px font-blod">
-              收款账户
+    <div>
+      <a-row :gutter="{ xs: 8, sm: 16, md: 24 }">
+        <a-col :span="24">
+          <div class="steps-form-steps-container">
+            <a-steps v-model:current="current">
+              <a-step v-for="item in steps" :key="item" :title="item" />
+            </a-steps>
+          </div>
+        </a-col>
+      </a-row>
+      <a-row :gutter="{ xs: 8, sm: 16, md: 24 }">
+        <a-col :span="24">
+          <div class="steps-form-container lt-sm:!min-w-full">
+            <div v-show="current === 0" class="steps-form-step">
+              <a-form layout="vertical">
+                <a-form-item label="付款账户" v-bind="validateInfos.payAccount">
+                  <a-select
+                    v-model:value="formState.payAccount"
+                    style="width: 328px"
+                    :options="[
+                      {
+                        value: 'ant-design@alipay.com',
+                        label: 'ant-design@alipay.com',
+                      },
+                    ]"
+                    placeholder="请选择付款账户"
+                    allow-clear
+                  />
+                </a-form-item>
+                <div class="mb-24px font-blod">
+                  收款账户
+                </div>
+                <div class="flex items-center gap-8px">
+                  <a-form-item v-bind="validateInfos.receiverMode">
+                    <a-select
+                      v-model:value="formState.receiverMode"
+                      style="width: 100px"
+                      :options="[
+                        {
+                          value: 'alipay',
+                          label: '支付宝',
+                        },
+                        {
+                          value: 'bank',
+                          label: '银行账户',
+                        },
+                      ]"
+                      placeholder="请选择付款账户"
+                      allow-clear
+                    />
+                  </a-form-item>
+                  <a-form-item v-bind="validateInfos.receiverAccount">
+                    <a-input
+                      v-model:value="formState.receiverAccount"
+                      placeholder="请输入收款人账户"
+                      allow-clear
+                    />
+                  </a-form-item>
+                </div>
+                <a-form-item label="收款人姓名" v-bind="validateInfos.receiverName">
+                  <a-input
+                    v-model:value="formState.receiverName"
+                    style="width: 328px"
+                    placeholder="请输入收款人姓名"
+                    allow-clear
+                  />
+                </a-form-item>
+                <a-form-item label="转账金额" v-bind="validateInfos.amount">
+                  <a-input-number
+                    v-model:value="formState.amount"
+                    style="width: 328px"
+                    placeholder="请输入金额"
+                  />
+                </a-form-item>
+              </a-form>
             </div>
-            <div class="flex items-center gap-8px">
-              <a-form-item v-bind="validateInfos.receiverMode">
-                <a-select
-                  v-model:value="formState.receiverMode"
-                  style="width: 100px"
-                  :options="[
-                    {
-                      value: 'alipay',
-                      label: '支付宝',
-                    },
-                    {
-                      value: 'bank',
-                      label: '银行账户',
-                    },
-                  ]"
-                  placeholder="请选择付款账户"
-                  allow-clear
+            <div v-show="current === 1" class="steps-form-step">
+              <div class="result">
+                <a-alert
+                  closable
+                  show-icon
+                  message="确认转账后，资金将直接打入对方账户，无法退回。"
+                  style="margin-bottom: 24px"
                 />
-              </a-form-item>
-              <a-form-item v-bind="validateInfos.receiverAccount">
-                <a-input
-                  v-model:value="formState.receiverAccount"
-                  placeholder="请输入收款人账户"
-                  allow-clear
-                />
-              </a-form-item>
+                <a-descriptions :column="1" bordered>
+                  <a-descriptions-item label="付款账户">
+                    {{ formState.payAccount || '-' }}
+                  </a-descriptions-item>
+                  <a-descriptions-item label="收款账户">
+                    {{ formState.receiverAccount || '-' }}
+                  </a-descriptions-item>
+                  <a-descriptions-item label="收款人姓名">
+                    {{ formState.receiverName || '-' }}
+                  </a-descriptions-item>
+                  <a-descriptions-item label="转账金额">
+                    <a-statistic :value="formState.amount" :precision="2">
+                      <template #suffix>
+                        <span class="!text-14px">元</span>
+                      </template>
+                    </a-statistic>
+                  </a-descriptions-item>
+                </a-descriptions>
+                <a-divider style="margin: 24px 0" />
+                <a-form layout="vertical">
+                  <a-form-item label="支付密码" v-bind="validateInfos.password">
+                    <a-input-password
+                      v-model:value="formState.password"
+                      style="width: 328px"
+                      placeholder="请输入支付密码"
+                    />
+                  </a-form-item>
+                </a-form>
+              </div>
             </div>
-            <a-form-item label="收款人姓名" v-bind="validateInfos.receiverName">
-              <a-input
-                v-model:value="formState.receiverName"
-                style="width: 328px"
-                placeholder="请输入收款人姓名"
-                allow-clear
-              />
-            </a-form-item>
-            <a-form-item label="转账金额" v-bind="validateInfos.amount">
-              <a-input-number
-                v-model:value="formState.amount"
-                style="width: 328px"
-                placeholder="请输入金额"
-              />
-            </a-form-item>
-          </a-form>
-        </div>
-        <div v-show="current === 1" class="steps-form-step">
-          <div class="result">
-            <a-alert
-              closable
-              show-icon
-              message="确认转账后，资金将直接打入对方账户，无法退回。"
-              style="margin-bottom: 24px"
-            />
-            <a-descriptions :column="1" bordered>
-              <a-descriptions-item label="付款账户">
-                {{ formState.payAccount || '-' }}
-              </a-descriptions-item>
-              <a-descriptions-item label="收款账户">
-                {{ formState.receiverAccount || '-' }}
-              </a-descriptions-item>
-              <a-descriptions-item label="收款人姓名">
-                {{ formState.receiverName || '-' }}
-              </a-descriptions-item>
-              <a-descriptions-item label="转账金额">
-                <a-statistic :value="formState.amount" :precision="2">
-                  <template #suffix>
-                    <span class="!text-14px">元</span>
+            <div v-show="current === 2" class="steps-form-step">
+              <div class="result">
+                <a-result status="success" title="操作成功" sub-title="预计两小时内到账">
+                  <template #extra>
+                    <a-button type="primary" @click="onFinish">
+                      再转一笔
+                    </a-button>
+                    <a-button>查看账单</a-button>
                   </template>
-                </a-statistic>
-              </a-descriptions-item>
-            </a-descriptions>
-            <a-divider style="margin: 24px 0" />
-            <a-form layout="vertical">
-              <a-form-item label="支付密码" v-bind="validateInfos.password">
-                <a-input-password
-                  v-model:value="formState.password"
-                  style="width: 328px"
-                  placeholder="请输入支付密码"
-                />
-              </a-form-item>
-            </a-form>
+                  <a-descriptions :column="1">
+                    <a-descriptions-item label="付款账户">
+                      {{ formState.payAccount || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item label="收款账户">
+                      {{ formState.receiverAccount || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item label="收款人姓名">
+                      {{ formState.receiverName || '-' }}
+                    </a-descriptions-item>
+                    <a-descriptions-item label="转账金额">
+                      <a-statistic :value="formState.amount" :precision="2">
+                        <template #suffix>
+                          <span class="!text-14px">元</span>
+                        </template>
+                      </a-statistic>
+                    </a-descriptions-item>
+                  </a-descriptions>
+                </a-result>
+              </div>
+            </div>
+            <div class="flex gap-8px">
+              <a-button v-if="current > 0 && current < 2" @click="current -= 1">
+                上一步
+              </a-button>
+              <a-button v-if="current < 2" type="primary" @click="handleNext">
+                下一步
+              </a-button>
+            </div>
           </div>
-        </div>
-        <div v-show="current === 2" class="steps-form-step">
-          <div class="result">
-            <a-result status="success" title="操作成功" sub-title="预计两小时内到账">
-              <template #extra>
-                <a-button type="primary" @click="onFinish">
-                  再转一笔
-                </a-button>
-                <a-button>查看账单</a-button>
-              </template>
-              <a-descriptions :column="1">
-                <a-descriptions-item label="付款账户">
-                  {{ formState.payAccount || '-' }}
-                </a-descriptions-item>
-                <a-descriptions-item label="收款账户">
-                  {{ formState.receiverAccount || '-' }}
-                </a-descriptions-item>
-                <a-descriptions-item label="收款人姓名">
-                  {{ formState.receiverName || '-' }}
-                </a-descriptions-item>
-                <a-descriptions-item label="转账金额">
-                  <a-statistic :value="formState.amount" :precision="2">
-                    <template #suffix>
-                      <span class="!text-14px">元</span>
-                    </template>
-                  </a-statistic>
-                </a-descriptions-item>
-              </a-descriptions>
-            </a-result>
-          </div>
-        </div>
-        <div class="flex gap-8px">
-          <a-button v-if="current > 0 && current < 2" @click="current -= 1">
-            上一步
-          </a-button>
-          <a-button v-if="current < 2" type="primary" @click="handleNext">
-            下一步
-          </a-button>
-        </div>
-      </div>
+        </a-col>
+      </a-row>
       <a-divider style="margin: 40px 0 24px" />
       <div class="desc">
         <h3>说明</h3>

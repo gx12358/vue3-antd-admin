@@ -11,6 +11,10 @@ const settingConfig: SettingConfig = {
     titleSeparator: ' - ',
     // 标题是否反转 如果为false:"page - title"，如果为ture:"title - page"
     titleReverse: false,
+    theme: {
+      value: 'system',
+      storageKey: 'gx-color-theme'
+    },
     waterMark: {
       // 是否开启水印
       use: true,
@@ -24,19 +28,21 @@ const settingConfig: SettingConfig = {
     // 缓存路由的最大数量
     keepAliveMaxNum: 99,
     // 路由模式，可选值为 browser 或 hash
-    routerMode: 'hash',
-    // 不经过token校验的路由
-    routesWhiteList: [ '/user/login', '/user/register', '/exception/404', '/exception/403' ],
-    // token失效回退到登录页时是否记录本次的路由
-    recordRoute: true,
+    router: {
+      mode: 'browser',
+      // 不经过token校验的路由
+      whiteList: [ '/user/login', '/user/register', '/exception/404', '/exception/403' ],
+      // token失效回退到登录页时是否记录本次的路由
+      recordRoute: true,
+      // front（前端导出路由）和 all（后端导出路由）两种方式
+      auth: 'all',
+    },
     // 是否开启登录拦截
     loginInterception: true,
     // 是否开启登录RSA加密
     loginRSA: false,
-    // front（前端导出路由）和 all（后端导出路由）两种方式
-    authentication: 'all',
   },
-  service: {
+  server: {
     // 开发环境端口号
     port: 9260,
   },
@@ -70,10 +76,11 @@ const settingConfig: SettingConfig = {
   token: {
     // token名称
     name: 'Authorization',
-    // token在localStorage、sessionStorage、cookie存储的key的名称
-    storageName: 'accessToken',
-    // token存储位置localStorage sessionStorage cookie
-    storage: 'localStorage',
+    storage: {
+      name: 'console_token',
+      refreshName: 'refresh_token',
+      type: 'localStorage'
+    }
   },
 }
 

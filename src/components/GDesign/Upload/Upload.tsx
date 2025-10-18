@@ -1,10 +1,9 @@
-import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { CSSProperties, ExtractPropTypes, SlotsType } from 'vue'
+import type { OperationRenderProps } from './props'
 import type { MaterialListItem } from './typings'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import {
-  checkFileType,
-  dataURLtoBlob,
+  checkFileType, dataURLtoBlob,
   dataURLtoFile,
   getBase64,
   getBlobUrl,
@@ -12,13 +11,15 @@ import {
   getMediaInfos,
   getPrefixCls,
   getSlot,
+  getSlotsChildren,
+  getSlotsProps,
   getSlotVNode,
   getVideoCoverPicture,
   isBoolean,
-  isObject
+  isObject, merge
 } from '@gx-design-vue/pro-utils'
 import { message, Upload } from 'ant-design-vue'
-import { cloneDeep, pick } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import {
   computed,
   defineComponent,
@@ -26,7 +27,7 @@ import {
   onUnmounted,
   reactive,
   ref,
-  toRefs,
+  toRef,
   unref
 } from 'vue'
 import { global } from '@/common'
@@ -34,10 +35,9 @@ import { download } from '@/services/common'
 import { createFileName } from '@/utils/uploadFile'
 import MaterialView from '../MaterialView'
 import UploadCard from './components/UploadCard'
+import { provideUploadContext } from './context'
 import { useUploadData } from './hooks/useUploadData'
-import { proUploadProps } from './props'
-
-import { provideUploadContext } from './UploadContext'
+import { cardSize, proUploadProps } from './props'
 
 import './style.less'
 
@@ -47,14 +47,14 @@ const GUpload = defineComponent({
   props: proUploadProps,
   inheritAttrs: false,
   slots: Object as SlotsType<{
-    default: any;
-    fallback: any;
-    wordExtra: any;
-    placeholder: any;
-    customOperationRender: any;
-    triggerRender: GUploadProps['triggerRender'];
+    default(trigger: any): void;
+    fallback(): void;
+    wordExtra(): void;
+    placeholder(): void;
+    customOperationRender(props: OperationRenderProps): void;
+    triggerRender(): void;
   }>,
-  emits: [ 'request', 'deleteBefore', 'errorRequest', 'change', 'changeDownloadLoading', 'openFileDialog' ],
+  emits: [ 'deleteBefore', 'errorRequest', 'change', 'changeDownloadLoading', 'openFileDialog' ],
   setup(props, { emit, attrs, slots }) {
     const baseClassName = getPrefixCls({
       suffixCls: 'upload'
@@ -64,7 +64,7 @@ const GUpload = defineComponent({
     const imageEditor = ref()
 
     const previewConfig = reactive({
-      type: '',
+      type: '' as MaterialListItem['type'],
       url: '',
       visible: false
     })
@@ -90,7 +90,12 @@ const GUpload = defineComponent({
       changeFileDataValue,
       deleteDataValue,
       deleteFileDataValue
-    } = useUploadData(pick(toRefs(props), [ 'limit', 'dataList', 'bindValue', 'coverDataList' ]))
+    } = useUploadData({
+      limit: toRef(props, 'limit'),
+      dataList: toRef(props, 'dataList'),
+      bindValue: toRef(props, 'bindValue'),
+      coverDataList: toRef(props, 'coverDataList')
+    })
 
     const showUpload = computed(() => props.disabled ? false : props.listType === 'card'
       ? unref(getDataValueRef).length < props.limit
@@ -233,34 +238,35 @@ const GUpload = defineComponent({
       }
     }
 
-    const deleteFile = async (uuid) => {
-      const fileUrl = unref(getDataValueRef).find(item => item.id === uuid)
-      if (props.deleteBefore)
-        await props.deleteBefore(fileUrl)
-      deleteDataValue(uuid)
-      emit(
-        'change',
-        cloneDeep(unref(getUrlValueRef)),
-        cloneDeep(unref(getDataValueRef))
-      )
+    const onDelete = async (record: MaterialListItem) => {
+      if (record) {
+        if (props.onDeleteBefore)
+          await props.onDeleteBefore(record)
+        deleteDataValue(record.id)
+        emit(
+          'change',
+          cloneDeep(unref(getUrlValueRef)),
+          cloneDeep(unref(getDataValueRef))
+        )
+      }
     }
 
-    const requestUpload = async (file, uid) => {
+    const requestUpload = async (file, row: MaterialListItem) => {
       const base64: string | ArrayBuffer | null = await getBase64(file)
       if (props.request) {
         const response = await props.request(
           file,
-          uid,
-          unref(getDataValueRef).find(item => item.id === uid)
+          row.id,
+          unref(getDataValueRef).find(item => item.id === row.id)
         )
         if (response && response.code === 0) {
-          handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, uid)
+          handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, row.id)
         } else {
           emit('errorRequest', response)
           if (props.errorClean) {
-            deleteFile(uid)
+            onDelete(row)
           } else {
-            changeDataValue(uid, {
+            changeDataValue(row.id, {
               loadingText: '',
               uploadStatus: 'exception',
               uploadLoading: false
@@ -272,7 +278,7 @@ const GUpload = defineComponent({
           url: getBlobUrl(dataURLtoBlob(base64)),
           previewUrl: getBlobUrl(dataURLtoBlob(base64)),
           localPreviewUrl: getBlobUrl(dataURLtoBlob(base64))
-        }, uid)
+        }, row.id)
       }
     }
 
@@ -330,7 +336,7 @@ const GUpload = defineComponent({
           if (play && type === '3') {
             fileCoverImg = await getVideoCoverPicture({
               url: file,
-              vidoeAllowPlay: true
+              videoAllowPlay: true
             })
           }
           fileDuration = play ? mediaAttributes.duration || 0 : 0
@@ -398,7 +404,7 @@ const GUpload = defineComponent({
           url: getBlobUrl(dataURLtoBlob(base64))
         })
       } else {
-        requestUpload(file, id)
+        requestUpload(file, { id } as MaterialListItem)
       }
     }
 
@@ -406,9 +412,9 @@ const GUpload = defineComponent({
       uploadList: getDataValueRef
     })
 
-    const view = (type, url) => {
-      previewConfig.type = String(type)
-      previewConfig.url = url
+    const onView = (row: MaterialListItem) => {
+      previewConfig.type = row.type
+      previewConfig.url = row.url || ''
       previewConfig.visible = true
     }
 
@@ -432,19 +438,18 @@ const GUpload = defineComponent({
       }
     }
 
-    const watermark = async (uuid, type) => {
-      const fileUrl = unref(getDataValueRef).find(item => item.id === uuid)?.url || ''
-      if (props.waterChange && fileUrl) {
-        changeDataValue(uuid, {
+    const onWatermark = async (row: MaterialListItem) => {
+      if (props.onWaterChange && row) {
+        changeDataValue(row.id, {
           progress: 0,
           uploadStatus: 'active',
           uploadLoading: true,
           spinning: true,
           loadingText: '正在添加水印...'
         })
-        const response = await props.waterChange(fileUrl, type)
+        const response = await props.onWaterChange(row)
         if (response && response.code === 0) {
-          changeDataValue(uuid, {
+          changeDataValue(row.id, {
             progress: 100,
             uploadStatus: 'success',
             uploadLoading: false,
@@ -459,7 +464,7 @@ const GUpload = defineComponent({
           )
         } else {
           emit('errorRequest', response)
-          changeDataValue(uuid, {
+          changeDataValue(row.id, {
             progress: 100,
             uploadStatus: 'success',
             uploadLoading: false,
@@ -489,16 +494,18 @@ const GUpload = defineComponent({
     const renderUploadButton = () => {
       if (!showUpload.value)
         return null
-      const triggerIconRender = getSlot<() => WithFalse<CustomRender>>(
+
+      const children = getSlotsChildren(slots, 'default')
+      const triggerRender = getSlotVNode({
         slots,
         props,
-        'triggerRender'
-      )
+        key: 'triggerRender'
+      })
 
-      const uploadButtonRender = slots.default?.() ? props.defaultUploadRender
-        ? uploadRender(slots.default?.())
+      const uploadButtonRender = children?.length ? props.defaultUploadRender
+        ? uploadRender(children)
         : slots.default?.(
-          uploadRender(triggerIconRender ? triggerIconRender?.() : <PlusOutlined />)
+          uploadRender(triggerRender || <PlusOutlined />)
         ) : null
 
       return (
@@ -512,9 +519,9 @@ const GUpload = defineComponent({
                 [`${baseClassName}-button-circle`]: props.shape === 'circle'
               }}
               onClick={() => props.onOpenFileDialog?.()}
-              style={props.triggerStyle}
+              style={merge(cardSize, props.triggerStyle)}
             >
-              {triggerIconRender ? triggerIconRender?.() : <PlusOutlined />}
+              {triggerRender || <PlusOutlined />}
             </div>
           )
         )
@@ -522,22 +529,16 @@ const GUpload = defineComponent({
     }
 
     return () => {
-      const wordExtraRender = getSlotVNode(slots, props, 'wordExtra')
-      const errorExtraRender = getSlotVNode<WithFalse<CustomRender>>(
+      const slotsProps = getSlotsProps({
         slots,
         props,
-        'fallback'
-      )
-      const placeholderExtra = getSlotVNode<WithFalse<CustomRender>>(
+        keys: [ 'wordExtra', 'fallback', 'placeholder' ]
+      })
+      const customOperationRender = getSlot({
         slots,
         props,
-        'placeholder'
-      )
-      const customOperationRender = getSlot<any>(
-        slots,
-        props,
-        'customOperationRender'
-      )
+        key: 'customOperationRender'
+      })
       return (
         <>
           <div style={{ ...(attrs.style as CSSProperties) }} class={getClassName.value}>
@@ -552,21 +553,21 @@ const GUpload = defineComponent({
               {props.listType === 'card' && (
                 <UploadCard
                   {...props}
-                  placeholder={placeholderExtra}
-                  fallback={errorExtraRender}
-                  baseClassName={baseClassName}
+                  placeholder={slotsProps.placeholder}
+                  fallback={slotsProps.fallback}
+                  prefixClass={baseClassName}
                   customOperationRender={customOperationRender}
                   root={uploadCard.value}
-                  onView={(type, url) => view(type, url)}
-                  onDelete={uuid => deleteFile(uuid)}
+                  onView={row => onView(row)}
+                  onDelete={uuid => onDelete(uuid)}
                   onDownload={downLoad}
-                  onWaterMark={(uuid, type) => watermark(uuid, type)}
+                  onWaterMark={row => onWatermark(row)}
                   onMediaCropper={mediaCropper}
                 />
               )}
               {renderUploadButton()}
             </div>
-            {wordExtraRender && <div class={`${baseClassName}-word-extra`}>{wordExtraRender}</div>}
+            {slotsProps.wordExtra && <div class={`${baseClassName}-word-extra`}>{slotsProps.wordExtra}</div>}
           </div>
           <MaterialView
             {...previewConfig}

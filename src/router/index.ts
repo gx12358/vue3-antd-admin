@@ -2,12 +2,12 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { defaultSettings } from '@gx-config'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
-import { constantRoutes } from './routes'
+import { basicRoutes } from './routes'
 
-const { routerMode } = defaultSettings.system
+const { router: routerConfig } = defaultSettings.system
 
 function handleRouterMode() {
-  switch (routerMode) {
+  switch (routerConfig.mode) {
     case 'hash':
       return createWebHashHistory()
       break
@@ -22,7 +22,7 @@ function handleRouterMode() {
 
 export const router = createRouter({
   history: handleRouterMode(),
-  routes: constantRoutes as unknown as RouteRecordRaw[]
+  routes: basicRoutes(routerConfig.auth) as unknown as RouteRecordRaw[]
 })
 
 // 配置路由器

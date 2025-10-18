@@ -3,7 +3,7 @@ import type { ProTableBodyCellProps } from '@gx-design-vue/pro-table'
 import type { SearchConfig } from './utils/columns'
 import { treeData } from '@gx-design-vue/pro-utils'
 import useProTable from '@/hooks/web/useProTable'
-import { getMenuList } from '@/services/systemCenter'
+import { getRouters } from '@/services/systemCenter'
 import { columns } from './utils/columns'
 
 const state = reactive({
@@ -19,10 +19,11 @@ const tableRef = ref()
 const { tableState } = useProTable<SystemMenuItem, SearchConfig>(tableRef, {
   state: {
     columns,
-    rowKey: 'menuId'
+    rowKey: 'menuId',
+    rowSelection: undefined,
   },
   request: async () => {
-    const response = await getMenuList<SystemMenuItem[], { total: number }>()
+    const response = await getRouters<SystemMenuItem[], { total: number }>()
     
     return {
       success: !!response,

@@ -1,27 +1,36 @@
-import type { GAxiosOptions, XhtInstance } from './typings'
+import type { AxiosError } from 'axios'
+import type { GAxiosOptions, GAxiosResponse } from './typings'
 import { defaultSettings, network } from '@gx-config'
 import { isBoolean } from '@gx-design-vue/pro-utils'
-import { message } from 'ant-design-vue'
 import { useStoreUser } from '@/store'
-import { isDev, typeViteEnv } from '@/utils/env'
 import { tansParams } from '@/utils/util'
 import { checkURL } from '@/utils/validate'
 import { handleCode } from './checkStatus'
-import { RequestEnum } from './typings'
+import { ContentType, RequestEnum } from './typings'
+import { getRequestUrl } from './utils'
 import { GAxios } from './XHR'
 
 const { token, mock } = defaultSettings
 
-const { requestTimeout, successCode } = network
+const { requestTimeout: TIME_OUT, successCode } = network
 
-const xhtInstance: XhtInstance = {
+const baseRequest = new GAxios({
+  method: 'get',
+  timeout: TIME_OUT,
+  headers: {
+    'Content-Type': ContentType.json,
+  },
+  // 忽略重复请求
+  ignoreCancelToken: true,
+  // 是否携带token
+  carryToken: true,
   /**
    * @description: 处理响应数据。如果数据不是预期格式，可直接抛出错误
    */
   transformResponseHook: (res, options) => {
-    const { customize, isReturnNativeResponse } = options
+    const { customize, needAllResponseContent } = options
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
-    if (isReturnNativeResponse) {
+    if (needAllResponseContent) {
       return res
     }
     // 不进行任何处理，直接返回
@@ -29,28 +38,40 @@ const xhtInstance: XhtInstance = {
     if (customize) {
       return res.data
     }
-    // 错误的时候返回
 
-    const { data }: { data: ResponseResult } = res
-    if (!data) {
-      throw new Error('请求出错，请稍候重试')
+    try {
+      if (res.status === 200) {
+        const { data }: { data: ResponseResult } = res
+        if (!data) {
+          const message = new Error('请求出错，请稍候重试')
+          return Promise.reject(message)
+        }
+        //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
+        const { code, message = '' } = data
+
+        const codeVerificationArray = successCode
+
+        // 这里逻辑可以根据项目进行修改
+        const hasSuccess = codeVerificationArray.includes(code)
+        if (hasSuccess) {
+          return data
+        }
+
+        // 在此处根据自己项目的实际情况对不同的code执行不同的操作
+        // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
+        return handleCode({
+          status: code,
+          response: res,
+          error: new Error(message) as AxiosError,
+          instance: baseRequest,
+        })
+      }
+
+      return res
+    } catch (e) {
+      console.error('transformResponseHook', e)
+      return Promise.reject(e)
     }
-    //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, message = '' } = data
-
-    const codeVerificationArray = successCode
-
-    // 这里逻辑可以根据项目进行修改
-    const hasSuccess = codeVerificationArray.includes(code)
-    if (hasSuccess) {
-      return data
-    }
-
-    // 在此处根据自己项目的实际情况对不同的code执行不同的操作
-    // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
-    handleCode(code, message)
-
-    return Promise.resolve(false)
   },
 
   // 请求之前处理config
@@ -64,10 +85,7 @@ const xhtInstance: XhtInstance = {
     }
 
     if (!checkURL(config.url)) {
-      const isMock = isBoolean(typeViteEnv('VITE_IS_MOCK')) ? typeViteEnv('VITE_IS_MOCK') : config.isMock
-      const prefix = isDev() && !isMock ? typeViteEnv('VITE_PROXY_PREFIX') : ''
-      const baseUrl = isMock ? mock.prefix : typeViteEnv('VITE_BASE_URL')
-      config.url = `${prefix}${baseUrl}${config.url}`
+      config.url = getRequestUrl(config.url || '', { prefix: mock.prefix, isMock: config.isMock! })
     }
 
     return config
@@ -80,12 +98,12 @@ const xhtInstance: XhtInstance = {
     const { name } = token
     const user = useStoreUser()
     const carryToken = isBoolean(config.carryToken) ? config.carryToken : true
-    if (user.accessToken && carryToken) {
+    if (user.token && carryToken) {
       if (config.headers) {
-        config.headers[name] = user.accessToken
+        config.headers[name] = user.token
       } else {
         config.headers = {
-          [name]: user.accessToken
+          [name]: user.token
         }
       }
     }
@@ -102,51 +120,43 @@ const xhtInstance: XhtInstance = {
   /**
    * @description: 响应错误处理
    */
-  responseInterceptorsCatch: (_, error) => {
-    const { response } = error
-    let errorMessage = error.message || ''
-    if (error.response && error.response.data) {
-      const { status = 404 } = response || {}
-      handleCode(status, errorMessage)
-      return Promise.resolve(false)
-    } else {
-      if (errorMessage === 'Network Error') {
-        errorMessage = '后端接口连接异常'
-      }
-      if (errorMessage.includes('timeout')) {
-        errorMessage = '后端接口请求超时'
-      }
-      if (errorMessage.includes('Request failed with status code')) {
-        const code = errorMessage.substr(errorMessage.length - 3)
-        errorMessage = '后端接口' + code || '' + '异常'
-      }
-      message.error(errorMessage || `后端接口未知异常`)
-      return Promise.resolve(false)
+  responseInterceptorsCatch: (error) => {
+    const response = error.response as unknown as GAxiosResponse
+    try {
+      return handleCode({
+        instance: baseRequest,
+        response,
+        error,
+      })
+    } catch (e) {
+      console.error('responseInterceptorsCatch', e)
+      return Promise.reject(e)
     }
   },
-  /**
-   * @description: 处理响应错误数据
-   */
-  requestCatchHook: () => false
+})
+
+const request: <T = any, R = undefined>(config: GAxiosOptions) => Promise<ResponseResult<T, R>> = (config) => {
+  return baseRequest.request(config)
 }
 
-function createXhr(opt?: Partial<GAxiosOptions>) {
-  return new GAxios({
-    method: 'get',
-    timeout: requestTimeout,
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    },
-    // 忽略重复请求
-    ignoreCancelToken: true,
-    // 是否携带token
-    carryToken: true,
-    ...xhtInstance,
-    ...opt
-  })
+export const get: <T = any, R = undefined>(url: GAxiosOptions['url'], config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T, R>> = (url, config = {}) => {
+  return request({ ...config, url, method: 'get' })
 }
 
-const request: <T = any, R = undefined>(opt?: GAxiosOptions) => Promise<ResponseResult<T, R>> = opt => createXhr()
-  .request(opt)
+export const post: <T = any, R = undefined>(url: GAxiosOptions['url'], config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T, R>> = (url, config = {}) => {
+  return request({ ...config, url, method: 'post' })
+}
+
+export const put: <T = any, R = undefined>(url: GAxiosOptions['url'], config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T, R>> = (url, config = {}) => {
+  return request({ ...config, url, method: 'put' })
+}
+
+export const del: <T = any, R = undefined>(url: GAxiosOptions['url'], config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T, R>> = (url, config = {}) => {
+  return request({ ...config, url, method: 'delete' })
+}
+
+export const patch: <T = any, R = undefined>(url: GAxiosOptions['url'], config?: Partial<GAxiosOptions>) => Promise<ResponseResult<T, R>> = (url, config = {}) => {
+  return request({ ...config, url, method: 'patch' })
+}
 
 export default request

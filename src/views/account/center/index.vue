@@ -69,9 +69,15 @@ const contentHeight = computed(() => {
 const activeKey = computed<TabsKey>(() => route.path.split('/').reverse()?.[0] as any)
 
 onActivated(() => {
+  layout.setValue({
+    config: {
+      settings: {
+        progress: true
+      }
+    }
+  })
   global.setValue({
     disabledScrollTop: true,
-    showProgressBar: true
   })
 })
 
@@ -83,7 +89,13 @@ onBeforeRouteLeave((to) => {
   if (!to.fullPath.includes('/account/center/')) {
     global.setValue({
       disabledScrollTop: false,
-      showProgressBar: true
+    })
+    layout.setValue({
+      config: {
+        settings: {
+          progress: true
+        }
+      }
     })
   }
 })

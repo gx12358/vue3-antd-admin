@@ -51,14 +51,16 @@ export class AxiosCanceler {
    * @param {object} config
    */
   removePending(config: GAxiosOptions, key?: string) {
-    const url = getPendingUrl(config, key)
+    if (config && key) {
+      const url = getPendingUrl(config, key)
 
-    if (this.pendingMap.has(url)) {
-      // If there is a current request identifier in pending,
-      // the current request needs to be cancelled and removed
-      const cancel = this.pendingMap.get(url)
-      cancel && cancel(url)
-      this.pendingMap.delete(url)
+      if (this.pendingMap.has(url)) {
+        // If there is a current request identifier in pending,
+        // the current request needs to be cancelled and removed
+        const cancel = this.pendingMap.get(url)
+        cancel && cancel(url)
+        this.pendingMap.delete(url)
+      }
     }
   }
 
