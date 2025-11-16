@@ -6,7 +6,6 @@ import { version } from '../package.json'
 import { defineCheckCircularCommand } from './check-circular'
 import { defineDepcheckCommand } from './check-dep'
 import { defineCodeWorkspaceCommand } from './code-workspace'
-import { defineLintCommand } from './lint'
 import { definePubLintCommand } from './publint'
 
 // 命令描述
@@ -26,7 +25,6 @@ async function main(): Promise<void> {
     const vsh = cac('vsh')
 
     // Register commands
-    defineLintCommand(vsh)
     definePubLintCommand(vsh)
     defineCodeWorkspaceCommand(vsh)
     defineCheckCircularCommand(vsh)
