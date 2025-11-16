@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@gx/tsconfig/web-app.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@images/*": ["src/assets/images/*"],
+      "@gx-mock": ["mock/index.ts"],
+      "@gx-mock/*": ["mock/*"],
+      "@gx-config": ["config/index.ts"],
+      "@gx-vuex": ["src/store/index.ts"],
+      "@gx-admin/hooks/*": ["src/hooks/*"],
+      "@gx-design/*": ["src/components/GDesign/*"]
+    }
+  },
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/*.d.ts"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@gx/vsh",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "bin": {
+    "vsh": "./bin/vsh.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "dependencies": {
+    "@gx/node-utils": "workspace:*",
+    "cac": "catalog:",
+    "circular-dependency-scanner": "catalog:",
+    "depcheck": "catalog:",
+    "publint": "catalog:"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@gx/web-h5",
+  "type": "module",
+  "version": "4.0.0",
+  "author": {
+    "name": "gx12358",
+    "email": "gx12358@gmail.com",
+    "url": "https://github.com/gx12358"
+  },
+  "license": "MIT",
+  "homepage": "https://gx12358.cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "apps/web-admin"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "imports": {
+    "@/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "catalog:"
+  }
+}

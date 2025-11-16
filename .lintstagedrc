@@ -1,18 +1,13 @@
 {
   "*.{js,jsx,ts,tsx}": [
-    "prettier --cache --ignore-unknown  --write",
     "eslint --cache --fix"
   ],
-  "{!(package)*.json,*.code-snippets,.!({browserslist,npm,nvm})*rc}": [
-    "prettier --cache --write--parser json"
-  ],
-  "package.json": ["prettier --cache --write"],
+  "package.json": ["eslint --cache --fix"],
   "*.vue": [
-    "prettier --write",
     "eslint --cache --fix"
   ],
   "*.{css,scss,html}": [
-    "prettier --cache --ignore-unknown --write"
+    "eslint --cache --fix"
   ],
-  "*.md": ["prettier --cache --ignore-unknown --write"]
+  "*.md": ["eslint --cache --fix"]
 }

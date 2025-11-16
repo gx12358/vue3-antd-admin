@@ -1,0 +1,25 @@
+{
+  "name": "@gx/tsconfig",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/vue3-antd-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "internal/tsconfig"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "files": [
+    "base.json",
+    "library.json",
+    "node.json",
+    "web-app.json",
+    "web.json"
+  ],
+  "dependencies": {
+    "@gx/types": "workspace:*",
+    "vite": "catalog:"
+  }
+}

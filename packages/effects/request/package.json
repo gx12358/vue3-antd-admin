@@ -1,0 +1,30 @@
+{
+  "name": "@gx/request",
+  "type": "module",
+  "version": "4.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/vue3-antd-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "packages/effects/request"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@gx-design-vue/pro-utils": "catalog:",
+    "axios": "catalog:",
+    "lodash-es": "catalog:",
+    "qs": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/types": "workspace:*",
+    "@types/lodash-es": "catalog:",
+    "@types/qs": "catalog:"
+  }
+}

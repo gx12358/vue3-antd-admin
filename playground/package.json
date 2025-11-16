@@ -1,0 +1,49 @@
+{
+  "name": "@gx/playground",
+  "type": "module",
+  "version": "4.0.0",
+  "author": {
+    "name": "vben",
+    "email": "ann.vben@gmail.com",
+    "url": "https://github.com/anncwb"
+  },
+  "license": "MIT",
+  "homepage": "https://vben.pro",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "directory": "playground"
+  },
+  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "imports": {
+    "@/*": "./src/*"
+  },
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  },
+  "dependencies": {
+    "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/pro-hooks": "catalog:",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "@gx/design": "workspace:*",
+    "@gx/hooks": "workspace:*",
+    "@gx/request": "workspace:*",
+    "@gx/styles": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "ant-design-vue": "catalog:",
+    "dayjs": "catalog:",
+    "lodash-es": "catalog:",
+    "pinia": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/types": "workspace:*",
+    "@types/lodash-es": "catalog:",
+    "unocss": "catalog:"
+  }
+}

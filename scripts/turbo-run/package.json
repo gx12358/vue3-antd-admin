@@ -1,0 +1,29 @@
+{
+  "name": "@gx/turbo-run",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "bin": {
+    "turbo-run": "./bin/turbo-run.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "dependencies": {
+    "@clack/prompts": "catalog:",
+    "@gx/node-utils": "workspace:*",
+    "cac": "catalog:"
+  }
+}

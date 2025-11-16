@@ -1,0 +1,71 @@
+{
+  "name": "@gx/web-admin",
+  "type": "module",
+  "version": "4.0.0",
+  "author": {
+    "name": "gx12358",
+    "email": "gx12358@gmail.com",
+    "url": "https://github.com/gx12358"
+  },
+  "license": "MIT",
+  "homepage": "https://gx12358.cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "apps/web-admin"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "imports": {
+    "@/*": "./src/*"
+  },
+  "scripts": {
+    "build": "cross-env vite build",
+    "build:pro": "cross-env vite build --mode pro",
+    "build:no-cache": "pnpm clean:cache && pnpm run build",
+    "dev": "cross-env VITE_APP_ENV=dev vite",
+    "dev:production": "cross-env VITE_APP_ENV=dev vite --mode production",
+    "dev:pro": "cross-env VITE_APP_ENV=dev vite --mode pro",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/color-picker": "catalog:",
+    "@gx-design-vue/image": "catalog:",
+    "@gx-design-vue/pro-app": "catalog:",
+    "@gx-design-vue/pro-card": "catalog:",
+    "@gx-design-vue/pro-hooks": "catalog:",
+    "@gx-design-vue/pro-layout": "catalog:",
+    "@gx-design-vue/pro-layout-components": "catalog:",
+    "@gx-design-vue/pro-modal": "catalog:",
+    "@gx-design-vue/pro-provider": "catalog:",
+    "@gx-design-vue/pro-table": "catalog:",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "@gx-design-vue/pro-watermark": "catalog:",
+    "@gx-design-vue/scrollbar": "catalog:",
+    "@gx/access": "workspace:*",
+    "@gx/design": "workspace:*",
+    "@gx/hooks": "workspace:*",
+    "@gx/request": "workspace:*",
+    "@gx/styles": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "ali-oss": "catalog:",
+    "ant-design-vue": "catalog:",
+    "axios": "catalog:",
+    "color": "catalog:",
+    "dayjs": "catalog:",
+    "highlight.js": "catalog:",
+    "lodash-es": "catalog:",
+    "nprogress": "catalog:",
+    "pinia": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "catalog:",
+    "@gx/types": "workspace:*",
+    "@types/lodash-es": "catalog:",
+    "unocss": "catalog:"
+  }
+}

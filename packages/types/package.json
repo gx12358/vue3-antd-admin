@@ -1,0 +1,25 @@
+{
+  "name": "@gx/types",
+  "type": "module",
+  "version": "4.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/vue3-antd-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "packages/types"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./mock": {
+      "types": "./mock.d.ts"
+    },
+    "./global": {
+      "types": "./global.d.ts"
+    }
+  }
+}

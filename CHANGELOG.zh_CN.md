@@ -44,7 +44,7 @@
     - 修正了多个组件路径和重定向路径
 - **登录**
   - 
-    - 修正了登录接口参数名从 [userName](/mock/routers/profile/basic.fake.ts#L12-L12) 改为 [username](/src/views/user/login/index.vue#L12-L12)
+    - 修正了登录接口参数名从 [userName](/apps/web-admin/mock/routers/profile/basic.fake.ts#L12-L12) 改为 [username](/src/views/user/login/index.vue#L12-L12)
     - 统一了接口返回字段，使用 [message](/src/utils/request/checkStatus.ts#L33-L33) 替代 `msg`
 - **HTML模板**
     - 优化了加载动画 SVG 图标

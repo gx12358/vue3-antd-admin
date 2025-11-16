@@ -1,0 +1,67 @@
+{
+  "name": "@gx/vite-config",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/pro-components-vue",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/pro-components-vue.git",
+    "directory": "internal/vite-config"
+  },
+  "bugs": "https://github.com/gx12358/pro-components-vue/issues",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "dependencies": {
+    "@gx-design-vue/pro-utils": "catalog:",
+    "archiver": "catalog:",
+    "dayjs": "catalog:",
+    "pkg-types": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/node-utils": "workspace:*",
+    "@gx/types": "workspace:*",
+    "@pnpm/workspace.read-manifest": "catalog:",
+    "@types/archiver": "catalog:",
+    "@vitejs/plugin-legacy": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vitejs/plugin-vue-jsx": "catalog:",
+    "autoprefixer": "^10.4.5",
+    "bundle-import": "catalog:",
+    "chokidar": "catalog:",
+    "dotenv": "catalog:",
+    "less": "catalog:",
+    "minimist": "catalog:",
+    "path-to-regexp": "catalog:",
+    "picocolors": "catalog:",
+    "postcss": "catalog:",
+    "postcss-html": "catalog:",
+    "postcss-less": "catalog:",
+    "rollup": "catalog:",
+    "rollup-plugin-visualizer": "catalog:",
+    "tinyglobby": "catalog:",
+    "unocss": "catalog:",
+    "unplugin-auto-import": "catalog:",
+    "unplugin-turbo-console": "catalog:",
+    "unplugin-vue-components": "catalog:",
+    "vite-plugin-compression": "catalog:",
+    "vite-plugin-dts": "catalog:",
+    "vite-plugin-fake-server": "catalog:",
+    "vite-plugin-html": "catalog:",
+    "vite-plugin-vue-devtools": "catalog:"
+  }
+}

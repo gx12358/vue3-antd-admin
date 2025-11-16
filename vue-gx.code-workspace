@@ -1,0 +1,80 @@
+{
+  "folders": [
+    {
+      "name": "@gx/backend-mock",
+      "path": "apps/backend-mock"
+    },
+    {
+      "name": "@gx/web-admin",
+      "path": "apps/web-admin"
+    },
+    {
+      "name": "@gx/web-h5",
+      "path": "apps/web-h5"
+    },
+    {
+      "name": "@gx/commitlint-config",
+      "path": "internal/lint-configs/commitlint-config"
+    },
+    {
+      "name": "@gx/node-utils",
+      "path": "internal/node-utils"
+    },
+    {
+      "name": "@gx/tsconfig",
+      "path": "internal/tsconfig"
+    },
+    {
+      "name": "@gx/vite-config",
+      "path": "internal/vite-config"
+    },
+    {
+      "name": "@gx-core/design",
+      "path": "packages/@core/base/design"
+    },
+    {
+      "name": "@gx-core/shared",
+      "path": "packages/@core/base/shared"
+    },
+    {
+      "name": "@gx/config",
+      "path": "packages/config"
+    },
+    {
+      "name": "@gx/access",
+      "path": "packages/effects/access"
+    },
+    {
+      "name": "@gx/design",
+      "path": "packages/effects/common-ui"
+    },
+    {
+      "name": "@gx/hooks",
+      "path": "packages/effects/hooks"
+    },
+    {
+      "name": "@gx/request",
+      "path": "packages/effects/request"
+    },
+    {
+      "name": "@gx/styles",
+      "path": "packages/styles"
+    },
+    {
+      "name": "@gx/types",
+      "path": "packages/types"
+    },
+    {
+      "name": "@gx/playground",
+      "path": "playground"
+    },
+    {
+      "name": "@gx/turbo-run",
+      "path": "scripts/turbo-run"
+    },
+    {
+      "name": "@gx/vsh",
+      "path": "scripts/vsh"
+    }
+  ]
+}

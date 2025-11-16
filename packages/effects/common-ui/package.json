@@ -1,0 +1,41 @@
+{
+  "name": "@gx/design",
+  "type": "module",
+  "version": "4.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/vbenjs/vue-vben-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "directory": "packages/effects/common-ui"
+  },
+  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/icon": "catalog:",
+    "@gx-design-vue/image": "catalog:",
+    "@gx-design-vue/pro-modal": "catalog:",
+    "@gx-design-vue/pro-provider": "catalog:",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "@gx/hooks": "workspace:*",
+    "@wangeditor-next/editor": "catalog:",
+    "@wangeditor-next/editor-for-vue": "catalog:",
+    "ant-design-vue": "catalog:",
+    "lodash-es": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/types": "workspace:*",
+    "@types/lodash-es": "catalog:"
+  }
+}

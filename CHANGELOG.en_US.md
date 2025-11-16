@@ -44,7 +44,7 @@
     - Corrected multiple component paths and redirect paths
 - **Login**
   - 
-    - Corrected login interface parameter name from [userName](/mock/routers/profile/basic.fake.ts#L12-L12) to [username](/src/views/user/login/index.vue#L12-L12)
+    - Corrected login interface parameter name from [userName](/apps/web-admin/mock/routers/profile/basic.fake.ts#L12-L12) to [username](/src/views/user/login/index.vue#L12-L12)
     - Unified interface return fields, using [message](/src/utils/request/checkStatus.ts#L33-L33) instead of `msg`
 - **HTML Template**
     - Optimized loading animation SVG icons

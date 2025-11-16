@@ -1,0 +1,33 @@
+{
+  "name": "@gx/hooks",
+  "type": "module",
+  "version": "4.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/vbenjs/vue-vben-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "directory": "packages/effects/hooks"
+  },
+  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@gx-design-vue/pro-layout": "catalog:",
+    "@gx-design-vue/pro-provider": "catalog:",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "@vueuse/core": "catalog:",
+    "echarts": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/types": "workspace:*"
+  }
+}

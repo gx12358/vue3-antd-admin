@@ -7,14 +7,12 @@ export default antFuEslint({
   gitignore: true,
   markdown: true,
   ignores: [
-    'src/assets/**/*.js',
     'public',
-    'tsconfig.*.json',
-    'tsconfig.json'
   ]
 }, {
   rules: {
     'curly': 0,
+    'valid-typeof': 0,
     'style/no-tabs': 0,
     'vue/eqeqeq': 0,
     'no-console': 0,

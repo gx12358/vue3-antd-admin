@@ -1,0 +1,32 @@
+{
+  "name": "@gx/config",
+  "type": "module",
+  "version": "4.0.0",
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/vue3-antd-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "packages/@core/preferences"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./src/index.ts",
+      "#default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "#build": "pnpm unbuild"
+  },
+  "dependencies": {}
+}

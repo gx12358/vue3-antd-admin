@@ -1,0 +1,42 @@
+{
+  "name": "@gx/node-utils",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/gx12358/vue3-antd-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
+    "directory": "internal/node-utils"
+  },
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "dependencies": {
+    "@changesets/git": "catalog:",
+    "@manypkg/get-packages": "catalog:",
+    "chalk": "catalog:",
+    "consola": "catalog:",
+    "dayjs": "catalog:",
+    "execa": "catalog:",
+    "find-up": "catalog:",
+    "ora": "catalog:",
+    "pkg-types": "catalog:",
+    "rimraf": "catalog:"
+  }
+}
