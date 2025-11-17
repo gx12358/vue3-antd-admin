@@ -1,3 +1,39 @@
+## 4.0.0 (2025-11-01)
+
+## Upgrade Instructions
+
+### ✨ CHORE
+
+- **Architecture Upgrade**
+    - Adopted the same [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) + `monorepo` architecture as `vben-admin`, improving project management and build efficiency
+    - Set `"type": "module"` in [package.json](/Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/package.json), fully supporting ES Module
+    - Integrated [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) build tool, optimizing multi-package dependency management and incremental builds
+    - Used `pnpm` workspace to manage dependencies, reducing disk usage and installation time
+
+### ✨ REFACTOR
+
+- **Project Structure Refactoring**
+    - Reorganized project directory structure based on `monorepo` architecture, separating different application modules
+    - Introduced `@gx` namespace for unified management of internal package dependencies
+    - Refactored build configuration, using [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) to centrally manage multi-package build processes
+    - Optimized `scripts` commands to support cross-package parallel execution
+
+### ✨ FEAT
+
+- **New Architecture Features**
+    - Support for independent development and deployment of multiple applications
+    - Unified maintenance of shared components and utility libraries
+    - Added [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) caching mechanism, significantly improving build speed
+    - Integrated `changeset` version management tool for standardized release process
+
+### ✨ FIX
+
+- **Dependency Management Optimization**
+    - Resolved multi-package dependency version conflicts
+    - Fixed cross-package reference path issues
+    - Optimized `pnpm` installation scripts to ensure correct dependency resolution
+    - Unified development environment configuration to avoid issues caused by environment differences
+
 ## 3.1.0 (2025-10-18)
 
 ## Upgrade Instructions

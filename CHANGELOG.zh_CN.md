@@ -1,3 +1,39 @@
+## 4.0.0 (2025-11-01)
+
+## 升级说明
+
+### ✨ CHORE
+
+- **架构升级**
+    - 采用与 `vben-admin` 相同的 [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) + `monorepo` 架构，提升项目管理和构建效率
+    - [package.json](/Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/package.json) 中 `"type": "module"` 设置，全面支持 ES Module
+    - 集成 [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) 构建工具，优化多包依赖管理和增量构建
+    - 使用 `pnpm` 工作空间管理依赖，降低磁盘占用和安装时间
+
+### ✨ REFACTOR
+
+- **项目结构重构**
+    - 基于 `monorepo` 架构重新组织项目目录结构，分离不同应用模块
+    - 引入 `@gx` 命名空间，统一管理内部包依赖
+    - 重构构建配置，使用 [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) 统一管理多包构建流程
+    - 优化 `scripts` 命令，支持跨包并行执行
+
+### ✨ FEAT
+
+- **新架构特性**
+    - 支持多应用独立开发和部署
+    - 实现共享组件和工具库的统一维护
+    - 新增 [turbo](file:///Users/gaoxiang/Documents/工作/工作项目/gx12358/vue/github/vue3-antd-admin/node_modules/turbo) 缓存机制，大幅提升构建速度
+    - 集成 `changeset` 版本管理工具，规范化发布流程
+
+### ✨ FIX
+
+- **依赖管理优化**
+    - 解决多包依赖版本冲突问题
+    - 修复跨包引用路径问题
+    - 优化 `pnpm` 安装脚本，确保依赖正确解析
+    - 统一开发环境配置，避免环境差异导致的问题
+
 ## 3.1.0 (2025-10-18)
 
 ## 升级说明
