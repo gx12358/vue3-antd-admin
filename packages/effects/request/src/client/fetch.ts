@@ -94,7 +94,7 @@ export class CreateClient {
 
     requestConfig.originOptions = cloneDeep(requestConfig)
 
-    const axiosConfig = deepMerge<RequestOptions>(this.options as any, requestConfig, {
+    const axiosConfig = deepMerge<RequestOptions>(requestConfig, { ...this.options }, {
       omitNil: true,
       omitEmpty: true
     })
