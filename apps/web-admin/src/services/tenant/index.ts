@@ -1,4 +1,4 @@
-import type { AuthApi } from '@/services/user-center'
+import type { AuthApi } from '@/services/user'
 import { requestClient } from '@/services/base'
 import * as SystemTenantApi from './typing'
 

@@ -1,7 +1,7 @@
 import { app } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
-import { getAuthPermissionInfoApi, loginApi, logoutApi } from '@/services/user-center'
+import { getAuthPermissionInfoApi, loginApi, logoutApi } from '@/services/user'
 import { accessToken } from '@/utils/accessToken'
 import { useStoreDict } from './dict'
 import { useStorePermission } from './permission'

@@ -3,7 +3,7 @@ import { checkURL } from '@gx-core/shared/utils'
 import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'
 import OSS from 'ali-oss'
 import { cloneDeep } from 'lodash-es'
-import { getUploadInfo } from '@/services/system-center'
+import { getUploadInfo } from '@/services/system'
 import { createFileName } from '@/utils/uploadFile'
 
 export interface OssUploadProps {

@@ -1,7 +1,7 @@
 import type { DictState } from '@/store/modules/dict'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
-import { getDicts } from '@/services/system-center'
+import { getDicts } from '@/services/system'
 
 export function useDict(dictTypes?: DictType | DictType[], wait?: boolean) {
   const { dict } = useStore()

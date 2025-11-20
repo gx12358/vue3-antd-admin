@@ -11,7 +11,7 @@ import { reactive } from 'vue'
 import Empty from '@/components/layout/empty/index.vue'
 import { useRequest } from '@/hooks/core'
 import { basicListOperate, getBasicListDetails } from '@/services/list-center'
-import { getUserList } from '@/services/user-center'
+import { getUserList } from '@/services/user'
 
 type FormState = Partial<BasicListItemDataType> & {
   ownerId?: number;
@@ -65,13 +65,13 @@ const handleOk = () => {
       createTime: dayjs(formState.createTimeDay).format('YYYY-MM-DD HH:mm:ss'),
       owner: userList.value.find(item => item.id === formState.ownerId)?.name
     }, 'createTimeDay'))
-    
+
     if (response) {
       message.success('操作成功')
       emit('ok')
       handleCancel()
     }
-    
+
     spinning.value = false
   })
 }

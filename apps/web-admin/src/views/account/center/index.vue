@@ -5,7 +5,7 @@ import { GProCard } from '@gx-design-vue/pro-card'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { useProConfigContext } from '@gx-design-vue/pro-provider'
 import { useRequest } from '@/hooks/core'
-import { getAccountCount, getAccountGroupList } from '@/services/user-center'
+import { getAccountCount, getAccountGroupList } from '@/services/user'
 import TagList from './components/TagList.vue'
 import { provideAccountCenterContext } from './context'
 
@@ -198,7 +198,7 @@ provideAccountCenterContext({
     margin-bottom: 0;
     padding: 0 16px;
   }
-  
+
   &:deep(.gx-pro-card-body) {
     padding: v-bind(cardRightBodyHeight);
   }

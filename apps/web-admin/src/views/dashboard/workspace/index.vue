@@ -316,7 +316,7 @@ const transition = computed(() => {
           </GProCard>
         </GProCard>
         <GProCard title="动态" header-bordered :body-style="{ paddingInline: 0 }">
-          <div v-for="(item, index) in trendItems" :key="index" class="flex py-16px gap-16px bd-b-main px-6">
+          <div v-for="(item, index) in trendItems" :key="index" class="flex py-16px gap-16px bd-b-border px-6">
             <span class="size-10 flex-none rounded-full" v-html="multiavatar(item.avatar)" />
             <div class="flex flex-col gap-4px">
               <div class="mail-item-top">

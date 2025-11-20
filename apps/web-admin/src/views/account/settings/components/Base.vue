@@ -4,7 +4,7 @@ import { useProForm } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
 import { reactive } from 'vue'
 import { useRequest } from '@/hooks/core'
-import { updateUserDetails } from '@/services/user-center'
+import { updateUserDetails } from '@/services/user'
 
 type UserFormState = UserDetails & { adressCode?: string[] }
 

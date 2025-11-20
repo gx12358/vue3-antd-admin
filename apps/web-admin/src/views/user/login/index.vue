@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { AuthApi } from '@/services/user-center'
+import type { AuthApi } from '@/services/user'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { app } from '@gx-config'
 import { cn, isDev } from '@gx-core/shared/utils'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getTenantByWebsite, getTenantSimpleList } from '@/services/tenant-center'
+import { getTenantByWebsite, getTenantSimpleList } from '@/services/tenant'
 import { storage } from '@/utils/storage'
 
 defineOptions({ name: 'SocialLogin' })

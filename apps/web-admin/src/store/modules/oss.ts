@@ -2,7 +2,7 @@ import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
 import { defineStore } from 'pinia'
-import { getOssClient, getUploadInfo } from '@/services/system-center'
+import { getOssClient, getUploadInfo } from '@/services/system'
 
 export interface PublicOssUploadInfo {
   pictureUrl1: string

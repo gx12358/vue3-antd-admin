@@ -5,7 +5,7 @@ import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
 import { useDict, useUpdateTableSearch } from '@/hooks/system'
 import { useProTable } from '@/hooks/web'
-import { doDelete, getTableList } from '@/services/table-center'
+import { getList } from '@/services/demo'
 import OperationModal from './components/OperationModal.vue'
 import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
 import ScrollModal from './components/ScrollModal.vue'
@@ -32,7 +32,7 @@ const state = reactive({
   selectedRowItems: [] as MockTableRecord[]
 })
 
-const { tableState, reload, setLoading, updateSearchMap } = useProTable<MockTableRecord, SearchConfig>(
+const { tableState, reload, updateSearchMap } = useProTable<MockTableRecord, SearchConfig>(
   tableRef,
   {
     state: {
@@ -74,12 +74,12 @@ const { tableState, reload, setLoading, updateSearchMap } = useProTable<MockTabl
       scroll: { x: 1850 }
     },
     request: async (params) => {
-      const response = await getTableList<PageResult<TableRecord<MockTableRecord>>>(params)
-      state.tableData = deepCopy(response?.data?.list || [])
+      const { list, totalCount } = await getList<PageResult<MockTableRecord>>(params)
+      state.tableData = list || []
       return {
-        data: deepCopy(response?.data?.list || []),
-        success: !!response,
-        total: response?.data?.totalCount || 0
+        data: deepCopy(list || []),
+        success: true,
+        total: totalCount || 0
       }
     }
   }
@@ -194,15 +194,7 @@ const batchOperation = (key) => {
 }
 
 const removeTable = async () => {
-  setLoading(true)
-  const response = await doDelete({
-    ids: state.selectedRowKeys.join()
-  })
-  if (response) {
-    message.success('操作成功！')
-    reload({ immediate: true, removeKeys: state.selectedRowKeys })
-  }
-  setLoading(false)
+
 }
 
 function changeTableCard(val: boolean) {

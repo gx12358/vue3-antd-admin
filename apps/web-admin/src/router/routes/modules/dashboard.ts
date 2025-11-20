@@ -4,7 +4,7 @@ export default [
   {
     path: '/workspace',
     name: 'Workspace',
-    component: () => import('@/views/dashboard/workplace/index.vue'),
+    component: () => import('@/views/dashboard/workspace/index.vue'),
     meta: {
       order: 1,
       icon: h(GIcon, { type: 'desktop' }),
