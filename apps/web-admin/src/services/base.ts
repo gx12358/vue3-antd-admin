@@ -51,7 +51,7 @@ function errorMessageResponseInterceptor(error: AxiosError) {
       makeErrorMessage: (msg, innerError) => {
         // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
         // 当前mock接口返回的错误字段是 error 或者 message
-        const responseData: any = innerError?.response?.data ?? {}
+        const responseData: any = innerError?.response?.data
         const errorMessage = responseData?.error ?? responseData?.message ?? ''
         // 如果没有错误信息，则会根据状态码进行提示
         message.error(errorMessage || msg)
@@ -88,12 +88,15 @@ function createRequestClient(options?: RequestOptions) {
     },
     // 请求拦截器处理
     requestInterceptors: (config) => {
-      const user = useStoreUser()
+      const storeUser = useStoreUser()
+      const storePermission = useStorePermission()
       const { name } = token
       const carryToken = isBoolean(config.carryToken) ? config.carryToken : true
       if (carryToken) {
         config.headers = {
-          [name]: user.token,
+          [name]: `Bearer ${storeUser.token}`,
+          'tenant-id': storePermission.tenantId,
+          'visit-tenant-id': storePermission.visitTenantId,
           ...(config.headers || {})
         }
       }
@@ -112,21 +115,22 @@ function createRequestClient(options?: RequestOptions) {
         return res.data
       }
 
+      // 直接给到res.data => data
       try {
         if (res.status >= 200 && res.status < 400) {
-          const { data }: { data: ResponseResult } = res
-          const { code, message = '' } = data
+          const { code, message = '', data } = res.data as ResponseResult
 
           const codeVerificationArray = successCode
 
           // 这里逻辑可以根据项目进行修改
           const hasSuccess = codeVerificationArray.includes(code)
-          if (hasSuccess) {
-            return data
-          }
+          if (hasSuccess) return data
 
           const error = new Error(message || '内部服务器错误，请稍后再试。') as AxiosError
-          error.status = code
+          error.response = {
+            ...(res as any),
+            status: code
+          }
           return errorMessageResponseInterceptor(error)
         }
         return Promise.reject(Object.assign({}, res, { res }))

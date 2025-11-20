@@ -1,5 +1,5 @@
 import type { AxiosError } from 'axios'
-import type { RequestInstance, RequestOptions, RequestResponse } from '../typings'
+import type { HttpResponse, RequestInstance, RequestOptions, RequestResponse } from '../typings'
 import { deepMerge, isFunction } from '@gx-design-vue/pro-utils'
 import axios from 'axios'
 import { cloneDeep } from 'lodash-es'
@@ -89,7 +89,7 @@ export class CreateClient {
     }
   }
 
-  request<T, R = undefined>(options: Partial<RequestOptions> = {}): Promise<ResponseResult<T, R>> {
+  request<T, R = undefined>(options: Partial<RequestOptions> = {}): Promise<HttpResponse<T, R>> {
     let requestConfig = cloneDeep(options) as RequestOptions
 
     requestConfig.originOptions = cloneDeep(requestConfig)

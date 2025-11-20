@@ -74,11 +74,10 @@ const settingConfig: SettingConfig = {
     // 是否开启代理
     use: true,
     // 代理的目标地址
-    target: 'http://127.0.0.1:3000',
+    target: 'http://localhost:5320',
   },
   mock: {
     prefix: '/mock-server',
-    checkToken: 0,
   },
   token: {
     // token名称

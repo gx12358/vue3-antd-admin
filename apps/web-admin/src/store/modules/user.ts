@@ -1,36 +1,34 @@
 import { app } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
-import { isArray, isNumber, isObject } from '@gx-design-vue/pro-utils'
-import my from '@images/public/my.png'
 import { defineStore } from 'pinia'
-import { getUserInfo, login, logout } from '@/services/user-center'
+import { getAuthPermissionInfoApi, loginApi, logoutApi } from '@/services/user-center'
 import { accessToken } from '@/utils/accessToken'
 import { useStoreDict } from './dict'
 import { useStorePermission } from './permission'
 import { useStoreRoutes } from './routes'
 
-const { loginInterception } = app.system
+const { loginInterception, router } = app.system
 
 export interface UserState {
   token: string;
   refreshToken: string;
-  userInfo: UserDetails;
+  userInfo: UserInfo;
 }
 
 // 0 返回登录页 1 成功 2 返回注册页
 export type CheckUserStatus = 0 | 1 | 2
 
 export const useStoreUser = defineStore('user', () => {
-  const dict = useStoreDict()
-  const routes = useStoreRoutes()
-  const permission = useStorePermission()
+  const storeDict = useStoreDict()
+  const storeRoutes = useStoreRoutes()
+  const storePermission = useStorePermission()
 
   const { token, refreshToken } = accessToken.getAccessToken()
 
   const [ state, setValue ] = useReactiveState<UserState>({
     token,
     refreshToken,
-    userInfo: {} as UserDetails
+    userInfo: {} as UserInfo
   }, { omitNil: false, omitEmpty: false })
 
   /**
@@ -51,61 +49,41 @@ export const useStoreUser = defineStore('user', () => {
    */
   const userLogin = async (params: any): Promise<boolean> => {
     try {
-      const response: ResponseResult<{ token: string; expiresIn: number; refreshToken?: string; }> = await login(params)
-      if (response) {
-        const token = response.data?.token
-        const refreshToken = response.data?.refreshToken
-        if (token) {
-          setValue({ token, refreshToken })
-          accessToken.setAccessToken({ token, refreshToken })
-          return true
-        }
-      }
-
-      return false
-    } catch {
-      return false
-    }
-  }
-
-  const updateUserInfo = async (): Promise<CheckUserStatus> => {
-    let status: CheckUserStatus = 0
-    try {
-      const response: ResponseResult<null, UserInfo> = await getUserInfo()
-      const { user, roles, permissions } = response || {} as UserInfo
-      if (response && user && isObject(user)) {
-        if (isNumber(user.userId) && roles && isArray(roles)) {
-          status = 1
-          permission.setValue({ admin: user.admin, role: roles, ability: permissions })
-          setValue({ userInfo: { ...user, avatar: my } })
-        }
-      }
+      const { accessToken: token, refreshToken } = await loginApi(params)
+      setValue({ token, refreshToken })
+      accessToken.setAccessToken({ token, refreshToken })
+      return true
     } catch {}
-    return status
+    return false
   }
 
-  /**
-   * @Author      gx12358
-   * @DateTime    2022/1/11
-   * @lastTime    2022/1/11
-   * @description 获取用户信息
-   */
-  const checkUserPermission = async (): Promise<CheckUserStatus> => {
+  const checkUserPermission = async (): Promise<{ status: CheckUserStatus; routes: AppRouteModule[] }> => {
     let status: CheckUserStatus = 0
+    let routes: AppRouteModule[] = []
     if (loginInterception) {
-      status = await updateUserInfo()
+      try {
+        const { user, roles, permissions, menus } = await getAuthPermissionInfoApi()
+        status = 1
+        storePermission.setValue({ role: roles, auths: permissions })
+        setValue({ userInfo: { ...user } })
+        if (router.auth === 'all') {
+          routes = await storeRoutes.setAllRoutes(menus)
+        }
+        return { status, routes }
+      } catch {}
     } else {
       status = setVirtualUserInfo()
     }
-    return status
+
+    return { status, routes }
   }
 
   const resetPermissions = () => {
     accessToken.removeAccessToken()
     setValue({ token: '', refreshToken: '', userInfo: {} })
-    dict.clear()
-    permission.setValue({ admin: false, role: undefined, ability: [] })
-    routes.setValue({ routes: [] })
+    storeDict.clear()
+    storePermission.clear()
+    storeRoutes.clear()
   }
 
   /**
@@ -116,10 +94,8 @@ export const useStoreUser = defineStore('user', () => {
    */
   const userLogout = async () => {
     try {
-      await logout()
-    } catch {
-      // 不做处理
-    }
+      await logoutApi()
+    } catch {}
     resetPermissions()
   }
 

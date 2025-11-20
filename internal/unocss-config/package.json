@@ -1,0 +1,48 @@
+{
+  "name": "@gx/unocss-config",
+  "type": "module",
+  "version": "4.0.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://github.com/vbenjs/vue-vben-admin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "directory": "internal/tailwind-config"
+  },
+  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./*": "./*"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "stub": "pnpm unbuild --stub"
+  },
+  "peerDependencies": {
+    "unocss": "catalog:"
+  },
+  "dependencies": {
+    "@gx-design-vue/pro-utils": "catalog:"
+  },
+  "devDependencies": {
+    "@unocss/preset-uno": "^66.5.7"
+  }
+}

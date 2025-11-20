@@ -49,6 +49,7 @@
     "@gx/hooks": "workspace:*",
     "@gx/request": "workspace:*",
     "@gx/styles": "workspace:*",
+    "@multiavatar/multiavatar": "catalog:",
     "@vueuse/core": "catalog:",
     "ali-oss": "catalog:",
     "ant-design-vue": "catalog:",
@@ -65,6 +66,7 @@
   "devDependencies": {
     "@faker-js/faker": "catalog:",
     "@gx/types": "workspace:*",
+    "@gx/unocss-config": "workspace:*",
     "@types/lodash-es": "catalog:",
     "unocss": "catalog:"
   }

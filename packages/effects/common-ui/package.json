@@ -28,6 +28,8 @@
     "@gx-design-vue/pro-provider": "catalog:",
     "@gx-design-vue/pro-utils": "catalog:",
     "@gx/hooks": "workspace:*",
+    "@iconify/vue": "catalog:",
+    "@vueuse/core": "catalog:",
     "@wangeditor-next/editor": "catalog:",
     "@wangeditor-next/editor-for-vue": "catalog:",
     "ant-design-vue": "catalog:",

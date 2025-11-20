@@ -18,7 +18,6 @@ function resetLogin(path: string, next: Fn) {
 
 export function createPermissionGuard(router: Router) {
   const userStore = useStoreUser()
-  const routeStore = useStoreRoutes()
   const permissionStore = useStorePermission()
 
   router.beforeEach(async (to, _, next) => {
@@ -43,8 +42,8 @@ export function createPermissionGuard(router: Router) {
         if (isArray(hasRoles) && hasRoles.length > 0) {
           const meta = to.meta as SystemMenuMeta
           if (meta.permissions) {
-            const { permission } = useAuth(meta.permissions, 'some')
-            if (permission.value) {
+            const { auths } = useAuth(meta.permissions, 'some')
+            if (auths.value) {
               next()
             } else {
               next({ path: '/exception/403', replace: true })
@@ -58,17 +57,14 @@ export function createPermissionGuard(router: Router) {
         return
       }
 
-      const status = await userStore.checkUserPermission()
+      const { status, routes } = await userStore.checkUserPermission()
       if (status === 1) {
-        if (routerConfig.auth === 'all') {
-          const routes = await routeStore.setAllRoutes()
-          if (routes?.length) {
-            routes.forEach((route) => {
-              router.addRoute(route as unknown as RouteRecordRaw)
-            })
-            next({ ...to, replace: true })
-            return
-          }
+        if (routes?.length) {
+          routes.forEach((route) => {
+            router.addRoute(route as unknown as RouteRecordRaw)
+          })
+          next({ ...to, replace: true })
+          return
         }
       } else {
         resetLogin(to.fullPath, next)

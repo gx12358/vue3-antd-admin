@@ -1,4 +1,4 @@
-import type { RequestOptions } from '../typings'
+import type { HttpResponse, RequestOptions } from '../typings'
 import { deepMerge } from '@gx-design-vue/pro-utils'
 import { ContentType } from '../typings'
 import { CreateClient } from './fetch'
@@ -34,7 +34,7 @@ class RequestClient {
   public delete<T = any, R = undefined>(
     url: string,
     config?: Partial<RequestOptions>,
-  ): Promise<ResponseResult<T, R>> {
+  ): Promise<HttpResponse<T, R>> {
     return this.request<T, R>(url, { ...config, method: 'DELETE' })
   }
 
@@ -44,7 +44,7 @@ class RequestClient {
   public get<T = any, R = undefined>(
     url: string,
     config?: Partial<RequestOptions>,
-  ): Promise<ResponseResult<T, R>> {
+  ): Promise<HttpResponse<T, R>> {
     return this.request<T, R>(url, { ...config, method: 'GET' })
   }
 
@@ -54,7 +54,7 @@ class RequestClient {
   public post<T = any, R = undefined>(
     url: string,
     config?: Partial<RequestOptions>,
-  ): Promise<ResponseResult<T, R>> {
+  ): Promise<HttpResponse<T, R>> {
     return this.request<T, R>(url, { ...config, method: 'POST' })
   }
 
@@ -64,14 +64,14 @@ class RequestClient {
   public put<T = any, R = undefined>(
     url: string,
     config?: Partial<RequestOptions>,
-  ): Promise<ResponseResult<T, R>> {
+  ): Promise<HttpResponse<T, R>> {
     return this.request<T, R>(url, { ...config, method: 'PUT' })
   }
 
   public request<T = any, R = undefined>(
     url: string,
     config?: Partial<RequestOptions>
-  ): Promise<ResponseResult<T, R>> {
+  ): Promise<HttpResponse<T, R>> {
     return this.baseRequest.request({ ...config, url })
   }
 }

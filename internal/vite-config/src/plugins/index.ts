@@ -17,7 +17,8 @@ import { viteExtraAppConfigPlugin } from './extra-app-config'
 import { vitePluginFakeServer } from './fake-server'
 import { viteMetadataPlugin } from './inject-metadata'
 import { viteLicensePlugin } from './license'
-
+import { viteNitroMockPlugin } from './nitro-mock'
+import { vitePrintPlugin } from './print'
 /**
  * 获取条件成立的 vite 插件
  * @param conditionPlugins
@@ -88,6 +89,10 @@ async function loadApplicationPlugins(
     html,
     mock,
     license,
+    print,
+    printInfoMap,
+    nitroMock,
+    nitroMockOptions,
     ...commonOptions
   } = options
 
@@ -114,6 +119,18 @@ async function loadApplicationPlugins(
           include: 'mock',
           enableProd: mock
         })]
+      },
+    },
+    {
+      condition: nitroMock,
+      plugins: async () => {
+        return [await viteNitroMockPlugin(nitroMockOptions)]
+      },
+    },
+    {
+      condition: print,
+      plugins: async () => {
+        return [await vitePrintPlugin({ infoMap: printInfoMap })]
       },
     },
     {

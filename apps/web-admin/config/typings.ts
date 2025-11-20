@@ -56,8 +56,6 @@ export interface SettingConfig {
   };
   mock: {
     prefix: string;
-    // 0 校验是否有token值 1 校验是否有token值且token时有效的（mock用户） -1 不校验
-    checkToken: -1 | 0 | 1;
   };
   token: {
     name: string;

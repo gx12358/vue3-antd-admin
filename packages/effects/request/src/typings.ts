@@ -161,6 +161,8 @@ export interface RequestInstance extends Omit<AxiosInstance, 'interceptors'> {
   }
 }
 
+export type HttpResponse<T, R = undefined> = R extends undefined ? T : ResponseResult<T, R>
+
 /**
  * @description: request method
  */

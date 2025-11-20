@@ -41,8 +41,8 @@ class CreateAccessToken {
   getAccessToken() {
     const { name, refreshName, type, storage } = this.options
     return {
-      token: storage.getItem({ key: name, isOrigin: true, type }),
-      refreshToken: storage.getItem({ key: refreshName, isOrigin: true, type }),
+      token: storage.getItem({ key: name, isOrigin: true, type, encryption: false }),
+      refreshToken: storage.getItem({ key: refreshName, isOrigin: true, type, encryption: false }),
     }
   }
 
@@ -52,12 +52,13 @@ class CreateAccessToken {
    * @param token | refreshToken
    * @returns {void|*}
    */
-  setAccessToken({ token, refreshToken }: { token: string; refreshToken?: string }) {
+  setAccessToken({ token, refreshToken }: { token: string; refreshToken?: string; expiresTime?: number }) {
     const { name, refreshName, type, storage } = this.options
     if (refreshToken) {
       storage.setItem({
         key: refreshName,
         isOrigin: true,
+        encryption: false,
         value: refreshToken,
       })
     }
@@ -65,6 +66,7 @@ class CreateAccessToken {
       key: name,
       type,
       isOrigin: true,
+      encryption: false,
       value: token,
     })
   }

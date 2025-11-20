@@ -74,6 +74,25 @@ interface ArchiverPluginOptions {
   outputDir?: string;
 }
 
+/**
+ * 打印插件配置选项
+ * @description 用于配置控制台打印信息
+ */
+interface PrintPluginOptions {
+  /**
+   * 打印的数据映射
+   * @description 键值对形式的数据，将在控制台打印
+   * @example
+   * ```typescript
+   * {
+   *   'App Version': '1.0.0',
+   *   'Build Time': '2024-01-01'
+   * }
+   * ```
+   */
+  infoMap?: Record<string, string | undefined>;
+}
+
 interface ApplicationPluginOptions extends CommonPluginOptions {
   /**
    * 是否开启TurboConsole
@@ -119,6 +138,24 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
    * @default true
    */
   html?: boolean | Record<string, any>;
+  /**
+   * 是否开启 Nitro Mock
+   * @default false
+   */
+  nitroMock?: boolean;
+  /**
+   * Nitro Mock 插件配置
+   */
+  nitroMockOptions?: NitroMockPluginOptions;
+  /**
+   * 是否开启控制台打印
+   * @default false
+   */
+  print?: boolean;
+  /**
+   * 打印插件配置
+   */
+  printInfoMap?: PrintPluginOptions['infoMap'];
   /**
    * 是否注入版权信息
    * @default true
@@ -185,6 +222,30 @@ type DefineLibraryOptions<T = undefined> = (config?: ConfigEnv & {
   vite?: UserConfig;
 }>
 
+/**
+ * Nitro Mock 插件配置选项
+ * @description 用于配置 Nitro Mock 服务器的行为
+ */
+interface NitroMockPluginOptions {
+  /**
+   * Mock 服务器包名
+   * @default '@vbenjs/nitro-mock'
+   */
+  mockServerPackage?: string;
+
+  /**
+   * Mock 服务端口
+   * @default 3000
+   */
+  port?: number;
+
+  /**
+   * 是否打印 Mock 日志
+   * @default false
+   */
+  verbose?: boolean;
+}
+
 type DefineConfig<T = undefined> = DefineApplicationOptions<T> | DefineLibraryOptions<T>
 
 export type {
@@ -195,5 +256,7 @@ export type {
   DefineApplicationOptions,
   DefineConfig,
   DefineLibraryOptions,
-  LibraryPluginOptions
+  LibraryPluginOptions,
+  NitroMockPluginOptions,
+  PrintPluginOptions
 }

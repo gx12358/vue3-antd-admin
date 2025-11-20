@@ -1,10 +1,48 @@
-export interface UserInfo {
+import type { UserInfo } from '@gx/types'
+import dayjs from 'dayjs'
+
+export interface TenantInfo {
+  /**
+   * 账号数量
+   */
+  accountCount: number;
+  /**
+   * 联系手机
+   */
+  contactMobile?: string;
+  /**
+   * 联系人
+   */
+  contactName: string;
+  /**
+   * 创建时间
+   */
+  createTime: Date;
+  /**
+   * 过期时间
+   */
+  expireTime: Date;
+  /**
+   * 租户编号
+   */
   id: number;
-  password: string;
-  realName: string;
-  roles: string[];
-  username: string;
-  homePath?: string;
+  /**
+   * 租户名
+   */
+  name: string;
+  /**
+   * 租户套餐编号
+   */
+  packageId: number;
+  /**
+   * 租户状态
+   */
+  status: number;
+  /**
+   * 绑定域名数组
+   */
+  websites?: string[];
+  [property: string]: any;
 }
 
 export interface TimezoneOption {
@@ -12,390 +50,431 @@ export interface TimezoneOption {
   timezone: string;
 }
 
-export const MOCK_USERS: UserInfo[] = [
-  {
-    id: 0,
-    password: '123456',
-    realName: 'Vben',
-    roles: ['super'],
-    username: 'vben',
-  },
-  {
-    id: 1,
-    password: '123456',
-    realName: 'Admin',
-    roles: ['admin'],
-    username: 'admin',
-    homePath: '/workspace',
-  },
-  {
-    id: 2,
-    password: '123456',
-    realName: 'Jack',
-    roles: ['user'],
-    username: 'jack',
-    homePath: '/analytics',
-  },
-]
+export interface UserDatabase extends UserInfo {
+  password: string;
+  tenantId: number;
+  roleId: number[];
+}
 
-export const MOCK_CODES = [
-  // super
-  {
-    codes: ['AC_100100', 'AC_100110', 'AC_100120', 'AC_100010'],
-    username: 'vben',
-  },
-  {
-    // admin
-    codes: ['AC_100010', 'AC_100020', 'AC_100030'],
-    username: 'admin',
-  },
-  {
-    // user
-    codes: ['AC_1000001', 'AC_1000002'],
-    username: 'jack',
-  },
-]
+export interface RoleDatabase {
+  /**
+   * 角色标志
+   */
+  code: string;
+  /**
+   * 创建时间
+   */
+  createTime: number;
+  /**
+   * 数据范围，参见 DataScopeEnum 枚举类
+   */
+  dataScope: number;
+  /**
+   * 数据范围(指定部门数组)
+   */
+  dataScopeDeptIds?: number[];
+  /**
+   * 角色编号
+   */
+  id: number;
+  /**
+   * 角色名称
+   */
+  name: string;
+  /**
+   * 备注
+   */
+  remark?: string;
+  /**
+   * 显示顺序
+   */
+  sort: number;
+  /**
+   * 状态，参见 CommonStatusEnum 枚举类
+   */
+  status: number;
+  /**
+   * 角色类型，参见 RoleTypeEnum 枚举类
+   */
+  type: number;
+}
 
-const dashboardMenus = [
-  {
-    meta: {
-      order: -1,
-      title: 'page.dashboard.title',
-    },
-    name: 'Dashboard',
-    path: '/dashboard',
-    redirect: '/analytics',
-    children: [
-      {
-        name: 'Analytics',
-        path: '/analytics',
-        component: '/dashboard/analytics/index',
-        meta: {
-          affixTab: true,
-          title: 'page.dashboard.analytics',
-        },
-      },
-      {
-        name: 'Workspace',
-        path: '/workspace',
-        component: '/dashboard/workspace/index',
-        meta: {
-          title: 'page.dashboard.workspace',
-        },
-      },
-    ],
-  },
-]
+export interface DeptDatabase {
+  /**
+   * 部门编号
+   */
+  id: number;
+  /**
+   * 部门名称
+   */
+  name: string;
+  /**
+   * 父部门 ID
+   */
+  parentId: number;
+  [property: string]: any;
+}
 
-const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
-  const roleWithMenus = {
-    admin: {
-      component: '/demos/access/admin-visible',
-      meta: {
-        icon: 'mdi:button-cursor',
-        title: 'demos.access.adminVisible',
-      },
-      name: 'AccessAdminVisibleDemo',
-      path: '/demos/access/admin-visible',
-    },
-    super: {
-      component: '/demos/access/super-visible',
-      meta: {
-        icon: 'mdi:button-cursor',
-        title: 'demos.access.superVisible',
-      },
-      name: 'AccessSuperVisibleDemo',
-      path: '/demos/access/super-visible',
-    },
-    user: {
-      component: '/demos/access/user-visible',
-      meta: {
-        icon: 'mdi:button-cursor',
-        title: 'demos.access.userVisible',
-      },
-      name: 'AccessUserVisibleDemo',
-      path: '/demos/access/user-visible',
-    },
+export const TENANT_LIST: TenantInfo[] = [
+  {
+    'id': 1,
+    'name': 'Super',
+    'contactName': null,
+    'contactMobile': null,
+    'status': null,
+    'websites': null,
+    'packageId': null,
+    'expireTime': null,
+    'accountCount': null,
+    'createTime': null
+  },
+  {
+    'id': 121,
+    'name': 'Admin',
+    'contactName': null,
+    'contactMobile': null,
+    'status': null,
+    'websites': null,
+    'packageId': null,
+    'expireTime': null,
+    'accountCount': null,
+    'createTime': null
+  },
+  {
+    'id': 122,
+    'name': 'User',
+    'contactName': null,
+    'contactMobile': null,
+    'status': null,
+    'websites': null,
+    'packageId': null,
+    'expireTime': null,
+    'accountCount': null,
+    'createTime': null
   }
+]
 
-  return [
+export const MOCK_USERS: UserDatabase[] = [
+  {
+    'id': 1,
+    'nickname': 'admin',
+    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'deptId': 103,
+    'username': 'admin',
+    'email': '11aoteman@126.com',
+    'tenantId': 1,
+    'password': 'admin123',
+    'roleId': [1, 2]
+  },
+  {
+    'id': 143,
+    'nickname': 'jack',
+    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'deptId': 110,
+    'username': 'jack',
+    'email': '',
+    'tenantId': 121,
+    'password': '123456',
+    'roleId': [109]
+  },
+  {
+    'id': 144,
+    'nickname': 'gx12358',
+    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'deptId': 110,
+    'username': 'gx12358',
+    'email': '',
+    'tenantId': 122,
+    'password': '123456',
+    'roleId': [111]
+  }
+]
+
+export const MOCK_ROLES: Record<any, RoleDatabase[]> = {
+  1: [
     {
-      meta: {
-        icon: 'ic:baseline-view-in-ar',
-        keepAlive: true,
-        order: 1000,
-        title: 'demos.title',
-      },
-      name: 'Demos',
-      path: '/demos',
-      redirect: '/demos/access',
-      children: [
-        {
-          name: 'AccessDemos',
-          path: '/demosaccess',
-          meta: {
-            icon: 'mdi:cloud-key-outline',
-            title: 'demos.access.backendPermissions',
-          },
-          redirect: '/demos/access/page-control',
-          children: [
-            {
-              name: 'AccessPageControlDemo',
-              path: '/demos/access/page-control',
-              component: '/demos/access/index',
-              meta: {
-                icon: 'mdi:page-previous-outline',
-                title: 'demos.access.pageAccess',
-              },
-            },
-            {
-              name: 'AccessButtonControlDemo',
-              path: '/demos/access/button-control',
-              component: '/demos/access/button-control',
-              meta: {
-                icon: 'mdi:button-cursor',
-                title: 'demos.access.buttonControl',
-              },
-            },
-            {
-              name: 'AccessMenuVisible403Demo',
-              path: '/demos/access/menu-visible-403',
-              component: '/demos/access/menu-visible-403',
-              meta: {
-                authority: ['no-body'],
-                icon: 'mdi:button-cursor',
-                menuVisibleWithForbidden: true,
-                title: 'demos.access.menuVisible403',
-              },
-            },
-            roleWithMenus[role],
-          ],
-        },
-      ],
+      'id': 1,
+      'name': '超级管理员',
+      'code': 'super_admin',
+      'sort': 1,
+      'status': 0,
+      'type': 1,
+      'remark': '超级管理员',
+      'dataScope': 1,
+      'dataScopeDeptIds': null,
+      'createTime': 1609837428000
     },
+    {
+      'id': 2,
+      'name': '普通角色',
+      'code': 'common',
+      'sort': 2,
+      'status': 0,
+      'type': 1,
+      'remark': '普通角色',
+      'dataScope': 2,
+      'dataScopeDeptIds': null,
+      'createTime': 1609837428000
+    },
+    {
+      'id': 3,
+      'name': 'CRM 管理员',
+      'code': 'crm_admin',
+      'sort': 2,
+      'status': 0,
+      'type': 1,
+      'remark': 'CRM 专属角色',
+      'dataScope': 1,
+      'dataScopeDeptIds': null,
+      'createTime': 1708743073000
+    },
+    {
+      'id': 155,
+      'name': '测试数据权限',
+      'code': 'test-dp',
+      'sort': 3,
+      'status': 0,
+      'type': 2,
+      'remark': '',
+      'dataScope': 2,
+      'dataScopeDeptIds': [
+        100,
+        102,
+        103,
+        104,
+        105,
+        108
+      ],
+      'createTime': 1743404286000
+    }
+  ],
+  121: [
+    {
+      'id': 109,
+      'name': '租户管理员',
+      'code': 'tenant_admin',
+      'sort': 0,
+      'status': 0,
+      'type': 1,
+      'remark': '',
+      'dataScope': 1,
+      'dataScopeDeptIds': [],
+      'createTime': 1743404286000
+    }
+  ],
+  122: [
+    {
+      'id': 111,
+      'name': '租户管理员',
+      'code': 'tenant_admin',
+      'sort': 0,
+      'status': 0,
+      'type': 1,
+      'remark': '',
+      'dataScope': 1,
+      'dataScopeDeptIds': [],
+      'createTime': 1743404286000
+    }
+  ],
+}
+
+export const MOCK_DEPT: Record<any, DeptDatabase[]> = {
+  1: [
+    {
+      'id': 100,
+      'name': '芋道源码',
+      'parentId': 0
+    },
+    {
+      'id': 101,
+      'name': '深圳总公司',
+      'parentId': 100
+    },
+    {
+      'id': 103,
+      'name': '研发部门',
+      'parentId': 101
+    },
+    {
+      'id': 108,
+      'name': '市场部门',
+      'parentId': 102
+    },
+    {
+      'id': 102,
+      'name': '长沙分公司',
+      'parentId': 100
+    },
+    {
+      'id': 104,
+      'name': '市场部门',
+      'parentId': 101
+    },
+    {
+      'id': 109,
+      'name': '财务部门',
+      'parentId': 102
+    },
+    {
+      'id': 105,
+      'name': '测试部门',
+      'parentId': 101
+    },
+    {
+      'id': 106,
+      'name': '财务部门',
+      'parentId': 101
+    },
+    {
+      'id': 107,
+      'name': '运维部门',
+      'parentId': 101
+    }
+  ],
+  121: [
+    {
+      'id': 110,
+      'name': '新部门',
+      'parentId': 0,
+      'sort': 1,
+      'leaderUserId': null,
+      'phone': null,
+      'email': null,
+      'status': 0,
+      'createTime': 1645620390000
+    }
+  ],
+  122: [
+    {
+      'id': 111,
+      'name': '顶级部门',
+      'parentId': 0,
+      'sort': 1,
+      'leaderUserId': null,
+      'phone': null,
+      'email': null,
+      'status': 0,
+      'createTime': 1646660690000
+    }
   ]
 }
 
-export const MOCK_MENUS = [
-  {
-    menus: [...dashboardMenus, ...createDemosMenus('super')],
-    username: 'vben',
-  },
-  {
-    menus: [...dashboardMenus, ...createDemosMenus('admin')],
-    username: 'admin',
-  },
-  {
-    menus: [...dashboardMenus, ...createDemosMenus('user')],
-    username: 'jack',
-  },
-]
-
-export const MOCK_MENU_LIST = [
-  {
-    id: 1,
-    name: 'Workspace',
-    status: 1,
-    type: 'menu',
-    icon: 'mdi:dashboard',
-    path: '/workspace',
-    component: '/dashboard/workspace/index',
-    meta: {
-      icon: 'carbon:workspace',
-      title: 'page.dashboard.workspace',
-      affixTab: true,
-      order: 0,
-    },
-  },
-  {
-    id: 2,
-    meta: {
-      icon: 'carbon:settings',
-      order: 9997,
-      title: 'system.title',
-      badge: 'new',
-      badgeType: 'normal',
-      badgeVariants: 'primary',
-    },
-    status: 1,
-    type: 'catalog',
-    name: 'System',
-    path: '/system',
-    children: [
-      {
-        id: 201,
-        pid: 2,
-        path: '/system/menu',
-        name: 'SystemMenu',
-        authCode: 'System:Menu:List',
-        status: 1,
-        type: 'menu',
-        meta: {
-          icon: 'carbon:menu',
-          title: 'system.menu.title',
+export const MOCK_MENUS: Record<any, any> = {
+  1: [
+    {
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      icon: 'setting',
+      menuId: 1,
+      path: 'system',
+      redirect: '/system/user',
+      name: '系统管理',
+      componentName: 'System',
+      menuType: 'M',
+      sort: 6,
+      parentId: 0,
+      children: [
+        {
+          component: 'system/user/index',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          icon: 'user',
+          menuId: 2,
+          path: 'user',
+          name: '用户管理',
+          componentName: 'SystemUser',
+          menuType: 'C',
+          sort: 1,
+          parentId: 1,
         },
-        component: '/system/menu/list',
-        children: [
-          {
-            id: 20_101,
-            pid: 201,
-            name: 'SystemMenuCreate',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Menu:Create',
-            meta: { title: 'common.create' },
-          },
-          {
-            id: 20_102,
-            pid: 201,
-            name: 'SystemMenuEdit',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Menu:Edit',
-            meta: { title: 'common.edit' },
-          },
-          {
-            id: 20_103,
-            pid: 201,
-            name: 'SystemMenuDelete',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Menu:Delete',
-            meta: { title: 'common.delete' },
-          },
-        ],
-      },
-      {
-        id: 202,
-        pid: 2,
-        path: '/system/dept',
-        name: 'SystemDept',
-        status: 1,
-        type: 'menu',
-        authCode: 'System:Dept:List',
-        meta: {
-          icon: 'carbon:container-services',
-          title: 'system.dept.title',
+        {
+          component: 'system/role/index',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          icon: 'roleBinding',
+          menuId: 3,
+          path: 'role',
+          name: '角色管理',
+          componentName: 'SystemRole',
+          menuType: 'C',
+          sort: 2,
+          parentId: 1,
         },
-        component: '/system/dept/list',
-        children: [
-          {
-            id: 20_401,
-            pid: 202,
-            name: 'SystemDeptCreate',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Dept:Create',
-            meta: { title: 'common.create' },
-          },
-          {
-            id: 20_402,
-            pid: 202,
-            name: 'SystemDeptEdit',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Dept:Edit',
-            meta: { title: 'common.edit' },
-          },
-          {
-            id: 20_403,
-            pid: 202,
-            name: 'SystemDeptDelete',
-            status: 1,
-            type: 'button',
-            authCode: 'System:Dept:Delete',
-            meta: { title: 'common.delete' },
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 9,
-    meta: {
-      badgeType: 'dot',
-      order: 9998,
-      title: 'demos.vben.title',
-      icon: 'carbon:data-center',
-    },
-    name: 'Project',
-    path: '/vben-admin',
-    type: 'catalog',
-    status: 1,
-    children: [
-      {
-        id: 901,
-        pid: 9,
-        name: 'VbenDocument',
-        path: '/vben-admin/document',
-        component: 'IFrameView',
-        type: 'embedded',
-        status: 1,
-        meta: {
-          icon: 'carbon:book',
-          iframeSrc: 'https://doc.vben.pro',
-          title: 'demos.vben.document',
+        {
+          component: 'system/menu/index',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          icon: 'menu',
+          menuId: 4,
+          path: 'menu',
+          name: '菜单管理',
+          componentName: 'SystemMenu',
+          menuType: 'C',
+          sort: 3,
+          parentId: 1,
         },
-      },
-      {
-        id: 902,
-        pid: 9,
-        name: 'VbenGithub',
-        path: '/vben-admin/github',
-        component: 'IFrameView',
-        type: 'link',
-        status: 1,
-        meta: {
-          icon: 'carbon:logo-github',
-          link: 'https://github.com/gx12358/vue3-antd-admin',
-          title: 'Github',
-        },
-      },
-      {
-        id: 903,
-        pid: 9,
-        name: 'VbenAntdv',
-        path: '/vben-admin/antdv',
-        component: 'IFrameView',
-        type: 'link',
-        status: 0,
-        meta: {
-          icon: 'carbon:hexagon-vertical-solid',
-          badgeType: 'dot',
-          link: 'https://ant.vben.pro',
-          title: 'demos.vben.antdv',
-        },
-      },
-    ],
-  },
-  {
-    id: 10,
-    component: '_core/about/index',
-    type: 'menu',
-    status: 1,
-    meta: {
-      icon: 'lucide:copyright',
-      order: 9999,
-      title: 'demos.vben.about',
-    },
-    name: 'About',
-    path: '/about',
-  },
-]
-
-export function getMenuIds(menus: any[]) {
-  const ids: number[] = []
-  menus.forEach((item) => {
-    ids.push(item.id)
-    if (item.children && item.children.length > 0) {
-      ids.push(...getMenuIds(item.children))
+      ]
     }
-  })
-  return ids
+  ],
+  2: [
+    {
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      icon: 'setting',
+      menuId: 1,
+      path: 'system',
+      redirect: '/system/user',
+      name: '系统管理',
+      componentName: 'System',
+      menuType: 'M',
+      sort: 6,
+      parentId: 0,
+      children: [
+        {
+          component: 'system/user/index',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          icon: 'user',
+          menuId: 2,
+          path: 'user',
+          name: '用户管理',
+          componentName: 'SystemUser',
+          menuType: 'C',
+          sort: 1,
+          parentId: 1,
+        },
+      ]
+    }
+  ],
+  3: [
+    {
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      icon: 'setting',
+      menuId: 1,
+      path: 'system',
+      redirect: '/system/user',
+      name: '系统管理',
+      componentName: 'System',
+      menuType: 'M',
+      sort: 6,
+      parentId: 0,
+      children: [
+        {
+          component: 'system/user/index',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          icon: 'user',
+          menuId: 2,
+          path: 'user',
+          name: '用户管理',
+          componentName: 'SystemUser',
+          menuType: 'C',
+          sort: 1,
+          parentId: 1,
+        },
+      ]
+    }
+  ],
 }
 
 /**
- * 时区选项
+ * @Author      gx12358
+ * @DateTime    2025/11/17
+ * @lastTime    2025/11/17
+ * @description 时区选项
  */
 export const TIME_ZONE_OPTIONS: TimezoneOption[] = [
   {

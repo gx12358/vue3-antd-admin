@@ -92,7 +92,7 @@ export function useEchart(chartId: string, options: MaybeRef<ECOption>) {
       initCharts(chartId)
       renderEchart(isRef(options) ? options.value : options)
     }
-  })
+  }, { immediate: true })
 
   function renderEchart(
     options: ECOption,

@@ -34,8 +34,13 @@ function defineApplicationConfig<T = undefined>(userConfigPromise?: DefineApplic
       html: true,
       unocss: true,
       isBuild,
+      nitroMock: !isBuild,
       license: true,
       injectMetadata: true,
+      print: !isBuild,
+      printInfoMap: {
+        'GX Admin Pro Docs': 'https://gx12358.cn/doc'
+      },
       mode,
       ...envConfig,
       ...application

@@ -1,24 +1,7 @@
 import type { BasicLayoutProps, MenuDataItem, MenuMeta } from '@gx-design-vue/pro-layout'
 import type { AppRouteModule as GProAppRouteModule } from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
+import type { UserInfo as BasicUserInfo } from '@gx/types'
 import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
-import type {
-  BarSeriesOption,
-  LineSeriesOption,
-  PieSeriesOption,
-  RadarSeriesOption
-} from 'echarts/charts'
-import type {
-  DatasetComponentOption,
-  GridComponentOption,
-  LegendComponentOption,
-  RadarComponentOption,
-  // 组件类型的定义后缀都为 ComponentOption
-  TitleComponentOption,
-  TooltipComponentOption
-} from 'echarts/components'
-import type {
-  ComposeOption,
-} from 'echarts/core'
 
 declare global {
   // 扩展 ProLayout-settings 类型
@@ -103,50 +86,7 @@ declare global {
   }
 
   // 系统用户信息 类型
-  interface UserInfo {
-    roles: string[];
-    permissions: string[];
-    user: UserDetails;
-  }
-
-  // 系统用户详情 类型
-  interface UserDetails {
-    createBy?: string
-    createTime?: string
-    updateBy?: string
-    updateTime?: string
-    remark?: string
-    userId?: number
-    deptId?: number
-    userName?: string
-    nickName: string
-    email: string
-    introduction?: string
-    address?: string
-    cityCode?: string
-    districtCode?: string
-    provinceCode?: string
-    phonenumber: string
-    sex?: string // 假设 '1' 代表某种性别，可能需要进一步定义
-    avatar?: string
-    password?: string
-    status?: string
-    delFlag?: string
-    loginIp?: string
-    signature?: string
-    tags?: string
-    levelName?: string
-    loginDate?: string // ISO 8601 格式
-    dept?: DepartBaseInfo
-    roles?: RoleInfo[] // 根据具体结构可进一步定义
-    roleIds?: number[]
-    postIds?: number[]
-    roleId?: number
-    admin?: boolean
-    group?: {
-      title?: string
-    }
-  }
+  interface UserInfo extends BasicUserInfo {}
 
   interface DefaultTableRecord {
     id: any;
@@ -184,24 +124,8 @@ declare global {
 
   // 扩展 AppRouteModule 类型 为 系统菜单 类型
   interface SystemMenuItem extends Omit<MenuDataItem, 'children'> {
+    sort?: MenuDataItem['order']
+    componentName?: MenuDataItem['name']
     children?: SystemMenuItem[]
   }
-
-  class FilerobotImageEditor {
-    constructor(selector: HTMLElement, options: any) {}
-  }
-
-  // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
-  type ECOption = ComposeOption<
-    | RadarSeriesOption
-    | PieSeriesOption
-    | BarSeriesOption
-    | LineSeriesOption
-    | RadarComponentOption
-    | LegendComponentOption
-    | TitleComponentOption
-    | TooltipComponentOption
-    | GridComponentOption
-    | DatasetComponentOption
-  >
 }

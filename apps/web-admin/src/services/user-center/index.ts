@@ -1,23 +1,36 @@
 import { requestClient } from '@/services/base'
+import * as AuthApi from './typing'
 
 export * from './account'
 
-export function login<T, D>(data) {
-  return requestClient.post<T, D>('/user/login', {
-    data,
-    isMock: true
+export { AuthApi }
+
+export function loginApi(data) {
+  return requestClient.post<AuthApi.LoginResult>('/system/auth/login', {
+    data
   })
 }
 
-export function logout() {
-  return requestClient.get('/user/logout', {
-    isMock: true
-  })
+/** 刷新 accessToken */
+export function refreshTokenApi(refreshToken: string) {
+  return requestClient.post(
+    `/system/auth/refresh-token?refreshToken=${refreshToken}`,
+  )
 }
 
-export function register(data) {
+export function logoutApi() {
+  return requestClient.get('/system/auth/logout')
+}
+
+export function registerApi(data) {
   return requestClient.post('/user/register', {
     data,
-    isMock: true
   })
+}
+
+/** 获取权限信息 */
+export async function getAuthPermissionInfoApi() {
+  return requestClient.get<AuthApi.AuthPermissionInfo>(
+    '/system/auth/get-permission-info',
+  )
 }

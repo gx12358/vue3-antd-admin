@@ -2,7 +2,7 @@ import { isArray, isBoolean, isFunction } from '@gx-design-vue/pro-utils'
 import { defineFakeRoute } from '@gx/vite-config'
 import { omit } from 'lodash-es'
 import { app } from '../config'
-import { checkBackDataFun, getToken } from './utils/util'
+import { checkBackDataFun } from './utils/util'
 
 const { mock } = app
 
@@ -13,7 +13,7 @@ export interface MockResponse {
 }
 
 export type MockResponseCallback
-  = | ((response: MockResponse, token?: string) => any)
+  = | ((response: MockResponse) => any)
   | string | number | Recordable | any[] | null
 
 export type MockConfig = FakeRouteConfig & {
@@ -22,9 +22,9 @@ export type MockConfig = FakeRouteConfig & {
   callback: MockResponseCallback;
 }
 
-function getRequestData(callback: MockResponseCallback, request: MockResponse, token?: string) {
+function getRequestData(callback: MockResponseCallback, request: MockResponse) {
   if (isFunction(callback)) {
-    return callback?.(request, token)
+    return callback?.(request)
   }
 
   return callback
@@ -37,8 +37,7 @@ function getMockRouteConfig(config: MockConfig) {
     url: `${mock.prefix}${config.url}`,
     response: (request: MockResponse) => {
       if (carryToken) {
-        const token = getToken(request.headers)
-        return checkBackDataFun(getRequestData(config.callback, request, token) || {}, token || '', config.merageRoot)
+        return checkBackDataFun(getRequestData(config.callback, request) || {}, config.merageRoot)
       }
       return getRequestData(config.callback, request)
     }

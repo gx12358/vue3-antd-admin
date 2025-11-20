@@ -1,34 +1,60 @@
 <script setup lang="ts">
+import type { AuthApi } from '@/services/user-center'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { app } from '@gx-config'
 import { cn, isDev } from '@gx-core/shared/utils'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getTenantByWebsite, getTenantSimpleList } from '@/services/tenant-center'
 import { storage } from '@/utils/storage'
+
+defineOptions({ name: 'SocialLogin' })
 
 type LoginType = 'account' | 'phone' | 'scanCode'
 
 interface UserState {
+  tenantId: number | undefined
   username: string
   password: string
+}
+
+const accountMap = {
+  1: [
+    {
+      username: 'admin',
+      password: 'admin123'
+    }
+  ],
+  121: [
+    {
+      username: 'jack',
+      password: '123456'
+    }
+  ],
+  122: [
+    {
+      username: 'gx12358',
+      password: '123456'
+    }
+  ]
 }
 
 const { title } = app.system
 
 const userFormValue = storage.getStorage<UserState>({ key: 'gx-login-form' })
 
-const userOutlined = h(UserOutlined)
-const lockOutlined = h(LockOutlined)
-
 const { user, layout, theme } = useStore()
 const route = useRoute()
 const router = useRouter()
+const { permission } = useStore()
 
 const toggleEl = ref()
 const loading = ref(false)
 const autoLogin = ref(true)
 const redirect = ref('/')
+/** 获取租户列表，并默认选中 */
+const tenantList = ref<AuthApi.TenantResult[]>([]) // 租户列表
 
 const loginType = reactive({
   options: [
@@ -49,26 +75,58 @@ const loginType = reactive({
   ],
   value: 'account' as LoginType
 })
-
 const userForm = reactive<UserState>({
   username: userFormValue?.username || (isDev() ? '' : ''),
-  password: userFormValue?.password || (isDev() ? '' : '')
+  password: userFormValue?.password || (isDev() ? '' : ''),
+  tenantId: userFormValue?.tenantId || undefined
 })
 
 const { validateInfos, validate } = useProForm(userForm, {
+  tenantId: [ { required: true, message: '请选择租户！' } ],
   username: [ { required: true, message: '用户名是必填项！' } ],
-  password: [ { required: true, message: '密码是必填项！' } ]
+  password: [ { required: true, message: '密码是必填项！' } ],
 })
 
 watch(() => route.fullPath, () => {
   redirect.value = (route.query?.redirect as string) || '/'
 }, { deep: true, immediate: true })
 
-function setAccount(type: 'admin') {
-  if (type === 'admin') {
-    userForm.username = 'admin'
-    userForm.password = '123456'
+onMounted(() => {
+  fetchTenantList()
+})
+
+async function fetchTenantList() {
+  try {
+    // 获取租户列表、域名对应租户
+    const websiteTenantPromise = getTenantByWebsite(window.location.hostname)
+    tenantList.value = await getTenantSimpleList()
+
+    // 选中租户：域名 > store 中的租户 > 首个租户
+    let tenantId: undefined | number
+    const websiteTenant = await websiteTenantPromise
+    if (websiteTenant?.id) {
+      tenantId = websiteTenant.id
+    }
+    // 如果没有从域名获取到租户，尝试从 store 中获取
+    if (!tenantId && permission.tenantId) {
+      tenantId = permission.tenantId
+    }
+    // 如果还是没有租户，使用列表中的第一个
+    if (!tenantId && tenantList.value?.[0]?.id) {
+      tenantId = tenantList.value[0].id
+    }
+
+    // 设置选中的租户编号
+    permission.setValue({ tenantId })
+
+    userForm.tenantId = tenantId
+  } catch (error) {
+    console.error('获取租户列表失败:', error)
   }
+}
+
+function setAccount(userinfo) {
+  Object.assign(userForm, { ...userinfo })
 }
 
 const handleRoute = () => {
@@ -79,8 +137,8 @@ const handleRoute = () => {
 
 const handleSubmit = async () => {
   validate().then(async () => {
-    const response = await user.userLogin({ ...toRaw(userForm) })
-    if (response) {
+    const status = await user.userLogin({ ...toRaw(userForm) })
+    if (status) {
       if (autoLogin.value) {
         storage.setStorage({
           key: 'gx-login-form',
@@ -133,12 +191,24 @@ const handleSubmit = async () => {
         </div>
         <a-segmented v-model:value="loginType.value" :options="loginType.options" size="large" />
         <a-form name="login" layout="vertical" class="mt-8" @sumbit="handleSubmit">
+          <a-form-item name="tenantId" v-bind="validateInfos.tenantId">
+            <a-select
+              v-model:value="userForm.tenantId"
+              size="large"
+              allow-clear
+              :options="tenantList.map(item => ({
+                label: item.name,
+                value: item.id,
+              }))"
+              placeholder="请选择租户"
+            />
+          </a-form-item>
           <a-form-item name="username" v-bind="validateInfos.username">
             <a-input
               v-model:value="userForm.username"
               size="large"
               allow-clear
-              :prefix="userOutlined"
+              :prefix="h(UserOutlined)"
               placeholder="请输入用户名"
             />
           </a-form-item>
@@ -146,7 +216,7 @@ const handleSubmit = async () => {
             <a-input-password
               v-model:value="userForm.password"
               size="large"
-              :prefix="lockOutlined"
+              :prefix="h(LockOutlined)"
               allow-clear
               placeholder="请输入密码"
             />
@@ -173,8 +243,8 @@ const handleSubmit = async () => {
             </div>
             <template #overlay>
               <a-menu>
-                <a-menu-item @click.stop="setAccount('admin')">
-                  超级管理员
+                <a-menu-item v-for="item in accountMap[userForm.tenantId as number]" :key="item.username" @click.stop="setAccount(item)">
+                  {{ item.username }}
                 </a-menu-item>
               </a-menu>
             </template>

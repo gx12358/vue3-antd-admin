@@ -24,15 +24,17 @@ catalog:
   "@gx-design-vue/pro-app": ^0.1.0-beta.33
   "@gx-design-vue/pro-card": ^0.2.0-beta.39
   "@gx-design-vue/pro-hooks": ^0.2.0-beta.55
-  "@gx-design-vue/pro-layout": ^0.1.0-beta.169
-  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.20
+  "@gx-design-vue/pro-layout": ^0.1.0-beta.170
+  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.21
   "@gx-design-vue/pro-modal": ^0.2.0-beta.37
   "@gx-design-vue/pro-provider": ^0.1.0-beta.130
   "@gx-design-vue/pro-table": ^0.2.0-beta.123
   "@gx-design-vue/pro-utils": ^0.2.0-beta.80
   "@gx-design-vue/pro-watermark": ^0.2.0-beta.15
   "@gx-design-vue/scrollbar": ^0.2.0-beta.21
+  "@iconify/vue": ^5.0.0
   "@manypkg/get-packages": ^3.1.0
+  "@multiavatar/multiavatar": ^1.0.7
   "@pnpm/workspace.read-manifest": ^1000.2.5
   "@types/archiver": ^6.0.4
   "@types/jsonwebtoken": ^9.0.10
@@ -70,6 +72,7 @@ catalog:
   echarts: ^6.0.0
   execa: ^9.6.0
   find-up: ^8.0.0
+  get-port: ^7.1.0
   h3: ^1.5.3
   highlight.js: ^11.11.1
   husky: ^9.1.7

@@ -95,7 +95,7 @@ const logout = (callBack?: any) => {
       </div>
     </template>
     <template #rightContentRender>
-      <GRightContent :avatar="user.userInfo.avatar" @click="onRightClick" @logout="logout">
+      <GRightContent :name="user.userInfo.nickname" :avatar="user.userInfo.avatar" @click="onRightClick" @logout="logout">
         <template #actionsRender="classNames">
           <div :class="classNames">
             <BellOutlined />
@@ -108,7 +108,7 @@ const logout = (callBack?: any) => {
               <div class="flex flex-col justify-between">
                 <div class="flex items-center gap-10px">
                   <span>
-                    {{ user.userInfo.nickName }}
+                    {{ user.userInfo.nickname }}
                   </span>
                   <a-tag class="text-12px">
                     Pro

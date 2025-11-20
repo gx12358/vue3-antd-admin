@@ -1,11 +1,5 @@
 import { requestClient } from '@/services/base'
 
-export function getUserInfo<T, D = undefined>() {
-  return requestClient.get<T, D>('/user/queryUserDetail', {
-    isMock: true
-  })
-}
-
 export function getUserList() {
   return requestClient.get('/user/account/list', {
     isMock: true

@@ -4,7 +4,6 @@ import { getLastPath } from '@gx-design-vue/pro-layout'
 import { defineStore } from 'pinia'
 import { generator, getRootMenu } from '@/router/helper/routeHelper'
 import { localRoutes, notFoundRoute } from '@/router/routes'
-import { getRouters } from '@/services/system-center'
 
 const { router } = app.system
 
@@ -29,24 +28,28 @@ export const useStoreRoutes = defineStore('routes', () => {
    * @lastTime    2022/1/11
    * @description all（后端动态路由）
    */
-  const setAllRoutes = async () => {
+  const setAllRoutes = async (menus: SystemMenuItem[]) => {
     try {
-      const response: ResponseResult<SystemMenuItem[]> = await getRouters()
-      if (response) {
-        const rootMenu = getRootMenu(response.data || [])
-        const asyncRouteList = generator(rootMenu)
-        asyncRouteList[0].children = localRoutes.concat([ ...(asyncRouteList[0]?.children || []) ])
-        asyncRouteList[0].redirect = router.rootPath || getLastPath(asyncRouteList[0].children as any)
-        asyncRouteList.push(notFoundRoute)
-        setValue({ routes: asyncRouteList })
-        return asyncRouteList
-      }
+      const rootMenu = getRootMenu(menus || [])
+      const asyncRouteList = generator(rootMenu)
+      asyncRouteList[0].children = localRoutes.concat([ ...(asyncRouteList[0]?.children || []) ])
+      asyncRouteList[0].redirect = router.rootPath || getLastPath(asyncRouteList[0].children as any)
+      asyncRouteList.push(notFoundRoute)
+      setValue({ routes: asyncRouteList })
+      return asyncRouteList
     } catch {}
     return []
   }
 
+  function clear() {
+    setValue({
+      routes: []
+    })
+  }
+
   return {
     ...toRefs(state),
+    clear,
     setValue,
     setAllRoutes
   }

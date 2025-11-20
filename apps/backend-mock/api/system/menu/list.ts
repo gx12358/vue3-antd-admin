@@ -1,6 +1,7 @@
 import { eventHandler } from 'h3'
+import { getTenantCookie } from '~/utils/cookie-utils'
 import { verifyAccessToken } from '~/utils/jwt-utils'
-import { MOCK_MENU_LIST } from '~/utils/mock-data'
+import { MOCK_MENUS } from '~/utils/mock-data'
 import { unAuthorizedResponse, useResponseSuccess } from '~/utils/response'
 
 export default eventHandler(async (event) => {
@@ -9,5 +10,8 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event)
   }
 
-  return useResponseSuccess(MOCK_MENU_LIST)
+  const tenantId = getTenantCookie(event)
+
+  const menus = MOCK_MENUS[tenantId]
+  return useResponseSuccess(menus)
 })

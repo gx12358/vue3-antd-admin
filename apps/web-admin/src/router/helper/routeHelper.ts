@@ -155,7 +155,6 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     menuType,
     icon,
     menuSelectKey,
-    order,
     iconPrefix = '',
     tabState, // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
     keepAlive = false,
@@ -169,16 +168,17 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
   const hasLink = menuItem.component === 'IframeLayout'
   const link = menuItem.link || (hasLink ? menuItem.path : '')
   const linkStatus = menuItem.linkStatus ?? (hasLink ? 1 : 0)
+  const order = menuItem.order ?? menuItem.sort ?? sort
   return {
-    key: menuItem.name,
-    name: menuItem.name,
+    key: menuItem.componentName || menuItem.name,
+    name: menuItem.componentName || menuItem.name,
     path: menuItem.path,
     disabled: menuItem.disabled || false,
     redirect: menuItem.redirect === 'noRedirect' ? '' : menuItem.redirect,
     component: [ 'Layout', 'ParentView', 'ContentView' ].includes(menuItem.component as string) ? undefined : menuItem.component,
 
     icon,
-    title,
+    title: title || menuItem.name,
     order: isNumber(order) ? order : sort || 0,
     keepAlive,
     menuType,

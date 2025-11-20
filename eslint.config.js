@@ -12,6 +12,7 @@ export default antFuEslint({
 }, {
   rules: {
     'curly': 0,
+    'ts/no-namespace': 0,
     'valid-typeof': 0,
     'style/no-tabs': 0,
     'vue/eqeqeq': 0,

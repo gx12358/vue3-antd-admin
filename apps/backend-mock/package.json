@@ -11,11 +11,16 @@
   },
   "dependencies": {
     "@faker-js/faker": "catalog:",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "dayjs": "catalog:",
     "jsonwebtoken": "catalog:",
+    "lodash-es": "catalog:",
     "nitropack": "catalog:"
   },
   "devDependencies": {
+    "@gx/types": "workspace:*",
     "@types/jsonwebtoken": "catalog:",
+    "@types/lodash-es": "catalog:",
     "h3": "catalog:"
   }
 }

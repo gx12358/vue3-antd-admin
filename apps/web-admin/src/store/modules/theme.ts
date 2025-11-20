@@ -28,7 +28,12 @@ export const useStoreTheme = defineStore('theme', () => {
   const token = ref(getToken())
 
   // root css var
-  const cssVar = ref<TokenCssVar>([])
+  const cssVar = ref<TokenCssVar>([
+    'borderRadius',
+    'borderRadiusLG',
+    'paddingLG',
+    'colorBorderSecondary',
+  ])
 
   function toggle(el?: HTMLElement) {
     if (el) {

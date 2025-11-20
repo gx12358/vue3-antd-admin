@@ -30,6 +30,8 @@
     "@gx-design-vue/pro-utils": "catalog:",
     "archiver": "catalog:",
     "dayjs": "catalog:",
+    "get-port": "catalog:",
+    "nitropack": "catalog:",
     "pkg-types": "catalog:"
   },
   "devDependencies": {
