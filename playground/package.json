@@ -26,9 +26,19 @@
     "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
     "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/context": "catalog:",
+    "@gx-design-vue/pro-app": "catalog:",
+    "@gx-design-vue/pro-card": "catalog:",
     "@gx-design-vue/pro-hooks": "catalog:",
+    "@gx-design-vue/pro-layout": "catalog:",
+    "@gx-design-vue/pro-layout-components": "catalog:",
+    "@gx-design-vue/pro-modal": "catalog:",
+    "@gx-design-vue/pro-provider": "catalog:",
     "@gx-design-vue/pro-utils": "catalog:",
+    "@gx-design-vue/pro-watermark": "catalog:",
+    "@gx-design-vue/scrollbar": "catalog:",
     "@gx/design": "workspace:*",
     "@gx/hooks": "workspace:*",
     "@gx/request": "workspace:*",
@@ -43,6 +53,7 @@
   },
   "devDependencies": {
     "@gx/types": "workspace:*",
+    "@gx/unocss-config": "workspace:*",
     "@types/lodash-es": "catalog:",
     "unocss": "catalog:"
   }

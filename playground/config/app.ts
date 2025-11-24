@@ -42,7 +42,7 @@ const settingConfig: SettingConfig = {
       // token失效回退到登录页时是否记录本次的路由
       recordRoute: true,
       // front（前端导出路由）和 all（后端导出路由）两种方式
-      auth: 'all',
+      auth: 'front',
     },
     // 是否开启登录拦截
     loginInterception: true,

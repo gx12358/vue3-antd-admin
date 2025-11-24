@@ -3,7 +3,7 @@ import type { MockTableRecord, SearchConfig } from './typings'
 import { deepCopy } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
-import { useDict, useUpdateTableSearch } from '@/hooks/system'
+import { useDict, useUpdateTableSearchMap } from '@/hooks/system'
 import { useProTable } from '@/hooks/web'
 import { getList } from '@/services/demo'
 import OperationModal from './components/OperationModal.vue'
@@ -13,12 +13,12 @@ import { columns } from './utils/columns'
 
 const emits = defineEmits([ 'changePageCard' ])
 
-useDict([ 'sys_common_status' ])
+useDict([ 'common_status' ])
 
 const tableRef = ref()
-const operationRef = useTemplateRef<InstanceType<typeof OperationModal>>('operationRef')
-const scrollModalRef = useTemplateRef<InstanceType<typeof ScrollModal>>('scrollModalRef')
-const scrollBreakpointModalRef = useTemplateRef<InstanceType<typeof ScrollBreakpointModal >>('scrollBreakpointModalRef')
+const operationRef = useTemplateRef<InstanceType<typeof OperationModal>>('operation')
+const scrollModalRef = useTemplateRef<InstanceType<typeof ScrollModal>>('scroll-modal')
+const scrollBreakpointModalRef = useTemplateRef<InstanceType<typeof ScrollBreakpointModal >>('scroll-breakpoint-modal')
 
 const state = reactive({
   inputSearchRef: '',
@@ -74,18 +74,18 @@ const { tableState, reload, updateSearchMap } = useProTable<MockTableRecord, Sea
       scroll: { x: 1850 }
     },
     request: async (params) => {
-      const { list, totalCount } = await getList<PageResult<MockTableRecord>>(params)
-      state.tableData = list || []
+      const { list = [], total = 0 } = await getList<PageResult<MockTableRecord>>(params)
+      state.tableData = list
       return {
-        data: deepCopy(list || []),
+        data: list,
         success: true,
-        total: totalCount || 0
+        total
       }
     }
   }
 )
 
-useUpdateTableSearch<keyof MockTableRecord>('sys_common_status', {
+useUpdateTableSearchMap<keyof MockTableRecord>('common_status', {
   key: 'status',
   callback: updateSearchMap
 })
@@ -417,23 +417,21 @@ function changeTableCard(val: boolean) {
       <template v-if="state.showOptionsExtra" #optionsExtra>
         <a-button>这是一个右侧额外的元素</a-button>
       </template>
-      <template #headerCell="{ column }">
-        <template v-if="column.dataIndex === 'name'">
-          FullName
-        </template>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'name'">
+      <template #bodyCell="{ column, record }: ProTableBodyCellProps<MockTableRecord>">
+        <template v-if="column.dataIndex === 'title'">
           这是高级列表的FullName的字段（测试溢出展示）：{{ record.title }}
+        </template>
+        <template v-if="column.dataIndex === 'percent'">
+          <a-progress :percent="record.percent" :show-info="false" />
         </template>
         <template v-if="column.dataIndex === 'action'">
           <a>这是高级列表的action的字段（测试溢出展示并且可复制）</a>
         </template>
       </template>
     </g-pro-table>
-    <ScrollModal ref="scrollModalRef" @handle-ok="handleScroll" />
-    <OperationModal ref="operationRef" @handle-ok="reload" />
-    <ScrollBreakpointModal ref="scrollBreakpointModalRef" @handle-ok="handleScrollBreakpoint" />
+    <ScrollModal ref="scroll-modal" @handle-ok="handleScroll" />
+    <OperationModal ref="operation" @handle-ok="reload" />
+    <ScrollBreakpointModal ref="scroll-breakpoint-modal" @handle-ok="handleScrollBreakpoint" />
   </g-pro-page-container>
 </template>
 

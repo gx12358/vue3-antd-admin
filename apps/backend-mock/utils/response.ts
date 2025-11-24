@@ -26,7 +26,7 @@ export function usePageResponseSuccess<T = any>(
   return {
     ...useResponseSuccess({
       list: pageData,
-      totalCount: list.length,
+      total: list.length,
     }),
     message,
   }

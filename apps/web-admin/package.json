@@ -32,6 +32,7 @@
     "@ant-design/icons-vue": "catalog:",
     "@gx-core/shared": "workspace:*",
     "@gx-design-vue/color-picker": "catalog:",
+    "@gx-design-vue/context": "catalog:",
     "@gx-design-vue/image": "catalog:",
     "@gx-design-vue/pro-app": "catalog:",
     "@gx-design-vue/pro-card": "catalog:",

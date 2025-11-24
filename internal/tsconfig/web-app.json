@@ -3,6 +3,6 @@
   "display": "Web Application",
   "extends": "./web.json",
   "compilerOptions": {
-    "types": ["vite/client", "@gx/types/global"]
+    "types": ["vite/client", "@gx/types/global", "@gx/types/dom"]
   }
 }

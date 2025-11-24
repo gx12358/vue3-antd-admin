@@ -1,10 +1,13 @@
 import type { CSSProperties, SlotsType } from 'vue'
-import type { OperationRenderProps } from './props'
+import type { GMediaViewProps } from '../media-view'
+import type { LimitProps, OperationRenderProps } from './props'
 import type { MaterialListItem } from './typings'
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { createFileName } from '@gx-core/shared/utils'
+import { unit } from '@gx-design-vue/pro-provider'
 import {
   checkFileType,
+  classNames,
   dataURLtoBlob,
   dataURLtoFile,
   fileTypes,
@@ -14,66 +17,58 @@ import {
   getMediaInfos,
   getPrefixCls,
   getSlot,
-  getSlotsChildren,
-  getSlotsProps,
   getSlotVNode,
   getVideoCoverPicture,
-  isBoolean,
+  isArray,
+  isFunction,
+  isNumber,
   isObject,
+  isString,
   merge
 } from '@gx-design-vue/pro-utils'
-import { message, Upload } from 'ant-design-vue'
-import { cloneDeep } from 'lodash-es'
+import { message as antMessage, Upload } from 'ant-design-vue'
+import { cloneDeep, pick } from 'lodash-es'
 import {
   computed,
   defineComponent,
   onDeactivated,
   onUnmounted,
   reactive,
-  ref,
   toRef,
   unref,
   watch
 } from 'vue'
-import MaterialView from '../media-view'
-import UploadCard from './components/UploadCard'
+import { GMediaView } from '../media-view'
+import CardItem from './components/CardItem'
 import { provideUploadContext } from './context'
 import { useUploadData } from './hooks/useUploadData'
-import { cardSize, proUploadProps } from './props'
-
-import './style.less'
+import { proUploadProps } from './props'
+import { useStyle } from './style'
 
 const GUpload = defineComponent({
   props: proUploadProps,
   inheritAttrs: false,
   slots: Object as SlotsType<{
     default(trigger: any): void;
-    fallback(): void;
-    wordExtra(): void;
-    placeholder(): void;
-    customOperationRender(props: OperationRenderProps): void;
-    triggerRender(): void;
+    fallback(props: MaterialListItem): void;
+    placeholder(props: MaterialListItem): void;
+    triggerIcon(): void;
+    dropdownMenu(props: MaterialListItem): void;
+    actionsRender(props: OperationRenderProps): void;
   }>,
   emits: [ 'deleteBefore', 'errorRequest', 'change', 'changeDownloadLoading', 'openFileDialog' ],
   setup(props, { emit, attrs, slots }) {
     const baseClassName = getPrefixCls({
+      isPor: true,
       suffixCls: 'upload'
     })
 
-    const uploadCard = ref()
-    const imageEditor = ref()
+    const { wrapSSR, hashId } = useStyle(baseClassName, props.cardProps?.borderRadius)
 
-    const previewConfig = reactive({
-      type: '' as MaterialListItem['type'],
-      url: '',
-      visible: false
-    })
-
-    const getClassName = computed(() => {
-      return {
-        [`${baseClassName}`]: true,
-        [`${attrs.class}`]: attrs.class
-      }
+    const previewConfig = reactive<GMediaViewProps>({
+      type: '1',
+      list: [],
+      open: false
     })
 
     watch(() => props.dataExtraInfo, () => {
@@ -81,8 +76,8 @@ const GUpload = defineComponent({
     }, { deep: true })
 
     const {
-      getUrlValueRef,
-      getDataValueRef,
+      listValue,
+      listUrlValue,
       setDataValue,
       addDataValue,
       changeDataValue,
@@ -91,15 +86,16 @@ const GUpload = defineComponent({
       deleteDataValue,
       deleteFileDataValue
     } = useUploadData({
-      limit: toRef(props, 'limit'),
-      dataList: toRef(props, 'dataList'),
-      bindValue: toRef(props, 'bindValue'),
-      coverDataList: toRef(props, 'coverDataList')
+      list: toRef(props, 'list'),
+      maxCount: toRef(props, 'maxCount'),
+      coverList: toRef(props, 'coverList')
     })
 
-    const showUpload = computed(() => props.disabled ? false : props.listType === 'card'
-      ? unref(getDataValueRef).length < props.limit
-      : true)
+    const showUploadSelect = computed(() => {
+      return props.disabled ? false : props.listType === 'card' && props.maxCount
+        ? unref(listValue).length < props.maxCount
+        : true
+    })
 
     onUnmounted(() => {
       setDataValue([])
@@ -113,62 +109,98 @@ const GUpload = defineComponent({
       batchChangeDataValue(props.dataExtraInfo)
     }
 
-    const beforeUpload = async (file) => {
+    const beforeUpload = async (file: File) => {
       const fileSuffix = getFileSuffix(file.name)
       const fileType = checkFileType(file.name)
-      let isFileType = true
-      let isFileSize = true
-      let isFileDuration = true
-      if (props.fileType.length > 0) {
-        if (props.fileType.length === 1 && props.fileType[0] === '*') {
-          isFileType = true
-        } else {
-          isFileType = props.fileType.includes(fileSuffix.toLowerCase())
-          if (!isFileType) {
-            const fileName = props.fileType.join('，')
-            message.error(
-              `请选择${props.fileType.length === 1 ? fileName : `（${fileName}）`}格式上传!`
-            )
+      let allow = true
+      let allowType = true
+      let allowSize = true
+      let allowDuration = true
+
+      if (isFunction(props.limit)) {
+        const status = await props.limit(file)
+        allow = status
+      } else if (isObject(props.limit)) {
+        const {
+          type,
+          size,
+          duration,
+          message
+        } = props.limit as LimitProps
+
+        // 这里处理文件类型
+        if (type) {
+          if (isString(type)) {
+            if (type !== '*') {
+              allowType = fileSuffix.toLowerCase() === type
+            }
+          } else if (isArray(type)) {
+            allowType = type.includes(fileSuffix.toLowerCase())
+          } else if (isFunction(type)) {
+            allowType = type(file)
           }
         }
-      }
-      isFileSize = props.fileSize ? file.size / 1024 / 1024 < props.fileSize : true
-      if (!isFileSize) {
-        message.error(`请上传${props.fileSize}MB以内的文件!`)
-      }
-      if ((fileType === '2' || fileType === '3') && isFileType && isFileSize) {
-        let fileDuration = 0
-        if (props.listType === 'card' || !getDataValueRef.value.length) {
-          addDataValue({
-            name: file.name,
-            size: file.size,
-            uploadLoading: true,
-            spinning: true,
-            loadingText: '正在准备中...'
-          })
-        } else {
-          const uuid = getDataValueRef.value[0].id
-          changeDataValue(uuid, {
-            name: file.name,
-            size: file.size,
-            uploadLoading: true,
-            spinning: true,
-            loadingText: '正在准备中...'
-          })
+
+        if (size && allowType) {
+          const fileSize = file.size / 1024 / 1024
+          if (isNumber(size)) {
+            allowSize = fileSize < size
+          } else if (isFunction(size)) {
+            allowSize = size(file)
+          }
         }
-        const { play, duration } = await getMediaInfos({
-          url: file,
-          fileType
-        })
-        if (play)
-          fileDuration = duration || 0
-        isFileDuration = props.fileDuration ? fileDuration < props.fileDuration : true
-        if ((fileType === '2' || fileType === '3') && !isFileDuration) {
-          message.error(`请上传${props.fileDuration}s以内的文件!`)
+
+        if (allowType && allowSize && (fileType === '2' || fileType === '3') && duration) {
+          let fileDuration = 0
+          const name = file.name
+          if (props.listType === 'card' || listValue.value.length === 0) {
+            addDataValue({
+              name,
+              size: file.size,
+              loading: true,
+              coverImageLoaded: fileType === '3' ? 'load' : 'success',
+              message: '正在准备中...'
+            })
+          } else {
+            // 直接替换第一个
+            const uuid = listValue.value[0].id
+            changeDataValue(uuid, {
+              name,
+              size: file.size,
+              loading: true,
+              message: '正在准备中...'
+            })
+          }
+
+          const result = await getMediaInfos({ url: file, fileType })
+          if (result.play) fileDuration = result.duration || 0
+
+          if (isNumber(duration)) {
+            allowDuration = fileDuration < duration
+          } else if (isFunction(duration)) {
+            allowDuration = duration(file)
+          }
         }
+
+        if (!allowType) {
+          antMessage.error(isFunction(message)
+            ? message('type', file)
+            : message || '上传文件格式不正确')
+        } else if (!allowSize) {
+          antMessage.error(isFunction(message)
+            ? message('size', file)
+            : message || '上传文件格式不正确')
+        } else if (!allowDuration) {
+          antMessage.error(isFunction(message)
+            ? message('duration', file)
+            : message || '上传文件格式不正确')
+        }
+
+        allow = allowType && allowSize && allowDuration
       }
+
       return new Promise<File | boolean>((resolve, reject) => {
-        if (isFileType && isFileSize && isFileDuration) {
+        if (allow) {
           resolve(file)
         } else {
           reject(false)
@@ -177,88 +209,55 @@ const GUpload = defineComponent({
       })
     }
 
-    const mediaCropper = async (uid, state?: { file: File; url: string }) => {
-      const fileUrl = state?.url || unref(getDataValueRef).find(item => item.id === uid)?.url || ''
-      const fileSuffix = getFileSuffix(fileUrl)
-      imageEditor.value?.openModal(fileUrl, {
-        suffix: fileSuffix,
-        uid
-      })
-    }
-
     const uploadCoverImgHttp = async (file, uuid) => {
       if (props.request) {
-        const response = await props.request(file, uuid)
-        if (response.code === 0) {
-          return response.previewUrl || response.url
+        const result = await props.request(file, uuid)
+        if (result.code === 0) {
+          return result.data.previewUrl || result.data.url
         } else {
-          emit('errorRequest', response)
+          emit('errorRequest', result)
         }
       }
       return ''
     }
 
-    const handleChange = async (res: Partial<MaterialListItem>, uid) => {
-      if (unref(getDataValueRef).find(item => item.id === uid)) {
-        changeDataValue(uid, {
+    const handleChange = async (res: Partial<MaterialListItem>, id) => {
+      if (unref(listValue).find(item => item.id === id)) {
+        changeDataValue(id, {
           uploadStatus: 'active',
-          uploadLoading: true,
-          spinning: true,
-          loadingText: '获取信息中...'
+          loading: true,
+          message: '获取信息中...'
         })
-        const fileItem = unref(getDataValueRef).find(item => item.id === uid) as MaterialListItem
-        const { name = '' } = fileItem
-        let { coverImg = '' } = fileItem
-        const { allowFormat, allowPlay } = fileItem
+        const row = unref(listValue).find(item => item.id === id) as MaterialListItem
+        let coverImg = row.coverImg
+        const { allowPlay } = row
         if (coverImg) {
-          const coverFile = dataURLtoFile(coverImg, `${name.split('.')[0]}_cover.png`)
-          coverImg = await uploadCoverImgHttp(coverFile, uid)
+          const coverFile = dataURLtoFile(coverImg, `${row.name?.split('.')[0]}_cover.png`)
+          coverImg = await uploadCoverImgHttp(coverFile, id)
         }
-        changeDataValue(uid, {
-          loadingText: '',
+        changeDataValue(id, {
           uploadStatus: 'success',
           allowPlay,
           progress: 100,
-          loadStatusMsg: allowFormat ? (allowPlay ? '' : '加载失败') : '无法在线预览',
-          uploadLoading: false,
+          message: allowPlay ? '' : '无法在线预览',
+          loading: false,
           ...res,
           coverImg
         })
-        emit(
-          'change',
-          cloneDeep(unref(getUrlValueRef)),
-          cloneDeep(unref(getDataValueRef))
-        )
+        emit('change', cloneDeep(unref(listUrlValue)), cloneDeep(unref(listValue)))
       } else {
-        changeDataValue(uid, {
-          loadingText: '',
+        changeDataValue(id, {
+          message: '',
           uploadStatus: 'exception',
-          uploadLoading: false
+          loading: false
         })
-      }
-    }
-
-    const onDelete = async (record: MaterialListItem) => {
-      if (record) {
-        if (props.onDeleteBefore)
-          await props.onDeleteBefore(record)
-        deleteDataValue(record.id)
-        emit(
-          'change',
-          cloneDeep(unref(getUrlValueRef)),
-          cloneDeep(unref(getDataValueRef))
-        )
       }
     }
 
     const requestUpload = async (file, row: MaterialListItem) => {
       const base64: string | ArrayBuffer | null = await getBase64(file)
       if (props.request) {
-        const response = await props.request(
-          file,
-          row.id,
-          unref(getDataValueRef).find(item => item.id === row.id)
-        )
+        const response = await props.request(file, row)
         if (response && response.code === 0) {
           handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, row.id)
         } else {
@@ -267,9 +266,9 @@ const GUpload = defineComponent({
             onDelete(row)
           } else {
             changeDataValue(row.id, {
-              loadingText: '',
+              message: '',
               uploadStatus: 'exception',
-              uploadLoading: false
+              loading: false
             })
           }
         }
@@ -288,58 +287,43 @@ const GUpload = defineComponent({
         file,
         name: type === '1' ? 'image' : type === '3' ? 'video' : 'audio'
       })
-      const fileSuffix = getFileSuffix(file.name)
-      let play = true
-      let allowFormat = true
+      const fileSuffix = getFileSuffix(file.name).toLowerCase()
+      let allowPlay = true
       let fileWidth = 0
       let fileHeight = 0
       let fileCoverImg = ''
       let fileDuration = 0
       const sizeSolt = (file.size / 1024 / 1024).toFixed(2)
-      const videoNoExplan = fileTypes.videoAllowType.includes(fileSuffix.toLowerCase())
-      const audioNoExplan = fileTypes.audioAllowType.includes(fileSuffix.toLowerCase())
+      const allowFormat = type === '2' || type === '3'
+        ? fileTypes[type === '2' ? 'audioAllowType' : 'videoAllowType'].includes(fileSuffix)
+        : true
       if (type === '1') {
-        const mediaAttributes = await getMediaInfos({
+        const result = await getMediaInfos({
           url: file,
           fileType: type
         })
-        play = mediaAttributes.play
-        if (play) {
-          fileWidth = mediaAttributes.width || 0
-          fileHeight = mediaAttributes.height || 0
+        allowPlay = result.play
+        if (result.play) {
+          fileWidth = result.width || 0
+          fileHeight = result.height || 0
         }
       }
+
       if (type === '2' || type === '3') {
         changeFileDataValue(file, {
-          uploadLoading: true,
-          spinning: true,
-          readySuccess: false,
-          loadingText: '正在准备中...'
+          loading: true,
+          message: '正在准备中...'
         })
-        if (type === '2') {
-          allowFormat = fileSuffix
-            ? fileTypes.audioAllowType.includes(fileSuffix.toLowerCase())
-            : false
-        }
-        if (type === '3') {
-          allowFormat = fileSuffix
-            ? fileTypes.videoAllowType.includes(fileSuffix.toLowerCase())
-            : false
-        }
-        const checkDuration = (type === '2' && audioNoExplan) || (type === '3' && videoNoExplan)
-        if (checkDuration) {
-          const mediaAttributes = await getMediaInfos({
-            url: file,
-            fileType: type
-          })
-          play = mediaAttributes.play
-          if (play && type === '3') {
+        if (['2', '3'].includes(type) && allowFormat) {
+          const result = await getMediaInfos({ url: file, fileType: type })
+          allowPlay = result.play
+          if (result.play && type === '3') {
             fileCoverImg = await getVideoCoverPicture({
               url: file,
               videoAllowPlay: true
             })
           }
-          fileDuration = play ? mediaAttributes.duration || 0 : 0
+          fileDuration = result.play ? result.duration || 0 : 0
         }
         changeFileDataValue(file, {
           id,
@@ -347,29 +331,26 @@ const GUpload = defineComponent({
           type,
           progress: 0,
           sizeSolt,
-          allowFormat,
-          allowPlay: play,
           uploadStatus: 'active',
-          spinning: false,
+          loading: true,
+          allowPlay: allowPlay ? allowFormat : false,
           width: fileWidth,
           height: fileHeight,
           coverImg: fileCoverImg,
+          coverImageLoaded: fileCoverImg ? 'success' : 'error',
           duration: fileDuration
         })
       } else {
-        if (props.listType === 'card' || !getDataValueRef.value.length) {
+        if (props.listType === 'card' || listValue.value.length === 0) {
           addDataValue({
             id,
             url: '',
             type,
             file,
-            loadingText: props.beforeEditable ? '正在快编中...' : '',
             progress: 0,
-            uploadLoading: true,
-            spinning: false,
+            loading: true,
             sizeSolt,
-            allowFormat,
-            allowPlay: play,
+            allowPlay,
             uploadStatus: 'active',
             name: file.name,
             size: file.size,
@@ -377,18 +358,15 @@ const GUpload = defineComponent({
             height: fileHeight
           })
         } else {
-          id = getDataValueRef.value[0].id
+          id = listValue.value[0].id
           changeDataValue(id, {
             url: '',
             type,
             file,
-            loadingText: props.beforeEditable ? '正在快编中...' : '',
             progress: 0,
-            uploadLoading: true,
-            spinning: false,
+            loading: true,
             sizeSolt,
-            allowFormat,
-            allowPlay: play,
+            allowPlay,
             uploadStatus: 'active',
             name: file.name,
             size: file.size,
@@ -397,83 +375,41 @@ const GUpload = defineComponent({
           })
         }
       }
-      if (props.beforeEditable && type === '1') {
-        const base64: string | ArrayBuffer | null = await getBase64(file)
-        mediaCropper(id, {
-          file,
-          url: getBlobUrl(dataURLtoBlob(base64))
-        })
-      } else {
-        requestUpload(file, { id } as MaterialListItem)
-      }
+      requestUpload(file, { id } as MaterialListItem)
     }
-
-    provideUploadContext({
-      uploadList: getDataValueRef
-    })
 
     const onView = (row: MaterialListItem) => {
-      previewConfig.type = row.type
-      previewConfig.url = row.url || ''
-      previewConfig.visible = true
-    }
-
-    const downLoad = async (record: MaterialListItem) => {
-      const url = isBoolean(props.downloadProps)
-        ? record.previewUrl
-        : props.downloadProps?.useLocal
-          ? record.localPreviewUrl
-          : record.previewUrl
-      const name = isObject(props.downloadProps) && props.downloadProps?.useFileName
-        ? record.name
-        : undefined
-      if (url && props.download) {
-        emit('changeDownloadLoading', true)
-        await props.download?.({ url, name })
-        emit('changeDownloadLoading', false)
-      }
-    }
-
-    const onWatermark = async (row: MaterialListItem) => {
-      if (props.onWaterChange && row) {
-        changeDataValue(row.id, {
-          progress: 0,
-          uploadStatus: 'active',
-          uploadLoading: true,
-          spinning: true,
-          loadingText: '正在添加水印...'
-        })
-        const response = await props.onWaterChange(row)
-        if (response && response.code === 0) {
-          changeDataValue(row.id, {
-            progress: 100,
-            uploadStatus: 'success',
-            uploadLoading: false,
-            spinning: false,
-            loadingText: '',
-            url: response.url
-          })
-          emit(
-            'change',
-            cloneDeep(unref(getUrlValueRef)),
-            cloneDeep(unref(getDataValueRef))
-          )
-        } else {
-          emit('errorRequest', response)
-          changeDataValue(row.id, {
-            progress: 100,
-            uploadStatus: 'success',
-            uploadLoading: false,
-            spinning: false,
-            loadingText: ''
-          })
+      previewConfig.type = row.type as any
+      previewConfig.list = [
+        {
+          url: row.previewUrl || row.localPreviewUrl || '',
+          name: row.name
         }
+      ]
+      previewConfig.open = true
+    }
+
+    const onDownload = async (row: MaterialListItem) => {
+      const url = row.previewUrl || row.localPreviewUrl
+      const name = props.createFileName ? props.createFileName(row) : row.name
+      if (url && props.download) {
+        props.onChangeLoading?.(true)
+        await props.download?.({ url, name })
+        props.onChangeLoading?.(false)
       }
     }
 
-    const uploadRender = (children: any) => (
+    async function onDelete(record: MaterialListItem) {
+      if (record) {
+        if (props.onDeleteBefore) await props.onDeleteBefore(record)
+        deleteDataValue(record.id)
+        emit('change', cloneDeep(unref(listUrlValue)), cloneDeep(unref(listValue)))
+      }
+    }
+
+    const renderUploadSelect = (children: any) => (
       <Upload
-        class={`${baseClassName}-upload`}
+        class={classNames(`${baseClassName}-select`, hashId.value)}
         beforeUpload={e => beforeUpload(e)}
         customRequest={e => uploadHttp(e)}
         disabled={props.disabled}
@@ -487,87 +423,82 @@ const GUpload = defineComponent({
       </Upload>
     )
 
-    const renderUploadButton = () => {
-      if (!showUpload.value)
-        return null
+    provideUploadContext({
+      list: listValue,
+      onView,
+      onDownload,
+      onDelete,
+    })
 
-      const children = getSlotsChildren(slots, 'default')
-      const triggerRender = getSlotVNode({
-        slots,
-        props,
-        key: 'triggerRender'
-      })
-
-      const uploadButtonRender = children?.length ? props.defaultUploadRender
-        ? uploadRender(children)
-        : slots.default?.(
-          uploadRender(triggerRender || <PlusOutlined />)
-        ) : null
+    const renderTrigger = () => {
+      const { width, height } = props.cardProps
+      const children = getSlot({ slots, props, key: 'default' })
+      const triggerIcon = getSlotVNode({ slots, props, key: 'triggerIcon' })
 
       return (
-        uploadButtonRender || (
-          uploadRender(
-            <div
-              class={{
-                [`${baseClassName}-button`]: true,
-                [`${props.triggerClass}`]: !!props.triggerClass,
-                [`${baseClassName}-button-disabled`]: props.disabled,
-                [`${baseClassName}-button-circle`]: props.shape === 'circle'
-              }}
-              onClick={() => props.onOpenFileDialog?.()}
-              style={merge(cardSize, props.triggerStyle)}
-            >
-              {triggerRender || <PlusOutlined />}
-            </div>
+        children && isFunction(children)
+          ? children(renderUploadSelect(triggerIcon || <PlusOutlined />) as any)
+          : (
+            renderUploadSelect(
+              <div
+                class={classNames({
+                  [`${baseClassName}-trigger`]: true,
+                  [`${baseClassName}-trigger-disabled`]: props.disabled,
+                  [`${baseClassName}-trigger-circle`]: props.shape === 'circle'
+                }, hashId.value, props.triggerClass)}
+                onClick={() => props.onOpenFileDialog?.()}
+                style={merge({ width: unit(width), height: unit(height) }, props.triggerStyle)}
+              >
+                {triggerIcon || <PlusOutlined />}
+              </div>
+            )
           )
-        )
       )
     }
 
     return () => {
-      const slotsProps = getSlotsProps({
-        slots,
-        props,
-        keys: [ 'wordExtra', 'fallback', 'placeholder' ]
-      })
-      const customOperationRender = getSlot({
-        slots,
-        props,
-        key: 'customOperationRender'
-      })
-      return (
+      const fallback = getSlot({ slots, props, key: 'fallback' })
+      const placeholder = getSlot({ slots, props, key: 'placeholder' })
+      const dropdownMenu = getSlot({ slots, props, key: 'dropdownMenu' })
+      const actionsRender = getSlot({ slots, props, key: 'actionsRender' })
+
+      return wrapSSR(
         <>
-          <div style={{ ...(attrs.style as CSSProperties) }} class={getClassName.value}>
+          <div
+            {...attrs}
+            style={attrs.style as CSSProperties}
+            class={classNames(hashId.value, baseClassName, attrs.class || '')}
+          >
             <div
-              ref={uploadCard}
-              class={{
-                [`${baseClassName}-card`]: true,
-                [`${baseClassName}-card-more`]: props.limit > 1,
-                [`${props.cardClassName}`]: props.cardClassName
-              }}
+              class={classNames({
+                [`${baseClassName}-wrapper`]: true,
+                [`${baseClassName}-wrapper-more`]: listValue.value.length > 1,
+                [`${baseClassName}-card-list`]: props.listType === 'card'
+              }, hashId.value, props.wrapperClassName)}
             >
               {props.listType === 'card' && (
-                <UploadCard
-                  {...props}
-                  placeholder={slotsProps.placeholder}
-                  fallback={slotsProps.fallback}
-                  prefixClass={baseClassName}
-                  customOperationRender={customOperationRender}
-                  root={uploadCard.value}
-                  onView={row => onView(row)}
-                  onDelete={uuid => onDelete(uuid)}
-                  onDownload={downLoad}
-                  onWaterMark={row => onWatermark(row)}
-                  onMediaCropper={mediaCropper}
-                />
+                <>
+                  {listValue.value.map(item => (
+                    <CardItem
+                      key={item.id}
+                      row={item}
+                      {...pick(props, 'cardProps', 'actions', 'progress', 'shape')}
+                      fallback={fallback}
+                      placeholder={placeholder}
+                      hashId={hashId.value}
+                      prefixClass={baseClassName}
+                      dropdownMenu={dropdownMenu}
+                      actionsRender={actionsRender}
+                    />
+                  ))}
+                </>
               )}
-              {renderUploadButton()}
+              {showUploadSelect.value && renderTrigger()}
             </div>
-            {slotsProps.wordExtra && <div class={`${baseClassName}-word-extra`}>{slotsProps.wordExtra}</div>}
           </div>
-          <MaterialView
+          <GMediaView
             {...previewConfig}
-            onChange={visible => (previewConfig.visible = visible)}
+            onChange={val => (previewConfig.open = val)}
           />
         </>
       )

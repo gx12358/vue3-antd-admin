@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { GProAppPage, ThemeContext } from '@gx-design-vue/pro-layout'
+import { ThemeContext } from '@gx-design-vue/context'
+import { GProAppPage } from '@gx-design-vue/pro-layout'
 import { GProConfigProvider } from '@gx-design-vue/pro-provider'
 import { StyleGlobalContext } from '@gx/design'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'

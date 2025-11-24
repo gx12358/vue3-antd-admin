@@ -14,13 +14,14 @@ export default defineConfig<GlobalViteEnv>(async (config) => {
     colorTheme = colorTheme || '${system.theme.value}'
     // 这里获取系统的color模式
     const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
+
     const theme = colorTheme ? colorTheme === 'system' ? preferredDark ? 'dark' : 'light' : colorTheme : preferredDark ? 'dark' : 'light'
     html.setAttribute('data-theme', theme)`
   const injectLink = theme.map(str => `/css/${str}.css`)
 
   return {
     application: {
+      nitroMock: false,
       proxy: {
         target: proxy.target,
         prefix: config?.env?.VITE_PROXY_PREFIX,

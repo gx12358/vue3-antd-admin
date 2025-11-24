@@ -158,7 +158,7 @@ const handleSubmit = async () => {
 <template>
   <div class="flex min-h-100vh select-none overflow-x-hidden">
     <div class="absolute left-0 top-0 z-10 flex flex-1">
-      <div class="text-muted lg:text-muted ml-4 mt-4 flex flex-1 items-center sm:left-6 sm:top-6">
+      <div class="text-base lg:text-base ml-4 mt-4 flex flex-1 items-center sm:left-6 sm:top-6">
         <img :src="layout.config.logo" alt="" width="42" class="mr-2">
         <div class="m-0 text-xl font-medium">
           {{ title }}
@@ -173,10 +173,10 @@ const handleSubmit = async () => {
         <div class="login-background absolute left-0 top-0 size-full" />
         <div class="flex-col-center -enter-x mr-20 h-full">
           <img src="@images/login/login_bg.svg" alt="" class="animate-float h-64">
-          <div class="text-1xl text-muted mt-6 font-sans lg:text-2xl">
+          <div class="text-1xl text-base mt-6 font-sans lg:text-2xl">
             开箱即用的大型中后台管理系统
           </div>
-          <div class="dark:text-muted-foreground mt-2">
+          <div class="dark:text-foreground mt-2">
             工程化、高性能、跨组件库的前端模版
           </div>
         </div>
@@ -237,7 +237,7 @@ const handleSubmit = async () => {
         </a-form>
         <div class="flex-center mt-4">
           <a-dropdown placement="bottom">
-            <div class="flex items-center gap-2 w-fit text-muted-foreground cursor-pointer">
+            <div class="flex items-center gap-2 w-fit text-foreground cursor-pointer">
               <span>演示账号</span>
               <team-outlined />
             </div>

@@ -1,6 +1,4 @@
-import { watch } from 'vue'
-
-export function useUpdateTableSearch<T = string>(key: DictType, updateProps: {
+export function useUpdateTableSearchMap<T = string>(key: DictType, updateProps: {
   key: T;
   callback: Fn
 }) {
@@ -8,12 +6,13 @@ export function useUpdateTableSearch<T = string>(key: DictType, updateProps: {
 
   watch(
     () => dict[key], (val) => {
+      if (!val) return
       updateProps.callback(updateProps.key, {
         loading: val.loading,
         valueEnum: val?.data.map((item) => {
           return {
-            text: item.dictLabel,
-            value: item.dictValue
+            label: item.label,
+            value: item.value
           }
         })
       })

@@ -1,6 +1,6 @@
 import type { MaybeRef } from 'vue'
 import type { ECOption } from './types'
-import { useThemeContext } from '@gx-design-vue/pro-layout'
+import { useThemeContext } from '@gx-design-vue/context'
 import {
   tryOnUnmounted,
   useDebounceFn,

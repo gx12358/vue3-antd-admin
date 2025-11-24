@@ -1,6 +1,7 @@
 export * from './context'
 export * from './count-to-animator'
 export * from './editor'
+export * from './file-icon'
 export * from './icons'
-export { default as GProMediaView } from './media-view'
+export * from './media-view'
 export * from './upload'

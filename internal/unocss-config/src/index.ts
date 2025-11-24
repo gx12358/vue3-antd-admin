@@ -32,6 +32,7 @@ function defineConfig<T extends object = Theme>(config: UserConfig<T> = {}): Use
         'flex-center': 'flex items-center justify-center',
         'flex-col-center': 'flex items-center justify-center flex-col',
         'flex-between': 'flex items-center justify-between',
+        'text-btn-error': 'text-error cursor-pointer hover:text-error-hover',
       },
     ],
     rules: rules([])

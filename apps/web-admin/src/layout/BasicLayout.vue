@@ -114,7 +114,7 @@ const logout = (callBack?: any) => {
                     Pro
                   </a-tag>
                 </div>
-                <span class="text-muted-foreground text-12px">{{ user.userInfo.email }}</span>
+                <span class="text-foreground text-12px">{{ user.userInfo.email }}</span>
               </div>
             </div>
           </a-menu-item>

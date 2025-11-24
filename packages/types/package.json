@@ -20,6 +20,9 @@
     },
     "./global": {
       "types": "./global.d.ts"
+    },
+    "./dom": {
+      "types": "./dom.d.ts"
     }
   }
 }

@@ -38,5 +38,5 @@ declare type ResponseResult<T = any, R = undefined> = R extends undefined
 
 declare interface PageResult<T> {
   list: T[];
-  totalCount: number;
+  total: number;
 }

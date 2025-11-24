@@ -1,58 +1,65 @@
 import type { Ref } from 'vue'
 import type { GUploadProps } from '../props'
 import type { MaterialListItem } from '../typings'
-import { checkFileType, generateVideoPicture, isString } from '@gx-design-vue/pro-utils'
+import {
+  checkFileType,
+  generateVideoPicture,
+  isArray, isObject,
+  isString
+} from '@gx-design-vue/pro-utils'
 import { cloneDeep, omit } from 'lodash-es'
 import { computed, ref, unref, watch } from 'vue'
 
 export function useUploadData(state: {
-  limit: Ref<GUploadProps['limit']>,
-  dataList: Ref<GUploadProps['dataList']>,
-  bindValue: Ref<GUploadProps['bindValue']>,
-  coverDataList: Ref<GUploadProps['coverDataList']>
+  list: Ref<GUploadProps['list']>,
+  maxCount: Ref<GUploadProps['maxCount']>,
+  coverList: Ref<GUploadProps['coverList']>
 }) {
-  const dataValue = ref<MaterialListItem[]>([])
-  const getDataValueRef = computed(() => unref(dataValue))
-  const getUrlValueRef = computed(() => unref(dataValue).filter(item => item.url).map(item => item.url))
+  const listValue = ref<MaterialListItem[]>([])
+  const listUrlValue = computed(() => unref(listValue)
+    .filter(item => item.url)
+    .map(item => item.url))
 
-  watch(() => state.dataList.value, (data) => {
-    if (data) getDataList(data)
+  watch(() => state.list.value, (value) => {
+    if (isArray(value)) handleDefaultList(value)
   }, { deep: true, immediate: true })
 
-  async function getDataList(list: (string | MaterialListItem)[]) {
-    if (state.bindValue.value)
-      dataValue.value = []
-    const newUploadList = list.filter(item => state.bindValue.value
-      ? true
-      : dataValue.value.every((el) => {
-        if (isString(item))
-          return el?.url !== item
-        return el?.url !== (item?.url || '')
-      })).filter((item) => {
-      if (state.bindValue.value)
-        return true
-      if (isString(item))
-        return item
-      return item?.url || ''
+  async function handleDefaultList(list: (string | MaterialListItem)[]) {
+    const newListValue = list.filter((row) => {
+      return listValue.value.every((el) => {
+        if (isString(row)) return el.url !== row
+        return el.url !== row.url
+      })
+    }).filter((row) => {
+      if (isString(row)) return row
+      return row.url
     })
-    for (let i = 0; i < newUploadList.length; i += 1) {
-      if (dataValue.value.length > (state.limit.value || 15) - 1)
-        return
+    for (let i = 0; i < newListValue.length; i += 1) {
+      if (state.maxCount.value && i >= state.maxCount.value) return
 
-      const row = isString(newUploadList[i]) ? {} as MaterialListItem : newUploadList[i] as MaterialListItem
-      const url = isString(newUploadList[i]) ? newUploadList[i] as string : row?.url || ''
-      const type = row?.type || checkFileType(url, '1')
-      const coverImg = state.coverDataList?.value?.[i] || ''
-      const otherParams = isString(newUploadList[i]) ? {} : omit(row, 'url')
-      dataValue.value.push({
+      const row = isString(newListValue[i])
+        ? {} as MaterialListItem
+        : newListValue[i] as MaterialListItem
+      const url = isString(newListValue[i]) ? newListValue[i] as string : row.url || ''
+      const previewUrl = isString(newListValue[i]) ? newListValue[i] as string : row.previewUrl || ''
+      const type = row?.type || checkFileType(url)
+      const coverImg = state.coverList.value?.[i] || ''
+      const otherParams = isString(newListValue[i]) ? {} : omit(row, 'url')
+      // url 取/最后一位
+      const name = isObject(newListValue[i])
+        ? row.name || (previewUrl || url).split('/').pop()
+        : (previewUrl || url).split('/').pop()
+      listValue.value.push({
         id: url,
         url,
-        previewUrl: isString(newUploadList[i]) ? url : (row?.previewUrl || url),
-        localPreviewUrl: isString(newUploadList[i]) ? url : (row?.previewUrl || url),
+        name,
+        previewUrl,
+        localPreviewUrl: previewUrl,
         progress: 100,
-        uploadLoading: false,
+        loading: false,
         allowPlay: true,
         coverImg,
+        coverImageLoaded: coverImg ? 'success' : 'load',
         uploadStatus: 'success',
         ...otherParams,
         type
@@ -60,22 +67,25 @@ export function useUploadData(state: {
 
       if (!coverImg && type === '3') {
         generateVideoPicture(url).then((coverUrl) => {
-          changeDataValue(url, { coverImg: coverUrl })
+          changeDataValue(
+            url,
+            { coverImg: coverUrl, coverImageLoaded: coverUrl ? 'success' : 'error' }
+          )
         })
       }
     }
   }
 
   function setDataValue(list) {
-    dataValue.value = cloneDeep(list)
+    listValue.value = cloneDeep(list)
   }
 
   function addDataValue(params: Partial<MaterialListItem>) {
-    dataValue.value.push({ ...params } as MaterialListItem)
+    listValue.value.push({ ...params } as MaterialListItem)
   }
 
   function changeDataValue(id: MaterialListItem['id'], params: Partial<MaterialListItem>) {
-    dataValue.value = dataValue.value.map((item) => {
+    listValue.value = listValue.value.map((item) => {
       if (item.id === id) {
         return {
           ...item,
@@ -88,7 +98,7 @@ export function useUploadData(state: {
 
   function batchChangeDataValue(list) {
     list.map((item) => {
-      dataValue.value = dataValue.value.map((el) => {
+      listValue.value = listValue.value.map((el) => {
         if (el.id === item.id) {
           return {
             ...el,
@@ -101,8 +111,8 @@ export function useUploadData(state: {
     })
   }
 
-  function changeFileDataValue(file, params) {
-    dataValue.value = dataValue.value.map((item) => {
+  function changeFileDataValue(file: File, params: Partial<MaterialListItem>) {
+    listValue.value = listValue.value.map((item) => {
       if (item.name === file.name && item.size === file.size) {
         return {
           ...item,
@@ -113,18 +123,18 @@ export function useUploadData(state: {
     })
   }
 
-  function deleteDataValue(uuid) {
-    dataValue.value = dataValue.value.filter(item => item.id !== uuid)
+  function deleteDataValue(id) {
+    listValue.value = listValue.value.filter(item => item.id !== id)
   }
 
-  function deleteFileDataValue(file) {
-    dataValue.value = dataValue.value.filter(item =>
+  function deleteFileDataValue(file: File) {
+    listValue.value = listValue.value.filter(item =>
       item.name !== file.name || item.size !== file.size)
   }
 
   return {
-    getUrlValueRef,
-    getDataValueRef,
+    listValue,
+    listUrlValue,
     setDataValue,
     addDataValue,
     changeDataValue,

@@ -11,17 +11,26 @@ declare global {
   }
 
   // 系统数据字典 Key 类型
-  type DictType = 'sys_common_status' | 'sys_common_category' | 'sys_common_author'
+  type DictType = 'common_status'
 
   type DictStatus = 'error' | 'processing'
+
+  interface SystemDictRecord {
+    id?: string | number;
+    value: string | number;
+    label: string;
+  }
 
   // 系统数据字典 Record 类型
   interface DictRecord {
     dictType?: DictType
     dictValue: string | number
+    value: string | number
+    id?: number
     dictId?: number
     dictSort?: number
     dictCode?: string | number
+    label: string
     dictLabel: string
     listClass?: string
     createTime?: string

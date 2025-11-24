@@ -262,7 +262,7 @@ const transition = computed(() => {
             <div class="font-500 leading-20px font-500 text-20px">
               {{ timeFix() }}，{{ user.userInfo.nickname }} ，祝你开心每一天
             </div>
-            <div class="text-muted-foreground">
+            <div class="text-foreground">
               前端工程师 | （REACT，VUE，UNIAPP、TARO）平台
             </div>
           </div>
@@ -305,12 +305,12 @@ const transition = computed(() => {
                 <GIconIfy class="size-8" :color="item.color" :icon="item.icon" />
                 <span class="gx-admin-a leading-24px">{{ item.title }}</span>
               </div>
-              <div class="text-hidden-2 leading-22px text-muted-foreground">
+              <div class="text-hidden-2 leading-22px text-foreground">
                 {{ item.content }}
               </div>
               <div class="flex items-center leading-20px text-12px gap-4px">
-                <span class="text-muted-foreground">{{ item.group }}</span>
-                <span class="text-muted-quaternary">{{ dayjs(item.date).fromNow() }}</span>
+                <span class="text-foreground">{{ item.group }}</span>
+                <span class="text-quaternary">{{ dayjs(item.date).fromNow() }}</span>
               </div>
             </div>
           </GProCard>
@@ -323,7 +323,7 @@ const transition = computed(() => {
                 <span class="mr-4px">{{ item.title }}</span>
                 <span v-html="item.content" />
               </div>
-              <span class="text-muted-quaternary">{{ item.date }}</span>
+              <span class="text-quaternary">{{ item.date }}</span>
             </div>
           </div>
         </GProCard>

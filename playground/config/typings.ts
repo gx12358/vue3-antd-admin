@@ -1,5 +1,5 @@
 import type { LocalStorageKey } from '@gx-core/shared/cache'
-import type { ThemeValue } from '@gx-design-vue/pro-layout'
+import type { ThemeValue } from '@gx-design-vue/context'
 
 export interface CdnModuleList {
   name: string;
@@ -8,7 +8,7 @@ export interface CdnModuleList {
   css?: string;
 }
 
-type SystemRoutesAuth = 'all' | 'front'
+export type SystemRoutesAuth = 'all' | 'front'
 
 export interface SettingConfig {
   server: {

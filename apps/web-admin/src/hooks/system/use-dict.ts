@@ -3,18 +3,26 @@ import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
 import { getDicts } from '@/services/system'
 
-export function useDict(dictTypes?: DictType | DictType[], wait?: boolean) {
+function changeMapParams(data: DictRecord[]): SystemDictRecord[] {
+  return data.map(item => ({
+    id: item.id,
+    label: item.label || item.dictLabel,
+    value: item.value || item.dictValue,
+  }))
+}
+
+export function useDict(types?: DictType | DictType[], wait?: boolean) {
   const { dict } = useStore()
 
   const dictValue = computed<DictState>(() => {
-    if (typeof dictTypes === 'string') {
+    if (typeof types === 'string') {
       return {
-        [`${dictTypes}`]: dict[dictTypes]
+        [`${types}`]: dict[types]
       }
     }
-    if (isArray(dictTypes)) {
+    if (isArray(types)) {
       const result: Partial<DictState> = {}
-      dictTypes.forEach((key) => {
+      types.forEach((key) => {
         result[`${key}`] = dict[key]
       })
       return result
@@ -23,32 +31,28 @@ export function useDict(dictTypes?: DictType | DictType[], wait?: boolean) {
   })
 
   async function getDict(enforce?: boolean) {
-    if (!dictTypes) return
-    if (typeof dictTypes === 'string') {
-      if (dict[dictTypes]?.loading) return
-      if (enforce || !dict[dictTypes] || !dict[dictTypes]?.data?.length) {
-        dict.setValue({ [`${dictTypes}`]: { loading: true } })
-        const response: ResponseResult<DictRecord[]> = await getDicts(dictTypes)
-        if (response) {
-          const data: DictRecord[] = response.data || []
-          dict.setValue({ [`${dictTypes}`]: { data } })
-        }
-        dict.setValue({ [`${dictTypes}`]: { loading: false } })
+    if (!types) return
+    if (typeof types === 'string') {
+      if (dict[types]?.loading) return
+      if (enforce || !dict[types] || !dict[types]?.data?.length) {
+        dict.setValue({ [`${types}`]: { loading: true } })
+        try {
+          const { list = [] } = await getDicts<PageResult<DictRecord>>({ dictType: types })
+          dict.setValue({ [`${types}`]: { data: changeMapParams(list) } })
+        } catch {}
+        dict.setValue({ [`${types}`]: { loading: false } })
       }
       return
     }
 
-    if (isArray(dictTypes)) {
-      for (let i = 0; i < dictTypes.length; i += 1) {
-        const key = dictTypes[i]
+    if (isArray(types)) {
+      for (let i = 0; i < types.length; i += 1) {
+        const key = types[i]
         if (dict[key]?.loading) return
         if (enforce || !dict[key] || !dict[key]?.data?.length) {
           dict.setValue({ [`${key}`]: { loading: true } })
-          getDicts(key).then((response: ResponseResult<DictRecord[]>) => {
-            if (response) {
-              const data: DictRecord[] = response.data || []
-              dict.setValue({ [`${key}`]: { data } })
-            }
+          getDicts<PageResult<DictRecord>>({ dictType: key }).then(({ list }) => {
+            dict.setValue({ [`${key}`]: { data: changeMapParams(list || []) } })
           }).finally(() => {
             dict.setValue({ [`${key}`]: { loading: false } })
           })
@@ -57,16 +61,16 @@ export function useDict(dictTypes?: DictType | DictType[], wait?: boolean) {
     }
   }
 
-  function findDict(type: DictType, value: any, key?: keyof DictRecord): DictRecord | undefined {
-    return dictValue.value[type]?.data.find(item => item[key || 'dictValue'] === value)
+  function findDict(type: DictType, value: any, key?: keyof DictRecord): SystemDictRecord | undefined {
+    return dictValue.value[type]?.data.find(item => item[key || 'value'] === value)
   }
 
   function findDictStatus(type: DictType, value: any, key?: keyof DictRecord, trueCode?: any): DictStatus {
     const record = findDict(type, value, key)
     const successCode = [ 'Y', '0', 0 ]
     const isSuccess = trueCode
-      ? record?.dictValue === trueCode
-      : successCode.includes(record?.dictValue || '')
+      ? record?.value === trueCode
+      : successCode.includes(record?.value || '')
     if (isSuccess) return 'processing'
     return 'error'
   }

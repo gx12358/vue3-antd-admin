@@ -50,8 +50,10 @@ const GAdminUpload = defineComponent({
 
       return {
         code: response.code,
-        url: previewUrl,
-        previewUrl
+        data: {
+          url: previewUrl,
+          previewUrl
+        }
       }
     }
 
@@ -60,7 +62,7 @@ const GAdminUpload = defineComponent({
         <GUpload
           {...props}
           dataExtraInfo={dataExtraInfo.value}
-          request={uploadHttps as any}
+          request={uploadHttps}
           v-slots={slots}
         />
       )

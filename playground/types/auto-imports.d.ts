@@ -46,6 +46,7 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
+  const setupStore: typeof import('../src/store/index').setupStore
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -64,6 +65,10 @@ declare global {
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
   const useSlots: typeof import('vue').useSlots
+  const useStore: typeof import('../src/store/index').useStore
+  const useStoreGlobal: typeof import('../src/store/index').useStoreGlobal
+  const useStoreLayout: typeof import('../src/store/index').useStoreLayout
+  const useStoreTheme: typeof import('../src/store/index').useStoreTheme
   const useTemplateRef: typeof import('vue').useTemplateRef
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect

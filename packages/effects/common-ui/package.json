@@ -22,8 +22,10 @@
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
     "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/context": "catalog:",
     "@gx-design-vue/icon": "catalog:",
     "@gx-design-vue/image": "catalog:",
+    "@gx-design-vue/pro-app": "catalog:",
     "@gx-design-vue/pro-modal": "catalog:",
     "@gx-design-vue/pro-provider": "catalog:",
     "@gx-design-vue/pro-utils": "catalog:",
@@ -33,6 +35,8 @@
     "@wangeditor-next/editor": "catalog:",
     "@wangeditor-next/editor-for-vue": "catalog:",
     "ant-design-vue": "catalog:",
+    "aplayer": "^1.10.1",
+    "artplayer": "^5.3.0",
     "lodash-es": "catalog:",
     "vue": "catalog:"
   },

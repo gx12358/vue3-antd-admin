@@ -19,14 +19,15 @@ catalog:
   "@commitlint/types": ^19.8.1
   "@faker-js/faker": ^10.1.0
   "@gx-design-vue/color-picker": ^0.2.0-beta.38
+  "@gx-design-vue/context": ^0.0.3
   "@gx-design-vue/icon": ^0.0.1
   "@gx-design-vue/image": ^0.2.0-beta.32
   "@gx-design-vue/pro-app": ^0.1.0-beta.33
   "@gx-design-vue/pro-card": ^0.2.0-beta.39
   "@gx-design-vue/pro-hooks": ^0.2.0-beta.55
-  "@gx-design-vue/pro-layout": ^0.1.0-beta.170
-  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.21
-  "@gx-design-vue/pro-modal": ^0.2.0-beta.37
+  "@gx-design-vue/pro-layout": ^0.1.0-beta.171
+  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.23
+  "@gx-design-vue/pro-modal": ^0.2.0-beta.38
   "@gx-design-vue/pro-provider": ^0.1.0-beta.130
   "@gx-design-vue/pro-table": ^0.2.0-beta.123
   "@gx-design-vue/pro-utils": ^0.2.0-beta.80
@@ -42,6 +43,7 @@ catalog:
   "@types/node": ^24.10.0
   "@types/nprogress": ^0.2.3
   "@types/qs": ^6.14.0
+  "@unocss/preset-uno": ^66.5.7
   "@vitejs/plugin-legacy": ^7.2.1
   "@vitejs/plugin-vue": ^6.0.1
   "@vitejs/plugin-vue-jsx": ^5.1.1

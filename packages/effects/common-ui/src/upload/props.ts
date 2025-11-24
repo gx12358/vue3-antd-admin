@@ -3,10 +3,14 @@ import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue'
 import type { MaterialListItem } from './typings'
 
-export const cardSize: CSSProperties = { width: '104px', height: '104px' }
-
 export interface ExtraMaterialListItem extends MaterialListItem {
   [key: string]: any;
+}
+
+export interface UploadRequestResult {
+  code: number;
+  data: Partial<MaterialListItem>;
+  message?: string;
 }
 
 export interface OperationRenderProps {
@@ -16,136 +20,146 @@ export interface OperationRenderProps {
   onDownload: (row: MaterialListItem) => void;
 }
 
+export interface UploadCardProps {
+  id?: string;
+  style?: CSSProperties;
+  width?: number;
+  height?: number;
+  className?: string;
+  borderRadius?: number;
+  renderClassName?: string;
+  renderStyle?: CSSProperties;
+  wrapperClassName?: string;
+  fit: GImageProps['fit']
+}
+
+export interface LimitProps {
+  size?: number | ((file: File) => boolean)
+  type?: '*' | ((file: File) => boolean) | string[];
+  duration?: number | ((file: File) => boolean);
+  message?: string | ((type: 'type' | 'size' | 'duration', file: File) => string);
+}
+
 export const proUploadProps = {
-  fit: {
-    type: String as PropType<GImageProps['fit']>,
-    default: 'cover'
-  },
-  cardClassName: String as PropType<string>,
-  triggerClass: String as PropType<string>,
-  cardItemClass: String as PropType<string>,
-  triggerStyle: {
-    type: Object as PropType<CSSProperties>,
-    default: () => ({ ...cardSize })
-  },
-  cardItemStyle: {
-    type: Object as PropType<CSSProperties>,
-    default: () => ({ ...cardSize })
-  },
-  cardWrapperClass: String as PropType<string>,
-  imageStyle: {
-    type: Object as PropType<CSSProperties>,
-  },
-  // 展示形态
-  listType: {
-    type: String as PropType<'card' | 'normal'>,
-    default: () => 'card'
-  },
-  disabled: Boolean as PropType<boolean>,
-  // 是否需要展示封面图（针对不是图片类型）
-  isCoverImg: Boolean as PropType<boolean>,
-  dataList: {
+  list: {
     type: Array as PropType<(MaterialListItem | string)[]>,
     default: () => []
   },
-  // 封面图list，顺序和dataList对应（针对不是图片类型）
-  coverDataList: {
+  coverList: {
     type: Array as PropType<string[]>,
     default: () => []
   },
-  defaultUploadRender: {
+  listType: {
+    type: String as PropType<'card' | 'default'>,
+    default: () => 'card'
+  },
+  cardProps: {
+    type: Object as PropType<UploadCardProps>,
+    default: () => ({
+      width: 100,
+      height: 100,
+      borderRadius: 8,
+      fit: 'contain'
+    } as UploadCardProps)
+  },
+  wrapperClassName: String as PropType<string>,
+  triggerClass: String as PropType<string>,
+  triggerStyle: {
+    type: Object as PropType<CSSProperties>,
+    default: () => ({})
+  },
+  disabled: Boolean as PropType<boolean>,
+  uploadSelectRender: {
     type: Boolean as PropType<boolean>,
     default: true
   },
-  limit: {
+  multiple: {
+    type: Boolean as PropType<boolean>,
+    default: true
+  },
+  maxCount: {
     type: Number as PropType<number>,
-    default: 15
   },
   // 限制素材类型
   accept: {
     type: [ String ] as PropType<string | null>,
     default: [ 'image/jpeg', 'image/png', 'image/jpg' ].join()
   },
-  fileType: {
-    type: Array as PropType<string[]>,
-    default: () => [ 'jpeg', 'png', 'jpg' ]
+  limit: {
+    type: Object as PropType<LimitProps | ((file: File) => Promise<boolean> | boolean)>,
+    default: () => ({
+      type: '*'
+    } as LimitProps)
   },
-  // 限制素材时长 （针对视频，音频类型）
-  fileDuration: Number as PropType<number>,
-  fileSize: Number as PropType<number>,
-  // 是否展示添加水印按钮（针对图片，视频，音频类型）
-  waterMark: Boolean as PropType<boolean>,
-  // 是否上传之前进行快编操作（针对图片类型）
-  multiple: Boolean as PropType<boolean>,
-  beforeEditable: Boolean as PropType<boolean>,
-  // 是否展示快编图片按钮（针对图片类型）
-  showEditor: {
-    type: Boolean as PropType<boolean>,
-    default: true
-  },
-  // 是否展示删除按钮
-  showDelete: {
-    type: Boolean as PropType<boolean>,
-    default: true
-  },
-  // 是否展示下载按钮
-  downloadProps: {
-    type: [ Boolean, Object ] as PropType<boolean | {
-      useLocal?: boolean;
-      useFileName?: boolean;
+  actions: {
+    type: Object as PropType<{
+      view: WithFalse<(props: MaterialListItem) => CustomRender>;
+      delete: WithFalse<(props: MaterialListItem) => CustomRender>;
+      download: WithFalse<(props: MaterialListItem) => CustomRender>;
     }>,
-    default: false
+    default: () => {
+      return {
+        view: true,
+        delete: true,
+        download: true
+      }
+    }
   },
-  // 是否展示预览按钮
-  showPreview: {
-    type: Boolean as PropType<boolean>,
-    default: true
-  },
-  // 是否展示进度条
   progress: {
-    type: Boolean as PropType<boolean>,
+    type: [Boolean, Function, Object] as PropType<WithFalse<(row: MaterialListItem) => CustomRender>>,
     default: undefined
   },
-  // 额外添加参数
+  /**
+   * @Author      gx12358
+   * @DateTime    2025/11/23
+   * @lastTime    2025/11/23
+   * @description 额外添加参数
+   */
   dataExtraInfo: {
     type: Array as PropType<ExtraMaterialListItem[]>,
     default: () => []
   },
-  bindValue: Boolean as PropType<boolean>,
-  // 错误后是否删除该条记录
+  /**
+   * @Author      gx12358
+   * @DateTime    2025/11/23
+   * @lastTime    2025/11/23
+   * @description 错误后是否删除该条记录
+   */
   errorClean: Boolean as PropType<boolean>,
-  wordExtra: {
-    type: [ Function, Object, Array, String, Number, Boolean ] as PropType<WithFalse<CustomRender>>,
-    default: () => undefined
-  },
-  fallback: {
-    type: [ Function, Object ] as PropType<WithFalse<CustomRender>>,
-    default: () => undefined
-  },
-  placeholder: {
-    type: [ Function, Object ] as PropType<WithFalse<CustomRender>>,
-    default: () => undefined
-  },
-  triggerRender: {
-    type: [ Function, Boolean ] as PropType<WithFalse<CustomRender>>,
-    default: () => undefined
-  },
-  customOperationRender: {
-    type: [ Function, Boolean ] as PropType<WithFalse<(props: OperationRenderProps) => CustomRender>>,
-    default: () => undefined
-  },
-  request: Function as PropType<(file: File, id: string | number, row?: MaterialListItem) => Promise<{ code: number; url: string; previewUrl?: string }>>,
+  // function
+  request: Function as PropType<(file: File, row: MaterialListItem) => Promise<UploadRequestResult>>,
+  createFileName: Function as PropType<(row: MaterialListItem) => string>,
   download: Function as PropType<(props: { url: string; name?: string; }) => Promise<void>>,
   onWaterChange: Function as PropType<(row: MaterialListItem) => Promise<ResponseResult<any, { url: string; }>>>,
   onOpenFileDialog: Function as PropType<() => void>,
-  onChangeDownloadLoading: Function as PropType<(loading: boolean) => void>,
+  onChangeLoading: Function as PropType<(loading: boolean) => void>,
   onChange: Function as PropType<(urls: string[], data: MaterialListItem[]) => void>,
-  onErrorRequest: Function as PropType<() => void>,
+  onErrorRequest: Function as PropType<(result: UploadRequestResult) => void>,
   onDeleteBefore: Function as PropType<(row: MaterialListItem) => void>,
   shape: {
-    type: String as PropType<string>,
+    type: String as PropType<'circle' | 'default'>,
     default: 'default'
-  }
+  },
+  fallback: {
+    type: [ Function, Object ] as PropType<WithFalse<(props: MaterialListItem) => CustomRender>>,
+    default: () => undefined
+  },
+  placeholder: {
+    type: [ Function, Object ] as PropType<WithFalse<(props: MaterialListItem) => CustomRender>>,
+    default: () => undefined
+  },
+  triggerIcon: {
+    type: [ Function, Boolean ] as PropType<WithFalse<CustomRender>>,
+    default: () => undefined
+  },
+  dropdownMenu: {
+    type: [ Function, Boolean ] as PropType<WithFalse<(props: MaterialListItem) => CustomRender>>,
+    default: () => undefined
+  },
+  actionsRender: {
+    type: [ Function, Boolean ] as PropType<WithFalse<(props: OperationRenderProps) => CustomRender>>,
+    default: () => undefined
+  },
 }
 
 export type GUploadProps = Partial<ExtractPropTypes<typeof proUploadProps>>

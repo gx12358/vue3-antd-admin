@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import dayjs from 'dayjs'
 import { eventHandler, getQuery } from 'h3'
 import { verifyAccessToken } from '~/utils/jwt-utils'
 import {
@@ -14,13 +15,14 @@ function generateMockDataList(count: number) {
     const dataItem = {
       id: faker.string.uuid(),
       title: faker.lorem.word(),
-      age: faker.number.int({ min: 18, max: 100 }),
-      adress: faker.location.city(),
+      age: faker.number.int({ min: 18, max: 50 }),
+      address: faker.location.city(),
       author: faker.person.fullName(),
       productName: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      percent: `${faker.number.int({ min: 1, max: 100 })}%`,
+      percent: faker.number.int({ min: 1, max: 100 }),
       img: faker.image.url(),
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     }
 
     dataList.push(dataItem)

@@ -1,3 +1,5 @@
+import type { SystemRoutesAuth } from '@gx-config'
+
 // import.meta.globEager() 直接引入所有的模块 Vite 独有的功能
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true })
 const routeModuleList: AppRouteModule[] = []

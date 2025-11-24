@@ -3,21 +3,21 @@ export interface MaterialListItem {
   url?: string;
   previewUrl?: string;
   localPreviewUrl?: string;
+  // 1 图片 2 音频 3 视频 4 其他
   type?: '1' | '2' | '3' | '4';
-  uploadLoading?: boolean;
-  uploadStatus?: 'normal' | 'active' | 'success' | 'exception';
+  loading?: boolean;
+  coverImageLoaded?: 'load' | 'error' | 'success';
+  uploadStatus?: 'active' | 'success' | 'exception';
   file?: File;
-  loadStatusMsg?: string;
   name?: string;
   coverImg?: string;
   size?: number;
   width?: number;
   height?: number;
   duration?: number;
-  spinning?: boolean;
-  loadingText?: string;
-  allowFormat?: boolean;
   allowPlay?: boolean;
+  allowFormat?: boolean;
   progress?: number;
   sizeSolt?: string;
+  message?: string;
 }

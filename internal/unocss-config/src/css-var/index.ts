@@ -1,8 +1,9 @@
 export const colors: Record<string, any> = {
-  muted: 'var(--gx-color-text)',
-  'muted-foreground': 'var(--gx-color-text-description)',
-  'muted-quaternary': 'var(--gx-color-text-quaternary)',
+  base: 'var(--gx-color-text)',
+  foreground: 'var(--gx-color-text-description)',
+  quaternary: 'var(--gx-color-text-quaternary)',
   error: 'var(--gx-color-error)',
+  'error-hover': 'var(--gx-color-error-hover)',
   success: 'var(--gx-color-success)',
   primary: 'var(--gx-color-primary)',
   split: 'var(--gx-color-split)',

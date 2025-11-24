@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { MockTableRecord, SearchConfig } from '../typings'
-import { deepCopy } from '@gx-design-vue/pro-utils'
 import { reactive, ref } from 'vue'
-import { useDict, useUpdateTableSearch } from '@/hooks/system'
+import { useDict, useUpdateTableSearchMap } from '@/hooks/system'
 import { useProTable } from '@/hooks/web'
-import { getTableList } from '@/services/table-center'
+import { getList } from '@/services/demo'
 import { operationModal } from '../utils/columns'
 
-const { getDict } = useDict('sys_common_status')
+const { getDict } = useDict('common_status')
 
 const tableRef = ref()
 const visible = ref(false)
@@ -32,28 +31,30 @@ const { tableState, updateSearchMap } = useProTable<TableRecord<MockTableRecord>
         valueType: 'select',
         placeholder: '请选择操作状态',
         loading: false,
+        order: 2,
         initialValue: '0',
         valueEnum: []
       },
       {
         name: 'date',
         valueType: 'date',
+        order: 3,
         placeholder: '请选择'
       }
     ],
     columns: operationModal
   },
   request: async (params) => {
-    const response = await getTableList<PageResult<TableRecord<MockTableRecord>>>(params)
+    const { list = [], total = 0 } = await getList<PageResult<TableRecord<MockTableRecord>>>(params)
     return {
-      data: deepCopy(response?.data?.list || []),
-      success: !!response,
-      total: response.data?.totalCount || 0
+      data: list,
+      success: true,
+      total
     }
   }
 })
 
-useUpdateTableSearch('sys_common_status', {
+useUpdateTableSearchMap('common_status', {
   key: 'status',
   callback: updateSearchMap
 })
@@ -108,19 +109,11 @@ defineExpose({
       v-bind="tableState"
       @reset="onReset"
     >
-      <template #headerCell="{ column }">
-        <template v-if="column.dataIndex === 'name'">
-          FullName
-        </template>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'name'">
-          这是高级列表的FullName的字段（测试溢出展示）：{{ record.title }}
-        </template>
+      <template #bodyCell="{ column }: ProTableBodyCellProps<MockTableRecord>">
         <template v-if="column.dataIndex === 'action'">
-          <div class="flex gap-20px items-center justify-center">
+          <div class="flex items-center gap-16px">
             <a>编辑</a>
-            <a>删除</a>
+            <span class="text-btn-error">删除</span>
           </div>
         </template>
       </template>
