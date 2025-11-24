@@ -1,13 +1,31 @@
 <script setup lang="ts">
-import type { Color } from '@gx-design-vue/color-picker'
+import type { Color, ColorPickerProps } from '@gx-design-vue/color-picker'
 import type { CSSProperties } from 'vue'
 import { copyToClipboard } from '@gx-core/shared/utils'
-import { GColorPicker } from '@gx-design-vue/color-picker'
+import { GColorPicker, generate, presetPalettes } from '@gx-design-vue/color-picker'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
 import { message } from 'ant-design-vue'
 import { computed, reactive, ref } from 'vue'
+
+type Presets = Required<ColorPickerProps>['presets'][number]
+
+const genPresets = (presets = presetPalettes) =>
+  Object.entries(presets).map<Presets>(([ label, colors ]) => ({ label, colors }))
+
+const presets = genPresets({
+  '蓝色': generate('#5B8FF9'),
+  '红色': generate('#F7664E'),
+  '水红色': generate('#FF86B7'),
+  '橘黄色': generate('#FF9D4E'),
+  '绿色': generate('#5BD8A6'),
+  '墨绿色': generate('#2B9E9D'),
+  '紫色': generate('#9270CA'),
+  '浅蓝色': generate('#6DC8EC'),
+  '黛蓝色': generate('#667796'),
+  '黄色': generate('#F6BD16'),
+})
 
 const colSize = useMediaQuery()
 
@@ -22,19 +40,6 @@ const code = ref(`<GPorWaterMark
 >
   <div>xxx</div>
 </GPorWaterMark>`)
-
-const predefineColors = ref([
-  '#FF9D4E', // 0 - 橘黄色
-  '#5BD8A6', // 1 - 绿色
-  '#5B8FF9', // 2 - 蓝色
-  '#F7664E', // 3 - 红色
-  '#FF86B7', // 4 - 水红色
-  '#2B9E9D', // 5 - 墨绿色
-  '#9270CA', // 6 - 紫色
-  '#6DC8EC', // 7 - 浅蓝色
-  '#667796', // 8 - 黛蓝色
-  '#F6BD16' // 9 - 黄色
-])
 
 const formState = reactive({
   content: '示例水印',
@@ -125,8 +130,7 @@ function copy() {
                 <a-form-item label="字体颜色">
                   <GColorPicker
                     v-model:value="formState.fontColor"
-                    :show-alpha="false"
-                    :swatches="predefineColors"
+                    :presets="presets"
                   />
                 </a-form-item>
                 <a-form-item label="字体大小">
@@ -169,14 +173,14 @@ function copy() {
     margin-top: 0;
     margin-bottom: 1em;
   }
-  
+
   h4 {
     margin-top: 0;
     margin-bottom: 0.5em;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.85);
   }
-  
+
   img {
     vertical-align: middle;
     border-style: none;

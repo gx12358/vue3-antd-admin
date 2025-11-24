@@ -100,7 +100,7 @@ pnpm build
 
 ## 特别鸣谢
 
-感谢 [vbenjs/vue-vben-admin](https://github.com/vbenjs/vue-vben-admin) 项目提供的灵感和参考实现。
+感谢 [vbenjs/vue-vben-admin](https://github.com/gx12358/vue3-antd-admin) 项目提供的灵感和参考实现。
 
 ## License
 

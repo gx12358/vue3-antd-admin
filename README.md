@@ -100,7 +100,7 @@ Supports modern browsers, does not support IE
 
 ## Special Thanks
 
-Thanks to the [vbenjs/vue-vben-admin](https://github.com/vbenjs/vue-vben-admin) project for providing inspiration and reference implementation.
+Thanks to the [vbenjs/vue-vben-admin](https://github.com/gx12358/vue3-antd-admin) project for providing inspiration and reference implementation.
 
 ## License
 

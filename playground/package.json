@@ -3,18 +3,18 @@
   "type": "module",
   "version": "4.0.0",
   "author": {
-    "name": "vben",
-    "email": "ann.vben@gmail.com",
-    "url": "https://github.com/anncwb"
+    "name": "gx12358",
+    "email": "gx12358@gmail.com",
+    "url": "https://github.com/gx12358"
   },
   "license": "MIT",
-  "homepage": "https://vben.pro",
+  "homepage": "http://gx12358.cn",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "url": "git+https://github.com/gx12358/vue3-antd-admin.git",
     "directory": "playground"
   },
-  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "bugs": "https://github.com/gx12358/vue3-antd-admin/issues",
   "imports": {
     "@/*": "./src/*"
   },
