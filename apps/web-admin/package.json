@@ -66,7 +66,6 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
-    "@faker-js/faker": "catalog:",
     "@gx/types": "workspace:*",
     "@gx/unocss-config": "workspace:*",
     "@types/lodash-es": "catalog:",

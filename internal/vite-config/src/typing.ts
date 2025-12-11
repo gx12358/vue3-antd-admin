@@ -162,11 +162,6 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
    */
   license?: boolean;
   /**
-   * 是否开启 Mock
-   * @default true
-   */
-  mock?: boolean;
-  /**
    * 代理配置
    * @default undefined
    */

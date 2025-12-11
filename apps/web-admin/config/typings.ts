@@ -54,9 +54,6 @@ export interface SettingConfig {
     use: boolean;
     target: string | Record<string, any>;
   };
-  mock: {
-    prefix: string;
-  };
   token: {
     name: string;
     storage: {

@@ -1,8 +1,6 @@
 import { requestClient } from '@/services/base'
 import * as AuthApi from './typing'
 
-export * from './account'
-
 export { AuthApi }
 
 export function loginApi(data) {

@@ -39,7 +39,7 @@ function defineApplicationConfig<T = undefined>(userConfigPromise?: DefineApplic
       injectMetadata: true,
       print: !isBuild,
       printInfoMap: {
-        'GX Admin Pro Docs': 'https://gx12358.cn/doc'
+        'GX Admin Pro Github': 'https://github.com/gx12358/vue3-antd-admin'
       },
       mode,
       ...envConfig,

@@ -31,7 +31,6 @@ declare global {
 
   interface GlobalViteEnv {
     VITE_BASE_URL: string
-    VITE_IS_MOCK: boolean
     VITE_IP_ADRESS: string
     VITE_USE_PWA: boolean
     VITE_UPLOAD_PATH: string

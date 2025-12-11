@@ -14,7 +14,6 @@ import { viteArchiverPlugin } from './archiver'
 
 import { createAutoImport } from './autoImport'
 import { viteExtraAppConfigPlugin } from './extra-app-config'
-import { vitePluginFakeServer } from './fake-server'
 import { viteMetadataPlugin } from './inject-metadata'
 import { viteLicensePlugin } from './license'
 import { viteNitroMockPlugin } from './nitro-mock'
@@ -87,7 +86,6 @@ async function loadApplicationPlugins(
     compressTypes,
     extraAppConfig,
     html,
-    mock,
     license,
     print,
     printInfoMap,
@@ -110,15 +108,6 @@ async function loadApplicationPlugins(
       condition: turboConsole,
       plugins: async () => {
         return [await TurboConsole()]
-      },
-    },
-    {
-      condition: mock,
-      plugins: async () => {
-        return [await vitePluginFakeServer({
-          include: 'mock',
-          enableProd: mock
-        })]
       },
     },
     {

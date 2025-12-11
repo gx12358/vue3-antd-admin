@@ -9,14 +9,13 @@ import { message } from 'ant-design-vue'
 import { accessToken } from '@/utils/accessToken'
 import { typeViteEnv } from '@/utils/env'
 
-const { mock, token } = app
+const { token } = app
 
 const { timeout, successCode } = networkSetting
 
-export function apiUrl(url: string, mock?: { prefix: string; isMock: boolean }) {
-  const isMock = isBoolean(typeViteEnv('VITE_IS_MOCK')) ? typeViteEnv('VITE_IS_MOCK') : mock?.isMock
-  const prefix = isDev() && !isMock ? typeViteEnv('VITE_PROXY_PREFIX') : ''
-  const baseUrl = isMock ? mock?.prefix : typeViteEnv('VITE_BASE_URL')
+export function apiUrl(url: string) {
+  const prefix = isDev() ? typeViteEnv('VITE_PROXY_PREFIX') : ''
+  const baseUrl = typeViteEnv('VITE_BASE_URL')
   return `${prefix}${baseUrl}${url}`
 }
 
@@ -81,7 +80,7 @@ function createRequestClient(options?: RequestOptions) {
       }
 
       if (!checkURL(config.url)) {
-        config.url = apiUrl(config.url || '', { prefix: mock.prefix, isMock: config.isMock! })
+        config.url = apiUrl(config.url || '')
       }
 
       return config

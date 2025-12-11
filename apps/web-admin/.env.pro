@@ -23,6 +23,3 @@ VITE_LEGACY = false
 
 # proxy 代理的api 前缀
 VITE_PROXY_PREFIX = /proApi
-
-# api前缀
-VITE_BASE_URL=/mock-server

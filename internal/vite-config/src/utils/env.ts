@@ -1,3 +1,4 @@
+import type { Recordable } from '@gx/types'
 import type { ApplicationPluginOptions } from '../typing'
 
 import { existsSync } from 'node:fs'
@@ -80,7 +81,6 @@ async function loadAndConvertEnv(
   const {
     VITE_ARCHIVER,
     VITE_COMPRESS,
-    VITE_USE_MOCK,
     VITE_VISUALIZER,
   } = envConfig
 
@@ -92,7 +92,6 @@ async function loadAndConvertEnv(
     archiver: getBoolean(VITE_ARCHIVER),
     compress: compressTypes.length > 0,
     compressTypes,
-    mock: getBoolean(VITE_USE_MOCK),
     visualizer: getBoolean(VITE_VISUALIZER),
   }
 }

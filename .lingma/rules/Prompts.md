@@ -105,7 +105,7 @@ vue3-antd-admin
 ## 网络请求约定
 - 请求客户端在 `services/base.ts`：统一超时、URL 拼接、携带 Token（`Authorization`、`tenant-id`）。
 - 成功 code 在 `config/network.ts` 维护（默认 `[200, 0]`），错误统一在拦截器内处理并提示。
-- 环境变量：`VITE_BASE_URL`、`VITE_PROXY_PREFIX`、`VITE_IS_MOCK` 控制基础地址与是否走 Mock。
+- 环境变量：`VITE_BASE_URL`、`VITE_PROXY_PREFIX` 控制基础地址与是否走 Mock。
 
 ## 页面与组件开发
 - 页面位于 `views/`，路由位于 `router/routes/modules/`，统一走守卫；通用业务组件位于 `components/`。

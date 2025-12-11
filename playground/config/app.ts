@@ -76,10 +76,6 @@ const settingConfig: SettingConfig = {
     // 代理的目标地址
     target: 'http://127.0.0.1:3000',
   },
-  mock: {
-    prefix: '/mock-server',
-    checkToken: 0,
-  },
   token: {
     // token名称
     name: 'Authorization',
