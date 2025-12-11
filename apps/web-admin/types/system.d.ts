@@ -1,4 +1,4 @@
-import type { BasicLayoutProps, MenuDataItem, MenuMeta } from '@gx-design-vue/pro-layout'
+import type { BasicLayoutProps, MenuDataItem, Meta } from '@gx-design-vue/pro-layout'
 import type { AppRouteModule as GProAppRouteModule } from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
 import type { UserInfo as BasicUserInfo } from '@gx/types'
 import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
@@ -11,7 +11,7 @@ declare global {
   }
 
   // 系统数据字典 Key 类型
-  type DictType = 'common_status'
+  type DictType = 'common_status' | 'sys_common_category' | 'system_user_sex'
 
   type DictStatus = 'error' | 'processing'
 
@@ -100,6 +100,7 @@ declare global {
   interface DefaultTableRecord {
     id: any;
     uuid: string;
+    updateTime?: string | null;
     createTime?: string | null;
   }
 
@@ -121,7 +122,7 @@ declare global {
   }
 
   // 扩展 MenuMeta 类型 为 菜单权限类型
-  interface SystemMenuMeta extends MenuMeta {
+  interface SystemMenuMeta extends Meta {
     permissions?: string | string[]
   }
 

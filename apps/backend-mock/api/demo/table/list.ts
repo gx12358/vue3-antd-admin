@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker'
-import dayjs from 'dayjs'
 import { eventHandler, getQuery } from 'h3'
 import { verifyAccessToken } from '~/utils/jwt-utils'
 import {
@@ -7,31 +5,7 @@ import {
   unAuthorizedResponse,
   usePageResponseSuccess,
 } from '~/utils/response'
-
-function generateMockDataList(count: number) {
-  const dataList = []
-
-  for (let i = 0; i < count; i++) {
-    const dataItem = {
-      id: faker.string.uuid(),
-      title: faker.lorem.word(),
-      age: faker.number.int({ min: 18, max: 50 }),
-      address: faker.location.city(),
-      author: faker.person.fullName(),
-      productName: faker.commerce.productName(),
-      description: faker.commerce.productDescription(),
-      percent: faker.number.int({ min: 1, max: 100 }),
-      img: faker.image.url(),
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    }
-
-    dataList.push(dataItem)
-  }
-
-  return dataList
-}
-
-const mockData = generateMockDataList(100)
+import { tableMockData } from '~/utils/table'
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event)
@@ -39,7 +13,7 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event)
   }
 
-  await sleep(200)
+  await sleep(500)
 
   const { page, pageSize } = getQuery(event)
   // 规范化分页参数，处理 string[]
@@ -53,7 +27,7 @@ export default eventHandler(async (event) => {
     100,
     Math.max(1, Number.parseInt(String(pageSizeRaw ?? '10'), 10) || 10),
   )
-  const listData = structuredClone(mockData)
+  const listData = structuredClone(tableMockData)
 
   return usePageResponseSuccess(
     String(pageNumber),

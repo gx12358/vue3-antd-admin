@@ -1,3 +1,1 @@
-import useRequest from './use-request'
-
-export { useRequest }
+export * from './use-request'

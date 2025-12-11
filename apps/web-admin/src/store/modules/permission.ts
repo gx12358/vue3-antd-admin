@@ -2,7 +2,7 @@ import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
 
 export interface PermissionState {
-  role: string[] | undefined
+  roles: string[] | undefined
   auths: string[] | undefined
   /**
    * 登录租户编号
@@ -15,25 +15,16 @@ export interface PermissionState {
 }
 
 export const useStorePermission = defineStore('permission', () => {
-  const [ state, setValue ] = useReactiveState<PermissionState>({
-    role: undefined,
+  const [ state, setState, clear ] = useReactiveState<PermissionState>({
+    roles: undefined,
     auths: undefined,
     tenantId: null,
     visitTenantId: null
-  }, { omitNil: false, omitEmpty: false })
-
-  function clear() {
-    setValue({
-      role: undefined,
-      auths: undefined,
-      tenantId: null,
-      visitTenantId: null
-    })
-  }
+  })
 
   return {
     ...toRefs(state),
-    setValue,
+    setState,
     clear
   }
 })

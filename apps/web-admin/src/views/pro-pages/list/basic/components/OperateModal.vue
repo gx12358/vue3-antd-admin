@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import type { UserList } from '@gx-mock/config/user'
-import type { BasicListItemDataType } from '@gx-mock/routers/list/basic.fake'
 import type { Dayjs } from 'dayjs'
+import type { MockTableRecord, UpdateMockTableRecord } from '@/services/demo/table'
 import { useProForm } from '@gx-design-vue/pro-provider'
-import { handleEmptyField } from '@gx-design-vue/pro-utils'
+import { forInObject, handleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { omit } from 'lodash-es'
 import { reactive } from 'vue'
-import Empty from '@/components/layout/empty/index.vue'
-import { useRequest } from '@/hooks/core'
-import { basicListOperate, getBasicListDetails } from '@/services/list-center'
-import { getUserList } from '@/services/user'
+import { getInfo, updateList } from '@/services/demo'
 
-type FormState = Partial<BasicListItemDataType> & {
-  ownerId?: number;
+type FormState = Partial<UpdateMockTableRecord> & {
+  owner?: string;
   createTimeDay?: Dayjs | null;
 }
 
@@ -33,21 +29,16 @@ const formState = reactive<FormState>({
   createTime: null,
   createTimeDay: null,
   owner: '',
-  ownerId: undefined,
-  subDescription: ''
+  description: ''
 })
 
 const ruleState = reactive<RulesState<FormState>>({
   title: [ { required: true, message: '请输入任务名称' } ],
   createTimeDay: [ { required: true, message: '请输入开始时间' } ],
-  ownerId: [ { required: true, message: '请选择任务负责人' } ]
+  owner: [ { required: true, message: '请选择任务负责人' } ]
 })
 
 const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
-
-const { loading, data: userList } = useRequest<UserList[]>(getUserList, {
-  manual: useWaitFetch
-})
 
 const handleCancel = () => {
   resetFields()
@@ -60,10 +51,9 @@ const handleCancel = () => {
 const handleOk = () => {
   validate().then(async (_) => {
     spinning.value = true
-    const response = await basicListOperate(omit({
-      ...formState,
+    const response = await updateList(omit({
+      ...toRaw(formState),
       createTime: dayjs(formState.createTimeDay).format('YYYY-MM-DD HH:mm:ss'),
-      owner: userList.value.find(item => item.id === formState.ownerId)?.name
     }, 'createTimeDay'))
 
     if (response) {
@@ -81,20 +71,20 @@ defineExpose({
     open.value = true
     useWaitFetch.value = false
     if (id) {
-      skeletonLoading.value = true
-      const response = await getBasicListDetails<BasicListItemDataType>({ id })
-      if (response) {
-        for (const key in formState) {
+      try {
+        skeletonLoading.value = true
+        const result = await getInfo<MockTableRecord>({ id })
+        forInObject(formState, (key, value) => {
           switch (key) {
             case 'createTimeDay':
-              formState[key] = dayjs(response.data?.createTime)
+              formState[key] = dayjs(result?.createTime)
               break
             default:
-              formState[key] = handleEmptyField(response?.data?.[key], '').value
+              formState[key] = handleEmptyField(value, '').value
               break
           }
-        }
-      }
+        })
+      } catch {}
       skeletonLoading.value = false
     }
   }
@@ -124,24 +114,17 @@ defineExpose({
       <a-form-item label="任务名称" v-bind="validateInfos.createTimeDay">
         <a-date-picker v-model:value="formState.createTimeDay as any" style="width: 100%" show-time />
       </a-form-item>
-      <a-form-item label="任务负责人" v-bind="validateInfos.ownerId">
+      <a-form-item label="任务负责人" v-bind="validateInfos.owner">
         <a-select
-          v-model:value="formState.ownerId"
+          v-model:value="formState.owner"
           placeholder="请选择任务负责人"
           allow-clear
-        >
-          <template #notFoundContent>
-            <g-spin v-if="loading" class="spinner-icon" />
-            <Empty v-else :width="80" />
-          </template>
-          <a-select-option v-for="item in userList" :key="item" :value="item.id">
-            {{ item.name }}
-          </a-select-option>
-        </a-select>
+          :options="['付小小', '周毛毛'].map(item => ({ label: item, value: item }))"
+        />
       </a-form-item>
-      <a-form-item label="产品描述" v-bind="validateInfos.subDescription" class="!mb-0">
+      <a-form-item label="产品描述" v-bind="validateInfos.description" class="!mb-0">
         <a-textarea
-          v-model:value="formState.subDescription"
+          v-model:value="formState.description"
           :auto-size="{ minRows: 5 }"
           placeholder="请输入产品描述"
           allow-clear
@@ -152,9 +135,4 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-.spinner-icon {
-  &:deep(.iconfont) {
-    --at-apply: text-20px;
-  }
-}
 </style>

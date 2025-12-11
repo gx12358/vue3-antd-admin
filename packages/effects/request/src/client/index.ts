@@ -23,7 +23,7 @@ class RequestClient {
       carryToken: true,
     } as Partial<RequestOptions>
     const { ...axiosConfig } = options
-    const requestConfig = deepMerge<RequestOptions>(defaultConfig as RequestOptions, axiosConfig)
+    const requestConfig = deepMerge(defaultConfig, axiosConfig)
 
     this.baseRequest = new CreateClient(requestConfig)
   }

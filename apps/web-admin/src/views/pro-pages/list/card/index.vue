@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import type { CardListItemDataType, CardSearchParmas } from '@gx-mock/routers/list/card.fake'
-import { GProCard } from '@gx-design-vue/pro-card'
+import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
 import { message } from 'ant-design-vue'
 import { globalConfirm } from '@/components/layout/confirm'
 import { useScrollPageList } from '@/hooks/web'
-import { deleteCardList, getCardList } from '@/services/list-center/card'
+import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
-import { cardGridConfig } from './utils/config'
 
 const operate = ref()
 const pageSize = ref(11)
@@ -17,10 +15,12 @@ const {
   loading,
   initLoading,
   reloadList,
-  handleNext
-} = useScrollPageList<CardListItemDataType, Partial<CardSearchParmas>>(
-  getCardList,
+  handleNext,
+  refreshLoading
+} = useScrollPageList<MockTableRecord, Partial<SearchConfig>>(
+  getList,
   {
+    reloadClear: false,
     fetchNextType: 'button',
     pageSize,
     scrollBottom: 124 + 24 * 2 + 200
@@ -38,7 +38,7 @@ const handleDelete = (id) => {
     content: '是否确认删除？',
     onOk: async () => {
       loading.value = true
-      const response = await deleteCardList({ id })
+      const response = await deleteList({ id })
       if (response) {
         message.success('操作成功')
         await reloadList()
@@ -50,7 +50,7 @@ const handleDelete = (id) => {
 </script>
 
 <template>
-  <g-pro-page-container :use-page-card="false" :loading="initLoading">
+  <g-pro-page-container :use-page-card="false" :loading="initLoading || refreshLoading">
     <template #contentRender>
       <div class="mt-8px font-600 text-rgba-[0-0-0-0.88] text-20px leading-32p text-hidden-1">
         卡片列表
@@ -73,43 +73,35 @@ const handleDelete = (id) => {
         </a>
       </div>
     </template>
-    <GProCard :gutter="cardGridConfig.gutter" ghost wrap>
-      <GProCard
-        class="card-add"
-        layout="center"
-        :col-span="cardGridConfig.colSpan"
-        :body-style="{ padding: 0 }"
-      >
-        <div class="card-add-btn" @click="operate?.open()">
-          <PlusOutlined />
-          新增产品
-        </div>
-      </GProCard>
-      <GProCard
-        v-for="item in list"
-        :key="item.id"
-        :col-span="cardGridConfig.colSpan"
-        hoverable
-      >
-        <div class="flex gap-16px">
-          <g-admin-image :src="item.avatar" :width="48" :height="48" class="rd-50% flex-shrink-0" />
+    <div class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-16px">
+      <div v-if="state.init" class="gx-card gx-card-add flex-center hover">
+        <span class="hover:text-primary duration-200">新增</span>
+      </div>
+      <div v-for="item in list" :key="item.id" class="gx-card flex flex-col hover">
+        <div class="flex gap-16px gx-card-body flex-1">
+          <a-avatar class="shrink-0" :src="item.img" :size="48" />
           <div class="flex flex-col gap-8px">
-            <div class="gx-admin-a text-16px font-600 text-rgba-[0-0-0-0.88] text-hidden-1 leading-26px">
+            <div class="text-heading text-16px font-600 text-hidden-1">
               {{ item.title }}
             </div>
-            <div class="text-rgba-[0-0-0-0.88] text-hidden-3 leading-22px h-66px">
-              {{ item.title }}
+            <div class="text-foreground text-hidden-3 leading-22px min-h-66px">
+              {{ item.description }}
             </div>
           </div>
         </div>
-        <template #actions>
-          <span key="update" class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" @click="operate?.open(item.id)">更新</span>
-          <span key="delete" class="gx-admin-a text-rgba-[0-0-0-0.45] leading-22px" @click="handleDelete(item.id)">删除</span>
-        </template>
-      </GProCard>
-    </GProCard>
+        <div class="bd-t-border-secondary flex relative">
+          <div class="py-12px flex-1 hover:text-primary duration-200 flex-center" @click="operate.open(item.id)">
+            更新
+          </div>
+          <div class="py-12px flex-1 hover:text-primary duration-200 flex-center" @click="handleDelete(item.id)">
+            删除
+          </div>
+          <div class="bg-border-secondary w-1px absolute position-center h-[calc(100%-24px)] top-12px" />
+        </div>
+      </div>
+    </div>
     <div class="flex-center">
-      <a-button v-if="state.isMore" class="mt-24px" :loading="loading" @click="handleNext">
+      <a-button v-if="state.isMore && !initLoading" class="mt-24px" :loading="loading && !refreshLoading" @click="handleNext">
         更多
       </a-button>
     </div>
@@ -118,23 +110,13 @@ const handleDelete = (id) => {
 </template>
 
 <style lang="less" scoped>
-.card-add {
-  cursor: pointer;
-  border: 1px dashed #d9d9d9;
-  transition: border .3s;
-  
+.gx-card-add {
+  border-style: dashed;
+
   &:hover {
-    border-color: var(--gx-primary-color);
-    
-    .card-add-btn {
-      --at-apply: text-primary;
-    }
-  }
-  
-  .card-add-btn {
-    transition: color .3s;
-    --at-apply: h-174px flex-center gap-4px w-full;
-    color: rgba(0, 0, 0, 0.65)
+    --at-apply: text-primary;
+    border-color: var(--gx-color-primary);
+    box-shadow: none;
   }
 }
 </style>

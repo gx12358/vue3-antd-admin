@@ -1,10 +1,8 @@
-import type { Ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import { useContext } from '@gx-design-vue/pro-provider'
 
 export interface AdvancedContextProps {
-  showTableLoading: Ref<boolean>;
-
-  [key: string]: any;
+  isMobile: ComputedRef<boolean>;
 }
 
 export const {

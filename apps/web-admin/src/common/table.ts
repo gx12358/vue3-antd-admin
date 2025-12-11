@@ -1,7 +1,6 @@
 import type { BaseTableState } from '@gx-design-vue/pro-table'
 
 const defaultSearch: BaseTableState['search'] = {
-  manualRequest: true,
   actions: {
     reload: true
   },

@@ -1,5 +1,6 @@
-import { typeViteEnv as globaltypeViteEnv } from '@gx-core/shared/utils'
+import type { ViteEnv } from '@gx/types'
+import { typeViteEnv as globalTypeViteEnv } from '@gx-core/shared/utils'
 
 export function typeViteEnv(key: keyof (GlobalViteEnv & ViteEnv)) {
-  return globaltypeViteEnv<GlobalViteEnv>(key)
+  return globalTypeViteEnv<GlobalViteEnv>(key)
 }

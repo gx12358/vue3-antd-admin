@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
 import type { Dayjs } from 'dayjs'
+import type { MockTableRecord } from '@/services/demo/table'
 import { useProForm } from '@gx-design-vue/pro-provider'
+import { keysOf } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
-import { addRules, updateRules } from '@/services/list-center'
+import { createList, updateList } from '@/services/demo'
 import { defauleState } from '../utils/config'
 
 interface FormState {
@@ -49,10 +50,10 @@ const ruleState = reactive<Partial<RulesState<FormState>>>({
   createTimeDay: [
     {
       required: true,
-      validator: (_, value: Dayjs) => {
+      validator: (_, value) => {
         if (value || current.value !== 2)
           return Promise.resolve()
-        
+
         return Promise.reject('请选择开始时间')
       }
     }
@@ -67,7 +68,7 @@ const changeStep = (type: 'next' | 'back') => {
       current.value += 1
     }).catch((_) => {})
   } else if (type === 'back') {
-    clearValidate(Object.keys(ruleState))
+    clearValidate(keysOf(ruleState))
     current.value -= 1
   }
 }
@@ -86,29 +87,29 @@ const handleOk = () => {
       formState.createTime = dayjs(formState.createTimeDay)
         .format('YYYY-MM-DD HH:mm:ss')
     }
-    const fetchFun = operateType.value === 'add' ? addRules : updateRules
+    const fetchFun = operateType.value === 'add' ? createList : updateList
     const response = await fetchFun({ ...omit(formState, 'createTimeDay') })
-    
+
     if (response) {
       message.success('操作成功')
       emit('ok')
       handleCancel()
     }
-    
+
     spinning.value = false
   }).catch((_) => {})
 }
 
 defineExpose({
-  open: (type: 'add' | 'update', record?: RulesListItem) => {
+  open: (type: 'add' | 'update', record?: MockTableRecord) => {
     operateType.value = type
-    
+
     if (record) {
       formState.id = record.id
       formState.name = record.name
-      formState.desc = record.desc
+      formState.desc = record.description
     }
-    
+
     open.value = true
   }
 })

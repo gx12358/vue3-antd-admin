@@ -6,4 +6,5 @@ export {
 
 export * from './echart'
 export * from './swr/index'
-export * from './useGlobalStyle'
+export * from './use-global-style'
+export * from './use-request'

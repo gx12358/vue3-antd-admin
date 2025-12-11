@@ -1,6 +1,6 @@
+import type { Theme } from '@unocss/preset-uno'
 import type { UserConfig } from 'unocss'
 import { deepMerge } from '@gx-design-vue/pro-utils'
-import { Theme } from '@unocss/preset-uno'
 import {
   presetAttributify,
   presetWind3,
@@ -12,14 +12,22 @@ import { colors } from './css-var'
 import { rules } from './rule'
 
 function defineConfig<T extends object = Theme>(config: UserConfig<T> = {}): UserConfig<T> {
-  const mergeConfig = deepMerge<UserConfig<T>>(config, {
+  const mergeConfig = deepMerge(config, {
     presets: [
       presetWind3(),
       presetAttributify()
     ],
-    theme: {
-      colors
-    } as any,
+    extendTheme: (theme) => {
+      return {
+        ...theme,
+        colors,
+        breakpoints: {
+          ...theme.breakpoints,
+          notebook: '1366px',
+          xxl: '1440px',
+        },
+      }
+    },
     transformers: [ transformerDirectives({
       applyVariable: [ '--at-apply' ]
     }), transformerVariantGroup() ],

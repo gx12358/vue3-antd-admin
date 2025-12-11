@@ -12,11 +12,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AAvatar: typeof import('ant-design-vue/es')['Avatar']
-    AMenuDivider: typeof import('ant-design-vue/es')['MenuDivider']
-    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     ASpin: typeof import('ant-design-vue/es')['Spin']
-    ATag: typeof import('ant-design-vue/es')['Tag']
     HelloWorld: typeof import('./../src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -25,11 +21,7 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
-  const AAvatar: typeof import('ant-design-vue/es')['Avatar']
-  const AMenuDivider: typeof import('ant-design-vue/es')['MenuDivider']
-  const AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
   const ASpin: typeof import('ant-design-vue/es')['Spin']
-  const ATag: typeof import('ant-design-vue/es')['Tag']
   const HelloWorld: typeof import('./../src/components/HelloWorld.vue')['default']
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']

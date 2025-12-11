@@ -1,3 +1,5 @@
+import type { Fn } from '@gx/types'
+import type { ResponseResult } from '@gx/types/request'
 import type { ClientDetails, OssMapKey } from '@/store/modules/oss'
 import { checkURL } from '@gx-core/shared/utils'
 import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'

@@ -19,12 +19,11 @@
   "dependencies": {
     "@gx-design-vue/pro-utils": "catalog:",
     "axios": "catalog:",
-    "lodash-es": "catalog:",
+    "es-toolkit": "catalog:",
     "qs": "catalog:"
   },
   "devDependencies": {
     "@gx/types": "workspace:*",
-    "@types/lodash-es": "catalog:",
     "@types/qs": "catalog:"
   }
 }

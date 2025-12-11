@@ -1,3 +1,4 @@
+import type { PageResult } from '@gx/types/request'
 import type { DictState } from '@/store/modules/dict'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
 import { isArray } from '@gx-design-vue/pro-utils'
@@ -9,6 +10,11 @@ function changeMapParams(data: DictRecord[]): SystemDictRecord[] {
     label: item.label || item.dictLabel,
     value: item.value || item.dictValue,
   }))
+}
+
+const pageState = {
+  pageNo: 1,
+  pageSize: 100
 }
 
 export function useDict(types?: DictType | DictType[], wait?: boolean) {
@@ -35,12 +41,12 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
     if (typeof types === 'string') {
       if (dict[types]?.loading) return
       if (enforce || !dict[types] || !dict[types]?.data?.length) {
-        dict.setValue({ [`${types}`]: { loading: true } })
+        dict.setState({ [`${types}`]: { loading: true } })
         try {
-          const { list = [] } = await getDicts<PageResult<DictRecord>>({ dictType: types })
-          dict.setValue({ [`${types}`]: { data: changeMapParams(list) } })
+          const { list = [] } = await getDicts<PageResult<DictRecord>>({ ...pageState, dictType: types })
+          dict.setState({ [`${types}`]: { data: changeMapParams(list) } })
         } catch {}
-        dict.setValue({ [`${types}`]: { loading: false } })
+        dict.setState({ [`${types}`]: { loading: false } })
       }
       return
     }
@@ -50,11 +56,11 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
         const key = types[i]
         if (dict[key]?.loading) return
         if (enforce || !dict[key] || !dict[key]?.data?.length) {
-          dict.setValue({ [`${key}`]: { loading: true } })
-          getDicts<PageResult<DictRecord>>({ dictType: key }).then(({ list }) => {
-            dict.setValue({ [`${key}`]: { data: changeMapParams(list || []) } })
+          dict.setState({ [`${key}`]: { loading: true } })
+          getDicts<PageResult<DictRecord>>({ ...pageState, dictType: key }).then(({ list }) => {
+            dict.setState({ [`${key}`]: { data: changeMapParams(list || []) } })
           }).finally(() => {
-            dict.setValue({ [`${key}`]: { loading: false } })
+            dict.setState({ [`${key}`]: { loading: false } })
           })
         }
       }

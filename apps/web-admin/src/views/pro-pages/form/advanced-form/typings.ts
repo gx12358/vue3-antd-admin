@@ -1,3 +1,5 @@
+import type { Dayjs } from 'dayjs'
+
 export interface FormState {
   name: string;
   url: string;
@@ -11,7 +13,7 @@ export interface FormState {
   url2: string;
   owner2?: any;
   approver2?: any;
-  dateRange2?: any;
+  dateTime?: Dayjs | string;
   type2?: any;
   createTime?: string;
   isMock?: boolean;

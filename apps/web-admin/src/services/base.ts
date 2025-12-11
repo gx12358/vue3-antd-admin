@@ -1,4 +1,5 @@
 import type { RequestOptions } from '@gx/request'
+import type { ResponseResult } from '@gx/types/request'
 import type { AxiosError } from 'axios'
 import { app, networkSetting } from '@gx-config'
 import { checkURL, isDev, tansParams } from '@gx-core/shared/utils'

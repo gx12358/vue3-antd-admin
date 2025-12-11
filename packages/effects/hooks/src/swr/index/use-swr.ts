@@ -1,3 +1,4 @@
+import type { Fn } from '@gx/types'
 import type { fetcherFn, IConfig, IKey, IResponse, revalidateOptions, State, SWRHook } from '../utils'
 import { isServer } from '@gx-design-vue/pro-utils'
 import {

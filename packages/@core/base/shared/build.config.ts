@@ -5,7 +5,6 @@ export default defineBuildConfig({
   declaration: true,
   entries: [
     'src/utils/index',
-    'src/cache/index',
-    'src/global-state',
+    'src/cache/index'
   ],
 })

@@ -18,9 +18,9 @@ export interface RoutesState {
 }
 
 export const useStoreRoutes = defineStore('routes', () => {
-  const [ state, setValue ] = useReactiveState<RoutesState>({
+  const [ state, setState, clear ] = useReactiveState<RoutesState>({
     routes: []
-  }, { omitEmpty: false })
+  })
 
   /**
    * @Author      gx12358
@@ -35,22 +35,16 @@ export const useStoreRoutes = defineStore('routes', () => {
       asyncRouteList[0].children = localRoutes.concat([ ...(asyncRouteList[0]?.children || []) ])
       asyncRouteList[0].redirect = router.rootPath || getLastPath(asyncRouteList[0].children as any)
       asyncRouteList.push(notFoundRoute)
-      setValue({ routes: asyncRouteList })
+      setState({ routes: asyncRouteList })
       return asyncRouteList
     } catch {}
     return []
   }
 
-  function clear() {
-    setValue({
-      routes: []
-    })
-  }
-
   return {
     ...toRefs(state),
     clear,
-    setValue,
+    setState,
     setAllRoutes
   }
 })

@@ -1,3 +1,5 @@
+import type { ViteEnv } from '@gx/types'
+
 /**
  * @Author      gx12358
  * @DateTime    2022/4/1

@@ -1,3 +1,4 @@
+import type { Fn } from '@gx/types'
 import type { Router, RouteRecordRaw } from 'vue-router'
 import { app } from '@gx-config'
 import { isArray } from '@gx-design-vue/pro-utils'
@@ -36,7 +37,7 @@ export function createPermissionGuard(router: Router) {
         return
       }
 
-      const hasRoles = permissionStore.role
+      const hasRoles = permissionStore.roles
 
       if (hasRoles) {
         if (isArray(hasRoles) && hasRoles.length > 0) {

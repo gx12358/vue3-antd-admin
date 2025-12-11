@@ -1,132 +1,133 @@
 <script setup lang="ts">
-import type { BasicDetails, CommodityRecord, ScheduleRecord } from '@gx-mock/routers/profile/basic.fake'
+import type { BasicGood, BasicProgress } from './typings'
+import { cloneDeep } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
-import { useRequest } from '@/hooks/core'
 import { useProTable } from '@/hooks/web'
-import { getBasic, getBasicTable } from '@/services/profile-center'
-import { goodsColumns, scheduleColumns } from './utils/columns'
-import { defaultSTableState, descriptionsState, statusState } from './utils/config'
+import { goodsColumns, progressColumns } from './utils/columns'
+import { basicDetails, basicGoods, basicProgress, descriptionsState } from './utils/config'
 
-const { data: basicData, loading } = useRequest<Partial<BasicDetails>>(getBasic, {
-  defaultData: {}
-})
+const goodTable = ref()
+const progressTable = ref()
+const basicGoodsList = ref<BasicGood[]>([])
 
-const scheduleRef = ref()
-const commodityRef = ref()
-
-const commodityState = useProTable<Partial<CommodityRecord>>(commodityRef, {
+const goodTableState = useProTable<BasicGood>(goodTable, {
   state: {
-    ...defaultSTableState as any,
+    rowKey: 'id',
     headerTitle: '退货商品',
-    loading: true,
-    dataSource: []
+    pagination: false,
+    options: false,
+  },
+  request: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let num = 0
+        let amount = 0
+        let goodsData: any[] = []
+        basicGoodsList.value = cloneDeep(basicGoods)
+        basicGoods.forEach((item) => {
+          num += Number(item.num)
+          amount += Number(item.amount)
+        })
+        goodsData = basicGoods.concat({
+          id: '总计',
+          num,
+          amount,
+        } as any)
+        resolve({
+          data: goodsData,
+          success: true
+        })
+      }, 200)
+    })
   }
 })
 
-const scheduleState = useProTable<Partial<ScheduleRecord>>(scheduleRef, {
+const progressTableState = useProTable<BasicProgress>(progressTable, {
   state: {
-    ...defaultSTableState as any,
+    rowKey: 'id',
     headerTitle: '退货进度',
-    dataSource: [],
-    loading: true,
-    columns: scheduleColumns
+    columns: progressColumns,
+    pagination: false,
+    options: false,
+  },
+  request: () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: basicProgress,
+          success: true
+        })
+      }, 200)
+    })
   }
 })
 
-const { loading: tableLoading } = useRequest<{
-  schedule: ScheduleRecord[];
-  commodity: CommodityRecord[];
-}>(getBasicTable, {
-  onSuccess: (data) => {
-    const { schedule, commodity } = data
-    scheduleState.tableState.loading = false
-    scheduleState.tableState.dataSource = schedule
-    commodityState.tableState.loading = false
-    commodityState.tableState.dataSource = commodity
-    
-    if (commodity.length) {
-      let num = 0
-      let amount = 0
-      commodityState.tableState.dataSource.forEach((item) => {
-        num += Number(item.num)
-        amount += Number(item.amount)
-      })
-      commodityState.tableState.dataSource = commodityState.tableState.dataSource.concat({
-        key: '总计',
-        num,
-        amount
-      } as Partial<CommodityRecord>)
-    }
-  }
-})
-
-const commodityColumns = computed(() => {
+const goodColumns = computed(() => {
   return [
     {
       title: '商品编号',
-      dataIndex: 'key',
-      key: 'key',
-      customCell: (_, rowIndex) => {
-        if (rowIndex && rowIndex >= scheduleState.tableState.dataSource?.length)
+      dataIndex: 'id',
+      key: 'id',
+      customCell: (_, index) => {
+        if (index === basicGoodsList.value.length) {
           return { colSpan: 4 }
-      }
+        }
+      },
     },
     {
       title: '商品名称',
       dataIndex: 'name',
       key: 'name',
-      customCell: renderContent
+      customCell: renderContent,
     },
     {
       title: '商品条码',
       dataIndex: 'barcode',
       key: 'barcode',
-      customCell: renderContent
+      customCell: renderContent,
     },
     {
       title: '单价',
       dataIndex: 'price',
       key: 'price',
       align: 'right',
-      customCell: renderContent
+      customCell: renderContent,
     },
     ...goodsColumns
-  ] as ProColumnsType<Partial<CommodityRecord>>
+  ] as ProColumnsType<BasicProgress>
 })
 
 function renderContent(_, rowIndex: number) {
-  if (rowIndex === scheduleState.tableState.dataSource.length) {
+  if (rowIndex === basicGoodsList.value.length) {
     return { colSpan: 0 }
   }
 }
 </script>
 
 <template>
-  <g-pro-page-container :loading="loading && tableLoading">
+  <g-pro-page-container>
     <template v-for="item in descriptionsState" :key="item.name">
       <a-descriptions :title="item.name" class="mb-32px">
         <a-descriptions-item v-for="el in Object.keys(item.data)" :key="el" :label="item.data[el]">
-          <template v-if="el === 'status'">
-            {{ statusState[(basicData as any)[el]] }}
-          </template>
-          <template v-else>
-            {{ basicData[el] }}
-          </template>
+          {{ basicDetails[el] }}
         </a-descriptions-item>
       </a-descriptions>
       <a-divider class="mb-32px" />
     </template>
-    <g-pro-table ref="commodityRef" v-bind="commodityState.tableState" :columns="commodityColumns" class="mb-32px">
-      <template #bodyCell="{ column, text, index }: ProTableBodyCellProps<CommodityRecord>">
-        <template v-if="column.dataIndex === 'key' || column.dataIndex === 'num' || column.dataIndex === 'amount'">
-          <span :style="{ fontWeight: index < (commodityState.tableState.dataSource.length - 1) ? undefined : 600 }">
+    <g-pro-table ref="goodTable" v-bind="goodTableState.tableState" :columns="goodColumns" class="mb-32px">
+      <template #bodyCell="{ column, text, index }: ProTableBodyCellProps<BasicGood>">
+        <template v-if="column.dataIndex === 'num' || column.dataIndex === 'amount'">
+          <span :style="{ fontWeight: index < basicGoodsList.length ? undefined : 600 }">
             {{ text }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'id'">
+          <span>{{ index < basicGoodsList.length ? text : '总计' }}</span>
+        </template>
       </template>
     </g-pro-table>
-    <g-pro-table ref="scheduleRef" v-bind="scheduleState.tableState">
-      <template #bodyCell="{ column, text, record }: { column: ProColumnType; text: string; record: ScheduleRecord; }">
+    <g-pro-table ref="progressTable" v-bind="progressTableState.tableState">
+      <template #bodyCell="{ column, text, record }: ProTableBodyCellProps<BasicProgress>">
         <template v-if="column.dataIndex === 'status'">
           <a-badge :status="text === 'success' ? 'success' : 'processing'" :text="text === 'success' ? '成功' : '进行中'" />
         </template>
@@ -139,7 +140,4 @@ function renderContent(_, rowIndex: number) {
 </template>
 
 <style lang="less" scoped>
-&:deep(.ant-descriptions-item-label) {
-  color: rgba(0, 0, 0, 0.45)
-}
 </style>

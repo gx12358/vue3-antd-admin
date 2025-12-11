@@ -14,7 +14,7 @@ export interface GlobalState {
 }
 
 export const useStoreGlobal = defineStore('global', () => {
-  const [ state, setValue ] = useReactiveState<GlobalState>({
+  const [ state, setState ] = useReactiveState<GlobalState>({
     keepAlive: true,
     pageLoading: false,
     disabledScrollTop: false
@@ -22,6 +22,6 @@ export const useStoreGlobal = defineStore('global', () => {
 
   return {
     ...state,
-    setValue
+    setState
   }
 })

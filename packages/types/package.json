@@ -16,7 +16,10 @@
       "default": "./src/index.ts"
     },
     "./mock": {
-      "types": "./mock.d.ts"
+      "types": "./mock.ts"
+    },
+    "./request": {
+      "types": "./src/request.ts"
     },
     "./global": {
       "types": "./global.d.ts"

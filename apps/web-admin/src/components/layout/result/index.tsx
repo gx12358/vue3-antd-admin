@@ -1,144 +1,100 @@
-import Result403 from '@images/error/403.png'
-import Result404 from '@images/error/404.png'
-import ResultCloud from '@images/error/cloud.png'
-import { Col, Row } from 'ant-design-vue'
-import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
+import type { CSSProperties, SlotsType } from 'vue'
+import { getSlotsProps } from '@gx-design-vue/pro-utils'
+import { Button, Result } from 'ant-design-vue'
+import { defineComponent } from 'vue'
 
-import './style.less'
+export type Status = '403' | '404' | '500'
 
-export interface SubInfo {
-  headline: string
-  info: string
-  exceptionImage: string
-}
-
-interface ResultSubInfo {
-  404: SubInfo
-  403: SubInfo
-}
-
-interface ResultState {
-  jumpTime: number
-  oops: string
-  headline: string
-  info: string
-  btn: string
-  timer: number | any
-  exceptionImage: any
-}
-
-const resultSubInfo: ResultSubInfo = {
+const resultSubInfo: Record<Status, {
+  title: string
+  subTitle: string
+}> = {
   '404': {
-    headline: '当前页面不存在...',
-    info: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
-    exceptionImage: Result404
+    title: '当前页面不存在...',
+    subTitle: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
   },
   '403': {
-    headline: '您没有操作角色...',
-    info: '当前帐号没有操作角色,请联系管理员。',
-    exceptionImage: Result403
-  }
+    title: '您没有操作角色...',
+    subTitle: '当前帐号没有操作角色,请联系管理员。',
+  },
+  '500': {
+    title: '服务器错误...',
+    subTitle: '服务器发生错误，请检查服务器配置。',
+  },
 }
 
 const GAdminResult = defineComponent({
   name: 'GAdminResult',
+  inheritAttrs: false,
   props: {
     status: {
-      type: String,
+      type: String as PropType<'403' | '404' | '500'>,
       required: true,
       default: '404'
-    }
+    },
+    title: {
+      type: String as PropType<string>,
+    },
+    icon: {
+      type: String as PropType<string>,
+    },
+    id: {
+      type: String as PropType<string>,
+    },
+    class: {
+      type: String as PropType<string>,
+    },
+    style: {
+      type: Object as PropType<CSSProperties>,
+      default: () => ({}),
+    },
+    subTitle: {
+      type: String as PropType<string>,
+    },
+    extra: {
+      type: [String] as PropType<CustomRender>,
+      default: undefined,
+    },
   },
-  setup(props) {
-    const { routes, layout } = useStore()
-    const route = useRoute()
+  slots: Object as SlotsType<{
+    default: WithFalse<CustomRender>;
+    extra: WithFalse<CustomRender>;
+  }>,
+  setup(props, { slots }) {
     const router = useRouter()
+    const title = computed(() => props.title || resultSubInfo[props.status]?.title)
+    const subTitle = computed(() => props.subTitle || resultSubInfo[props.status]?.subTitle)
 
-    const routers = computed(() => routes.routes)
-
-    const backRouter = computed(() => (routers.value?.length ? '/' : '/user/login'))
-
-    const state = reactive<ResultState>({
-      jumpTime: 5,
-      oops: '抱歉!',
-      headline: '您没有操作角色...',
-      info: '当前帐号没有操作角色,请联系管理员。',
-      btn: `${routers.value?.length ? '返回首页' : '返回登录页'}`,
-      timer: 0,
-      exceptionImage: Result404
-    })
-
-    const handleBackRouter = () => {
-      layout.proLayout?.tabsComRef()?.close(route.name as string)
-      router.push({ path: backRouter.value })
-      // if (routers.value?.length) { /* empty */ } else {
-      //   store.user.resetPermissions()
-      // }
-      clearInterval(state.timer)
+    function backHome() {
+      router.replace('/')
     }
 
-    const timeChange = () => {
-      // state.timer = setInterval(() => {
-      //   if (state.jumpTime) {
-      //     state.jumpTime--
-      //   } else {
-      //     handleBackRouter()
-      //   }
-      // }, 1000)
+    return () => {
+      const renders = getSlotsProps({
+        slots,
+        props,
+        render: true,
+        keys: ['extra', 'default'],
+      })
+      return (
+        <Result
+          {...props}
+          title={title.value}
+          subTitle={subTitle.value}
+          extra={(
+            <>
+              {renders.extra || (
+                <Button onClick={() => backHome()} type="primary">返回首页</Button>
+              )}
+            </>
+          )}
+          v-slots={{
+            default: renders.default,
+          }}
+        />
+      )
     }
-
-    onMounted(() => {
-      timeChange()
-    })
-
-    onBeforeUnmount(() => {
-      clearInterval(state.timer)
-    })
-
-    watch(
-      () => props.status,
-      (val: string) => {
-        Object.keys(resultSubInfo).map((item: string) => {
-          if (item === val) {
-            Object.keys(resultSubInfo[item]).map((el: any) => {
-              state[el] = resultSubInfo[item][el]
-              return el
-            })
-          }
-          return item
-        })
-      },
-      {
-        deep: true,
-        immediate: true
-      }
-    )
-
-    return () => (
-      <div class="error-container">
-        <div class="error-content">
-          <Row gutter={20}>
-            <Col lg={12} md={12} sm={24} xl={12} xs={24}>
-              <div class="pic-error">
-                <img class="pic-error-parent" src={state.exceptionImage} />
-                <img class={[ 'pic-error-child', 'left' ]} src={ResultCloud} />
-              </div>
-            </Col>
-            <Col lg={12} md={12} sm={24} xl={12} xs={24}>
-              <div class="bullshit">
-                <div class="bullshit-oops">{state.oops}</div>
-                <div class="bullshit-headline">{state.headline}</div>
-                <div class="bullshit-info">{state.info}</div>
-                <a class="bullshit-return-home" onClick={() => handleBackRouter()}>
-                  {state.btn}
-                </a>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
-    )
   }
 })
 

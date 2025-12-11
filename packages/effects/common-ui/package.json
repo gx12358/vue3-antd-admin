@@ -35,8 +35,8 @@
     "@wangeditor-next/editor": "catalog:",
     "@wangeditor-next/editor-for-vue": "catalog:",
     "ant-design-vue": "catalog:",
-    "aplayer": "^1.10.1",
-    "artplayer": "^5.3.0",
+    "aplayer": "catalog:",
+    "artplayer": "catalog:",
     "lodash-es": "catalog:",
     "vue": "catalog:"
   },

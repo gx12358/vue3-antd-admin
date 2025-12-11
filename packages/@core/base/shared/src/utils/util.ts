@@ -1,7 +1,6 @@
 import type { Dayjs } from 'dayjs'
-import { getRandomNumber, isFunction, isNumber } from '@gx-design-vue/pro-utils'
+import { getRandomNumber, isNumber } from '@gx-design-vue/pro-utils'
 import dayjs from 'dayjs'
-import { h } from 'vue'
 
 export interface NumberToShow {
   numberValue: string;
@@ -34,10 +33,6 @@ export async function fetchWithRetry<T = any>(fn: Promise<T>, retries = 3): Prom
   else {
     return [null, res]
   }
-}
-
-export const TransformVNode = (props: { node: any; class?: string }) => {
-  return h(isFunction(props.node) ? props.node?.(props.class) : props.node)
 }
 
 export function timeFix() {

@@ -1,6 +1,5 @@
 <script setup lang="ts" name="SearchList">
 import type { ComputedRef } from 'vue'
-import type { TagsListItem } from './components/typings'
 import { useDict } from '@/hooks/system'
 import { provideSearchListContext } from './context'
 
@@ -20,13 +19,10 @@ const loading = ref(false)
 const listType: ComputedRef<ListType> = computed(() => route.path.split('/').reverse()?.[0] as ListType || 'articles')
 
 const changeListType = (value: ListType) => {
-  router.push({ path: '/proPage/list/search/' + value })
+  router.push({ path: '/pro-pages/list/search/' + value })
 }
 
-const classData: ComputedRef<TagsListItem[]> = computed(() => dict.sys_common_category.data.map(item => ({
-  label: item.dictLabel,
-  value: item.dictValue as string
-})) || [])
+const classData = computed(() => dict.sys_common_category.data || [])
 
 provideSearchListContext({
   classData,
@@ -36,7 +32,7 @@ provideSearchListContext({
 </script>
 
 <template>
-  <g-pro-page-container :page-header-style="{ paddingBottom: 0 }" :use-page-card="false">
+  <g-pro-page-container :loading="loading" :page-header-style="{ paddingBottom: 0 }" :use-page-card="false">
     <template #contentRender>
       <div class="flex-center my-16px">
         <a-input-search
@@ -50,7 +46,7 @@ provideSearchListContext({
           @search="value => state.keyword = value"
         />
       </div>
-      <a-tabs class="search-list-tabs" :active-key="listType" @change="changeListType">
+      <a-tabs :active-key="listType" @change="val => changeListType(val as ListType)">
         <a-tab-pane key="articles" class="!hidden" tab="文章" />
         <a-tab-pane key="projects" class="!hidden" tab="项目" />
         <a-tab-pane key="applications" class="!hidden" tab="应用" />
@@ -67,17 +63,4 @@ provideSearchListContext({
 </template>
 
 <style lang="less" scoped>
-.search-list-tabs {
-  &:deep(.ant-tabs-nav) {
-    --at-apply: mb-0;
-    
-    &::before {
-      --at-apply: border-bottom-0;
-    }
-    
-    .ant-tabs-tab {
-      --at-apply: text-16px;
-    }
-  }
-}
 </style>

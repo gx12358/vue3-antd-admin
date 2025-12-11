@@ -15,7 +15,30 @@ export const dictTypeList = [
     'remark': null,
     'createTime': 1614269751000
   },
+  {
+    'id': 3,
+    'name': '公共类别',
+    'type': 'sys_common_category',
+    'status': 0,
+    'remark': null,
+    'createTime': 1614269751000
+  },
 ]
+
+const commonCateData = Array.from({ length: 12 }).map((_, index) => {
+  return {
+    'id': 28 + index,
+    'sort': index + 1,
+    'label': `类目${index + 1}`,
+    'value': `${index + 1}`,
+    'dictType': 'sys_common_category',
+    'status': 0,
+    'colorType': 'success',
+    'cssClass': '',
+    'remark': `类目${index + 1}`,
+    'createTime': 1609837428000
+  }
+})
 
 export const dictDataList = [
   {
@@ -65,5 +88,6 @@ export const dictDataList = [
     'cssClass': '',
     'remark': '开启状态',
     'createTime': 1609837428000
-  }
+  },
+  ...commonCateData
 ]

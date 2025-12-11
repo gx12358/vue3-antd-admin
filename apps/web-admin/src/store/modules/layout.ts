@@ -39,7 +39,7 @@ export const useStoreLayout = defineStore('layout', () => {
 
   const proLayout = ref<ProLayoutExpose>()
 
-  const [ state, setValue ] = useReactiveState<LayoutState>({
+  const [ state, setState ] = useReactiveState<LayoutState>({
     config: {
       logo: new URL('/img/logo.png', import.meta.url).href,
       waterMark: waterMark.use ? { content: waterMark.content } : false,
@@ -51,7 +51,7 @@ export const useStoreLayout = defineStore('layout', () => {
 
   watch(() => storeTheme.isDark, () => {
     storeTheme.reloadToken()
-    setValue({
+    setState({
       config: {
         token: storeTheme.getToken()
       }
@@ -60,7 +60,7 @@ export const useStoreLayout = defineStore('layout', () => {
 
   return {
     ...toRefs(state),
-    setValue,
+    setState,
     proLayout
   }
 })

@@ -157,11 +157,11 @@ export const TENANT_LIST: TenantInfo[] = [
 export const MOCK_USERS: UserDatabase[] = [
   {
     'id': 1,
-    'nickname': 'admin',
-    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'nickname': '智耳科技',
+    'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 103,
     'username': 'admin',
-    'email': '11aoteman@126.com',
+    'email': 'gx12358@gmail.com',
     'tenantId': 1,
     'password': 'admin123',
     'roleId': [1, 2]
@@ -169,10 +169,10 @@ export const MOCK_USERS: UserDatabase[] = [
   {
     'id': 143,
     'nickname': 'jack',
-    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 110,
     'username': 'jack',
-    'email': '',
+    'email': 'gx12358@gmail.com',
     'tenantId': 121,
     'password': '123456',
     'roleId': [109]
@@ -180,10 +180,10 @@ export const MOCK_USERS: UserDatabase[] = [
   {
     'id': 144,
     'nickname': 'gx12358',
-    'avatar': 'https://oss-liveshow.oss-cn-beijing.aliyuncs.com/20251118/my_1763430521727.png',
+    'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 110,
     'username': 'gx12358',
-    'email': '',
+    'email': 'gx12358@gmail.com',
     'tenantId': 122,
     'password': '123456',
     'roleId': [111]

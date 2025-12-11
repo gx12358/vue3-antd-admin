@@ -8,6 +8,7 @@ export default antFuEslint({
   markdown: true,
   ignores: [
     'public',
+    'ant-design-import.d.ts'
   ]
 }, {
   rules: {

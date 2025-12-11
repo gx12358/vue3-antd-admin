@@ -24,13 +24,13 @@ catalog:
   "@gx-design-vue/image": ^0.2.0-beta.32
   "@gx-design-vue/pro-app": ^0.1.0-beta.33
   "@gx-design-vue/pro-card": ^0.2.0-beta.39
-  "@gx-design-vue/pro-hooks": ^0.2.0-beta.55
-  "@gx-design-vue/pro-layout": ^0.1.0-beta.171
-  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.23
-  "@gx-design-vue/pro-modal": ^0.2.0-beta.38
-  "@gx-design-vue/pro-provider": ^0.1.0-beta.130
-  "@gx-design-vue/pro-table": ^0.2.0-beta.123
-  "@gx-design-vue/pro-utils": ^0.2.0-beta.80
+  "@gx-design-vue/pro-hooks": ^0.2.0-beta.60
+  "@gx-design-vue/pro-layout": ^0.1.0-beta.179
+  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.30
+  "@gx-design-vue/pro-modal": ^0.2.0-beta.39
+  "@gx-design-vue/pro-provider": ^0.1.0-beta.134
+  "@gx-design-vue/pro-table": ^0.2.0-beta.132
+  "@gx-design-vue/pro-utils": ^0.2.0-beta.84
   "@gx-design-vue/pro-watermark": ^0.2.0-beta.15
   "@gx-design-vue/scrollbar": ^0.2.0-beta.21
   "@iconify/vue": ^5.0.0
@@ -53,7 +53,9 @@ catalog:
   "@wangeditor-next/editor-for-vue": ^5.1.14
   ali-oss: ^6.23.0
   ant-design-vue: ^4.2.6
+  aplayer: ^1.10.1
   archiver: ^7.0.1
+  artplayer: ^5.3.0
   axios: ^1.13.2
   axios-mock-adapter: ^2.1.0
   bundle-import: ^0.0.2
@@ -72,6 +74,7 @@ catalog:
   depcheck: ^1.4.7
   dotenv: ^16.6.1
   echarts: ^6.0.0
+  es-toolkit: ^1.42.0
   execa: ^9.6.0
   find-up: ^8.0.0
   get-port: ^7.1.0
@@ -90,6 +93,7 @@ catalog:
   path-to-regexp: ^8.3.0
   picocolors: ^1.1.1
   pinia: ^3.0.3
+  pinyin-pro: ^3.27.0
   pkg-types: ^2.3.0
   postcss: ^8.5.6
   postcss-html: ^1.8.0

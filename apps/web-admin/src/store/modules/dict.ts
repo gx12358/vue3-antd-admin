@@ -1,5 +1,4 @@
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
-import { cloneDeep } from 'lodash-es'
 import { defineStore } from 'pinia'
 
 /**
@@ -17,18 +16,16 @@ export type DictState = Record<DictType, SystemDictData>
 
 const defaultState: DictState = {
   common_status: { data: [] },
+  system_user_sex: { data: [] },
+  sys_common_category: { data: [] },
 }
 
 export const useStoreDict = defineStore('dict', () => {
-  const [ state, setValue ] = useReactiveState<DictState>(defaultState, { omitEmpty: false })
-
-  function clear() {
-    setValue(cloneDeep(defaultState))
-  }
+  const [ state, setState, clear ] = useReactiveState<DictState>(defaultState)
 
   return {
     ...toRefs(state),
-    setValue,
+    setState,
     clear
   }
 })

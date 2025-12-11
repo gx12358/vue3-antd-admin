@@ -21,11 +21,6 @@
       "types": "./src/cache/index.ts",
       "development": "./src/cache/index.ts",
       "default": "./dist/cache/index.mjs"
-    },
-    "./global-state": {
-      "types": "./src/global-state.ts",
-      "development": "./src/global-state.ts",
-      "default": "./dist/global-state.mjs"
     }
   },
   "files": [
@@ -44,21 +39,17 @@
       "./cache": {
         "types": "./dist/cache/index.d.ts",
         "default": "./dist/cache/index.mjs"
-      },
-      "./global-state": {
-        "types": "./dist/global-state.d.ts",
-        "default": "./dist/global-state.mjs"
       }
     }
   },
   "dependencies": {
     "@gx-design-vue/pro-utils": "catalog:",
+    "@gx/types": "workspace:*",
     "crypto-js": "catalog:",
     "dayjs": "catalog:",
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
-    "@gx/types": "workspace:*",
     "@types/nprogress": "catalog:"
   }
 }

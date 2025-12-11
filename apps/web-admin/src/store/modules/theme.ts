@@ -30,6 +30,10 @@ export const useStoreTheme = defineStore('theme', () => {
 
   // root css var
   const cssVar = ref<TokenCssVar>([
+    'lineHeightLG',
+    'colorTextHeading',
+    'colorFillAlter',
+    'colorTextSecondary',
     'borderRadius',
     'borderRadiusLG',
     'paddingLG',

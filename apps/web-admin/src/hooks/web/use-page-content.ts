@@ -1,21 +1,24 @@
 import { unit, useProConfigContext } from '@gx-design-vue/pro-provider'
-import { useWindowSize } from '@vueuse/core'
 import { layoutConfig } from '@/store/modules/layout'
 
-export default function (h?: number) {
-  const { height } = useWindowSize()
+export function usePageContent(h: number = 0) {
   const { token } = useProConfigContext()
 
-  const count = computed(() => {
-    const header = (token.value?.layout?.header?.heightLayoutHeader || layoutConfig.headerHeight || 48) as number
-    const tabsRoute = 40
-    const paddingBlockPageContainerContent = token.value?.layout?.pageContainer?.paddingBlockPageContainerContent || 20
+  const height = computed(() => {
+    const headerHeight = (token.value?.layout?.header?.heightLayoutHeader || layoutConfig.headerHeight) ?? 48
+    const marginBlockPageContainerContent = token.value?.layout?.pageContainer?.marginBlockPageContainerContent ?? 20
+    const paddingBlockPageContainerContent = token.value?.layout?.pageContainer?.paddingBlockPageContainerContent || 0
+    const contentOutNumber = paddingBlockPageContainerContent * 2 + marginBlockPageContainerContent * 2
 
-    return height.value - header - paddingBlockPageContainerContent * 2 - tabsRoute - (h || 0)
+    const parts = [
+      headerHeight,
+      layoutConfig.showTabsBar ? 40 : 0,
+      contentOutNumber,
+      h
+    ].filter(str => str).map(item => unit(item))
+
+    return `calc(100vh - ${parts.join(' - ')})`
   })
 
-  return {
-    str: computed(() => unit(count.value)),
-    count
-  }
+  return height
 }

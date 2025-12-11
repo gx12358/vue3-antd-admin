@@ -32,7 +32,7 @@ export function createPageLoadingGuard(router: Router) {
 
   router.beforeEach(async (to) => {
     if (!loadedPaths.has(to.path) && !routerConfig.whiteList.includes(to.path)) {
-      global.setValue({ pageLoading: true })
+      global.setState({ pageLoading: true })
       loadedPaths.add(to.path)
     }
 
@@ -40,7 +40,7 @@ export function createPageLoadingGuard(router: Router) {
   })
 
   router.afterEach((_) => {
-    global.setValue({ pageLoading: false })
+    global.setState({ pageLoading: false })
   })
 }
 

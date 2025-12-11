@@ -1,10 +1,8 @@
 <script setup lang="ts" name="TableList">
-import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
-import { isArray } from '@gx-design-vue/pro-utils'
+import type { MockTableRecord } from '@/services/demo/table'
 import { useMounted } from '@vueuse/core'
-import { message } from 'ant-design-vue'
-import { useProTable } from '@/hooks/web'
-import { deleteRules, getRulesList } from '@/services/list-center'
+import { useProPageTable } from '@/hooks/web'
+import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
 import PreviewDrawer from './components/PreviewDrawer.vue'
 import { columns } from './utils/columns'
@@ -15,7 +13,10 @@ const operate = ref()
 const preview = ref()
 const tableRef = ref()
 
-const { selectedKeys, setLoading, reload, tableState } = useProTable<RulesListItem, any>(tableRef, {
+const [
+  { selectedKeys, reload, tableState },
+  actions
+] = useProPageTable<MockTableRecord>(tableRef, {
   state: {
     headerTitle: '查询表格',
     columns,
@@ -27,34 +28,21 @@ const { selectedKeys, setLoading, reload, tableState } = useProTable<RulesListIt
       selectedRowKeys: []
     }
   },
-  request: async (params, sorter) => {
-    const response = await getRulesList<PageResult<RulesListItem>>({
-      ...params,
-      sortOrder: isArray(sorter) ? undefined : sorter.order,
-      sortField: isArray(sorter) ? undefined : sorter.columnKey,
-    })
-    
+  request: getList,
+  onBefore: ({ sorter }) => {
     return {
-      success: !!response,
-      total: response.data?.totalCount,
-      data: response?.data?.list || []
+      sortOrders: sorter.map(item => item.order).join(),
+      sortFields: sorter.map(item => item.columnKey).join(),
     }
+  },
+  deleteProps: {
+    requestFn: deleteList
   }
 })
 
 onActivated(() => {
   reload?.()
 })
-
-const removeTableRule = async (id: number) => {
-  setLoading(true)
-  const response = await deleteRules({ id })
-  if (response) {
-    message.success('操作成功！')
-    await reload({ immediate: true, removeKeys: [ id ] })
-  }
-  setLoading(false)
-}
 </script>
 
 <template>
@@ -76,7 +64,7 @@ const removeTableRule = async (id: number) => {
           新建
         </a-button>
       </template>
-      <template #bodyCell="{ column, record }: ProTableBodyCellProps<RulesListItem>">
+      <template #bodyCell="{ column, record }: ProTableBodyCellProps<MockTableRecord>">
         <template v-if="column.dataIndex === 'name'">
           <a v-if="record.name" @click="preview?.open(record)">{{ record.name }}</a>
           <template v-else>
@@ -86,15 +74,15 @@ const removeTableRule = async (id: number) => {
         <template v-if="column.dataIndex === 'callNo'">
           {{ record.callNo > 0 ? `${record.callNo}万` : record.callNo }}
         </template>
-        <template v-if="column.dataIndex === 'status'">
-          <a-badge v-if="record.status === '0'" status="default" text="关闭" />
-          <a-badge v-if="record.status === '1'" status="processing" text="运行中" />
-          <a-badge v-if="record.status === '2'" status="success" text="已上线" />
-          <a-badge v-if="record.status === '3'" status="error" text="异常" />
+        <template v-if="column.dataIndex === 'status1'">
+          <a-badge v-if="record.status1 === 0" status="default" text="关闭" />
+          <a-badge v-if="record.status1 === 1" status="processing" text="运行中" />
+          <a-badge v-if="record.status1 === 2" status="success" text="已上线" />
+          <a-badge v-if="record.status1 === 3" status="error" text="异常" />
         </template>
         <template v-if="column.dataIndex === 'action'">
           <a key="config" class="mr-15px" @click="operate?.open('update', record)">配置</a>
-          <a-popconfirm title="确定要删除吗?" @confirm="removeTableRule(record.id)">
+          <a-popconfirm title="确定要删除吗?" @confirm="actions.remove([record.id])">
             <a key="delete" class="mr-15px">删除</a>
           </a-popconfirm>
           <a key="subscribeAlert" href="https://procomponents.ant.design/" target="_blank">

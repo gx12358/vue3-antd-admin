@@ -1,26 +1,27 @@
 import type { PageState } from '@gx-design-vue/pro-table'
-import type { MaybeRef, Ref } from 'vue'
+import type { Fn } from '@gx/types'
+import type { PageResult } from '@gx/types/request'
+import type { MaybeRef, Reactive, Ref } from 'vue'
 import { app } from '@gx-config'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
-import { isBoolean } from '@gx-design-vue/pro-utils'
+import { cloneDeep, deepMerge, isBoolean } from '@gx-design-vue/pro-utils'
+import { useRequest } from '@gx/hooks'
 import { useScroll } from '@vueuse/core'
-import { cloneDeep } from 'lodash-es'
-import { computed, isRef, reactive, ref } from 'vue'
-import { useRequest } from '@/hooks/core'
+import { computed, isRef, reactive, ref, unref } from 'vue'
 
 const { viewScrollRoot } = app.system
 
-export default function <T, R = any>(serve: any, options: {
+export default function <T, R extends object = Record<string, any>>(serve: any, options: {
   fetchNextType: 'scroll' | 'button';
   pageSize?: MaybeRef<number>;
-  otherParams?: R;
+  params?: Reactive<R>;
   scrollBottom?: number;
   scrollRoot?: string;
   reloadClear?: boolean;
-  onAfterMutateData?: (list: T[]) => T[];
 } = { fetchNextType: 'scroll', scrollBottom: 124 + 24 * 2 }) {
   const scrollEl = ref<HTMLElement>()
   const watchParams = ref(true)
+  const refreshLoading = ref(false)
   const list = ref<T[]>([])
 
   const state = reactive<{
@@ -43,31 +44,28 @@ export default function <T, R = any>(serve: any, options: {
     pageSize: isRef(options.pageSize) ? unref(options.pageSize) : options.pageSize || 10
   })
 
-  const { loading, refresh } = useRequest<T[], R & PageState, PageResult<T>>(
+  const params = ref<R & PageState>(deepMerge(toRaw(pageState), cloneDeep(options.params || {} as any)))
+
+  const { loading, run } = useRequest<PageResult<T>, R & PageState>(
     serve,
     {
-      params: computed(() => ({
-        ...cloneDeep(options.otherParams),
-        ...pageState
-      } as (R & PageState))),
+      params: params as any,
       watchParams,
-      onAfterMutateData: (response) => {
-        return options?.onAfterMutateData
-          ? options?.onAfterMutateData?.(response.data.list || [])
-          : (response.data?.list || [])
-      },
       onBefore: (params) => {
         if (params?.pageNum === 1) {
           const reloadClear = isBoolean(options?.reloadClear) ? options?.reloadClear : true
-          if (reloadClear)
-            list.value = []
+          if (reloadClear) list.value = []
+          if (state.init) return
           state.init = false
         }
       },
-      onSuccess: (data, response) => {
-        list.value = pageState?.pageNum === 1 ? data : [ ...list.value as unknown as T[], ...data ]
-        state.isMore = list.value.length < (response.data.totalCount || 0)
+      onSuccess: (result) => {
+        list.value = pageState?.pageNum === 1 ? result.list : [ ...list.value as unknown as T[], ...result.list ]
+        state.isMore = list.value.length < result.total
+      },
+      onFinal: () => {
         state.init = true
+        refreshLoading.value = false
       }
     }
   )
@@ -89,7 +87,7 @@ export default function <T, R = any>(serve: any, options: {
   if (options.fetchNextType === 'scroll' && (options?.scrollRoot || viewScrollRoot)) {
     const { arrivedState, y } = useScroll(scrollEl, {
       offset: {
-        bottom: options?.scrollBottom || 124 + 24 * 2
+        bottom: options?.scrollBottom
       }
     })
 
@@ -98,16 +96,14 @@ export default function <T, R = any>(serve: any, options: {
     let stopWatchScrollY: Fn | null
 
     onMountedOrActivated(() => {
-      if (stopWatchBottom)
-        stopWatchBottom?.()
-      if (stopWatchScrollY)
-        stopWatchScrollY?.()
+      if (stopWatchBottom) stopWatchBottom?.()
+      if (stopWatchScrollY) stopWatchScrollY?.()
       stopWatchBottom = null
       stopWatchScrollY = null
 
       stopWatchBottom = watch(() => arrivedState.bottom, (val) => {
         if (val && !loading.value && state.isMore) {
-          pageState.pageNum += 1
+          handleNext()
         }
       })
 
@@ -136,24 +132,35 @@ export default function <T, R = any>(serve: any, options: {
     watchParams.value = false
   })
 
-  watch(() => options.otherParams, (val) => {
-    if (val) {
+  watch(() => options.params, (value) => {
+    if (value) {
       pageState.pageNum = 1
+      params.value = deepMerge(unref(params), cloneDeep({
+        ...value,
+        ...toRaw(pageState)
+      }))
     }
   }, { deep: true })
 
-  const handleNext = () => pageState.pageNum += 1
+  function handleNext() {
+    pageState.pageNum = pageState.pageNum + 1
+    params.value = deepMerge(unref(params), toRaw(pageState))
+  }
 
   const reloadList = (count?: number) => {
     watchParams.value = false
+    refreshLoading.value = true
     state.oldPageState = { ...pageState }
     pageState.pageNum = 1
     pageState.pageSize = count || list.value.length
-    refresh()
+    params.value = deepMerge(unref(params), toRaw(pageState))
+    run({ params: unref(params) })
 
     // 这里再返回之前的翻页顺序
     nextTick(() => {
       watchParams.value = true
+      pageState.pageNum = state.oldPageState.pageNum
+      pageState.pageSize = state.oldPageState.pageSize
     })
   }
 
@@ -163,6 +170,7 @@ export default function <T, R = any>(serve: any, options: {
     hasEmpty,
     loading,
     initLoading,
+    refreshLoading,
     pageState,
     reloadList,
     handleNext

@@ -1,24 +1,18 @@
 <script setup lang="ts">
 import type { FormState } from './typings'
+import type { FomeType } from '@/services/demo/form'
 import { app } from '@gx-config'
 import { handleOffsetTop } from '@gx-core/shared/utils'
 import { GProCard } from '@gx-design-vue/pro-card'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
-import { convertValueBoolean, forInObject, scrollTo } from '@gx-design-vue/pro-utils'
-import { useMounted } from '@vueuse/core'
+import { forInObject, handleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
+import { useRequest } from '@gx/hooks'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import { cloneDeep, omit } from 'lodash-es'
-import { ref } from 'vue'
-import { useRequest } from '@/hooks/core'
-import { useProTable } from '@/hooks/web'
-import {
-  addAdvancedFormTable,
-  deleteAdvancedFormTable,
-  getAdvancedForm,
-  getAdvancedFormTable,
-  updateAdvancedFormTable
-} from '@/services/form-center'
+import { cloneDeep } from 'lodash-es'
+import { reactive, ref } from 'vue'
+import { useProPageTable } from '@/hooks/web'
+import { createList, deleteList, getForm, getList, updateList } from '@/services/demo'
 import { columns } from './utils/columns'
 import { fieldLabels, rules } from './utils/config'
 
@@ -29,20 +23,19 @@ interface ErrorField {
   errors: string[]
 }
 
-const { user } = useStore()
 const { token } = useProConfigContext()
 
 const tableRef = ref()
-const teport = ref(false)
-const mounted = useMounted()
 
-const {
-  dataSource,
-  setDataValue,
-  reload,
-  setLoading,
-  tableState
-} = useProTable<TableRecord<FormState>, FormState>(
+const [
+  {
+    dataSource,
+    setDataValue,
+    reload,
+    setLoading,
+    tableState
+  }
+] = useProPageTable<TableRecord<FormState>, FormState>(
   tableRef,
   {
     state: {
@@ -52,14 +45,7 @@ const {
       pagination: false,
       columns
     },
-    request: async (params) => {
-      const response = await getAdvancedFormTable<PageResult<TableRecord<FormState>>>(params)
-      return {
-        success: !!response,
-        total: response.data?.totalCount || 0,
-        data: response?.data?.list || []
-      }
-    }
+    request: getList
   }
 )
 
@@ -79,30 +65,31 @@ const formState = reactive<FormState>({
   url2: '',
   owner2: undefined,
   approver2: undefined,
-  dateRange2: null,
+  dateTime: undefined,
   type2: undefined
 })
 
 const { validate, validateInfos, resetFields } = useProForm<FormState>(formState, reactive(rules))
 
-const { loading } = useRequest(getAdvancedForm, {
+const { loading } = useRequest<FormState, { type: FomeType; }>(getForm, {
   params: {
-    userId: user.userInfo.userId
+    type: 'advanced'
   },
   onSuccess: (data) => {
     tableState.showLoading = true
     forInObject(formState, (key) => {
-      formState[key] = data[key] ?? formState[key]
+      switch (key) {
+        case 'dateRange':
+          formState[key] = data[key] ? [ dayjs(data[key][0]), dayjs(data[key][1]) ] : undefined
+          break
+        case 'dateTime':
+          formState[key] = data[key] ? dayjs(data[key]) : undefined
+          break
+        default :
+          formState[key] = handleEmptyField(data[key], '').value
+      }
     })
   }
-})
-
-onActivated(() => {
-  teport.value = true
-})
-
-onDeactivated(() => {
-  teport.value = false
 })
 
 const handelEdit = (key) => {
@@ -110,14 +97,13 @@ const handelEdit = (key) => {
 }
 
 const handleSave = async (record: TableRecord<FormState>) => {
-  const response = await record.isMock
-    ? addAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
-    : updateAdvancedFormTable(omit(record, [ 'isMock', 'isUpdate' ]))
-  if (convertValueBoolean(response)) {
+  try {
+    const requestFn = record.isMock ? createList : updateList
+    await requestFn(record)
     message.success('操作成功')
     await reload?.({ immediate: true })
     record.id && (delete state.editableData[record.id])
-  }
+  } catch {}
 }
 
 const handleCancel = (key: number) => {
@@ -126,16 +112,16 @@ const handleCancel = (key: number) => {
 
 const handleDelete = async (key: number) => {
   if (state.editableData[key]?.isMock) {
-    setDataValue({ value: key, type: 'delete', params: { id: key } })
+    setDataValue({ value: key, type: 'delete' })
     delete state.editableData[key]
   } else {
     setLoading(true)
-    const response = await deleteAdvancedFormTable({ id: key })
-    if (response) {
+    try {
+      await deleteList({ id: key })
       message.success('操作成功')
       await reload({ immediate: true })
       delete state.editableData[key]
-    }
+    } catch {}
     setLoading(false)
   }
 }
@@ -143,7 +129,8 @@ const handleDelete = async (key: number) => {
 const handelTableAdd = () => {
   const key = dataSource.value.length + 1
   setDataValue({
-    params: {
+    type: 'push',
+    row: {
       id: key,
       workId: '',
       name: '',
@@ -172,6 +159,7 @@ const scrollToField = (fieldKey: string) => {
 const submitForm = () => {
   validate()
     .then(() => {
+      state.errorFields = []
       const parames = {
         ...formState,
         member: cloneDeep(dataSource.value)
@@ -332,9 +320,9 @@ const resetForm = () => {
               </a-form-item>
             </a-col>
             <a-col :xl="{ span: 6, offset: 2 }" :lg="{ span: 8 }" :md="{ span: 12 }" :sm="24">
-              <a-form-item :label="fieldLabels.dateRange2" v-bind="validateInfos.dateRange2">
+              <a-form-item :label="fieldLabels.dateTime" v-bind="validateInfos.dateTime">
                 <a-time-picker
-                  v-model:value="formState.dateRange2"
+                  v-model:value="formState.dateTime"
                   style="width: 100%"
                   placeholder="提醒时间"
                 />
@@ -402,51 +390,48 @@ const resetForm = () => {
         </GProCard>
       </div>
     </a-form>
-    <Teleport v-if="mounted && teport" to=".ant-layout-has-sider>.ant-layout">
-      <div class="mt-32px h-49px" />
-    </Teleport>
-    <Teleport v-if="teport" to="body">
-      <div class="footer-bar">
-        <div class="flex items-center">
-          <span
-            v-if="
-              state.errorFields.length > 0 && state.errorFields.filter((item) => item.errors.length > 0).length > 0
-            "
-            class="errorIcon"
+    <template #footer>
+      <div class="flex items-center h-64px">
+        <div
+          v-if="state.errorFields.length > 0 && state.errorFields.filter((item) => item.errors.length > 0).length > 0"
+          class="errorIcon"
+        >
+          <a-popover
+            title="表单校验信息"
+            overlay-class-name="errorPopover"
+            trigger="click"
+            :get-popup-container="trigger => trigger?.parentNode as HTMLElement"
           >
-            <a-popover
-              title="表单校验信息"
-              overlay-class-name="errorPopover"
-              trigger="click"
-              :get-popup-container="trigger => trigger?.parentNode as HTMLElement"
-            >
-              <template #content>
-                <li
-                  v-for="err in state.errorFields"
-                  :key="err.name"
-                  class="errorListItem"
-                  @click="scrollToField(err.name)"
-                >
-                  <close-circle-outlined class="errorIcon" :style="{ color: token.colorError }" />
-                  <div class="errorMessage">{{ err.errors[0] }}</div>
-                  <div class="errorField">{{ fieldLabels[err.name] }}</div>
-                </li>
-              </template>
-              <div :style="{ color: token.colorError }">
-                <close-circle-outlined />
-                {{ state.errorFields.filter((item) => item.errors.length > 0).length }}
-              </div>
-            </a-popover>
-          </span>
-          <a-button class="mr-8px" @click="resetForm">
-            重置
-          </a-button>
-          <a-button type="primary" @click="submitForm">
-            提交
-          </a-button>
+            <template #content>
+              <li
+                v-for="err in state.errorFields"
+                :key="err.name"
+                class="errorListItem"
+                @click="scrollToField(err.name)"
+              >
+                <close-circle-outlined class="errorIcon" :style="{ color: token.colorError }" />
+                <div class="errorMessage">
+                  {{ err.errors[0] }}
+                </div>
+                <div class="errorField">
+                  {{ fieldLabels[err.name] }}
+                </div>
+              </li>
+            </template>
+            <div :style="{ color: token.colorError }">
+              <close-circle-outlined />
+              {{ state.errorFields.filter((item) => item.errors.length > 0).length }}
+            </div>
+          </a-popover>
         </div>
+        <a-button class="mr-8px" @click="resetForm">
+          重置
+        </a-button>
+        <a-button type="primary" @click="submitForm">
+          提交
+        </a-button>
       </div>
-    </Teleport>
+    </template>
   </g-pro-page-container>
 </template>
 

@@ -11,7 +11,7 @@ export const fieldLabels = {
   url2: '任务描述',
   owner2: '执行人',
   approver2: '责任人',
-  dateRange2: '生效日期',
+  dateTime: '生效日期',
   type2: '任务类型'
 }
 
@@ -46,7 +46,7 @@ export const rules: RulesState<FormState> = {
   approver2: [
     { required: true, message: '请选择责任人' }
   ],
-  dateRange2: [
+  dateTime: [
     { required: true, message: '请输入生效时间' }
   ],
   type2: [

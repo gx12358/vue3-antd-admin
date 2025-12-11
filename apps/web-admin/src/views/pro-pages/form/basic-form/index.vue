@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import type { BasicFormState } from '@gx-mock/routers/form/index.fake'
-import type { Dayjs } from 'dayjs'
+import type { FormState } from './typings'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep, omit } from 'lodash-es'
 import { reactive } from 'vue'
-import { submitForm } from '@/services/form-center'
-
-type FormState = BasicFormState & {
-  timeRange: [string, string] | [Dayjs, Dayjs] | undefined
-}
+import { createForm } from '@/services/demo'
 
 const optionList = [
   {
@@ -29,9 +24,11 @@ const optionList = [
 
 const { token } = useProConfigContext()
 
+const loading = ref(false)
+
 const formState = reactive<FormState>({
   title: '',
-  timeRange: [] as any,
+  timeRange: undefined,
   startTime: '',
   endTime: '',
   target: 1,
@@ -51,24 +48,30 @@ const { validateInfos, validate, resetFields } = useProForm(formState, {
 
 const handleFinish = async () => {
   validate().then(async () => {
+    loading.value = true
     const params = cloneDeep(formState)
-    const response = await submitForm({
-      ...omit(params, 'timeRange'),
-      startTime: params.timeRange?.[0] ? dayjs(params.timeRange?.[0]).format('YYYY-MM-DD') : '',
-      endTime: params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : ''
-    } as BasicFormState)
-    
-    if (response) {
+    const startTime = params.timeRange?.[0] ? dayjs(params.timeRange?.[0]).format('YYYY-MM-DD') : ''
+    const endTime = params.timeRange?.[1] ? dayjs(params.timeRange?.[1]).format('YYYY-MM-DD') : ''
+    try {
+      await createForm({
+        ...omit(params, 'timeRange'),
+        startTime,
+        endTime
+      })
+
       message.success('操作成功')
-      
+
       nextTick(() => resetFields())
-    }
-  }).catch(() => {})
+    } catch {}
+    loading.value = false
+  }).catch(() => {
+    loading.value = false
+  })
 }
 </script>
 
 <template>
-  <g-pro-page-container>
+  <g-pro-page-container :loading="loading">
     <div class="mx-auto mt-8px max-w-600px">
       <a-form layout="vertical">
         <a-form-item label="标题" v-bind="validateInfos.title">

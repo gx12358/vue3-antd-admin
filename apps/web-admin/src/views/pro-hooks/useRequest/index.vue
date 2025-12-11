@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { PageResult } from '@gx/types/request'
+import type { MockTableRecord } from '@/services/demo/table'
+import { useRequest } from '@gx/hooks'
 import { ref } from 'vue'
-import { useRequest } from '@/hooks/core'
-import { getHooksRequest } from '@/services/data-center'
+import { getList } from '@/services/demo'
 
 const count = ref(0)
 
@@ -10,28 +12,17 @@ const paramsState = reactive({
   pageSize: 1
 })
 
-const { loading, run, result } = useRequest<
-  {
-    name: string;
-    type: string;
-  },
-  typeof paramsState
->(getHooksRequest, {
+const { loading, run, data } = useRequest<PageResult<MockTableRecord>>(getList, {
   params: paramsState,
   cancel: {
-    level: true
+    level: true,
+    next: true
   },
   refreshDeps: [ () => count.value ],
 })
 
 watchEffect(() => {
-  console.log(result.value)
-})
-
-onMounted(() => {
-  // setTimeout(() => {
-  //   paramsState.name = 2
-  // }, 2000)
+  console.log(data.value)
 })
 </script>
 

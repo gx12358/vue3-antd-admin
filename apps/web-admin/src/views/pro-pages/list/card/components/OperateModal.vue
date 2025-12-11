@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import type { CardListItemDataType } from '@gx-mock/routers/list/card.fake'
+import type { Dayjs } from 'dayjs'
+import type { MockTableRecord, UpdateMockTableRecord } from '@/services/demo/table'
 import { handleRandomImage } from '@gx-core/shared/utils'
 import { useProForm } from '@gx-design-vue/pro-provider'
-import { handleEmptyField } from '@gx-design-vue/pro-utils'
+import { forInObject, handleEmptyField } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import { omit } from 'lodash-es'
 import { reactive } from 'vue'
-import { cardListOperate, getCardListDetails } from '@/services/list-center'
+import { createList, getInfo, updateList } from '@/services/demo'
 
-type FormState = Partial<CardListItemDataType>
+type FormState = UpdateMockTableRecord<{
+  createTimeDay: Dayjs | null
+}>
 
 const emit = defineEmits<{
   (e: 'ok'): void
@@ -24,20 +26,19 @@ const userReadyFetch = ref(false)
 const formState = reactive<FormState>({
   id: undefined,
   title: '',
-  avatar: '',
-  description: ''
+  logo: '',
+  description: '',
+  createTimeDay: null
 })
 
-const ruleState = reactive<RulesState<FormState>>({
+const { validate, validateInfos, resetFields } = useProForm(formState, {
   title: [ { required: true, message: '请输入' } ],
-  avatar: [ { required: true, message: '请上传' } ],
+  logo: [ { required: true, message: '请上传' } ],
   description: [ { required: true, message: '请输入' } ]
 })
 
-const { validate, validateInfos, resetFields } = useProForm(formState, ruleState)
-
 const handleChange = (url: string[]) => {
-  formState.avatar = url.join()
+  formState.logo = url.join()
 }
 
 const handleCancel = () => {
@@ -51,17 +52,14 @@ const handleCancel = () => {
 const handleOk = () => {
   validate().then(async (_) => {
     spinning.value = true
-    const response = await cardListOperate(omit(
-      { ...formState, avatar: handleRandomImage(100, 100) },
-      [ formState?.id ? '' : 'id' ]
-    ))
-    
-    if (response) {
+    const requestFn = formState.id ? updateList : createList
+    try {
+      await requestFn({ ...toRaw(formState), avatar: handleRandomImage(100, 100) })
       message.success('操作成功')
       emit('ok')
       handleCancel()
-    }
-    
+    } catch {}
+
     spinning.value = false
   })
 }
@@ -72,19 +70,19 @@ defineExpose({
     userReadyFetch.value = true
     if (id) {
       skeletonLoading.value = true
-      const response = await getCardListDetails<CardListItemDataType>({ id })
-      if (response) {
-        for (const key in formState) {
+      try {
+        const result = await getInfo<MockTableRecord>({ id })
+        forInObject(formState, (key) => {
           switch (key) {
             case 'createTimeDay':
-              formState[key] = dayjs(response.data?.createTime)
+              formState[key] = result?.createTime ? dayjs(result?.createTime) : null
               break
             default:
-              formState[key] = handleEmptyField(response?.data?.[key], '').value
+              formState[key] = handleEmptyField(result[key], '').value
               break
           }
-        }
-      }
+        })
+      } catch {}
       skeletonLoading.value = false
     }
   }
@@ -95,7 +93,7 @@ defineExpose({
   <g-pro-modal
     full-spin
     type="normal"
-    :width="640"
+    :width="520"
     :open="open"
     :spinning="spinning"
     :skeleton-loading="skeletonLoading"
@@ -107,7 +105,7 @@ defineExpose({
       <a-form-item label="名称" v-bind="validateInfos.title">
         <a-input v-model:value="formState.title" allow-clear placeholder="请输入" />
       </a-form-item>
-      <a-form-item v-bind="validateInfos.avatar">
+      <a-form-item v-bind="validateInfos.logo">
         <template #label>
           Logo
           <a-tooltip title="这里上传是模拟">
@@ -116,8 +114,8 @@ defineExpose({
         </template>
         <g-admin-upload
           :progress="false"
-          :data-list="[{ url: formState.avatar, previewUrl: formState.avatar, type: '1' }]"
-          :limit="1"
+          :list="[formState.logo]"
+          :max-count="1"
           :disabled="false"
           :trigger-style="{ overflow: 'hidden', borderRadius: '4px' }"
           :card-item-style="{ overflow: 'hidden', borderRadius: '4px' }"
@@ -132,9 +130,4 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-.spinner-icon {
-  &:deep(.iconfont) {
-    --at-apply: text-20px;
-  }
-}
 </style>

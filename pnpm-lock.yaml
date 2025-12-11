@@ -49,26 +49,26 @@ catalogs:
       specifier: ^0.2.0-beta.39
       version: 0.2.0-beta.39
     '@gx-design-vue/pro-hooks':
-      specifier: ^0.2.0-beta.55
-      version: 0.2.0-beta.55
+      specifier: ^0.2.0-beta.60
+      version: 0.2.0-beta.60
     '@gx-design-vue/pro-layout':
-      specifier: ^0.1.0-beta.171
-      version: 0.1.0-beta.171
+      specifier: ^0.1.0-beta.179
+      version: 0.1.0-beta.179
     '@gx-design-vue/pro-layout-components':
-      specifier: ^0.1.0-beta.23
-      version: 0.1.0-beta.23
+      specifier: ^0.1.0-beta.30
+      version: 0.1.0-beta.30
     '@gx-design-vue/pro-modal':
-      specifier: ^0.2.0-beta.38
-      version: 0.2.0-beta.38
+      specifier: ^0.2.0-beta.39
+      version: 0.2.0-beta.39
     '@gx-design-vue/pro-provider':
-      specifier: ^0.1.0-beta.130
-      version: 0.1.0-beta.130
+      specifier: ^0.1.0-beta.134
+      version: 0.1.0-beta.134
     '@gx-design-vue/pro-table':
-      specifier: ^0.2.0-beta.123
-      version: 0.2.0-beta.123
+      specifier: ^0.2.0-beta.132
+      version: 0.2.0-beta.132
     '@gx-design-vue/pro-utils':
-      specifier: ^0.2.0-beta.80
-      version: 0.2.0-beta.80
+      specifier: ^0.2.0-beta.84
+      version: 0.2.0-beta.84
     '@gx-design-vue/pro-watermark':
       specifier: ^0.2.0-beta.15
       version: 0.2.0-beta.15
@@ -132,9 +132,15 @@ catalogs:
     ant-design-vue:
       specifier: ^4.2.6
       version: 4.2.6
+    aplayer:
+      specifier: ^1.10.1
+      version: 1.10.1
     archiver:
       specifier: ^7.0.1
       version: 7.0.1
+    artplayer:
+      specifier: ^5.3.0
+      version: 5.3.0
     axios:
       specifier: ^1.13.2
       version: 1.13.2
@@ -177,6 +183,9 @@ catalogs:
     echarts:
       specifier: ^6.0.0
       version: 6.0.0
+    es-toolkit:
+      specifier: ^1.42.0
+      version: 1.42.0
     execa:
       specifier: ^9.6.0
       version: 9.6.0
@@ -228,6 +237,9 @@ catalogs:
     picocolors:
       specifier: ^1.1.1
       version: 1.1.1
+    pinyin-pro:
+      specifier: ^3.27.0
+      version: 3.27.0
     pkg-types:
       specifier: ^2.3.0
       version: 2.3.0
@@ -403,7 +415,7 @@ importers:
         version: 10.1.0
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       dayjs:
         specifier: 'catalog:'
         version: 1.11.19
@@ -455,25 +467,25 @@ importers:
         version: 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-hooks':
         specifier: 'catalog:'
-        version: 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-layout':
         specifier: 'catalog:'
-        version: 0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-layout-components':
         specifier: 'catalog:'
-        version: 0.1.0-beta.23(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.30(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue-router@4.6.3(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-modal':
         specifier: 'catalog:'
-        version: 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-provider':
         specifier: 'catalog:'
-        version: 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-table':
         specifier: 'catalog:'
-        version: 0.2.0-beta.123(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.132(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))(vxe-table@4.17.20(vue@3.5.24(typescript@5.9.3)))
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-watermark':
         specifier: 'catalog:'
         version: 0.2.0-beta.15(vue@3.5.24(typescript@5.9.3))
@@ -528,6 +540,9 @@ importers:
       pinia:
         specifier: ^3.0.3
         version: 3.0.4(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3))
+      pinyin-pro:
+        specifier: 'catalog:'
+        version: 3.27.0
       vue:
         specifier: ^3.5.22
         version: 3.5.24(typescript@5.9.3)
@@ -603,7 +618,7 @@ importers:
     dependencies:
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       unocss:
         specifier: 'catalog:'
         version: 66.5.5(postcss@8.5.6)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
@@ -616,7 +631,7 @@ importers:
     dependencies:
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       archiver:
         specifier: 'catalog:'
         version: 7.0.1
@@ -730,7 +745,10 @@ importers:
     dependencies:
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
+      '@gx/types':
+        specifier: workspace:*
+        version: link:../../../types
       crypto-js:
         specifier: 'catalog:'
         version: 4.2.0
@@ -741,9 +759,6 @@ importers:
         specifier: 'catalog:'
         version: 3.3.1
     devDependencies:
-      '@gx/types':
-        specifier: workspace:*
-        version: link:../../../types
       '@types/nprogress':
         specifier: 'catalog:'
         version: 0.2.3
@@ -781,13 +796,13 @@ importers:
         version: 0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-modal':
         specifier: 'catalog:'
-        version: 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-provider':
         specifier: 'catalog:'
-        version: 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -807,10 +822,10 @@ importers:
         specifier: 'catalog:'
         version: 4.2.6(vue@3.5.24(typescript@5.9.3))
       aplayer:
-        specifier: ^1.10.1
+        specifier: 'catalog:'
         version: 1.10.1
       artplayer:
-        specifier: ^5.3.0
+        specifier: 'catalog:'
         version: 5.3.0
       lodash-es:
         specifier: 'catalog:'
@@ -831,12 +846,18 @@ importers:
       '@gx-design-vue/context':
         specifier: 'catalog:'
         version: 0.0.3(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks':
+        specifier: 'catalog:'
+        version: 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-provider':
         specifier: 'catalog:'
-        version: 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
+      '@gx/request':
+        specifier: workspace:*
+        version: link:../request
       '@vueuse/core':
         specifier: 'catalog:'
         version: 14.0.0(vue@3.5.24(typescript@5.9.3))
@@ -846,6 +867,9 @@ importers:
       vue:
         specifier: ^3.5.22
         version: 3.5.24(typescript@5.9.3)
+      vue-router:
+        specifier: 'catalog:'
+        version: 4.6.3(vue@3.5.24(typescript@5.9.3))
     devDependencies:
       '@gx/types':
         specifier: workspace:*
@@ -855,13 +879,13 @@ importers:
     dependencies:
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       axios:
         specifier: 'catalog:'
         version: 1.13.2
-      lodash-es:
+      es-toolkit:
         specifier: 'catalog:'
-        version: 4.17.21
+        version: 1.42.0
       qs:
         specifier: 'catalog:'
         version: 6.14.0
@@ -869,9 +893,6 @@ importers:
       '@gx/types':
         specifier: workspace:*
         version: link:../../types
-      '@types/lodash-es':
-        specifier: 'catalog:'
-        version: 4.17.12
       '@types/qs':
         specifier: 'catalog:'
         version: 6.14.0
@@ -903,22 +924,22 @@ importers:
         version: 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-hooks':
         specifier: 'catalog:'
-        version: 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-layout':
         specifier: 'catalog:'
-        version: 0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-layout-components':
         specifier: 'catalog:'
-        version: 0.1.0-beta.23(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.30(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue-router@4.6.3(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-modal':
         specifier: 'catalog:'
-        version: 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-provider':
         specifier: 'catalog:'
-        version: 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+        version: 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-utils':
         specifier: 'catalog:'
-        version: 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+        version: 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-watermark':
         specifier: 'catalog:'
         version: 0.2.0-beta.15(vue@3.5.24(typescript@5.9.3))
@@ -2041,41 +2062,43 @@ packages:
       ant-design-vue: ^4.1.2
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-hooks@0.2.0-beta.55':
-    resolution: {integrity: sha512-i2J4pD/4INwNYymU+YCCLBKhVln9SrNYAQdKFh8dSRoSdqP/+/QYgsfZ2GGxnlcxz2UCmdo0uqOt+wUHyOkaog==}
+  '@gx-design-vue/pro-hooks@0.2.0-beta.60':
+    resolution: {integrity: sha512-0bSjCtF4TsbjbaGoF8itxvswsjFpReVO4Yhz9giRQh5gpsBNvYN1ioGmKiw2rKRNwO4ngzagc667HtDjDBqq+A==}
     peerDependencies:
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-layout-components@0.1.0-beta.23':
-    resolution: {integrity: sha512-U0QI8CPBUPPUDU1V20DSUUFUdb+LtLEJJvjOsowVi4LtVDCOXEge6XWa7yzKPoTpb9tzOqAk5umLmKyOiL2FXg==}
+  '@gx-design-vue/pro-layout-components@0.1.0-beta.30':
+    resolution: {integrity: sha512-8vN9uUG9Mu9gyJqVuLjrh2dTkTrgPS7ERP1ZhLASN30KsSb4QMA/KSvJCi/mpUKWOXyWr9XNNAIUkly/CTBZ0w==}
     peerDependencies:
-      '@gx-design-vue/pro-layout': ^0.1.0-beta.171
-      ant-design-vue: ^4.1.6
+      '@gx-design-vue/pro-layout': ^0.1.0-beta.179
+      ant-design-vue: ^4.2.6
+      vue: ^3.5.22
+      vue-router: ^4.6.3
+
+  '@gx-design-vue/pro-layout@0.1.0-beta.179':
+    resolution: {integrity: sha512-MtWjtdDW72nBhsoEJMCutuSbFzi8jOQ5Tclpb9XpAY0TgXka6rguo5WoP1brGII0HIWtH4qpp7Guc5uY8lKMpw==}
+    peerDependencies:
+      ant-design-vue: ^4.2.6
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-layout@0.1.0-beta.171':
-    resolution: {integrity: sha512-5lzz1NNSeNprHnZCCB3NuY7IJO3YyujJztzo/cTm2/UwrwxhiQ7VMKKZCxtWJEJe/4XlaQ7mA3uTvnYbLPmisg==}
+  '@gx-design-vue/pro-modal@0.2.0-beta.39':
+    resolution: {integrity: sha512-lmLhbw5MycIs2PrUPsXDrUWQmZ4HS5uTXZy2F69xX1bnOPDWCU5kmsKiEs7hAon54xhfYFCa8COsyynUxLzpEg==}
     peerDependencies:
-      ant-design-vue: ^4.1.2
+      ant-design-vue: ^4.2.6
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-modal@0.2.0-beta.38':
-    resolution: {integrity: sha512-0sT+KCq4juiOmQXG4HppyiNfFl+Vs/9Rv7muqdi3Lu1cfipzd3tbonhsnuayg2848/3vsFvVrCNhwZJ5P3u7SQ==}
+  '@gx-design-vue/pro-provider@0.1.0-beta.134':
+    resolution: {integrity: sha512-6FoXjo1cIu0c/R0rgGKysVdHLepP/d/uyx06uwRzKqqCHgrLOASFhDNc3V6lwrkSUO1dXRUM3zvKDVF2JDFDjA==}
     peerDependencies:
-      ant-design-vue: ^4.1.2
+      ant-design-vue: ^4.2.6
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-provider@0.1.0-beta.130':
-    resolution: {integrity: sha512-Z/xCBhH7anRhBMq16FOohTHvFIqxPNpPmv17RbIQ/eT7yWTtSWN8vL8EribOXSWi8JT8KwyH1IOeLjHp5sm1jw==}
+  '@gx-design-vue/pro-table@0.2.0-beta.132':
+    resolution: {integrity: sha512-AO8NlaChiQ2MlohVo6eb9dNhJzopQSCqcpUtbVfsEi0NYXIl4WYQEuPLmkrRiC53TqTreMuno9IalxFW/7bLsg==}
     peerDependencies:
-      ant-design-vue: ^4.1.2
+      ant-design-vue: ^4.2.6
       vue: ^3.5.22
-
-  '@gx-design-vue/pro-table@0.2.0-beta.123':
-    resolution: {integrity: sha512-oz3dQ0ZwgwwBkrtw016yRZEuhxjz11U6gG5mPEvQVOuiLseUSGQ2hZxheZFBz8YmCkzKqyVP2jAwiTmE80FtIA==}
-    peerDependencies:
-      ant-design-vue: ^4.1.2
-      vue: ^3.5.22
+      vxe-table: ^4.17.11
 
   '@gx-design-vue/pro-utils-components@0.1.0-beta.38':
     resolution: {integrity: sha512-vUP6Y5OJosjxzFortcaMmv9MfRB6Of8PTh8zlglEByEYjgTANgpah1osPUfPhbk+/zKijePdjpAEi+EP6L5zUg==}
@@ -2083,8 +2106,8 @@ packages:
       ant-design-vue: ^4.1.2
       vue: ^3.5.22
 
-  '@gx-design-vue/pro-utils@0.2.0-beta.80':
-    resolution: {integrity: sha512-4EIpX4z0xklHYHTUyPLBoW5s0Z+a2ZOLkg/6J5STaJfEK+PfjHtHCqM07QdCb5EQsbLRzGcP19hJsVPkgNm5pg==}
+  '@gx-design-vue/pro-utils@0.2.0-beta.84':
+    resolution: {integrity: sha512-3w0jSLeQTGeuKdwBXoy3MOUZ+UcoWTVRTsixfLk5QVfLwwi/AZ8V9ZaJJnm/TOYrGxjzBXijcSzpw9/obZ4oSA==}
     peerDependencies:
       vue: ^3.5.22
 
@@ -2786,9 +2809,6 @@ packages:
   '@types/web-bluetooth@0.0.16':
     resolution: {integrity: sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==}
 
-  '@types/web-bluetooth@0.0.20':
-    resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
-
   '@types/web-bluetooth@0.0.21':
     resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
 
@@ -3137,9 +3157,6 @@ packages:
   '@vue/shared@3.5.24':
     resolution: {integrity: sha512-9cwHL2EsJBdi8NY22pngYYWzkTDhld6fAD6jlaeloNGciNSJL6bLpbxVgXl96X00Jtc6YWQv96YA/0sxex/k1A==}
 
-  '@vueuse/core@11.3.0':
-    resolution: {integrity: sha512-7OC4Rl1f9G8IT6rUfi9JrKiXy4bfmHhZ5x2Ceojy0jnd3mHNEvV4JaRygH362ror6/NZ+Nl+n13LPzGiPN8cKA==}
-
   '@vueuse/core@14.0.0':
     resolution: {integrity: sha512-d6tKRWkZE8IQElX2aHBxXOMD478fHIYV+Dzm2y9Ag122ICBpNKtGICiXKOhWU3L1kKdttDD9dCMS4bGP3jhCTQ==}
     peerDependencies:
@@ -3148,17 +3165,11 @@ packages:
   '@vueuse/core@9.13.0':
     resolution: {integrity: sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==}
 
-  '@vueuse/metadata@11.3.0':
-    resolution: {integrity: sha512-pwDnDspTqtTo2HwfLw4Rp6yywuuBdYnPYDq+mO38ZYKGebCUQC/nVj/PXSiK9HX5otxLz8Fn7ECPbjiRz2CC3g==}
-
   '@vueuse/metadata@14.0.0':
     resolution: {integrity: sha512-6yoGqbJcMldVCevkFiHDBTB1V5Hq+G/haPlGIuaFZHpXC0HADB0EN1ryQAAceiW+ryS3niUwvdFbGiqHqBrfVA==}
 
   '@vueuse/metadata@9.13.0':
     resolution: {integrity: sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==}
-
-  '@vueuse/shared@11.3.0':
-    resolution: {integrity: sha512-P8gSSWQeucH5821ek2mn/ciCk+MS/zoRKqdQIM3bHq6p7GXDAJLmnRRKmF5F65sAVJIfzQlwR3aDzwCn10s8hA==}
 
   '@vueuse/shared@14.0.0':
     resolution: {integrity: sha512-mTCA0uczBgurRlwVaQHfG0Ja7UdGe4g9mwffiJmvLiTtp1G4AQyIjej6si/k8c8pUwTfVpNufck+23gXptPAkw==}
@@ -3167,6 +3178,11 @@ packages:
 
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
+
+  '@vxe-ui/core@4.2.15':
+    resolution: {integrity: sha512-kpregErCgRpz3joGeVOrnOADHOOG/454kGXVy/JqBb4w7ENzCk1OmqDCrvCjaugP09FE0exaTiSdfcv3/+kRQg==}
+    peerDependencies:
+      vue: ^3.5.22
 
   '@wangeditor-next/basic-modules@1.5.46':
     resolution: {integrity: sha512-q8/al99P7+koPTJ+X79WjrEP5pDXs8+vFYo0pIbs59Oi1cM1b9CCB0384Mdcg0DQU7eZrN7dl2bHKO5Z5r7E8g==}
@@ -4107,6 +4123,9 @@ packages:
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
 
+  dom-zindex@1.0.6:
+    resolution: {integrity: sha512-FKWIhiU96bi3xpP9ewRMgANsoVmMUBnMnmpCT6dPMZOunVYJQmJhSRruoI0XSPoHeIif3kyEuiHbFrOJwEJaEA==}
+
   dom7@4.0.6:
     resolution: {integrity: sha512-emjdpPLhpNubapLFdjNL9tP06Sr+GZkrIHEXLWvOGsytACUrkbeIdjO5g77m00BrHTznnlcNqgmn7pCN192TBA==}
 
@@ -4252,6 +4271,9 @@ packages:
   es-set-tostringtag@2.1.0:
     resolution: {integrity: sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==}
     engines: {node: '>= 0.4'}
+
+  es-toolkit@1.42.0:
+    resolution: {integrity: sha512-SLHIyY7VfDJBM8clz4+T2oquwTQxEzu263AyhVK4jREOAwJ+8eebaa4wM3nlvnAqhDrMm2EsA6hWHaQsMPQ1nA==}
 
   es5-ext@0.10.64:
     resolution: {integrity: sha512-p2snDhiLaXe6dahss1LddxqEm+SkuDvV8dnIQG0MWjyHpcMNfXKPE+/Cc0y+PhxJX3A4xGNeFCj5oc0BUh6deg==}
@@ -6141,6 +6163,9 @@ packages:
       typescript:
         optional: true
 
+  pinyin-pro@3.27.0:
+    resolution: {integrity: sha512-Osdgjwe7Rm17N2paDMM47yW+jUIUH3+0RGo8QP39ZTLpTaJVDK0T58hOLaMQJbcMmAebVuK2ePunTEVEx1clNQ==}
+
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
 
@@ -7564,6 +7589,12 @@ packages:
       typescript:
         optional: true
 
+  vxe-pc-ui@4.10.31:
+    resolution: {integrity: sha512-I55GN1BhewtUsL6NddNgHx5GBat5lfLxtBUXnPQsk2wxTvAEP80vo2psn7LJB8DJWkf0MiF+2V6BrpnZUdPcKA==}
+
+  vxe-table@4.17.20:
+    resolution: {integrity: sha512-7aKi162ILgl2rUug31mJZ26m0bEYe3YMH24Fg9oc81IgU9YglvRo9QFn561WRX9ihX8rD0DSW+3BAlujGdPtWw==}
+
   warning@4.0.3:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
 
@@ -7630,6 +7661,9 @@ packages:
   xdg-basedir@5.1.0:
     resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
     engines: {node: '>=12'}
+
+  xe-utils@3.7.9:
+    resolution: {integrity: sha512-LWH6M7g+TKX8P2fqGxDPgJQygiULhbMtpmfxTMxJTUjuUv9y2+I45UCcVLh5AnmJSxDV1xTxsq7G5P9Eid06JQ==}
 
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
@@ -8871,9 +8905,9 @@ snapshots:
 
   '@gx-design-vue/color-picker@0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 9.13.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       lodash-es: 4.17.21
@@ -8883,25 +8917,23 @@ snapshots:
 
   '@gx-design-vue/context@0.0.3(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
   '@gx-design-vue/icon@0.0.1(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@ant-design/icons-vue': 7.0.1(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       lodash-es: 4.17.21
       vue: 3.5.24(typescript@5.9.3)
 
   '@gx-design-vue/image@0.2.0-beta.32(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 9.13.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       lodash-es: 4.17.21
@@ -8911,19 +8943,18 @@ snapshots:
 
   '@gx-design-vue/pro-app@0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
     transitivePeerDependencies:
-      - '@vue/composition-api'
       - ant-design-vue
 
   '@gx-design-vue/pro-card@0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-utils-components': 0.1.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 9.13.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
@@ -8932,41 +8963,44 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@gx-design-vue/pro-hooks@0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-hooks@0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
 
-  '@gx-design-vue/pro-layout-components@0.1.0-beta.23(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
-    dependencies:
-      '@gx-design-vue/color-picker': 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/context': 0.0.3(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/icon': 0.0.1(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-layout': 0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-modal': 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/scrollbar': 0.2.0-beta.21(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
-      ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
-      dayjs: 1.11.19
-      lodash-es: 4.17.21
-      vue: 3.5.24(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@ant-design/icons-vue'
-      - '@vue/composition-api'
-
-  '@gx-design-vue/pro-layout@0.1.0-beta.171(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-layout-components@0.1.0-beta.30(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(@gx-design-vue/pro-layout@0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue-router@4.6.3(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@gx-design-vue/color-picker': 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/context': 0.0.3(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/icon': 0.0.1(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-app': 0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-modal': 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-layout': 0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-modal': 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/scrollbar': 0.2.0-beta.21(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
+      ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
+      dayjs: 1.11.19
+      lodash-es: 4.17.21
+      pinyin-pro: 3.27.0
+      vue: 3.5.24(typescript@5.9.3)
+      vue-router: 4.6.3(vue@3.5.24(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@ant-design/icons-vue'
+      - '@vue/composition-api'
+
+  '@gx-design-vue/pro-layout@0.1.0-beta.179(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
+    dependencies:
+      '@gx-design-vue/color-picker': 0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/context': 0.0.3(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/icon': 0.0.1(@ant-design/icons-vue@7.0.1(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-app': 0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-modal': 0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/pro-watermark': 0.2.0-beta.15(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/scrollbar': 0.2.0-beta.21(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
@@ -8978,12 +9012,12 @@ snapshots:
       - '@ant-design/icons-vue'
       - '@vue/composition-api'
 
-  '@gx-design-vue/pro-modal@0.2.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-modal@0.2.0-beta.39(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@gx-design-vue/pro-app': 0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@gx-design-vue/scrollbar': 0.2.0-beta.21(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
@@ -8992,52 +9026,47 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@gx-design-vue/pro-provider@0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-provider@0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@ctrl/tinycolor': 3.6.1
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
-      '@vueuse/core': 11.3.0(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
+      '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
-  '@gx-design-vue/pro-table@0.2.0-beta.123(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-table@0.2.0-beta.132(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))(vxe-table@4.17.20(vue@3.5.24(typescript@5.9.3)))':
     dependencies:
       '@gx-design-vue/pro-app': 0.1.0-beta.33(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-hooks': 0.2.0-beta.55(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
-      '@vueuse/core': 9.13.0(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-hooks': 0.2.0-beta.60(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
+      '@vueuse/core': 14.0.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       dayjs: 1.11.19
       lodash-es: 4.17.21
       vue: 3.5.24(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
+      vxe-table: 4.17.20(vue@3.5.24(typescript@5.9.3))
 
   '@gx-design-vue/pro-utils-components@0.1.0-beta.38(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
 
-  '@gx-design-vue/pro-utils@0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))':
+  '@gx-design-vue/pro-utils@0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       vue: 3.5.24(typescript@5.9.3)
 
   '@gx-design-vue/pro-watermark@0.2.0-beta.15(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
 
   '@gx-design-vue/scrollbar@0.2.0-beta.21(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))':
     dependencies:
-      '@gx-design-vue/pro-provider': 0.1.0-beta.130(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
-      '@gx-design-vue/pro-utils': 0.2.0-beta.80(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-provider': 0.1.0-beta.134(ant-design-vue@4.2.6(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
+      '@gx-design-vue/pro-utils': 0.2.0-beta.84(vue@3.5.24(typescript@5.9.3))
       '@vueuse/core': 9.13.0(vue@3.5.24(typescript@5.9.3))
       ant-design-vue: 4.2.6(vue@3.5.24(typescript@5.9.3))
       vue: 3.5.24(typescript@5.9.3)
@@ -9668,8 +9697,6 @@ snapshots:
 
   '@types/web-bluetooth@0.0.16': {}
 
-  '@types/web-bluetooth@0.0.20': {}
-
   '@types/web-bluetooth@0.0.21': {}
 
   '@typescript-eslint/eslint-plugin@8.46.3(@typescript-eslint/parser@8.46.3(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)':
@@ -10248,16 +10275,6 @@ snapshots:
 
   '@vue/shared@3.5.24': {}
 
-  '@vueuse/core@11.3.0(vue@3.5.24(typescript@5.9.3))':
-    dependencies:
-      '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 11.3.0
-      '@vueuse/shared': 11.3.0(vue@3.5.24(typescript@5.9.3))
-      vue-demi: 0.14.10(vue@3.5.24(typescript@5.9.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
-
   '@vueuse/core@14.0.0(vue@3.5.24(typescript@5.9.3))':
     dependencies:
       '@types/web-bluetooth': 0.0.21
@@ -10275,18 +10292,9 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/metadata@11.3.0': {}
-
   '@vueuse/metadata@14.0.0': {}
 
   '@vueuse/metadata@9.13.0': {}
-
-  '@vueuse/shared@11.3.0(vue@3.5.24(typescript@5.9.3))':
-    dependencies:
-      vue-demi: 0.14.10(vue@3.5.24(typescript@5.9.3))
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-      - vue
 
   '@vueuse/shared@14.0.0(vue@3.5.24(typescript@5.9.3))':
     dependencies:
@@ -10298,6 +10306,12 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+
+  '@vxe-ui/core@4.2.15(vue@3.5.24(typescript@5.9.3))':
+    dependencies:
+      dom-zindex: 1.0.6
+      vue: 3.5.24(typescript@5.9.3)
+      xe-utils: 3.7.9
 
   '@wangeditor-next/basic-modules@1.5.46(@wangeditor-next/core@1.7.45(@uppy/core@2.3.4)(@uppy/xhr-upload@2.1.3(@uppy/core@2.3.4))(dom7@4.0.6)(is-hotkey@0.2.0)(lodash.camelcase@4.3.0)(lodash.clonedeep@4.5.0)(lodash.debounce@4.0.8)(lodash.foreach@4.5.0)(lodash.throttle@4.1.1)(lodash.toarray@4.4.0)(nanoid@5.1.6)(slate@0.82.1)(snabbdom@3.6.3))(dom7@4.0.6)(lodash.throttle@4.1.1)(nanoid@5.1.6)(slate@0.82.1)(snabbdom@3.6.3)':
     dependencies:
@@ -11289,6 +11303,8 @@ snapshots:
       domhandler: 5.0.3
       entities: 4.5.0
 
+  dom-zindex@1.0.6: {}
+
   dom7@4.0.6:
     dependencies:
       ssr-window: 4.0.2
@@ -11421,6 +11437,8 @@ snapshots:
       get-intrinsic: 1.3.0
       has-tostringtag: 1.0.2
       hasown: 2.0.2
+
+  es-toolkit@1.42.0: {}
 
   es5-ext@0.10.64:
     dependencies:
@@ -13630,6 +13648,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  pinyin-pro@3.27.0: {}
+
   pkg-types@1.3.1:
     dependencies:
       confbox: 0.1.8
@@ -15079,6 +15099,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  vxe-pc-ui@4.10.31(vue@3.5.24(typescript@5.9.3)):
+    dependencies:
+      '@vxe-ui/core': 4.2.15(vue@3.5.24(typescript@5.9.3))
+    transitivePeerDependencies:
+      - vue
+
+  vxe-table@4.17.20(vue@3.5.24(typescript@5.9.3)):
+    dependencies:
+      vxe-pc-ui: 4.10.31(vue@3.5.24(typescript@5.9.3))
+    transitivePeerDependencies:
+      - vue
+
   warning@4.0.3:
     dependencies:
       loose-envify: 1.4.0
@@ -15144,6 +15176,8 @@ snapshots:
       is-wsl: 3.1.0
 
   xdg-basedir@5.1.0: {}
+
+  xe-utils@3.7.9: {}
 
   xml-name-validator@4.0.0: {}
 

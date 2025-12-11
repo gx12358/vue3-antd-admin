@@ -1,3 +1,4 @@
+import type { ResponseResult } from '@gx/types/request'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
@@ -57,7 +58,7 @@ const defaultOss: OssInfoState = {
 }
 
 export const useStoreOss = defineStore('oss', () => {
-  const [ state, setValue ] = useReactiveState<OssInfoState>(cloneDeep(defaultOss))
+  const [ state, setState, clear ] = useReactiveState<OssInfoState>(cloneDeep(defaultOss))
 
   const queryOssToken = async () => {
     try {
@@ -73,7 +74,7 @@ export const useStoreOss = defineStore('oss', () => {
           pictureCdn,
           pictureUrl1
         } = ossBucket.data || {}
-        setValue({
+        setState({
           image: {
             bucket: pictureBucket,
             region: pictureRegion,
@@ -100,7 +101,7 @@ export const useStoreOss = defineStore('oss', () => {
               ? dayjs(details.expiration).format('YYYY-MM-DD HH:mm:ss')
               : dayjs().add(1, 'hour').format('YYYY-MM-DD HH:mm:ss')
           }
-          setValue({
+          setState({
             image: cloneDeep(client),
             video: cloneDeep(client),
           })
@@ -127,14 +128,10 @@ export const useStoreOss = defineStore('oss', () => {
     return { ...client, ...extraClient }
   }
 
-  const clearOss = () => {
-    setValue(cloneDeep(defaultOss))
-  }
-
   return {
     ...toRefs(state),
-    setValue,
-    clearOss,
+    setState,
+    clear,
     getOssToken,
     queryOssToken
   }

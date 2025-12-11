@@ -14,16 +14,6 @@ export const rules = (extra: any[] = []) => {
         'border-radius': 'var(--gx-border-radius-lg)'
       }
     ],
-    [
-      'card-box',
-      {
-        'position': 'relative',
-        'background': 'var(--gx-color-bg-container)',
-        'border': '1px solid var(--gx-color-border-secondary)',
-        'border-radius': 'calc(var(--gx-border-radius-lg) * 1px)',
-        'padding': 'calc(var(--gx-padding-lg) * 1px)',
-      }
-    ],
     [ /^text-g-(.*)$/, ([ , str ]) => {
       const regex = /\[([^[\]]*)\]/
       const match = str.match(regex)
@@ -99,6 +89,7 @@ export const rules = (extra: any[] = []) => {
       '-webkit-box-orient': 'vertical',
       'word-break': 'break-word'
     }) ],
+    [ 'leading-lg', { 'line-height': 'var(--gx-line-height-lg)' } ],
     [ 'opacity-visible', { 'opacity': '1', 'visibility': 'visible' } ],
     [ 'hidden-none', { 'opacity': '0', 'visibility': 'hidden' } ],
     [ /^flex-main-(\d+)$/, ([ , str ]) => ({
@@ -126,7 +117,7 @@ export const rules = (extra: any[] = []) => {
       'top': '50%',
       'transform': 'translateY(-50%)'
     }
-    ]
+    ],
   ]
   return [
     ...base,

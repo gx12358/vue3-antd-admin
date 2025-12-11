@@ -5,8 +5,8 @@ import { spinProps } from 'ant-design-vue/es/spin'
 import { omit } from 'lodash-es'
 import { defineComponent, h } from 'vue'
 
-const GProSpin = defineComponent({
-  name: 'GProSpin',
+const GSpin = defineComponent({
+  name: 'GSpin',
   inheritAttrs: true,
   props: {
     iconStyle: Object as PropType<CSSProperties>,
@@ -31,4 +31,4 @@ const GProSpin = defineComponent({
   }
 })
 
-export default GProSpin
+export default GSpin

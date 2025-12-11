@@ -1,3 +1,4 @@
+import type { ResponseResult } from '@gx/types/request'
 import { faker } from '@faker-js/faker'
 import { deepMerge, isObject } from '@gx-design-vue/pro-utils'
 
@@ -19,10 +20,7 @@ export const checkBackDataFun = (
   if (isObject(config)) {
     const { data } = config
     if (merageRoot) {
-      result = deepMerge(result, config, {
-        omitEmpty: false,
-        omitNil: false
-      })
+      result = deepMerge(result, config)
     } else {
       result.data = config
     }

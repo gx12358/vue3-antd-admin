@@ -59,11 +59,54 @@ export default {
       },
       children: [
         {
+          path: '/pro-pages/list/search',
+          name: 'TableSearch',
+          redirect: '/pro-pages/list/search/articles',
+          component: () => import('@/views/pro-pages/list/search/index.vue'),
+          meta: {
+            order: 1,
+            hideChildrenInMenu: true,
+            title: '搜索列表',
+          },
+          children: [
+            {
+              path: '/pro-pages/list/search/articles',
+              name: 'TableSearchArticles',
+              component: () => import('@/views/pro-pages/list/search/articles.vue'),
+              meta: {
+                order: 1,
+                menuSelectKey: 'TableSearch',
+                title: '搜索列表-文章',
+              },
+            },
+            {
+              path: '/pro-pages/list/search/projects',
+              name: 'TableSearchProjects',
+              component: () => import('@/views/pro-pages/list/search/projects.vue'),
+              meta: {
+                order: 2,
+                menuSelectKey: 'TableSearch',
+                title: '搜索列表-项目',
+              },
+            },
+            {
+              path: '/pro-pages/list/search/applications',
+              name: 'TableSearchApplications',
+              component: () => import('@/views/pro-pages/list/search/applications.vue'),
+              meta: {
+                order: 3,
+                menuSelectKey: 'TableSearch',
+                title: '搜索列表-应用',
+              },
+            },
+          ]
+        },
+        {
           path: '/pro-pages/list/table-list',
           name: 'TableList',
           component: () => import('@/views/pro-pages/list/table/index.vue'),
           meta: {
-            order: 1,
+            order: 2,
             title: '查询表格',
           },
         },
@@ -72,7 +115,7 @@ export default {
           name: 'BasicList',
           component: () => import('@/views/pro-pages/list/basic/index.vue'),
           meta: {
-            order: 2,
+            order: 3,
             title: '标准表格',
           },
         },
@@ -81,7 +124,7 @@ export default {
           name: 'CardList',
           component: () => import('@/views/pro-pages/list/card/index.vue'),
           meta: {
-            order: 3,
+            order: 4,
             title: '卡片表格',
           },
         },
@@ -193,25 +236,25 @@ export default {
       },
       children: [
         {
-          path: '/pro-pages/iframe/ant-design-vue',
-          name: 'IframeAntDesignVue',
+          path: '/pro-pages/iframe/ant-design',
+          name: 'IframeAntDesign',
           component: () => import('@/layout/IframeLayout.vue'),
           meta: {
             order: 1,
             linkStatus: 0,
-            link: 'https://antdv.com/components/overview-cn',
-            title: 'AntVue（内嵌）',
+            link: 'https://ant.design/components/overview-cn/',
+            title: 'Ant DesIgn',
           },
         },
         {
-          path: '/pro-pages/iframe/ant-design',
-          name: 'IframeAntDesignReact',
+          path: '/pro-pages/iframe/ant-design-x',
+          name: 'IframeAntDesignX',
           component: () => import('@/layout/IframeLayout.vue'),
           meta: {
             order: 2,
-            link: 'https://ant.design/components/overview-cn/',
+            link: 'https://ant-design-x.antgroup.com/index-cn',
             linkStatus: 1,
-            title: 'AntReact（外链）',
+            title: 'Ant DesIgn X',
           },
         },
       ]

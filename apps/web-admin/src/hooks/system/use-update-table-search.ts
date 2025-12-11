@@ -1,3 +1,5 @@
+import type { Fn } from '@gx/types'
+
 export function useUpdateTableSearchMap<T = string>(key: DictType, updateProps: {
   key: T;
   callback: Fn

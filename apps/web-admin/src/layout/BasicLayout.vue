@@ -26,7 +26,7 @@ watch([
   () => layout.config.settings?.layout
 ], ([ val, settingsLayout ]) => {
   if (settingsLayout) {
-    layout.setValue({
+    layout.setState({
       config: {
         settings: {
           siderWidth: val ? 0 : layoutConfig.siderWidth
@@ -37,13 +37,14 @@ watch([
 }, { immediate: true })
 
 function onRightClick(type: keyof RightContentActions) {
+  console.log(type)
   if (type === 'themeEditor') {
     themeEditorOpen.value = !themeEditorOpen.value
   }
 }
 
 function changeLayoutConfig(state: Partial<SystemLayoutConfig>) {
-  layout.setValue({
+  layout.setState({
     config: {
       settings: state
     }
@@ -51,7 +52,7 @@ function changeLayoutConfig(state: Partial<SystemLayoutConfig>) {
 }
 
 function changeLayoutTokens(state: DeepPartial<ProAliasToken>) {
-  layout.setValue({
+  layout.setState({
     config: {
       token: state
     }
@@ -111,12 +112,19 @@ const logout = (callBack?: any) => {
                     {{ user.userInfo.nickname }}
                   </span>
                   <a-tag class="text-12px">
-                    Pro
+                    {{ user.userInfo.username }}
                   </a-tag>
                 </div>
                 <span class="text-foreground text-12px">{{ user.userInfo.email }}</span>
               </div>
             </div>
+          </a-menu-item>
+          <a-menu-divider />
+          <a-menu-item @click="router.push('/account/center')">
+            <template #icon>
+              <user-outlined />
+            </template>
+            个人中心
           </a-menu-item>
           <a-menu-divider />
         </template>

@@ -1,6 +1,6 @@
-import type { RulesListItem } from '@gx-mock/routers/list/rule.fake'
+import type { MockTableRecord } from '@/services/demo/table'
 
-export const columns: ProColumnsType<RulesListItem, any> = [
+export const columns: ProColumnsType<MockTableRecord> = [
   {
     dataIndex: 'name',
     searchConfig: {
@@ -21,29 +21,31 @@ export const columns: ProColumnsType<RulesListItem, any> = [
   {
     title: '服务调用次数',
     dataIndex: 'callNo',
-    sorter: true
+    sorter: {
+      multiple: 1
+    }
   },
   {
     title: '状态',
     searchConfig: {
-      name: 'status',
+      name: 'status1',
       valueType: 'select',
       valueEnum: [
         {
           label: '关闭',
-          value: '0'
+          value: 0
         },
         {
           label: '运行中',
-          value: '1'
+          value: 1
         },
         {
           label: '已上线',
-          value: '2'
+          value: 2
         },
         {
           label: '异常',
-          value: '3'
+          value: 3
         }
       ],
       placeholder: '请选择状态'
@@ -62,7 +64,9 @@ export const columns: ProColumnsType<RulesListItem, any> = [
       placeholder: [ '请选择日期', '请选择日期' ]
     },
     dataIndex: 'createTime',
-    sorter: true
+    sorter: {
+      multiple: 2
+    }
   },
   {
     title: '操作',

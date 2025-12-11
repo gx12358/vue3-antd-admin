@@ -117,7 +117,7 @@ async function fetchTenantList() {
     }
 
     // 设置选中的租户编号
-    permission.setValue({ tenantId })
+    permission.setState({ tenantId })
 
     userForm.tenantId = tenantId
   } catch (error) {

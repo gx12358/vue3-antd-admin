@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import type { BasicCountState, BasicListItemDataType, BasicSearchParmas } from '@gx-mock/routers/list/basic.fake'
-import type { CountState } from './utils/config'
+import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
 import { GProCard } from '@gx-design-vue/pro-card'
-import { useMounted } from '@vueuse/core'
-import { message } from 'ant-design-vue'
-import { globalConfirm } from '@/components/layout/confirm'
-import { useRequest } from '@/hooks/core'
-import { useProTable } from '@/hooks/web'
-import { deleteBasicList, getBasicCount, getBasicList } from '@/services/list-center'
+import { useProPageTable } from '@/hooks/web'
+import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
-import { defaultCountState } from './utils/config'
-
-const isMount = useMounted()
 
 const operate = useTemplateRef<InstanceType<typeof OperateModal>>('operate')
 const tableRef = ref()
 
-const countState = reactive<CountState>({ ...defaultCountState })
-
-const { reload, setLoading, tableState } = useProTable<BasicListItemDataType, BasicSearchParmas>(tableRef, {
+const [
+  { reload, tableState, loading },
+  actions
+] = useProPageTable<MockTableRecord, SearchConfig>(tableRef, {
   state: {
     params: {
       status: 'all',
       title: ''
+    },
+    search: {
+      manualRequest: false,
     },
     pagination: {
       pageSize: 5
@@ -30,64 +26,33 @@ const { reload, setLoading, tableState } = useProTable<BasicListItemDataType, Ba
     columns: [],
     showLoading: false
   },
-  request: async (params) => {
-    const response = await getBasicList<PageResult<BasicListItemDataType>>(params)
-    
-    return {
-      data: response?.data?.list || [],
-      total: response?.data?.totalCount || 0,
-      success: !!response
-    }
+  request: getList,
+  deleteProps: {
+    requestFn: deleteList
   }
 })
-
-const { loading } = useRequest<BasicCountState>(getBasicCount, {
-  onSuccess: (data) => {
-    for (const key in data) {
-      if (countState[key])
-        countState[key as keyof BasicCountState].count = data[key]
-    }
-
-    tableState.showLoading = true
-  }
-})
-
-const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => {
-  switch (key) {
-    case 'delete':
-      globalConfirm({
-        content: '是否确认删除？',
-        async onOk() {
-          setLoading(false)
-          const response = await deleteBasicList({ id: record.id })
-          if (response) {
-            message.success('操作成功')
-            await reload({ immediate: true, removeKeys: [record.id] })
-          }
-          setLoading(false)
-        }
-      })
-      break
-    case 'update':
-      operate.value?.open(record.id)
-      break
-  }
-}
 </script>
 
 <template>
   <g-pro-page-container :use-page-card="false" :loading="loading">
     <GProCard>
       <a-row>
-        <a-col v-for="item in Object.keys(countState) as (keyof BasicCountState)[]" :key="item" :sm="8" :xs="24">
+        <a-col :sm="8" :xs="24">
           <div class="flex-center flex-col gap-4px relative">
-            <span class="leading-22px text-rgba-[0-0-0-0.65]">{{ countState[item].name }}</span>
-            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">{{ countState[item].count
-              + countState[item].unit }}</span>
-            <em
-              v-if="item !== 'done'"
-              class="lt-sm:relative lt-sm-h-0 lt-sm:my-10px absolute right-0 top-0 w-1px h-56px bg-rgba-[5-5-5-0.06]"
-            />
+            <span class="leading-22px text-rgba-[0-0-0-0.65]">我的待办</span>
+            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">8个任务</span>
+          </div>
+        </a-col>
+        <a-col :sm="8" :xs="24">
+          <div class="flex-center flex-col gap-4px relative">
+            <span class="leading-22px text-rgba-[0-0-0-0.65]">本周任务平均处理时间</span>
+            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">32分钟</span>
+          </div>
+        </a-col>
+        <a-col :sm="8" :xs="24">
+          <div class="flex-center flex-col gap-4px relative">
+            <span class="leading-22px text-rgba-[0-0-0-0.65]">本周完成任务数</span>
+            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">24个任务</span>
           </div>
         </a-col>
       </a-row>
@@ -108,29 +73,29 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
               </a-radio-button>
             </a-radio-group>
           </div>
-          <g-input-search v-model:value="tableState.params.title" placeholder="请输入" allow-clear />
+          <a-input-search v-model:value="tableState.params.title" placeholder="请输入" allow-clear />
         </div>
       </template>
       <g-pro-table ref="tableRef" v-bind="tableState">
         <template #customRender="{ dataSource }">
-          <a-list size="large" row-key="id" :loading="loading" :data-source="dataSource">
-            <template #renderItem="{ item }: { item: BasicListItemDataType }">
+          <a-list size="large" row-key="id" :data-source="dataSource">
+            <template #renderItem="{ item }: { item: MockTableRecord }">
               <a-list-item>
                 <template #actions>
-                  <a key="update" @click="operateBtn('update', item)">编辑</a>
-                  <a key="delete" @click="operateBtn('delete', item)">删除</a>
+                  <a key="update" @click="operate?.open(item.id)">编辑</a>
+                  <a key="delete" @click="actions.remove([item.id])">删除</a>
                 </template>
                 <a-list-item-meta>
                   <template #title>
-                    <a :href="item.href" class="text-hidden-1">{{ item.title }}</a>
+                    <a class="text-hidden-1">{{ item.title }}</a>
                   </template>
                   <template #avatar>
                     <g-admin-image :src="item.logo" :width="48" :height="48" class="rd-4px" />
                   </template>
                   <template #description>
-                    <a-tooltip :title="item.subDescription">
+                    <a-tooltip :title="item.description">
                       <div class="text-hidden-1">
-                        {{ item.subDescription }}
+                        {{ item.description }}
                       </div>
                     </a-tooltip>
                   </template>
@@ -138,14 +103,18 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
                 <div class="listContent">
                   <div class="listContentItem">
                     <span>Owner</span>
-                    <p>{{ item.owner }}</p>
+                    <p>{{ item.author }}</p>
                   </div>
                   <div class="listContentItem">
                     <span>开始时间</span>
                     <p>{{ item.createTime }}</p>
                   </div>
                   <div class="listContentProgress">
-                    <a-progress :stroke-width="6" :percent="item.percent" :status="item.status" />
+                    <a-progress
+                      :stroke-width="6"
+                      :percent="item.percent"
+                      :status="item.percent < 100 ? 'active' : 'success'"
+                    />
                   </div>
                 </div>
               </a-list-item>
@@ -154,19 +123,14 @@ const operateBtn = (key: 'update' | 'delete', record: BasicListItemDataType) => 
         </template>
       </g-pro-table>
     </GProCard>
-    <Teleport v-if="isMount" to=".ant-layout-has-sider>.ant-layout">
-      <div class="mt-32px h-49px" />
-    </Teleport>
-    <Teleport to="body">
-      <div class="footer-bar">
-        <a-button @click="operate?.open()">
-          <template #icon>
-            <plus-outlined />
-          </template>
-          添加
-        </a-button>
-      </div>
-    </Teleport>
+    <template #footer>
+      <a-button @click="operate?.open()">
+        <template #icon>
+          <plus-outlined />
+        </template>
+        添加
+      </a-button>
+    </template>
     <OperateModal ref="operate" @ok="reload" />
   </g-pro-page-container>
 </template>

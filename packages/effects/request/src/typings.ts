@@ -1,3 +1,4 @@
+import type { ResponseResult } from '@gx/types/request'
 import type {
   AxiosError,
   AxiosInstance,

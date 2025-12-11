@@ -1,3 +1,4 @@
+import type { Fn } from '@gx/types'
 import type { Ref, WatchSource } from 'vue'
 import SWRVCache from './cache'
 import LocalStorageCache from './cache/adapters/localStorage'

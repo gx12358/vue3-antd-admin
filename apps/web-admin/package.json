@@ -61,6 +61,7 @@
     "lodash-es": "catalog:",
     "nprogress": "catalog:",
     "pinia": "catalog:",
+    "pinyin-pro": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
   },

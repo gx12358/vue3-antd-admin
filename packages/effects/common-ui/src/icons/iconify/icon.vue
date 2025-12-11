@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Fn } from '@gx/types'
 import type { Component } from 'vue'
 import { isHttpUrl, } from '@gx-core/shared/utils'
 import { isFunction, isObject, isString, } from '@gx-design-vue/pro-utils'

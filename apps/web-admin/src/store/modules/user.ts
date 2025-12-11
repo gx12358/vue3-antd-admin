@@ -22,14 +22,13 @@ export const useStoreUser = defineStore('user', () => {
   const storeDict = useStoreDict()
   const storeRoutes = useStoreRoutes()
   const storePermission = useStorePermission()
-
   const { token, refreshToken } = accessToken.getAccessToken()
 
-  const [ state, setValue ] = useReactiveState<UserState>({
+  const [ state, setState, clear ] = useReactiveState<UserState>({
     token,
     refreshToken,
     userInfo: {} as UserInfo
-  }, { omitNil: false, omitEmpty: false })
+  })
 
   /**
    * @Author      gx12358
@@ -50,7 +49,7 @@ export const useStoreUser = defineStore('user', () => {
   const userLogin = async (params: any): Promise<boolean> => {
     try {
       const { accessToken: token, refreshToken } = await loginApi(params)
-      setValue({ token, refreshToken })
+      setState({ token, refreshToken })
       accessToken.setAccessToken({ token, refreshToken })
       return true
     } catch {}
@@ -62,14 +61,15 @@ export const useStoreUser = defineStore('user', () => {
     let routes: AppRouteModule[] = []
     if (loginInterception) {
       try {
-        const { user, roles, permissions, menus } = await getAuthPermissionInfoApi()
-        status = 1
-        storePermission.setValue({ role: roles, auths: permissions })
-        setValue({ userInfo: { ...user } })
-        if (router.auth === 'all') {
-          routes = await storeRoutes.setAllRoutes(menus)
+        const result = await fetchAuthPermissionInfo()
+        if (result) {
+          status = 1
+          storePermission.setState({ roles: result.roles, auths: result.permissions })
+          if (router.auth === 'all') {
+            routes = await storeRoutes.setAllRoutes(result.menus)
+          }
+          return { status, routes }
         }
-        return { status, routes }
       } catch {}
     } else {
       status = setVirtualUserInfo()
@@ -78,12 +78,20 @@ export const useStoreUser = defineStore('user', () => {
     return { status, routes }
   }
 
+  async function fetchAuthPermissionInfo() {
+    try {
+      const result = await getAuthPermissionInfoApi()
+      setState({ userInfo: { ...result.user } })
+      return result
+    } catch {}
+  }
+
   const resetPermissions = () => {
     accessToken.removeAccessToken()
-    setValue({ token: '', refreshToken: '', userInfo: {} })
+    clear({ token: '', refreshToken: '', userInfo: {} } as UserState)
     storeDict.clear()
-    storePermission.clear()
     storeRoutes.clear()
+    storePermission.clear()
   }
 
   /**
@@ -103,8 +111,9 @@ export const useStoreUser = defineStore('user', () => {
     ...toRefs(state),
     userLogin,
     userLogout,
-    setValue,
+    setState,
     resetPermissions,
+    fetchAuthPermissionInfo,
     checkUserPermission
   }
 })

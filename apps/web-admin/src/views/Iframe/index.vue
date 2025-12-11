@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
   frameSrc: ''
 })
 
-const { count } = usePageContent()
+const height = usePageContent()
 
 const prefixCls = getPrefixCls({
   suffixCls: 'iframe-page',
@@ -22,7 +22,7 @@ const frameRef = ref<HTMLIFrameElement>()
 const loading = ref(true)
 
 const frameStyle = reactive<CSSProperties>({
-  height: `${count.value}px`,
+  height: height.value,
   borderRadius: '8px'
 })
 
@@ -37,15 +37,12 @@ watch(
   }
 )
 
-watch(
-  () => count.value,
-  (_) => {
-    calcHeight()
-  }
-)
+watch(() => height.value, (_) => {
+  calcHeight()
+})
 
 function calcHeight() {
-  frameStyle.height = `${window.innerHeight - count.value}px`
+  frameStyle.height = height.value
 }
 
 useEventListener('resize', calcHeight)
@@ -58,7 +55,7 @@ const hideLoading = () => {
 <template>
   <g-pro-page-container :use-page-card="false">
     <div :class="prefixCls" :style="frameStyle">
-      <a-spin :spinning="loading" size="large" :style="frameStyle">
+      <g-spin :spinning="loading" size="large" :style="frameStyle">
         <iframe
           ref="frameRef"
           :src="frameSrc"
@@ -66,7 +63,7 @@ const hideLoading = () => {
           :style="frameStyle"
           @load="hideLoading"
         />
-      </a-spin>
+      </g-spin>
     </div>
   </g-pro-page-container>
 </template>

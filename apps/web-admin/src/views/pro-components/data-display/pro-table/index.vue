@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { MockTableRecord, SearchConfig } from './typings'
-import { deepCopy } from '@gx-design-vue/pro-utils'
+import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
+import { cloneDeep } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive, ref, watch } from 'vue'
 import { useDict, useUpdateTableSearchMap } from '@/hooks/system'
-import { useProTable } from '@/hooks/web'
+import { useProPageTable } from '@/hooks/web'
 import { getList } from '@/services/demo'
 import OperationModal from './components/OperationModal.vue'
 import ScrollBreakpointModal from './components/ScrollBreakpointModal.vue'
@@ -32,7 +32,9 @@ const state = reactive({
   selectedRowItems: [] as MockTableRecord[]
 })
 
-const { tableState, reload, updateSearchMap } = useProTable<MockTableRecord, SearchConfig>(
+const [
+  { tableState, reload, updateSearchMap }
+] = useProPageTable<MockTableRecord, SearchConfig>(
   tableRef,
   {
     state: {
@@ -73,14 +75,9 @@ const { tableState, reload, updateSearchMap } = useProTable<MockTableRecord, Sea
       rowKey: 'id',
       scroll: { x: 1850 }
     },
-    request: async (params) => {
-      const { list = [], total = 0 } = await getList<PageResult<MockTableRecord>>(params)
-      state.tableData = list
-      return {
-        data: list,
-        success: true,
-        total
-      }
+    request: getList,
+    onSuccess: ({ list }) => {
+      state.tableData = cloneDeep(list)
     }
   }
 )

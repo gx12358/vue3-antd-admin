@@ -1,5 +1,6 @@
 import type { GImageProps } from '@gx-design-vue/image'
 import type { CustomRender, WithFalse } from '@gx-design-vue/pro-utils'
+import type { ResponseResult } from '@gx/types/request'
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue'
 import type { MaterialListItem } from './typings'
 

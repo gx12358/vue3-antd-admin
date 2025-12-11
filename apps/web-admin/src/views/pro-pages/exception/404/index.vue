@@ -1,18 +1,15 @@
+<script setup lang="ts">
+import GAdminResult from '@/components/layout/result'
+</script>
+
 <template>
   <g-pro-page-container>
-    <a-result
-      status="404"
-      title="404"
-      style="background: none"
-      sub-title="Sorry, the page you visited does not exist."
-    >
+    <GAdminResult status="404">
       <template #extra>
-        <router-link to="/">
-          <a-button type="primary">
-            返回首页
-          </a-button>
-        </router-link>
+        <a-button type="primary">
+          返回首页
+        </a-button>
       </template>
-    </a-result>
+    </GAdminResult>
   </g-pro-page-container>
 </template>

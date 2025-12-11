@@ -1,3 +1,5 @@
+import type { Recordable } from '@gx/types'
+import type { FakeRouteConfig, RequestHeater } from '@gx/types/mock'
 import { isArray, isBoolean, isFunction } from '@gx-design-vue/pro-utils'
 import { defineFakeRoute } from '@gx/vite-config'
 import { omit } from 'lodash-es'

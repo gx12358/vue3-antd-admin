@@ -1,8 +1,7 @@
 import type { AxiosError } from 'axios'
 import type { HttpResponse, RequestInstance, RequestOptions, RequestResponse } from '../typings'
-import { deepMerge, isFunction } from '@gx-design-vue/pro-utils'
+import { cloneDeep, deepMerge, isFunction } from '@gx-design-vue/pro-utils'
 import axios from 'axios'
-import { cloneDeep } from 'lodash-es'
 import qs from 'qs'
 import { ContentType, RequestEnum } from '../typings'
 import { AxiosCanceler } from './cancel'
@@ -94,10 +93,7 @@ export class CreateClient {
 
     requestConfig.originOptions = cloneDeep(requestConfig)
 
-    const axiosConfig = deepMerge<RequestOptions>(requestConfig, { ...this.options }, {
-      omitNil: true,
-      omitEmpty: true
-    })
+    const axiosConfig = deepMerge(this.options, requestConfig)
 
     const { beforeRequestHook, requestCatchHook, transformResponseHook } = axiosConfig
     if (beforeRequestHook && isFunction(beforeRequestHook)) {

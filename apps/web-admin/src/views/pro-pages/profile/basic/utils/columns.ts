@@ -1,21 +1,21 @@
-import type { CommodityRecord, ScheduleRecord } from '@gx-mock/routers/profile/basic.fake'
+import type { BasicGood, BasicProgress } from '../typings'
 
-export const goodsColumns: ProColumnsType<Partial<CommodityRecord>> = [
+export const goodsColumns: ProColumnsType<BasicGood> = [
   {
     title: '数量（件）',
     dataIndex: 'num',
     key: 'num',
-    align: 'right' as 'left' | 'right' | 'center'
+    align: 'right'
   },
   {
     title: '金额',
     dataIndex: 'amount',
     key: 'amount',
-    align: 'right' as 'left' | 'right' | 'center'
+    align: 'right'
   }
 ]
 
-export const scheduleColumns: ProColumnsType<Partial<ScheduleRecord>> = [
+export const progressColumns: ProColumnsType<BasicProgress> = [
   {
     title: '时间',
     dataIndex: 'time',

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { MockTableRecord, SearchConfig } from '../typings'
+import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
 import { reactive, ref } from 'vue'
 import { useDict, useUpdateTableSearchMap } from '@/hooks/system'
-import { useProTable } from '@/hooks/web'
+import { useProPageTable } from '@/hooks/web'
 import { getList } from '@/services/demo'
 import { operationModal } from '../utils/columns'
 
@@ -20,7 +20,9 @@ const params = reactive({
   age: ''
 })
 
-const { tableState, updateSearchMap } = useProTable<TableRecord<MockTableRecord>, SearchConfig>(tableRef, {
+const [
+  { tableState, updateSearchMap }
+] = useProPageTable<TableRecord<MockTableRecord>, SearchConfig>(tableRef, {
   state: {
     rowKey: 'id',
     options: false,
@@ -44,14 +46,7 @@ const { tableState, updateSearchMap } = useProTable<TableRecord<MockTableRecord>
     ],
     columns: operationModal
   },
-  request: async (params) => {
-    const { list = [], total = 0 } = await getList<PageResult<TableRecord<MockTableRecord>>>(params)
-    return {
-      data: list,
-      success: true,
-      total
-    }
-  }
+  request: getList
 })
 
 useUpdateTableSearchMap('common_status', {

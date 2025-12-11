@@ -34,7 +34,7 @@ watch(
 </script>
 
 <template>
-  <div class="card-box w-full px-4 pb-5 pt-3">
+  <div class="gx-card w-full px-4 pb-5 pt-3">
     <a-segmented v-model:value="value" :options="tabs" />
     <template v-for="tab in tabs" :key="tab.label">
       <div v-if="tab.value === value" class="pt-4 mt-2">

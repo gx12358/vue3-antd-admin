@@ -1,39 +1,27 @@
-import type { DefaultToT } from '@gx-design-vue/pro-utils'
+import type { LimitDeepPartial } from '@gx-design-vue/pro-utils'
 import type { CancelOptions, RequestOptions } from '@gx/request'
-import type { ComputedRef, MaybeRef, UnwrapRef, WatchSource } from 'vue'
-import { useState } from '@gx-design-vue/pro-hooks'
-import { deepMerge, isArray, isObject } from '@gx-design-vue/pro-utils'
+import type { ComputedRef, MaybeRef, WatchSource } from 'vue'
+import { useReactiveState, useState } from '@gx-design-vue/pro-hooks'
+import { cloneDeep, getRandomNumber } from '@gx-design-vue/pro-utils'
 import { useThrottleFn } from '@vueuse/core'
-import { cloneDeep } from 'lodash-es'
-import { computed, isReactive, isRef, onActivated, onMounted, reactive, ref, watch } from 'vue'
+import { computed, isReactive, isRef, onActivated, onMounted, ref, toRaw, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-
-type RequestResponse<T> = T extends ResponseResult ? T : ResponseResult<T>
-
-export type SearchParams<P = Record<string, undefined>> = MaybeRef<P> | ComputedRef<P>
 
 /**
  * 使用请求的自定义 Hook
  * @template T - 返回data数据的类型
- * @template P - 请求参数的类型，默认为 Record<string, any>
- * @template R - 整体响应的类型，默认为 undefined
- * @param {Function} service - 服务函数，用于发起请求
+ * @template P - 请求参数的类型，默认为 Record<any, any>
  * @param {object} options - 配置选项
  * @param {object} options.params - 请求参数，类型为 SearchParams<P>
  * @param {boolean} [options.manual] - 是否需要手动触发首次请求，默认值为 false
  * @param {object} [options.cancel] - 用于控制请求取消行为的配置对象
  * @param {boolean} [options.cancel.level] - 若为 true，表示离开页面时取消上一次请求；若为 false 则不启用此功能
  * @param {boolean} [options.cancel.next] - 若为 true，表示下次请求时取消上次请求；若为 false 则不启用此功能
- * @returns {object} - 包含请求控制方法和状态的对象
- * @returns {DefaultToT<T, R>} data - 请求返回的数据，类型为 DefaultToT<T, R>
- * @returns {boolean} loading - 表示请求是否正在进行中
- * @returns {(opt?: P) => Promise<void>} run - 用于发起请求的函数，可传入请求参数
- * @returns {() => void} refresh - 按照当前参数再次发起请求的函数
  */
-function useRequest<T, P = Record<string, any>, R = undefined>(
-  service: (opt: P, config?: Partial<RequestOptions>) => Promise<RequestResponse<DefaultToT<T, R>>>,
-  options: {
-    params?: SearchParams<P>;
+export function useRequest<T, P extends object = Record<any, any>>(
+  service: any,
+  props: {
+    params?: MaybeRef<P> | ComputedRef<P>;
     watchParams?: MaybeRef<boolean>;
     defaultData?: T;
     requestConfig?: Partial<RequestOptions>;
@@ -44,25 +32,26 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
     pageActivated?: boolean;
     defaultLoading?: boolean;
     manual?: MaybeRef<boolean>;
-    onBefore?: (params: P) => P | unknown;
-    onSuccess?: (data: T, response: RequestResponse<DefaultToT<T, R>>) => void;
+    onBefore?: (params: P) => LimitDeepPartial<P> | undefined;
+    onSuccess?: (data: T) => T | unknown;
     onError?: (e: any) => void;
     onFinal?: () => void;
-    onAfterMutateData?: (response: RequestResponse<DefaultToT<T, R>>) => Promise<T> | T;
     debounceInterval?: number;
     refreshDeps?: WatchSource[];
     refreshDepsAction?: () => Promise<any>;
   } = {}
 ) {
+  const updateKey = ref<string>('')
   const [ init, setInit ] = useState<boolean>(false)
-  const [ loading, setLoading ] = useState(!!options.defaultLoading)
+  const [ loading, setLoading ] = useState(!!props.defaultLoading)
 
-  const data = ref<T>(options?.defaultData as T)
+  const data = ref<T>(props?.defaultData as T)
 
-  const state = reactive<{ params: P, result: RequestResponse<DefaultToT<T, R>> }>({
-    params: (isRef(options.params) ? options.params?.value : options.params) || {} as P,
-    result: undefined as any
-  })
+  const defaultParams = cloneDeep(props.params
+    ? isRef(props.params) ? props.params?.value : props.params
+    : {} as P)
+
+  const [ state, setState, resetState ] = useReactiveState<P>(cloneDeep(defaultParams))
 
   const requestCancel: Partial<CancelOptions> = {
     cancel: undefined,
@@ -70,81 +59,80 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
   }
 
   const manual = computed(() =>
-    isRef(options?.manual) ? options?.manual?.value ?? false : options?.manual ?? false)
+    isRef(props?.manual) ? props?.manual?.value ?? false : props?.manual ?? false)
 
   const watchParams = computed(() =>
-    isRef(options?.watchParams) ? options?.watchParams?.value ?? true : options?.watchParams ?? true)
+    isRef(props?.watchParams)
+      ? props?.watchParams?.value ?? true
+      : props?.watchParams ?? true)
 
-  function mergeParams(val?: P): P {
-    if (val && isObject(val)) {
-      return deepMerge<any>(
-        cloneDeep(state.params) as P,
-        cloneDeep({
-          ...((isRef(options.params)
-            ? options.params?.value as P
-            : options.params) || {}),
-          ...val
-        } as any),
-        {
-          omitEmpty: false,
-          omitNil: false
-        }
-      )
+  // 保持最新的更新
+  function update(key: string, callback?: () => void) {
+    if (key === updateKey.value) {
+      if (callback) callback()
     }
-
-    if (val) {
-      return val as unknown as P
-    }
-    return cloneDeep(state.params) as unknown as P
   }
 
-  const query = async (opt?: P) => {
-    if (options?.cancel?.next && typeof requestCancel.cancel === 'function') requestCancel.cancel?.()
+  const query = async (options?: { params?: LimitDeepPartial<P>; reset?: boolean; }) => {
+    const requestKey = `use_request_${getRandomNumber().uuid(10)}`
+    updateKey.value = requestKey
+    if (props?.cancel?.next && typeof requestCancel.cancel === 'function') requestCancel.cancel?.()
     setLoading(true)
-    state.params = mergeParams(opt) as unknown as UnwrapRef<P>
-    if (options.onBefore) {
-      const value = options.onBefore(cloneDeep(state.params) as P) as unknown as UnwrapRef<P>
-      if (value) state.params = value as unknown as UnwrapRef<P>
+    if (options?.reset) {
+      resetState()
+    } else if (options?.params) {
+      setState(options?.params)
     }
-    const requestConfig: Partial<RequestOptions> = {
-      ...(options.requestConfig || {
-        cancelCallBackHook: (cancelOptions) => {
-          Object.assign(requestCancel, cancelOptions)
-        }
-      })
+    if (props.onBefore) {
+      const newParams = props.onBefore(toRaw(state) as P)
+      if (newParams) setState(newParams)
     }
 
     try {
-      const response: RequestResponse<DefaultToT<T, R>> = await service(cloneDeep(state.params as P), requestConfig)
-      if (response) {
-        data.value = options?.onAfterMutateData
-          ? await options?.onAfterMutateData?.(response)
-          : response.data
+      const response: T = await service(cloneDeep(state), {
+        ...(props.requestConfig || {
+          cancelCallBackHook: (cancelOptions) => {
+            Object.assign(requestCancel, cancelOptions)
+          }
+        })
+      })
 
-        options.onSuccess && options.onSuccess?.(data.value, response)
-        state.result = isObject(response) || isArray(response) ? cloneDeep(response as any) : response as any
-      } else {
-        options.onError && options.onError?.(response)
-      }
+      update(requestKey, () => {
+        if (props.onSuccess) {
+          const newData = props.onSuccess(response)
+          if (newData) data.value = cloneDeep(newData)
+        } else {
+          data.value = cloneDeep(response)
+        }
+      })
     } catch (e) {
-      console.error(e)
-      options.onError && options.onError?.(e)
+      update(requestKey, () => {
+        console.error(e)
+        props.onError && props.onError?.(e)
+      })
     }
 
-    options.onFinal && options.onFinal?.()
+    update(requestKey, () => {
+      props.onFinal && props.onFinal?.()
+    })
 
-    setLoading(false)
-    setInit(true)
+    update(requestKey, () => {
+      setLoading(false)
+      setInit(true)
+    })
   }
 
-  const run = useThrottleFn<(opt?: P) => Promise<void>>(query, options.debounceInterval || 50)
+  const run = useThrottleFn<(props?: {
+    params?: LimitDeepPartial<P>;
+    reset?: boolean;
+  }) => Promise<void>>(query, props.debounceInterval || 50)
 
-  const refresh = () => run()
+  const refresh = () => run({ reset: true })
 
-  if (options.refreshDeps?.length) {
-    watch(options.refreshDeps, () => {
-      if (options.refreshDepsAction) {
-        options?.refreshDepsAction()
+  if (props.refreshDeps?.length) {
+    watch(props.refreshDeps, () => {
+      if (props.refreshDepsAction) {
+        props?.refreshDepsAction()
       } else {
         run()
       }
@@ -152,10 +140,10 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
       deep: true
     })
   }
-  if ((isReactive(options.params) || isRef(options.params))) {
+  if (props.params && (isReactive(props.params) || isRef(props.params))) {
     if (watchParams.value) {
-      watch(() => isRef(options.params) ? options.params?.value : options.params, (val) => {
-        query(val)
+      watch(() => isRef(props.params) ? props.params?.value : props.params, (newParams) => {
+        run(newParams as any)
       }, { deep: true })
     }
   }
@@ -167,10 +155,10 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
   })
 
   onActivated(() => {
-    if (!manual.value && options?.pageActivated) run()
+    if (!manual.value && props?.pageActivated) run()
   })
 
-  if (options.cancel?.level) {
+  if (props.cancel?.level) {
     onBeforeRouteLeave(() => {
       requestCancel?.cancel?.()
     })
@@ -182,11 +170,9 @@ function useRequest<T, P = Record<string, any>, R = undefined>(
     data,
     loading,
     init,
-    params: computed(() => state.params),
-    result: computed(() => state.result),
+    defaultParams,
+    params: computed(() => cloneDeep(state)),
     cancel: requestCancel.cancel,
     cancelAll: requestCancel.cancelAll
   }
 }
-
-export default useRequest

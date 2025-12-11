@@ -1,4 +1,4 @@
-import type { MockTableRecord, SearchConfig } from '../typings'
+import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
 
 export const columns: ProColumnsType<TableRecord<MockTableRecord>, SearchConfig> = [
   {

@@ -119,7 +119,6 @@ export const generator = (routerMap: SystemMenuItem[], parent?: AppRouteModule) 
       meta: {
         order: item.order,
         title: item.title || '',
-        menuType: item.menuType as any,
         tabState: item.tabState,
         // iconPrefix 存在使用 iconfont图标，否则使用 GIcon 渲染svg图标
         icon: item.icon ? item.iconPrefix ? item.icon : h(GIcon, { type: item.icon }) : null,
@@ -152,7 +151,6 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
   const meta: SystemMenuItem = menuItem.meta as SystemMenuItem ?? menuItem
   const {
     title = '',
-    menuType,
     icon,
     menuSelectKey,
     iconPrefix = '',
@@ -181,7 +179,6 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     title: title || menuItem.name,
     order: isNumber(order) ? order : sort || 0,
     keepAlive,
-    menuType,
     iconPrefix,
     hidden,
     hideInMenu,

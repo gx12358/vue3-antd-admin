@@ -1,30 +1,23 @@
 <script setup lang="ts">
+import type { FormState } from './typings'
+import type { FomeType } from '@/services/demo/form'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { forInObject, handleEmptyField } from '@gx-design-vue/pro-utils'
-import { useRequest } from '@/hooks/core'
-import { getStepForm } from '@/services/form-center'
-
-interface FormState {
-  payAccount: string;
-  receiverAccount: string;
-  receiverName: string;
-  amount: string;
-  receiverMode: string;
-  password: string;
-}
+import { useRequest } from '@gx/hooks'
+import { message } from 'ant-design-vue'
+import { reactive } from 'vue'
+import { createForm, getForm } from '@/services/demo'
 
 const steps = [ '填写转账信息', '确认转账信息', '完成' ]
-
-const { user } = useStore()
 
 const current = ref(0)
 
 const formState = reactive<FormState>({
-  payAccount: '',
+  payAccount: undefined,
   receiverAccount: '',
   receiverName: '',
   amount: '',
-  receiverMode: '',
+  receiverMode: undefined,
   password: ''
 })
 
@@ -49,23 +42,20 @@ const { validate, validateInfos, resetFields } = useProForm<FormState>(formState
             return Promise.reject('需要支付密码才能进行支付！')
           }
         }
-        
+
         return Promise.resolve()
       }
     }
   ]
 })
 
-const { loading } = useRequest<FormState, { userId?: number; }>(getStepForm, {
+const { loading } = useRequest<FormState, { type: FomeType; }>(getForm, {
   params: {
-    userId: user.userInfo.userId
+    type: 'step'
   },
   onSuccess: (data) => {
     forInObject(formState, (key) => {
       switch (key) {
-        case 'payAccount':
-          formState[key] = data[key] || ''
-          break
         default:
           formState[key] = handleEmptyField(data[key], '').value
           break
@@ -74,10 +64,24 @@ const { loading } = useRequest<FormState, { userId?: number; }>(getStepForm, {
   }
 })
 
-const handleNext = () => {
-  validate().then(() => {
-    current.value += 1
-  }).catch(() => {})
+const handleNext = async () => {
+  try {
+    await validate()
+    if (current.value === 1) {
+      loading.value = true
+      await createForm(toRaw(formState))
+
+      message.success('操作成功')
+      setTimeout(() => {
+        loading.value = false
+        current.value += 1
+      }, 200)
+    } else {
+      current.value += 1
+    }
+  } catch {
+    loading.value = false
+  }
 }
 
 const onFinish = () => {
@@ -106,7 +110,7 @@ const onFinish = () => {
                 <a-form-item label="付款账户" v-bind="validateInfos.payAccount">
                   <a-select
                     v-model:value="formState.payAccount"
-                    style="width: 328px"
+                    class="w-full"
                     :options="[
                       {
                         value: 'ant-design@alipay.com',
@@ -124,7 +128,7 @@ const onFinish = () => {
                   <a-form-item v-bind="validateInfos.receiverMode">
                     <a-select
                       v-model:value="formState.receiverMode"
-                      style="width: 100px"
+                      style="width: 140px"
                       :options="[
                         {
                           value: 'alipay',
@@ -139,7 +143,7 @@ const onFinish = () => {
                       allow-clear
                     />
                   </a-form-item>
-                  <a-form-item v-bind="validateInfos.receiverAccount">
+                  <a-form-item v-bind="validateInfos.receiverAccount" class="flex-1">
                     <a-input
                       v-model:value="formState.receiverAccount"
                       placeholder="请输入收款人账户"
@@ -150,7 +154,7 @@ const onFinish = () => {
                 <a-form-item label="收款人姓名" v-bind="validateInfos.receiverName">
                   <a-input
                     v-model:value="formState.receiverName"
-                    style="width: 328px"
+                    class="w-full"
                     placeholder="请输入收款人姓名"
                     allow-clear
                   />
@@ -158,7 +162,7 @@ const onFinish = () => {
                 <a-form-item label="转账金额" v-bind="validateInfos.amount">
                   <a-input-number
                     v-model:value="formState.amount"
-                    style="width: 328px"
+                    class="w-full"
                     placeholder="请输入金额"
                   />
                 </a-form-item>
@@ -195,7 +199,7 @@ const onFinish = () => {
                   <a-form-item label="支付密码" v-bind="validateInfos.password">
                     <a-input-password
                       v-model:value="formState.password"
-                      style="width: 328px"
+                      class="w-full"
                       placeholder="请输入支付密码"
                     />
                   </a-form-item>
