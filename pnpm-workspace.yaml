@@ -24,12 +24,11 @@ catalog:
   "@gx-design-vue/icon": ^0.0.1
   "@gx-design-vue/image": ^0.2.0-beta.32
   "@gx-design-vue/pro-app": ^0.1.0-beta.35
-  "@gx-design-vue/pro-card": ^0.2.0-beta.40
   "@gx-design-vue/pro-hooks": ^0.2.0-beta.61
-  "@gx-design-vue/pro-layout": ^0.1.0-beta.181
-  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.32
+  "@gx-design-vue/pro-layout": ^0.1.0-beta.183
+  "@gx-design-vue/pro-layout-components": ^0.1.0-beta.33
   "@gx-design-vue/pro-modal": ^0.2.0-beta.40
-  "@gx-design-vue/pro-provider": ^0.1.0-beta.140
+  "@gx-design-vue/pro-provider": ^0.1.0-beta.141
   "@gx-design-vue/pro-table": ^0.2.0-beta.143
   "@gx-design-vue/pro-utils": ^0.2.0-beta.87
   "@gx-design-vue/pro-watermark": ^0.2.0-beta.16

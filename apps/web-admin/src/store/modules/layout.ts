@@ -42,7 +42,13 @@ export const useStoreLayout = defineStore('layout', () => {
   const [ state, setState ] = useReactiveState<LayoutState>({
     config: {
       logo: new URL('/img/logo.png', import.meta.url).href,
-      waterMark: waterMark.use ? { content: waterMark.content } : false,
+      waterMarkProps: waterMark.use
+        ? {
+          width: 120,
+          height: 80,
+          offset: [ 80, 100 ]
+        }
+        : false,
       cssVar: storeTheme.cssVar,
       token: storeTheme.token,
       settings: layoutConfig

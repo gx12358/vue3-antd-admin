@@ -36,6 +36,16 @@ watch([
   }
 }, { immediate: true })
 
+watch(() => user.userInfo.nickname, (name) => {
+  layout.setState({
+    config: {
+      waterMarkProps: {
+        content: name
+      }
+    }
+  })
+}, { immediate: true })
+
 function onRightClick(type: keyof RightContentActions) {
   console.log(type)
   if (type === 'themeEditor') {

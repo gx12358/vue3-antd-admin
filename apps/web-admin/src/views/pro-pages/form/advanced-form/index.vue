@@ -3,7 +3,6 @@ import type { FormState } from './typings'
 import type { FomeType } from '@/services/demo/form'
 import { app } from '@gx-config'
 import { handleOffsetTop } from '@gx-core/shared/utils'
-import { GProCard } from '@gx-design-vue/pro-card'
 import { useProConfigContext, useProForm } from '@gx-design-vue/pro-provider'
 import { forInObject, handleEmptyField, scrollTo } from '@gx-design-vue/pro-utils'
 import { useRequest } from '@gx/hooks'
@@ -182,7 +181,7 @@ const resetForm = () => {
   <g-pro-page-container :use-page-card="false" :loading="loading">
     <a-form layout="vertical">
       <div class="flex flex-col gap-24px">
-        <GProCard title="仓库管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
+        <a-card title="仓库管理" class="card" :body-style="{ width: '100%', display: 'block' }">
           <a-row :gutter="16">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :label="fieldLabels.name" v-bind="validateInfos.name">
@@ -266,7 +265,7 @@ const resetForm = () => {
               </a-form-item>
             </a-col>
           </a-row>
-        </GProCard>
+        </a-card>
         <GProCard title="任务管理" header-bordered class="card" :body-style="{ width: '100%', display: 'block' }">
           <a-row :gutter="16">
             <a-col :lg="6" :md="12" :sm="24">
