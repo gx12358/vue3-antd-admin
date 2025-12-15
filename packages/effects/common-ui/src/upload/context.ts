@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import type { MaterialListItem } from './typings'
-import { useContext } from '@gx-design-vue/pro-provider'
+import { useContext } from '@gx-design-vue/context'
 
 export interface UploadContextProps {
   list: Ref<MaterialListItem[]>;

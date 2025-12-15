@@ -38,7 +38,7 @@ export function useProTable<T extends object = RecordType, R extends object = Re
 export function useProPageTable<T extends object = RecordType, R extends object = RecordType>(
   tableRef: Ref<ProTableRef<T> | undefined>,
   options: {
-    request: any;
+    request: (params: SystemPageState<R>) => Promise<PageResult<T>>;
     state?: MaybeRef<BaseTableState<T, R>>;
     onBefore?: (props: RequestConfig<R>) => Promise<R> | R;
     onSuccess?: (result: PageResult<T>, props: RequestConfig<R>) => void;
@@ -74,9 +74,13 @@ export function useProPageTable<T extends object = RecordType, R extends object 
       request: async (props) => {
         const newParams = await options.onBefore?.(props)
         const newProps = deepMerge(props, {
-          params: newParams || {}
+          params: newParams || props.params
         })
-        const { list = [], total = 0 }: PageResult<T> = await options.request(newProps.params)
+        const { list = [], total = 0 }: PageResult<T> = await options.request({
+          ...(newParams || {}),
+          pageNo: newProps.params.current,
+          pageSize: newProps.params.pageSize,
+        } as SystemPageState<R>)
         options.onSuccess && options.onSuccess({ list, total }, newProps)
         return {
           data: list,

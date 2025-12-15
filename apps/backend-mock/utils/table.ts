@@ -77,7 +77,7 @@ function generateMockDataList(count: number) {
       percent: faker.number.int({ min: 1, max: 100 }),
       status1: faker.helpers.arrayElement([0, 1, 2, 3]),
       type: ['订购关系生效', '财务复审', '部门初审', '提交订单', '创建订单'][i % 5],
-      status: ['processing', 'error', 'success'][i % 3],
+      status: ['active', 'exception', 'success', 'normal'][i % 4],
       department: faker.company.name(),
       img: faker.image.url(),
       href: 'https://ant.design',

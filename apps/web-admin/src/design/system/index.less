@@ -1,3 +1,5 @@
+@import "./table";
+
 #@{gx-prefix-pro}-admin {
   height: 100%;
 }
@@ -48,11 +50,11 @@
   height: 100%;
   background: #fafafa;
   color: #909399;
-  
+
   .iconfont {
     font-size: 24px;
   }
-  
+
   .anticon {
     font-size: 24px;
   }
@@ -61,7 +63,7 @@
 .@{gx-prefix}-admin-a {
   transition: color 0.3s;
   cursor: pointer;
-  
+
   &:hover {
     --at-apply: text-primary;
   }
@@ -72,10 +74,10 @@
   background: #fff;
   background-clip: padding-box;
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),0 3px 6px -4px rgba(0, 0, 0, 0.12),0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  
+
   .@{gx-prefix}-actions-menu-item {
     padding: 5px 12px;
-    
+
     &:hover {
       background-color: rgba(0, 0, 0, 0.04);
     }
@@ -91,10 +93,10 @@
   line-height: 1.5714285714285714;
   cursor: pointer;
   transition: all 0.2s;
-  
+
   &.danger {
     color: var(--gx-color-error);
-    
+
     &:hover {
       color: var(--gx-color-error-hover);
     }

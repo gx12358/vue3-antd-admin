@@ -1,26 +1,26 @@
 .listContent {
   --at-apply: flex flex-wrap items-center;
-  
+
   .listContentItem {
     display: inline-block;
     margin-left: 48px;
     color: rgba(0, 0, 0, 0.45);
-    
+
     &:nth-child(2) {
       margin-right: 48px;
     }
-    
+
     > span {
       line-height: 20px;
     }
-    
+
     > p {
       margin-top: 4px;
       margin-bottom: 0;
       line-height: 22px;
     }
   }
-  
+
   .listContentProgress {
     &:deep(.ant-progress) {
       --at-apply: w-180px;
@@ -31,7 +31,7 @@
 @media screen and (max-width: 640px) {
   &:deep(.gx-pro-card-header) {
     flex-wrap: wrap;
-    
+
     .gx-pro-card-extra {
       --at-apply: w-full mt-16px;
     }
@@ -41,52 +41,30 @@
 @media screen and (max-width: 1200px) {
   &:deep(.ant-list-item) {
     --at-apply: flex flex-col gap-10px;
-    
+
     .ant-list-item-meta {
       --at-apply: w-full;
     }
-    
+
     .listContent {
       --at-apply: flex flex-wrap w-full pl-64px;
-      
+
       .listContentItem {
         width: 50%;
         margin: 0;
       }
-      
+
       .listContentProgress {
         --at-apply: w-full flex justify-end mt-10px;
-        
+
         .ant-progress {
           --at-apply: w-full;
         }
       }
     }
-    
+
     .ant-list-item-action {
       --at-apply: flex-main m-0 w-full flex justify-end;
     }
   }
-}
-
-.footer-bar {
-  position: fixed;
-  inset-inline-end: 0;
-  bottom: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  padding-inline: 24px;
-  padding-block: 0;
-  box-sizing: border-box;
-  height: 49px;
-  line-height: 49px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-block-start: 1px solid rgba(5, 5, 5, 0.06);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  color: rgba(0, 0, 0, 0.88);
-  transition: all 0.2s ease 0s;
 }

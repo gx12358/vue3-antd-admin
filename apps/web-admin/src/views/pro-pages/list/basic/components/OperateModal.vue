@@ -28,7 +28,7 @@ const formState = reactive<FormState>({
   title: '',
   createTime: null,
   createTimeDay: null,
-  owner: '',
+  owner: undefined,
   description: ''
 })
 

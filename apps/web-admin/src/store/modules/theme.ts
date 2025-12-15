@@ -29,16 +29,7 @@ export const useStoreTheme = defineStore('theme', () => {
   const token = ref(getToken())
 
   // root css var
-  const cssVar = ref<TokenCssVar>([
-    'lineHeightLG',
-    'colorTextHeading',
-    'colorFillAlter',
-    'colorTextSecondary',
-    'borderRadius',
-    'borderRadiusLG',
-    'paddingLG',
-    'colorBorderSecondary',
-  ])
+  const cssVar = ref<TokenCssVar>([])
 
   function toggle(el?: HTMLElement) {
     if (el) {

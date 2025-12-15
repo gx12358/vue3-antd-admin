@@ -1,5 +1,6 @@
 import type { BasicLayoutProps, MenuDataItem, Meta } from '@gx-design-vue/pro-layout'
 import type { AppRouteModule as GProAppRouteModule } from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
+import type { ExtendIfDefined } from '@gx-design-vue/pro-utils'
 import type { UserInfo as BasicUserInfo } from '@gx/types'
 import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
 
@@ -9,6 +10,11 @@ declare global {
     colorWeak?: boolean;
     progress?: boolean;
   }
+
+  type SystemPageState<R = undefined> = ExtendIfDefined<{
+    pageNo: number;
+    pageSize: number;
+  }, R>
 
   // 系统数据字典 Key 类型
   type DictType = 'common_status' | 'sys_common_category' | 'system_user_sex'
@@ -104,9 +110,9 @@ declare global {
     createTime?: string | null;
   }
 
-  type TableRecord<T = undefined> = T extends undefined ? DefaultTableRecord : DefaultTableRecord & T
+  type TableRecord<T = undefined> = ExtendIfDefined<DefaultTableRecord, T>
 
-  type UpdateTableRecord<T = undefined> = T extends undefined ? Partial<DefaultTableRecord> : Partial<DefaultTableRecord> & T
+  type UpdateTableRecord<T = undefined> = ExtendIfDefined<Partial<DefaultTableRecord>, T>
 
   // 扩展 ant-design-vue DataNode 类型
   interface SystemDataNode<Key = number> extends Omit<DataNode, 'children'> {

@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import type { Color, ColorPickerProps } from '@gx-design-vue/color-picker'
-import type { CSSProperties } from 'vue'
-import { copyToClipboard } from '@gx-core/shared/utils'
 import { GColorPicker, generate, presetPalettes } from '@gx-design-vue/color-picker'
-import { GProCard } from '@gx-design-vue/pro-card'
-import { useMediaQuery } from '@gx-design-vue/pro-hooks'
 import { GPorWaterMark } from '@gx-design-vue/pro-watermark'
-import { message } from 'ant-design-vue'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 
 type Presets = Required<ColorPickerProps>['presets'][number]
 
@@ -27,32 +22,20 @@ const presets = genPresets({
   '黄色': generate('#F6BD16'),
 })
 
-const colSize = useMediaQuery()
-
-const isMobile = computed(() => colSize.value === 'sm' || colSize.value === 'xs')
-
-const code = ref(`<GPorWaterMark
-  :rotate="-2"
-  content="示例水印"
-  fontColor="#064417"
-  :fontSize="15"
-  :zIndex="18"
->
-  <div>xxx</div>
-</GPorWaterMark>`)
-
 const formState = reactive({
   content: '示例水印',
-  fontColor: 'rgba(0,0,0,.15)',
+  fontColor: '#FF9D4E',
   fontSize: 16,
   zIndex: 10,
   rotate: -22
 })
 
-function copy() {
-  copyToClipboard(code.value)
-  message.success('复制成功')
-}
+const font = computed(() => {
+  return {
+    color: typeof formState.fontColor === 'string' ? formState.fontColor : (formState.fontColor as Color).toCssString(),
+    fontSize: formState.fontSize,
+  }
+})
 </script>
 
 <template>
@@ -67,107 +50,80 @@ function copy() {
         这里给出一些通用配置项。如需进一步配置请联系我们。
       </a-typography>
     </a-typography>
-    <div class="water-mark">
-      <div style="padding: 40px 24px">
-        <GProCard
-          bordered
-          header-bordered
-          :class="$style['gx-pro-card-contain-card']"
-          title="水印自定义配置器"
-          :body-style="{ display: 'flex', padding: 0, flexWrap: isMobile ? 'wrap' : '' } as CSSProperties"
-        >
-          <div :style="{ flexShrink: 0, width: isMobile ? '100%' : '70%', borderRight: '1px solid #f0f0f0' }">
-            <GProCard :bordered="false">
-              <GPorWaterMark
-                :content="formState.content"
-                :font-color="typeof formState.fontColor === 'string' ? formState.fontColor : (formState.fontColor as Color).toCssString()"
-                :font-size="formState.fontSize"
-                :z-index="formState.zIndex"
-                :rotate="formState.rotate"
-              >
-                <div :class="$style['customize-set']">
-                  <p>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam aliquid
-                    perferendis, adipisci dolorum officia odio natus facere cumque iusto libero
-                    repellendus praesentium ipsa cupiditate iure autem eos repudiandae delectus totam?
-                  </p>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo praesentium, aperiam
-                    numquam voluptatibus asperiores odio? Doloribus saepe, eligendi facere inventore
-                    culpa, exercitationem explicabo earum laborum deleniti reiciendis deserunt
-                    accusantium ullam.
-                  </p>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia voluptas numquam
-                    impedit architecto facilis aliquam at assumenda, nostrum explicabo accusantium
-                    ipsam error provident voluptate molestias magnam quisquam excepturi illum sit!
-                  </p>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, accusantium quo
-                    corporis fugit possimus quaerat ad consequatur veniam voluptatum ut cumque illo
-                    beatae. Magni assumenda eligendi itaque eum voluptate non!
-                  </p>
-                </div>
-                <h4>
-                  下面是一张zIndex 为 10 的 position 为 relative 图片，
-                  <br>
-                  如果要在图片中展示水印尝试调大右侧的 zIndex 滑块试试。
-                </h4>
-                <img
-                  src="/src/assets/images/public/watermark.svg"
-                  alt="示例图片"
-                  :style="{ zIndex: 10, maxWidth: '100%', position: 'relative' }"
-                >
-              </GPorWaterMark>
-            </GProCard>
-          </div>
-          <div style="width: 100%">
-            <GProCard :bordered="false" title="配置面板" :head-style="{ borderBottom: 0 } as CSSProperties">
-              <a-form layout="vertical" :model="formState">
-                <a-form-item label="水印文字">
-                  <a-input v-model:value="formState.content" placeholder="Basic usage" />
-                </a-form-item>
-                <a-form-item label="字体颜色">
-                  <GColorPicker
-                    v-model:value="formState.fontColor"
-                    :presets="presets"
-                  />
-                </a-form-item>
-                <a-form-item label="字体大小">
-                  <a-slider v-model:value="formState.fontSize" :min="1" :max="100" />
-                </a-form-item>
-                <a-form-item label="zIndex">
-                  <a-slider v-model:value="formState.zIndex" :min="1" :max="100" />
-                </a-form-item>
-                <a-form-item label="旋转角度">
-                  <a-slider v-model:value="formState.rotate" :min="-90" :max="90" />
-                </a-form-item>
-              </a-form>
-              <a-divider />
-            </GProCard>
-            <a-typography-paragraph style="margin: 0 24px 0 24px" class="relative">
-              <pre>{{ code }}</pre>
-              <div class="absolute right-8px top-8px text-primary">
-                <copy-outlined @click="copy" />
+    <div class="gx-card">
+      <div class="gx-card-body">
+        <div class="flex gap-base">
+          <div>
+            <GPorWaterMark
+              :content="formState.content"
+              :font="font"
+              :z-index="formState.zIndex"
+              :rotate="formState.rotate"
+            >
+              <div :class="$style['customize-set']">
+                <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam aliquid
+                  perferendis, adipisci dolorum officia odio natus facere cumque iusto libero
+                  repellendus praesentium ipsa cupiditate iure autem eos repudiandae delectus totam?
+                </p>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo praesentium, aperiam
+                  numquam voluptatibus asperiores odio? Doloribus saepe, eligendi facere inventore
+                  culpa, exercitationem explicabo earum laborum deleniti reiciendis deserunt
+                  accusantium ullam.
+                </p>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia voluptas numquam
+                  impedit architecto facilis aliquam at assumenda, nostrum explicabo accusantium
+                  ipsam error provident voluptate molestias magnam quisquam excepturi illum sit!
+                </p>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, accusantium quo
+                  corporis fugit possimus quaerat ad consequatur veniam voluptatum ut cumque illo
+                  beatae. Magni assumenda eligendi itaque eum voluptate non!
+                </p>
               </div>
-            </a-typography-paragraph>
+              <h4>
+                下面是一张zIndex 为 10 的 position 为 relative 图片，
+                <br>
+                如果要在图片中展示水印尝试调大右侧的 zIndex 滑块试试。
+              </h4>
+              <img
+                src="/src/assets/images/public/watermark.png"
+                alt="示例图片"
+                :style="{ zIndex: 10, maxWidth: '100%', position: 'relative' }"
+              >
+            </GPorWaterMark>
           </div>
-        </GProCard>
+          <div class="p-l-sm bd-l-split">
+            <a-form class="w-280px" layout="vertical" :model="formState">
+              <a-form-item label="水印文字">
+                <a-input v-model:value="formState.content" placeholder="Basic usage" />
+              </a-form-item>
+              <a-form-item label="字体颜色">
+                <GColorPicker
+                  v-model:value="formState.fontColor"
+                  :presets="presets"
+                />
+              </a-form-item>
+              <a-form-item label="字体大小">
+                <a-slider v-model:value="formState.fontSize" :min="1" :max="100" />
+              </a-form-item>
+              <a-form-item label="zIndex">
+                <a-slider v-model:value="formState.zIndex" :min="1" :max="100" />
+              </a-form-item>
+              <a-form-item label="旋转角度">
+                <a-slider v-model:value="formState.rotate" :min="-90" :max="90" />
+              </a-form-item>
+            </a-form>
+          </div>
+        </div>
       </div>
     </div>
   </g-pro-page-container>
 </template>
 
 <style lang="less" module>
-.water-mark {
-  position: relative;
-  z-index: 90;
-  margin-top: 15px;
-  background-color: rgb(240, 242, 245);
-  border: 1px solid #ebedf1;
-  border-radius: 1px;
-}
-
 .customize-set {
   p {
     margin-top: 0;

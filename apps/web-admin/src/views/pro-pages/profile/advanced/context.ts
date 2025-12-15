@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue'
-import { useContext } from '@gx-design-vue/pro-provider'
+import { useContext } from '@gx-design-vue/context'
 
 export interface AdvancedContextProps {
   isMobile: ComputedRef<boolean>;

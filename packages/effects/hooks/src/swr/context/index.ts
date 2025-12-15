@@ -1,6 +1,6 @@
 import type { PropType } from 'vue'
 import type { IConfig } from '../utils'
-import { useContext } from '@gx-design-vue/pro-provider'
+import { useContext } from '@gx-design-vue/context'
 import { defineComponent } from 'vue'
 
 export const { provideContext: createSwrConfig, useInjectContext: useSwrConfig } = useContext<IConfig>('swr-config', {})

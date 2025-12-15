@@ -1,4 +1,4 @@
-import type { SearchState } from '../typings'
+import type { SearchState } from '../typing'
 import { reactive } from 'vue'
 import { useSearchListContext } from '../context'
 

@@ -40,7 +40,7 @@ const [
     state: {
       polling: 2000,
       options: true,
-      titleTip: true,
+      headerTitleTip: true,
       showIndex: true,
       autoScroll: true,
       neverScroll: false,
@@ -359,7 +359,7 @@ function changeTableCard(val: boolean) {
       <template #headerTitle>
         <div>高级列表</div>
       </template>
-      <template #toolBarBtn>
+      <template #actions>
         <a-button key="button" type="primary" @click="operationRef?.open()">
           新建
         </a-button>
@@ -397,7 +397,7 @@ function changeTableCard(val: boolean) {
           </a-button>
         </a-dropdown>
       </template>
-      <template #search>
+      <template #form>
         <a-input-number
           v-model:value="tableState.params.age"
           allow-clear

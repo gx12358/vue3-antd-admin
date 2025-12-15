@@ -15,9 +15,9 @@ export default eventHandler(async (event) => {
 
   await sleep(500)
 
-  const { page, pageSize } = getQuery(event)
+  const { pageNo, pageSize } = getQuery(event)
   // 规范化分页参数，处理 string[]
-  const pageRaw = Array.isArray(page) ? page[0] : page
+  const pageRaw = Array.isArray(pageNo) ? pageNo[0] : pageNo
   const pageSizeRaw = Array.isArray(pageSize) ? pageSize[0] : pageSize
   const pageNumber = Math.max(
     1,

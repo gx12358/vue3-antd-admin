@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { AnalysisOverviewItem, WorkbenchGroupItem, WorkbenchProjectItem, WorkbenchTrendItem } from './typing'
 import { timeFix } from '@gx-core/shared/utils'
-import { GProCard } from '@gx-design-vue/pro-card'
 import { FastColor, unit, useProConfigContext } from '@gx-design-vue/pro-provider'
 import { toChinesNum } from '@gx-design-vue/pro-utils'
 import { GIconIfy } from '@gx/design'
@@ -262,7 +261,7 @@ const transition = computed(() => {
             <div class="font-500 leading-20px font-500 text-20px">
               {{ timeFix() }}，{{ user.userInfo.nickname }} ，祝你开心每一天
             </div>
-            <div class="text-foreground">
+            <div class="text-description">
               前端工程师 | （REACT，VUE，UNIAPP、TARO）平台
             </div>
           </div>
@@ -282,7 +281,7 @@ const transition = computed(() => {
     </template>
     <a-row :gutter="24">
       <a-col :xl="16" :lg="24" :md="24" :sm="24" :xs="24">
-        <GProCard
+        <a-card
           class="mb-24px"
           title="进行中的项目"
           wrap
@@ -293,7 +292,7 @@ const transition = computed(() => {
           <template #extra>
             <a>全部项目</a>
           </template>
-          <GProCard
+          <a-card-grid
             v-for="item in projectItems"
             :key="item.title"
             class="card-item"
@@ -305,18 +304,18 @@ const transition = computed(() => {
                 <GIconIfy class="size-8" :color="item.color" :icon="item.icon" />
                 <span class="gx-admin-a leading-24px">{{ item.title }}</span>
               </div>
-              <div class="text-hidden-2 leading-22px text-foreground">
+              <div class="text-hidden-2 leading-22px text-description">
                 {{ item.content }}
               </div>
               <div class="flex items-center leading-20px text-12px gap-4px">
-                <span class="text-foreground">{{ item.group }}</span>
+                <span class="text-description">{{ item.group }}</span>
                 <span class="text-quaternary">{{ dayjs(item.date).fromNow() }}</span>
               </div>
             </div>
-          </GProCard>
-        </GProCard>
-        <GProCard title="动态" header-bordered :body-style="{ paddingInline: 0 }">
-          <div v-for="(item, index) in trendItems" :key="index" class="flex py-16px gap-16px bd-b-border px-6">
+          </a-card-grid>
+        </a-card>
+        <a-card title="动态" header-bordered :body-style="{ padding: 0 }">
+          <div v-for="(item, index) in trendItems" :key="index" class="flex py-16px gap-16px bd-b-split px-6">
             <span class="size-10 flex-none rounded-full" v-html="multiavatar(item.avatar)" />
             <div class="flex flex-col gap-4px">
               <div class="mail-item-top">
@@ -326,10 +325,10 @@ const transition = computed(() => {
               <span class="text-quaternary">{{ item.date }}</span>
             </div>
           </div>
-        </GProCard>
+        </a-card>
       </a-col>
       <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
-        <GProCard class="mb-24px" title="快速开始 / 便捷导航" header-bordered>
+        <a-card class="mb-24px" title="快速开始 / 便捷导航">
           <div class="flex flex-wrap">
             <span
               v-for="(_, index) in Array.from({ length: 6 })"
@@ -342,11 +341,11 @@ const transition = computed(() => {
               添加
             </a-button>
           </div>
-        </GProCard>
-        <GProCard header-bordered class="mb-24px" title="XX 指数">
+        </a-card>
+        <a-card class="mb-24px" title="XX 指数">
           <Radar :data="radarList" />
-        </GProCard>
-        <GProCard title="团队" header-bordered>
+        </a-card>
+        <a-card title="团队" :body-style="{ paddingBlock: '12px' }">
           <a-row :gutter="10">
             <a-col v-for="(item, index) in groupList" :key="index" :span="12">
               <div class="py-12px">
@@ -357,7 +356,7 @@ const transition = computed(() => {
               </div>
             </a-col>
           </a-row>
-        </GProCard>
+        </a-card>
       </a-col>
     </a-row>
   </g-pro-page-container>

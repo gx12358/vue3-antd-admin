@@ -1,9 +1,10 @@
+import type { ExtendIfDefined } from '@gx-design-vue/pro-utils'
 import type { RequestOptions } from '@gx/request'
 import { requestClient } from '@/services/base'
 
 export type DefaultSearchConfig = Partial<Pick<MockTableRecord, 'adress' | 'age' | 'name' | 'createTime' | 'date' | 'status' | 'title'>>
 
-export type SearchConfig<T = undefined> = T extends undefined ? DefaultSearchConfig : DefaultSearchConfig & T
+export type SearchConfig<T = undefined> = ExtendIfDefined<DefaultSearchConfig, T>
 
 export interface DefaultRecord {
   name?: string;
@@ -22,17 +23,13 @@ export interface DefaultRecord {
   callNo?: number;
   adress?: string;
   date?: string;
-  status?: 'processing' | 'error' | 'success';
+  status?: 'normal' | 'active' | 'success' | 'exception';
   status1?: 0 | 1 | 2 | 3;
 }
 
-export type MockTableRecord<T = undefined> = T extends undefined
-  ? TableRecord<DefaultRecord>
-  : TableRecord<DefaultRecord> & T
+export type MockTableRecord<T = undefined> = ExtendIfDefined<TableRecord<DefaultRecord>, T>
 
-export type UpdateMockTableRecord<T = undefined> = T extends undefined
-  ? UpdateTableRecord<DefaultRecord>
-  : UpdateTableRecord<DefaultRecord> & T
+export type UpdateMockTableRecord<T = undefined> = ExtendIfDefined<UpdateTableRecord<DefaultRecord>, T>
 
 export function getList<T = any>(params, options = {} as RequestOptions) {
   return requestClient.get<T>('/demo/table/list', {

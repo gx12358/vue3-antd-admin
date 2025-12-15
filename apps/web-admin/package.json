@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
+    "@ctrl/tinycolor": "catalog:",
     "@gx-core/shared": "workspace:*",
     "@gx-design-vue/color-picker": "catalog:",
     "@gx-design-vue/context": "catalog:",

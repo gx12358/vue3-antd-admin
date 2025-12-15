@@ -1,5 +1,5 @@
 import type { ComputedRef, Ref } from 'vue'
-import { useContext } from '@gx-design-vue/pro-provider'
+import { useContext } from '@gx-design-vue/context'
 
 export interface SearchListContextProps {
   /* 附加属性 */

@@ -50,7 +50,7 @@ export const columns: ProColumnsType<MockTableRecord> = [
       ],
       placeholder: '请选择状态'
     },
-    dataIndex: 'status'
+    dataIndex: 'status1'
   },
   {
     title: '上次调度时间',

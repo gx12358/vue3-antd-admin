@@ -84,7 +84,7 @@ const handleDelete = (id) => {
             <div class="text-heading text-16px font-600 text-hidden-1">
               {{ item.title }}
             </div>
-            <div class="text-foreground text-hidden-3 leading-22px min-h-66px">
+            <div class="text-description text-hidden-3 leading-22px min-h-66px">
               {{ item.description }}
             </div>
           </div>

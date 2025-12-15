@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ListItemDataType, SearchState } from './typings'
+import type { ListItemDataType, SearchState } from './typing'
 import dayjs from 'dayjs'
 import { useScrollPageList } from '@/hooks/web'
 import { getList } from '@/services/demo'

@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue'
-import type { TagsListItem } from '../typings'
+import type { TagsListItem } from '../typing'
 import { onMountedOrActivated, useMergedState, useState } from '@gx-design-vue/pro-hooks'
 import { useWindowSize } from '@vueuse/core'
 import { CheckableTag } from 'ant-design-vue'

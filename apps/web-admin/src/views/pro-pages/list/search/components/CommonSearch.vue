@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SearchState } from '../typings'
+import type { SearchState } from '../typing'
 import { useMergedState } from '@gx-design-vue/pro-hooks'
 import { useSearchListContext } from '../context'
 import TagsSelect from './TagsSelect'

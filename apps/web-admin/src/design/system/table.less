@@ -1,0 +1,13 @@
+.gx-pro-actions {
+  --at-apply: flex items-center gap-sm;
+
+  span {
+    --at-apply: text-primary hover\:text-primary-hover cursor-pointer;
+    color: var(--gx-color-primary);
+    transition: color 0.2s ease-in-out;
+
+    &.danger {
+      --at-apply: text-error hover\:text-error-hover;
+    }
+  }
+}

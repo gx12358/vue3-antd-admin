@@ -1,13 +1,13 @@
 <script setup lang="ts" name="TableList">
 import type { MockTableRecord } from '@/services/demo/table'
-import { useMounted } from '@vueuse/core'
+import { setAlpha, useProConfigContext } from '@gx-design-vue/pro-provider'
 import { useProPageTable } from '@/hooks/web'
 import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
 import PreviewDrawer from './components/PreviewDrawer.vue'
 import { columns } from './utils/columns'
 
-const isMounted = useMounted()
+const { token } = useProConfigContext()
 
 const operate = ref()
 const preview = ref()
@@ -18,6 +18,7 @@ const [
   actions
 ] = useProPageTable<MockTableRecord>(tableRef, {
   state: {
+    options: true,
     headerTitle: '查询表格',
     columns,
     rowKey: 'id',
@@ -48,21 +49,34 @@ onActivated(() => {
 <template>
   <g-pro-page-container>
     <g-pro-table ref="tableRef" v-bind="tableState">
-      <template #headerCell="{ column }">
-        <template v-if="column.dataIndex === 'name'">
-          规则名称
-          <a-tooltip title="规则名称是唯一的 key">
-            <info-circle-outlined />
-          </a-tooltip>
-        </template>
-      </template>
-      <template #optionsExtra>
+      <template #actions>
         <a-button type="primary" @click="operate?.open('add')">
           <template #icon>
             <plus-outlined />
           </template>
           新建
         </a-button>
+      </template>
+      <template v-if="selectedKeys.length" #listToolAfter>
+        <div
+          class="px-24px py-12px rd-6px flex items-center justify-between"
+          :style="{ background: setAlpha(token.colorTextBase, 0.2) }"
+        >
+          <div class="flex gap-8px text-tertiary">
+            <span>已选择</span>
+            <span>{{ selectedKeys.length }}</span>
+            <span>项</span>
+          </div>
+          <a class="text-tertiary" @click="tableState.rowSelection && (tableState.rowSelection.selectedRowKeys = [])">取消选择</a>
+        </div>
+      </template>
+      <template #headerCell="{ column }: ProTableBodyCellProps<MockTableRecord>">
+        <template v-if="column.dataIndex === 'name'">
+          规则名称
+          <a-tooltip title="规则名称是唯一的 key">
+            <info-circle-outlined />
+          </a-tooltip>
+        </template>
       </template>
       <template #bodyCell="{ column, record }: ProTableBodyCellProps<MockTableRecord>">
         <template v-if="column.dataIndex === 'name'">
@@ -72,7 +86,7 @@ onActivated(() => {
           </template>
         </template>
         <template v-if="column.dataIndex === 'callNo'">
-          {{ record.callNo > 0 ? `${record.callNo}万` : record.callNo }}
+          {{ record.callNo && record.callNo > 0 ? `${record.callNo}万` : record.callNo }}
         </template>
         <template v-if="column.dataIndex === 'status1'">
           <a-badge v-if="record.status1 === 0" status="default" text="关闭" />
@@ -81,31 +95,22 @@ onActivated(() => {
           <a-badge v-if="record.status1 === 3" status="error" text="异常" />
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a key="config" class="mr-15px" @click="operate?.open('update', record)">配置</a>
-          <a-popconfirm title="确定要删除吗?" @confirm="actions.remove([record.id])">
-            <a key="delete" class="mr-15px">删除</a>
-          </a-popconfirm>
-          <a key="subscribeAlert" href="https://procomponents.ant.design/" target="_blank">
-            订阅警报
-          </a>
+          <div class="gx-pro-actions">
+            <span key="config" @click="operate?.open('update', record)">配置</span>
+            <a-popconfirm title="确定要删除吗?" @confirm="actions.remove([record.id])">
+              <span key="delete" class="danger">删除</span>
+            </a-popconfirm>
+            <span key="subscribeAlert" href="https://procomponents.ant.design/" target="_blank">
+              订阅警报
+            </span>
+          </div>
         </template>
       </template>
     </g-pro-table>
-    <Teleport v-if="isMounted && selectedKeys?.length" to=".gx-pro-table-list-toolbar">
-      <div class="mb-16px px-24px py-12px bg-rgba-[0-0-0-0.02] rd-6px flex items-center justify-between">
-        <div class="flex gap-8px text-rgba-[0-0-0-0.45]">
-          <span>已选择</span>
-          <span>{{ selectedKeys.length }}</span>
-          <span>项</span>
-        </div>
-        <a @click="tableState.rowSelection && (tableState.rowSelection.selectedRowKeys = [])">取消选择</a>
-      </div>
-    </Teleport>
     <OperateModal ref="operate" @ok="reload" />
     <PreviewDrawer ref="preview" @update="state => operate?.open('update', state)" />
   </g-pro-page-container>
 </template>
 
 <style lang="less" scoped>
-
 </style>

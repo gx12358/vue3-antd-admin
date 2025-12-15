@@ -10,7 +10,7 @@ import { appList } from '@/common'
 import { globalConfirm } from '@/components/layout/confirm'
 import { useStore } from '@/store'
 import { layoutConfig } from '@/store/modules/layout'
-import ProContent from './ContentView.vue'
+import ContentView from './ContentView.vue'
 
 const { theme, layout, user } = useStore()
 
@@ -90,11 +90,6 @@ const logout = (callBack?: any) => {
     <template #appsLogoComponents>
       <GAppsLogoComponents :app-list="appList" />
     </template>
-    <template v-if="layout.config.settings.layout === 'wide'" #menuHeaderRender>
-      <div class="text-center">
-        额外元素
-      </div>
-    </template>
     <template #rightContentRender>
       <GRightContent :name="user.userInfo.nickname" :avatar="user.userInfo.avatar" @click="onRightClick" @logout="logout">
         <template #actionsRender="classNames">
@@ -115,7 +110,7 @@ const logout = (callBack?: any) => {
                     {{ user.userInfo.username }}
                   </a-tag>
                 </div>
-                <span class="text-foreground text-12px">{{ user.userInfo.email }}</span>
+                <span class="text-description text-12px">{{ user.userInfo.email }}</span>
               </div>
             </div>
           </a-menu-item>
@@ -130,7 +125,7 @@ const logout = (callBack?: any) => {
         </template>
       </GRightContent>
     </template>
-    <ProContent />
+    <ContentView />
     <GProThemeEditor
       v-model:open="themeEditorOpen"
       :default-token="layout.config.token"

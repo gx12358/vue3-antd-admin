@@ -176,7 +176,7 @@ const handleSubmit = async () => {
           <div class="text-1xl text-base mt-6 font-sans lg:text-2xl">
             开箱即用的大型中后台管理系统
           </div>
-          <div class="dark:text-foreground mt-2">
+          <div class="dark:text-description mt-2">
             工程化、高性能、跨组件库的前端模版
           </div>
         </div>
@@ -185,7 +185,7 @@ const handleSubmit = async () => {
     <div class="flex-col-center bg-background-container relative px-6 py-10 lg:flex-initial lg:px-8 min-h-full w-[34%] flex-1">
       <div class="mt-6 w-full sm:mx-auto md:max-w-md">
         <div class="mb-4 sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 class="text-foreground mb-3 text-2xl font-bold leading-9 tracking-tight lg:text-3xl">
+          <h2 class="text-description mb-3 text-2xl font-bold leading-9 tracking-tight lg:text-3xl">
             欢迎回来 👋🏻
           </h2>
         </div>
@@ -237,7 +237,7 @@ const handleSubmit = async () => {
         </a-form>
         <div class="flex-center mt-4">
           <a-dropdown placement="bottom">
-            <div class="flex items-center gap-2 w-fit text-foreground cursor-pointer">
+            <div class="flex items-center gap-2 w-fit text-description cursor-pointer">
               <span>演示账号</span>
               <team-outlined />
             </div>

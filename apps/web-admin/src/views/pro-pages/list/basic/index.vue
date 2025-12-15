@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { MockTableRecord, SearchConfig } from '@/services/demo/table'
-import { GProCard } from '@gx-design-vue/pro-card'
+import type { SearchState, TableRow } from './typing'
+import dayjs from 'dayjs'
+import GInputSearch from '@/components/design/g-input-search/index.vue'
 import { useProPageTable } from '@/hooks/web'
 import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
@@ -9,22 +10,18 @@ const operate = useTemplateRef<InstanceType<typeof OperateModal>>('operate')
 const tableRef = ref()
 
 const [
-  { reload, tableState, loading },
-  actions
-] = useProPageTable<MockTableRecord, SearchConfig>(tableRef, {
+  { reload, tableState }
+] = useProPageTable<TableRow, SearchState>(tableRef, {
   state: {
+    headerTitle: '基本列表',
     params: {
-      status: 'all',
+      type: 'all',
       title: ''
-    },
-    search: {
-      manualRequest: false,
     },
     pagination: {
       pageSize: 5
     },
     columns: [],
-    showLoading: false
   },
   request: getList,
   deleteProps: {
@@ -34,34 +31,28 @@ const [
 </script>
 
 <template>
-  <g-pro-page-container :use-page-card="false" :loading="loading">
-    <GProCard>
-      <a-row>
-        <a-col :sm="8" :xs="24">
-          <div class="flex-center flex-col gap-4px relative">
-            <span class="leading-22px text-rgba-[0-0-0-0.65]">我的待办</span>
-            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">8个任务</span>
-          </div>
-        </a-col>
-        <a-col :sm="8" :xs="24">
-          <div class="flex-center flex-col gap-4px relative">
-            <span class="leading-22px text-rgba-[0-0-0-0.65]">本周任务平均处理时间</span>
-            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">32分钟</span>
-          </div>
-        </a-col>
-        <a-col :sm="8" :xs="24">
-          <div class="flex-center flex-col gap-4px relative">
-            <span class="leading-22px text-rgba-[0-0-0-0.65]">本周完成任务数</span>
-            <span class="text-24px leading-32px text-rgba-[0-0-0-0.88]">24个任务</span>
-          </div>
-        </a-col>
-      </a-row>
-    </GProCard>
-    <GProCard class="mt-24px" title="基本列表">
-      <template #extra>
-        <div class="flex gap-16px lt-sm:flex-wrap">
-          <div class="flex-shrink-0 flex lt-sm:justify-end lt-sm:w-full">
-            <a-radio-group v-model:value="tableState.params.status">
+  <g-pro-page-container :use-page-card="false">
+    <div class="gx-card">
+      <div class="gx-card-body flex">
+        <div class="flex-center flex-col gap-4px flex-1 bd-r-split">
+          <span class="leading-22px text-description">我的待办</span>
+          <span class="text-24px leading-32px">8个任务</span>
+        </div>
+        <div class="flex-center flex-col gap-4px flex-1 bd-r-split">
+          <span class="leading-22px text-description">本周任务平均处理时间</span>
+          <span class="text-24px leading-32px">32分钟</span>
+        </div>
+        <div class="flex-center flex-col gap-4px flex-1">
+          <span class="leading-22px text-description">本周完成任务数</span>
+          <span class="text-24px leading-32px">24个任务</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-24px gx-card">
+      <div class="gx-card-body">
+        <g-pro-table ref="tableRef" v-bind="tableState">
+          <template #actions>
+            <a-radio-group v-model:value="tableState.params.type">
               <a-radio-button value="all">
                 全部
               </a-radio-button>
@@ -72,57 +63,68 @@ const [
                 进行中
               </a-radio-button>
             </a-radio-group>
-          </div>
-          <a-input-search v-model:value="tableState.params.title" placeholder="请输入" allow-clear />
-        </div>
-      </template>
-      <g-pro-table ref="tableRef" v-bind="tableState">
-        <template #customRender="{ dataSource }">
-          <a-list size="large" row-key="id" :data-source="dataSource">
-            <template #renderItem="{ item }: { item: MockTableRecord }">
-              <a-list-item>
-                <template #actions>
-                  <a key="update" @click="operate?.open(item.id)">编辑</a>
-                  <a key="delete" @click="actions.remove([item.id])">删除</a>
-                </template>
-                <a-list-item-meta>
-                  <template #title>
-                    <a class="text-hidden-1">{{ item.title }}</a>
-                  </template>
-                  <template #avatar>
-                    <g-admin-image :src="item.logo" :width="48" :height="48" class="rd-4px" />
-                  </template>
-                  <template #description>
-                    <a-tooltip :title="item.description">
-                      <div class="text-hidden-1">
-                        {{ item.description }}
-                      </div>
-                    </a-tooltip>
-                  </template>
-                </a-list-item-meta>
-                <div class="listContent">
-                  <div class="listContentItem">
-                    <span>Owner</span>
-                    <p>{{ item.author }}</p>
+            <GInputSearch v-model:value="tableState.params.title" class="w-300px" placeholder="请输入" allow-clear />
+          </template>
+          <template #customRender="{ dataSource }: { dataSource: TableRow[] }">
+            <div v-for="item in dataSource" :key="item.id" class="flex items-center justify-between px-24px py-16px bd-b-split">
+              <div class="max-w-full flex-1 flex items-start gap-16px">
+                <a-avatar :src="item.logo" :size="48" shape="square" />
+                <div class="flex-1 w-0">
+                  <div class="leading-base mb-4px">
+                    <a class="gx-admin-a text-base">{{ item.title }}</a>
                   </div>
-                  <div class="listContentItem">
-                    <span>开始时间</span>
-                    <p>{{ item.createTime }}</p>
-                  </div>
-                  <div class="listContentProgress">
-                    <a-progress
-                      :stroke-width="6"
-                      :percent="item.percent"
-                      :status="item.percent < 100 ? 'active' : 'success'"
-                    />
+                  <div class="leading-base text-description">
+                    {{ item.subDescription }}
                   </div>
                 </div>
-              </a-list-item>
-            </template>
-          </a-list>
-        </template>
-      </g-pro-table>
-    </GProCard>
+              </div>
+              <div class="flex gap-40px items-center">
+                <div class="flex flex-col gap-4px text-secondary">
+                  <div class="leading-20px">
+                    Owner
+                  </div>
+                  <div class="leading-22px">
+                    {{ item.owner }}
+                  </div>
+                </div>
+                <div class="flex flex-col gap-4px text-secondary">
+                  <div class="leading-20px">
+                    开始时间
+                  </div>
+                  <div class="leading-22px">
+                    {{ dayjs(item.createTime).format('YYYY-MM-DD HH:mm') }}
+                  </div>
+                </div>
+                <a-progress
+                  :percent="item.percent"
+                  :status="item.status"
+                  :size="6"
+                  class="w-300px"
+                />
+              </div>
+              <div class="flex-auto-0 ml-48px flex items-center gap-8px">
+                <a class="gx-admin-a text-description">编辑</a>
+                <a-dropdown>
+                  <a class="gx-admin-a text-description">
+                    更多 <down-outlined />
+                  </a>
+                  <template #overlay>
+                    <a-menu>
+                      <a-menu-item key="update-1">
+                        操作一
+                      </a-menu-item>
+                      <a-menu-item key="update-2">
+                        操作二
+                      </a-menu-item>
+                    </a-menu>
+                  </template>
+                </a-dropdown>
+              </div>
+            </div>
+          </template>
+        </g-pro-table>
+      </div>
+    </div>
     <template #footer>
       <a-button @click="operate?.open()">
         <template #icon>
