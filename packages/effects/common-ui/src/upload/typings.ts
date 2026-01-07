@@ -21,3 +21,16 @@ export interface MaterialListItem {
   sizeSolt?: string;
   message?: string;
 }
+
+export interface UploadExpose {
+  onView: (row: MaterialListItem) => void;
+  onDelete: (row: MaterialListItem) => void;
+  onDownload: (row: MaterialListItem) => Promise<void>;
+  setDataValue: (list: MaterialListItem[]) => void;
+  addDataValue: (params: Partial<MaterialListItem>) => void;
+  changeDataValue: (id: MaterialListItem['id'], params: Partial<MaterialListItem>) => void;
+  deleteDataValue: (id: MaterialListItem['id']) => void;
+  changeFileDataValue: (file: File, params: Partial<MaterialListItem>) => void;
+  deleteFileDataValue: (file: File) => void;
+  batchChangeDataValue: (list: (Partial<MaterialListItem>)[]) => void;
+}

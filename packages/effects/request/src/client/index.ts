@@ -1,9 +1,18 @@
 import type { HttpResponse, RequestOptions } from '../typings'
 import { deepMerge } from '@gx-design-vue/pro-utils'
+import qs from 'qs'
 import { ContentType } from '../typings'
 import { CreateClient } from './fetch'
 
+export function getParamsSerializer(params: any) {
+  return params ? qs.stringify(params, { arrayFormat: 'repeat' }) : ''
+}
+
 class RequestClient {
+  // 是否正在刷新token
+  public isRefreshing = false
+  // 刷新token队列
+  public refreshTokenQueue: ((token: string) => void)[] = []
   public readonly baseRequest: CreateClient
   /**
    * 构造函数，用于创建Axios实例
@@ -21,6 +30,7 @@ class RequestClient {
       ignoreCancelToken: true,
       // 是否携带token
       carryToken: true,
+      paramsSerializer: getParamsSerializer
     } as Partial<RequestOptions>
     const { ...axiosConfig } = options
     const requestConfig = deepMerge(defaultConfig, axiosConfig)
@@ -72,6 +82,16 @@ class RequestClient {
     url: string,
     config?: Partial<RequestOptions>
   ): Promise<HttpResponse<T, R>> {
+    if (config?.download) {
+      config.responseReturn = 'body'
+      config.responseType = 'blob'
+    }
+    if (config?.uploader) {
+      config.headers = {
+        ...(config.headers || {}),
+        'Content-Type': ContentType.upload
+      }
+    }
     return this.baseRequest.request({ ...config, url })
   }
 }

@@ -1,5 +1,7 @@
 import type { BasicLayoutProps, MenuDataItem, Meta } from '@gx-design-vue/pro-layout'
-import type { AppRouteModule as GProAppRouteModule } from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
+import type {
+  AppRouteModule as GProAppRouteModule
+} from '@gx-design-vue/pro-layout/dist/types/RouteTypings'
 import type { ExtendIfDefined } from '@gx-design-vue/pro-utils'
 import type { UserInfo as BasicUserInfo } from '@gx/types'
 import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
@@ -16,88 +18,33 @@ declare global {
     pageSize: number;
   }, R>
 
+  type CommonStatus = 0 | 1
+
   // 系统数据字典 Key 类型
-  type DictType = 'common_status' | 'sys_common_category' | 'system_user_sex'
+  type DictType
+    = 'common_status'
+    | 'system_data_scope'
+    | 'sys_common_category'
+    | 'system_user_sex'
+    | 'system_menu_type'
+    | 'system_role_type'
 
-  type DictStatus = 'error' | 'processing'
-
-  interface SystemDictRecord {
-    id?: string | number;
-    value: string | number;
-    label: string;
-  }
+  type DictStatus = 'error' | 'processing' | 'success' | 'warning' | 'default' | 'pink' | 'red' | 'orange' | 'green' | 'cyan' | 'blue' | 'purple'
 
   // 系统数据字典 Record 类型
   interface DictRecord {
+    id: any;
+    status: 0 | 1;
+    label: string;
+    value: any;
     dictType?: DictType
-    dictValue: string | number
-    value: string | number
-    id?: number
-    dictId?: number
-    dictSort?: number
-    dictCode?: string | number
-    label: string
-    dictLabel: string
-    listClass?: string
-    createTime?: string
-    remark?: string
-    cssClass?: string
-    updateTime?: string
-    updateBy?: string
-    createBy?: string
-    dictName?: string
-    isDefault?: string
-    default?: boolean
-    status?: '0' | '1'
-  }
-
-  // 系统角色信息 类型
-  interface RoleInfo {
-    createBy?: string;
-    createTime?: string;
-    updateBy?: string;
-    updateTime?: string;
-    remark: string;
-    roleId?: number;
-    roleName: string;
-    roleKey: string;
-    roleSort: number;
-    dataScope?: string;
-    menuCheckStrictly: boolean;
-    deptCheckStrictly: boolean;
-    status: string;
-    value?: string;
-    disabled?: boolean;
-    delFlag?: string;
-    flag?: boolean;
-    menuIds: number[]; // 假设 menuIds 是数字数组
-    deptIds: number[]; // 假设 deptIds 是数字数组
-    permissions?: string[]; // 假设 permissions 是字符串数组
-    admin?: boolean;
-  }
-
-  // 系统部门信息 类型
-  interface DepartBaseInfo {
-    createBy?: string;
-    createTime?: string;
-    updateBy?: string;
-    updateTime?: string;
+    dictLabel?: string;
+    dictValue?: any;
+    sort?: number
+    colorType?: DictStatus;
+    cssClass?: string;
     remark?: string;
-    id?: number;
-    key?: number;
-    value?: number;
-    deptId?: number;
-    parentId?: number;
-    ancestors?: string;
-    deptName: string;
-    label?: number;
-    orderNum?: number;
-    leader: string;
-    phone: string;
-    email: string;
-    status: string;
-    delFlag?: string;
-    parentName?: string;
+    createTime?: number;
   }
 
   // 系统用户信息 类型
@@ -106,8 +53,10 @@ declare global {
   interface DefaultTableRecord {
     id: any;
     uuid: string;
-    updateTime?: string | null;
-    createTime?: string | null;
+    updateTime?: string | null | Date;
+    createTime?: string | null | Date;
+    creator?: string;
+    updater?: string;
   }
 
   type TableRecord<T = undefined> = ExtendIfDefined<DefaultTableRecord, T>
@@ -123,7 +72,6 @@ declare global {
 
   // 扩展 SystemDataNode 类型 为 部门树状类型
   interface DeptTreeData extends Omit<SystemDataNode, 'children'> {
-    deptType?: DepartBaseInfo['deptType'];
     children?: DeptTreeData[];
   }
 
@@ -139,7 +87,13 @@ declare global {
   }
 
   // 扩展 AppRouteModule 类型 为 系统菜单 类型
-  interface SystemMenuItem extends Omit<MenuDataItem, 'children'> {
+  interface SystemMenuItem extends Omit<MenuDataItem, 'children' | 'id'> {
+    id?: number;
+    // 1 目录 2 菜单 3 按钮
+    type?: 1 | 2 | 3
+    status?: 0 | 1;
+    permission?: string;
+    alwaysShow?: boolean;
     sort?: MenuDataItem['order']
     componentName?: MenuDataItem['name']
     children?: SystemMenuItem[]

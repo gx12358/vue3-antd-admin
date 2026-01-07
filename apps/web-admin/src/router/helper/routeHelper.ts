@@ -1,18 +1,19 @@
+import { isHttpUrl } from '@gx-core/shared/utils'
 import { getMaxFloor, isNumber } from '@gx-design-vue/pro-utils'
 import { GIcon } from '@gx/design'
 import { cloneDeep } from 'lodash-es'
+import { isLink } from '@/utils/util'
 
 /**
  * @description: default layout
  */
 export const BasicLayout = () => import('@/layout/BasicLayout.vue')
-export const IframeLayout = () => import('@/layout/IframeLayout.vue')
+export const IframsComponent = () => import('@/layout/IframeLayout.vue')
 export const EXCEPTION_COMPONENT = () => import('@/views/exception/404/index.vue')
 
 const LayoutMap = new Map<string, any>()
 
 LayoutMap.set('BasicLayout', BasicLayout)
-LayoutMap.set('IframeLayout', IframeLayout)
 
 let dynamicViewsModules: Record<string, () => Promise<Record<string, any>>>
 
@@ -118,10 +119,12 @@ export const generator = (routerMap: SystemMenuItem[], parent?: AppRouteModule) 
       redirect: item.redirect,
       meta: {
         order: item.order,
-        title: item.title || '',
+        title: item.title,
+        styles: item.styles,
         tabState: item.tabState,
-        // iconPrefix 存在使用 iconfont图标，否则使用 GIcon 渲染svg图标
-        icon: item.icon ? item.iconPrefix ? item.icon : h(GIcon, { type: item.icon }) : null,
+        classNames: item.classNames,
+        // iconPrefix 存在使用 iconfont图标，如果是链接则使用本身，否则使用 GIcon 渲染svg图标
+        icon: item.icon ? item.iconPrefix || isLink(item.icon) ? item.icon : h(GIcon, { type: item.icon }) : null,
         iconPrefix: item.iconPrefix || '',
         hidden: item.hidden,
         hideChildren: item.hidden,
@@ -152,6 +155,9 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
   const {
     title = '',
     icon,
+    styles,
+    classNames,
+    rightContent,
     menuSelectKey,
     iconPrefix = '',
     tabState, // 标签栏固定状态（标签栏路由地址是否固定（只有标签栏为显示转态才生效））0:是 1:否
@@ -163,7 +169,7 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     animateDisabled = false
   } = meta
 
-  const hasLink = menuItem.component === 'IframeLayout'
+  const hasLink = isHttpUrl(menuItem.path)
   const link = menuItem.link || (hasLink ? menuItem.path : '')
   const linkStatus = menuItem.linkStatus ?? (hasLink ? 1 : 0)
   const order = menuItem.order ?? menuItem.sort ?? sort
@@ -171,13 +177,14 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     key: menuItem.componentName || menuItem.name,
     name: menuItem.componentName || menuItem.name,
     path: menuItem.path,
-    disabled: menuItem.disabled || false,
-    redirect: menuItem.redirect === 'noRedirect' ? '' : menuItem.redirect,
-    component: [ 'Layout', 'ParentView', 'ContentView' ].includes(menuItem.component as string) ? undefined : menuItem.component,
+    disabled: menuItem.disabled ?? false,
+    redirect: menuItem.redirect,
+    component: menuItem.component,
 
     icon,
-    title: title || menuItem.name,
-    order: isNumber(order) ? order : sort || 0,
+    styles,
+    classNames,
+    rightContent,
     keepAlive,
     iconPrefix,
     hidden,
@@ -188,7 +195,9 @@ function handleMenuParams(menuItem: SystemMenuItem, sort?: number): SystemMenuIt
     animateDisabled,
     tabState,
     link,
-    linkStatus
+    linkStatus,
+    title: title || menuItem.name,
+    order: isNumber(order) ? order : sort,
   }
 }
 

@@ -128,7 +128,10 @@ export const proUploadProps = {
    */
   errorClean: Boolean as PropType<boolean>,
   // function
-  request: Function as PropType<(file: File, row: MaterialListItem) => Promise<UploadRequestResult>>,
+  request: {
+    type: [Function, Boolean] as PropType<false | ((file: File, row: MaterialListItem) => Promise<UploadRequestResult>)>,
+    default: undefined
+  },
   createFileName: Function as PropType<(row: MaterialListItem) => string>,
   download: Function as PropType<(props: { url: string; name?: string; }) => Promise<void>>,
   onWaterChange: Function as PropType<(row: MaterialListItem) => Promise<ResponseResult<any, { url: string; }>>>,

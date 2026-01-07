@@ -1,11 +1,10 @@
 import type { Fn } from '@gx/types'
-import type { ResponseResult } from '@gx/types/request'
 import type { ClientDetails, OssMapKey } from '@/store/modules/oss'
 import { checkURL } from '@gx-core/shared/utils'
-import { checkFileType, getFileSuffix, isArray } from '@gx-design-vue/pro-utils'
+import { isArray } from '@gx-design-vue/pro-utils'
 import OSS from 'ali-oss'
 import { cloneDeep } from 'lodash-es'
-import { getUploadInfo } from '@/services/system'
+import { getFilePresignedUrl } from '@/services/system'
 import { createFileName } from '@/utils/uploadFile'
 
 export interface OssUploadProps {
@@ -102,16 +101,14 @@ export function useOss() {
       if (serverFn) {
         name = await serverFn()
       } else {
-        const response: ResponseResult<{
-          videoUrl: string;
-          pictureUrl1: string;
-        }> = await getUploadInfo()
-        if (response) {
-          const url = file instanceof File ? file.name : file
-          const infos = response.data
-          name = `${checkFileType(url) === '1' ? infos?.pictureUrl1 : infos?.videoUrl}.${getFileSuffix(
-            url)}`
-        }
+        const url = file instanceof File ? file.name : file
+        const result = await getFilePresignedUrl<{
+          configId: number; // 文件配置编号
+          uploadUrl: string; // 文件上传 URL
+          url: string; // 文件 URL
+          path: string; // 文件路径
+        }>(url)
+        name = result.path
       }
     } catch {}
     return name
@@ -123,8 +120,7 @@ export function useOss() {
     file,
     serverFn
   }: OssUploadProps) {
-    if (fullName)
-      return fullName
+    if (fullName) return fullName
     const fileName = await getUploadName({
       file,
       fileName: name,

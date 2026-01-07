@@ -24,6 +24,7 @@ export function createPermissionGuard(router: Router) {
   router.beforeEach(async (to, _, next) => {
     if (loginInterception) {
       const token = userStore.token
+      const tenantId = permissionStore.tenantId
       if (routerConfig.whiteList.includes(to.path)) {
         if (token && to.path.includes('/user')) {
           next({ path: '/', replace: true })
@@ -32,7 +33,7 @@ export function createPermissionGuard(router: Router) {
         next()
         return
       }
-      if (!token) {
+      if (!token || !tenantId) {
         resetLogin(to.fullPath, next)
         return
       }

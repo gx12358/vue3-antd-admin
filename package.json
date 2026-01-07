@@ -1,9 +1,9 @@
 {
   "name": "vue-gx-monorepo",
   "type": "module",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
-  "packageManager": "pnpm@10.23.0",
+  "packageManager": "pnpm@10.26.0",
   "author": {
     "name": "gx12358",
     "email": "gx12358@gmail.com",
@@ -71,7 +71,7 @@
     "@types/node": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitejs/plugin-vue-jsx": "catalog:",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "catalog:",
     "cross-env": "catalog:",
     "husky": "catalog:",
     "lefthook": "catalog:",
@@ -85,22 +85,5 @@
     "vitest": "catalog:",
     "vue": "catalog:",
     "vue-tsc": "catalog:"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "eslint": "*"
-      }
-    },
-    "overrides": {
-      "@ast-grep/napi": "catalog:",
-      "esbuild": "0.25.3",
-      "pinia": "catalog:",
-      "vue": "catalog:"
-    },
-    "neverBuiltDependencies": [
-      "canvas",
-      "node-gyp"
-    ]
   }
 }

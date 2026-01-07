@@ -25,6 +25,7 @@ export default {
           component: () => import('@/views/pro-pages/form/basic-form/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '基础表单',
           },
         },
@@ -34,6 +35,7 @@ export default {
           component: () => import('@/views/pro-pages/form/step-form/index.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             title: '分步表单',
           },
         },
@@ -43,6 +45,7 @@ export default {
           component: () => import('@/views/pro-pages/form/advanced-form/index.vue'),
           meta: {
             order: 3,
+            inlineIndent: 18,
             title: '高级表单',
           },
         },
@@ -65,6 +68,7 @@ export default {
           component: () => import('@/views/pro-pages/list/search/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             hideChildrenInMenu: true,
             title: '搜索列表',
           },
@@ -107,6 +111,7 @@ export default {
           component: () => import('@/views/pro-pages/list/table/index.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             title: '查询表格',
           },
         },
@@ -116,6 +121,7 @@ export default {
           component: () => import('@/views/pro-pages/list/basic/index.vue'),
           meta: {
             order: 3,
+            inlineIndent: 18,
             title: '标准表格',
           },
         },
@@ -125,6 +131,7 @@ export default {
           component: () => import('@/views/pro-pages/list/card/index.vue'),
           meta: {
             order: 4,
+            inlineIndent: 18,
             title: '卡片表格',
           },
         },
@@ -145,6 +152,7 @@ export default {
           component: () => import('@/views/pro-pages/profile/basic/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '基础详情页',
           },
         },
@@ -154,6 +162,7 @@ export default {
           component: () => import('@/views/pro-pages/profile/advanced/index.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             title: '高级详情页',
           },
         },
@@ -174,6 +183,7 @@ export default {
           component: () => import('@/views/pro-pages/result/success/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '成功页',
           },
         },
@@ -183,6 +193,7 @@ export default {
           component: () => import('@/views/pro-pages/result/fail/index.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             title: '失败页',
           },
         },
@@ -203,6 +214,7 @@ export default {
           component: () => import('@/views/pro-pages/exception/403/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '403',
           },
         },
@@ -212,6 +224,7 @@ export default {
           component: () => import('@/views/pro-pages/exception/404/index.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             title: '404',
           },
         },
@@ -221,6 +234,7 @@ export default {
           component: () => import('@/views/pro-pages/exception/500/index.vue'),
           meta: {
             order: 3,
+            inlineIndent: 18,
             title: '500',
           },
         },
@@ -238,9 +252,9 @@ export default {
         {
           path: '/pro-pages/iframe/ant-design',
           name: 'IframeAntDesign',
-          component: () => import('@/layout/IframeLayout.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             linkStatus: 0,
             link: 'https://ant.design/components/overview-cn/',
             title: 'Ant DesIgn',
@@ -249,9 +263,9 @@ export default {
         {
           path: '/pro-pages/iframe/ant-design-x',
           name: 'IframeAntDesignX',
-          component: () => import('@/layout/IframeLayout.vue'),
           meta: {
             order: 2,
+            inlineIndent: 18,
             link: 'https://ant-design-x.antgroup.com/index-cn',
             linkStatus: 1,
             title: 'Ant DesIgn X',

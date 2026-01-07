@@ -10,15 +10,19 @@
     "start": "nitro dev"
   },
   "dependencies": {
+    "@alicloud/credentials": "catalog:",
     "@faker-js/faker": "catalog:",
     "@gx-design-vue/pro-utils": "catalog:",
+    "ali-oss": "catalog:",
     "dayjs": "catalog:",
+    "dotenv": "catalog:",
     "jsonwebtoken": "catalog:",
     "lodash-es": "catalog:",
     "nitropack": "catalog:"
   },
   "devDependencies": {
     "@gx/types": "workspace:*",
+    "@types/ali-oss": "catalog:",
     "@types/jsonwebtoken": "catalog:",
     "@types/lodash-es": "catalog:",
     "h3": "catalog:"

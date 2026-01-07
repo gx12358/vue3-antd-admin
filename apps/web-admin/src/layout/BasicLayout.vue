@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ProLayoutExpose } from '@gx-design-vue/pro-layout'
 import type { RightContentActions } from '@gx-design-vue/pro-layout-components'
 import type { DeepPartial, ProAliasToken } from '@gx-design-vue/pro-provider'
 import { BellOutlined } from '@ant-design/icons-vue'
@@ -18,6 +19,7 @@ const router = useRouter()
 
 const collapsed = ref(false)
 const themeEditorOpen = ref(false)
+const layoutRef = ref<ProLayoutExpose>()
 
 const { breadcrumbRouters, matchedKeys, menuData } = useLayoutMenu()
 
@@ -87,7 +89,7 @@ const logout = (callBack?: any) => {
 
 <template>
   <GProLayout
-    :ref="val => layout.proLayout = val as any"
+    ref="layoutRef"
     v-model:collapsed="collapsed"
     v-model:selected-keys="matchedKeys.selectedKeys"
     v-model:open-keys="matchedKeys.openKeys"

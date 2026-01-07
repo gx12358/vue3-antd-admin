@@ -10,22 +10,25 @@ import type {
   ProTableBodyCellProps as GProTableBodyCellProps
 } from '@gx-design-vue/pro-table'
 import type { Recordable } from '@gx/types'
+import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
 
 declare global {
-  declare type RulesState<D> = GRulesState<D>
-  declare type ProAliasToken = DeepPartial<GProAliasToken>
-  declare type ProColumnType<DataValue = any, SearchParama = Recordable> = GProColumnType<
+  type PartialFields<T, K extends keyof T = undefined> = T extends undefined ? T : Omit<T, K> & Partial<Pick<T, K>>
+  type RulesState<D> = GRulesState<D>
+  type ProAliasToken = DeepPartial<GProAliasToken>
+  type ProColumnType<DataValue = any, SearchParama = Recordable> = GProColumnType<
     DataValue,
     SearchParama
   >
-  declare type ProColumnsType<DataValue = any, SearchParama = Recordable> = GProColumnsType<
+  type ProColumnsType<DataValue = any, SearchParama = Recordable> = GProColumnsType<
     DataValue,
     SearchParama
   >
-  declare type ProTableBodyCellProps<T = Record<string, any>> = GProTableBodyCellProps<T>
-  declare type CustomRenderResult<T = Record<string, any>> = GCustomRenderResult<T>
+  type ProTableBodyCellProps<T = Record<string, any>> = GProTableBodyCellProps<T>
+  type CustomRenderResult<T = Record<string, any>> = GCustomRenderResult<T>
+  type AntDataNode = DataNode
 
-  declare type WithRequired<T, Keys extends keyof T>
+  type WithRequired<T, Keys extends keyof T>
     = Required<Pick<T, Keys>>
     & Partial<Omit<T, Keys>>
 

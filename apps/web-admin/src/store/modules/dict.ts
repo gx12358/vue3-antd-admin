@@ -9,13 +9,16 @@ import { defineStore } from 'pinia'
  */
 export interface SystemDictData {
   loading?: boolean;
-  data: SystemDictRecord[]
+  data: DictRecord[]
 }
 
 export type DictState = Record<DictType, SystemDictData>
 
 const defaultState: DictState = {
   common_status: { data: [] },
+  system_data_scope: { data: [] },
+  system_role_type: { data: [] },
+  system_menu_type: { data: [] },
   system_user_sex: { data: [] },
   sys_common_category: { data: [] },
 }

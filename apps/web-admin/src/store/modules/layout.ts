@@ -1,9 +1,9 @@
-import type { BasicLayoutProps, ProLayoutExpose } from '@gx-design-vue/pro-layout'
+import type { BasicLayoutProps } from '@gx-design-vue/pro-layout'
 import { app } from '@gx-config'
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defaultSettings } from '@gx-design-vue/pro-layout'
 import { defineStore } from 'pinia'
-import { ref, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { useStoreTheme } from './theme'
 
 const { waterMark, title } = app.system
@@ -37,8 +37,6 @@ export interface LayoutState {
 export const useStoreLayout = defineStore('layout', () => {
   const storeTheme = useStoreTheme()
 
-  const proLayout = ref<ProLayoutExpose>()
-
   const [ state, setState ] = useReactiveState<LayoutState>({
     config: {
       logo: new URL('/img/logo.png', import.meta.url).href,
@@ -49,6 +47,11 @@ export const useStoreLayout = defineStore('layout', () => {
           offset: [ 80, 100 ]
         }
         : false,
+      menu: {
+        menuProps: {
+          extraInlineIndent: 8
+        }
+      },
       cssVar: storeTheme.cssVar,
       token: storeTheme.token,
       settings: layoutConfig
@@ -67,6 +70,5 @@ export const useStoreLayout = defineStore('layout', () => {
   return {
     ...toRefs(state),
     setState,
-    proLayout
   }
 })

@@ -25,6 +25,7 @@ export default {
           component: () => import('@/views/pro-components/data-display/pro-table/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '高级表格',
           },
         }
@@ -45,6 +46,7 @@ export default {
           component: () => import('@/views/pro-components/data-entry/pro-upload/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '高级上传',
           },
         }
@@ -65,6 +67,7 @@ export default {
           component: () => import('@/views/pro-components/layout/watermark/index.vue'),
           meta: {
             order: 1,
+            inlineIndent: 18,
             title: '水印组件',
           },
         }

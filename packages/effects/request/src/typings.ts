@@ -11,6 +11,11 @@ import type {
   Method
 } from 'axios'
 
+export interface ResponseError extends Omit<AxiosError, 'config' | 'response'> {
+  response: RequestResponse
+  config: RequestOptions
+}
+
 export interface RequestResponse<T = any> extends Omit<AxiosResponse, 'data' | 'config'> {
   data: T;
   config: Omit<RequestOptions, 'headers'>;
@@ -42,7 +47,7 @@ export interface XhtInstance {
   /**
    * @description: 处理响应数据
    */
-  transformResponseHook?: (res: RequestResponse, options: Partial<RequestOptions>) => any;
+  transformResponseHook?: (response: RequestResponse, options: Partial<RequestOptions>) => any;
 
   /**
    * @description: 请求失败处理
@@ -57,22 +62,26 @@ export interface XhtInstance {
   /**
    * @description: 请求之后的拦截器
    */
-  responseInterceptors?: (res: RequestResponse) => RequestResponse;
+  responseInterceptors?: (response: RequestResponse) => RequestResponse;
 
   /**
    * @description: 请求之前的拦截器错误处理
    */
-  requestInterceptorsCatch?: (error: AxiosError) => void;
+  requestInterceptorsCatch?: (error: ResponseError) => void;
 
   /**
    * @description: 请求之后的拦截器错误处理
    */
-  responseInterceptorsCatch?: (error: AxiosError) => Promise<any>;
+  responseInterceptorsCatch?: (error: ResponseError) => Promise<any>;
 }
 
 export interface RequestOptions extends Omit<AxiosRequestConfig, 'headers' | 'method' | 'url'> {
   url: string;
   method: Method;
+  // 是否上传
+  uploader?: boolean;
+  // 是否下载
+  download?: boolean;
   headers?: Record<string, any>;
   body?: AxiosRequestConfig['data'];
   isMock?: boolean; // 开启Mock接口

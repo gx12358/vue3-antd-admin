@@ -9,7 +9,7 @@ import { useRequest } from '@gx/hooks'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { cloneDeep } from 'lodash-es'
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useProPageTable } from '@/hooks/web'
 import { createList, deleteList, getForm, getList, updateList } from '@/services/demo'
 import { columns } from './utils/columns'
@@ -24,18 +24,16 @@ interface ErrorField {
 
 const { token } = useProConfigContext()
 
-const tableRef = ref()
-
 const [
+  tableRef,
   {
     dataSource,
-    setDataValue,
+    operateTableDataRow,
     reload,
     setLoading,
     tableState
   }
 ] = useProPageTable<TableRecord<FormState>, FormState>(
-  tableRef,
   {
     state: {
       showLoading: false,
@@ -111,7 +109,7 @@ const handleCancel = (key: number) => {
 
 const handleDelete = async (key: number) => {
   if (state.editableData[key]?.isMock) {
-    setDataValue({ value: key, type: 'delete' })
+    operateTableDataRow({ value: key, type: 'delete' })
     delete state.editableData[key]
   } else {
     setLoading(true)
@@ -127,7 +125,7 @@ const handleDelete = async (key: number) => {
 
 const handelTableAdd = () => {
   const key = dataSource.value.length + 1
-  setDataValue({
+  operateTableDataRow({
     type: 'push',
     row: {
       id: key,

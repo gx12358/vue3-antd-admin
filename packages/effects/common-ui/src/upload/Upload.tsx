@@ -49,7 +49,7 @@ const GUpload = defineComponent({
   props: proUploadProps,
   inheritAttrs: false,
   slots: Object as SlotsType<{
-    default(trigger: any): void;
+    default(triggerIcon: any): void;
     fallback(props: MaterialListItem): void;
     placeholder(props: MaterialListItem): void;
     triggerIcon(): void;
@@ -57,7 +57,7 @@ const GUpload = defineComponent({
     actionsRender(props: OperationRenderProps): void;
   }>,
   emits: [ 'deleteBefore', 'errorRequest', 'change', 'changeDownloadLoading', 'openFileDialog' ],
-  setup(props, { emit, attrs, slots }) {
+  setup(props, { emit, attrs, slots, expose }) {
     const baseClassName = getPrefixCls({
       isPor: true,
       suffixCls: 'upload'
@@ -212,7 +212,7 @@ const GUpload = defineComponent({
     const uploadCoverImgHttp = async (file, uuid) => {
       if (props.request) {
         const result = await props.request(file, uuid)
-        if (result.code === 0) {
+        if (result.code === 200) {
           return result.data.previewUrl || result.data.url
         } else {
           emit('errorRequest', result)
@@ -258,7 +258,7 @@ const GUpload = defineComponent({
       const base64: string | ArrayBuffer | null = await getBase64(file)
       if (props.request) {
         const response = await props.request(file, row)
-        if (response && response.code === 0) {
+        if (response && response.code === 200) {
           handleChange({ ...response, localPreviewUrl: getBlobUrl(dataURLtoBlob(base64)) }, row.id)
         } else {
           emit('errorRequest', response)
@@ -399,10 +399,10 @@ const GUpload = defineComponent({
       }
     }
 
-    async function onDelete(record: MaterialListItem) {
-      if (record) {
-        if (props.onDeleteBefore) await props.onDeleteBefore(record)
-        deleteDataValue(record.id)
+    async function onDelete(row: MaterialListItem) {
+      if (row) {
+        if (props.onDeleteBefore) await props.onDeleteBefore(row)
+        deleteDataValue(row.id)
         emit('change', cloneDeep(unref(listUrlValue)), cloneDeep(unref(listValue)))
       }
     }
@@ -437,7 +437,7 @@ const GUpload = defineComponent({
 
       return (
         children && isFunction(children)
-          ? children(renderUploadSelect(triggerIcon || <PlusOutlined />) as any)
+          ? renderUploadSelect(children?.(triggerIcon || <PlusOutlined />))
           : (
             renderUploadSelect(
               <div
@@ -456,6 +456,19 @@ const GUpload = defineComponent({
       )
     }
 
+    expose({
+      onView,
+      onDelete,
+      onDownload,
+      setDataValue,
+      addDataValue,
+      changeDataValue,
+      deleteDataValue,
+      changeFileDataValue,
+      deleteFileDataValue,
+      batchChangeDataValue,
+    })
+
     return () => {
       const fallback = getSlot({ slots, props, key: 'fallback' })
       const placeholder = getSlot({ slots, props, key: 'placeholder' })
@@ -463,7 +476,7 @@ const GUpload = defineComponent({
       const actionsRender = getSlot({ slots, props, key: 'actionsRender' })
 
       return wrapSSR(
-        <>
+        <div class={classNames(`${baseClassName}-wrapper-container`, hashId.value)}>
           <div
             {...attrs}
             style={attrs.style as CSSProperties}
@@ -500,7 +513,7 @@ const GUpload = defineComponent({
             {...previewConfig}
             onChange={val => (previewConfig.open = val)}
           />
-        </>
+        </div>
       )
     }
   }

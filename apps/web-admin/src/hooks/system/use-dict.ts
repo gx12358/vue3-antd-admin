@@ -1,15 +1,19 @@
-import type { PageResult } from '@gx/types/request'
 import type { DictState } from '@/store/modules/dict'
 import { onMountedOrActivated } from '@gx-design-vue/pro-hooks'
-import { isArray } from '@gx-design-vue/pro-utils'
-import { getDicts } from '@/services/system'
+import { isArray, isBoolean, isNumber } from '@gx-design-vue/pro-utils'
+import { getDictDataPage } from '@/services/system/dict'
 
-function changeMapParams(data: DictRecord[]): SystemDictRecord[] {
+export const colorTypeMap: any = {
+  'primary': 'processing',
+  'danger': 'error',
+}
+
+function changeMapParams(data: DictRecord[]): DictRecord[] {
   return data.map(item => ({
-    id: item.id,
-    label: item.label || item.dictLabel,
-    value: item.value || item.dictValue,
-  }))
+    ...item,
+    label: item.label || item.dictLabel || '',
+    value: item.value || item.dictValue || '',
+  })).filter(item => item.label && item.value)
 }
 
 const pageState = {
@@ -43,7 +47,7 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
       if (enforce || !dict[types] || !dict[types]?.data?.length) {
         dict.setState({ [`${types}`]: { loading: true } })
         try {
-          const { list = [] } = await getDicts<PageResult<DictRecord>>({ ...pageState, dictType: types })
+          const { list = [] } = await getDictDataPage({ ...pageState, dictType: types })
           dict.setState({ [`${types}`]: { data: changeMapParams(list) } })
         } catch {}
         dict.setState({ [`${types}`]: { loading: false } })
@@ -57,7 +61,7 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
         if (dict[key]?.loading) return
         if (enforce || !dict[key] || !dict[key]?.data?.length) {
           dict.setState({ [`${key}`]: { loading: true } })
-          getDicts<PageResult<DictRecord>>({ ...pageState, dictType: key }).then(({ list }) => {
+          getDictDataPage({ ...pageState, dictType: key }).then(({ list }) => {
             dict.setState({ [`${key}`]: { data: changeMapParams(list || []) } })
           }).finally(() => {
             dict.setState({ [`${key}`]: { loading: false } })
@@ -67,17 +71,30 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
     }
   }
 
-  function findDict(type: DictType, value: any, key?: keyof DictRecord): SystemDictRecord | undefined {
-    return dictValue.value[type]?.data.find(item => item[key || 'value'] === value)
+  function findDict(type: DictType, value: any, key?: keyof DictRecord): DictRecord | undefined {
+    return dictValue.value[type]?.data.find((item) => {
+      const dictKey = key || 'value'
+      const numberValue = Number(item[key || 'value'])
+      return item[dictKey] === value
+        ? true
+        : isNumber(numberValue) && !Number.isNaN(numberValue) ? numberValue === value : false
+    })
   }
 
-  function findDictStatus(type: DictType, value: any, key?: keyof DictRecord, trueCode?: any): DictStatus {
+  function getDictTagStatus(type: DictType, value: any, key?: keyof DictRecord, trueCode?: any): DictStatus {
     const record = findDict(type, value, key)
+    if (!record) return 'default'
+
+    if (record.colorType) {
+      return colorTypeMap[record.colorType] || record.colorType || 'default'
+    }
     const successCode = [ 'Y', '0', 0 ]
     const isSuccess = trueCode
-      ? record?.value === trueCode
-      : successCode.includes(record?.value || '')
-    if (isSuccess) return 'processing'
+      ? record.value === trueCode
+      : isBoolean(record.value)
+        ? record.value
+        : successCode.includes(record.value || '')
+    if (isSuccess) return 'success'
     return 'error'
   }
 
@@ -90,6 +107,6 @@ export function useDict(types?: DictType | DictType[], wait?: boolean) {
     dictState: dictValue,
     getDict,
     findDict,
-    findDictStatus
+    getDictTagStatus
   }
 }

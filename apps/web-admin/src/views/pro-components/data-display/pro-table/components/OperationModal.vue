@@ -8,7 +8,6 @@ import { operationModal } from '../utils/columns'
 
 const { getDict } = useDict('common_status')
 
-const tableRef = ref()
 const visible = ref(false)
 const isFail = ref(false)
 const spinning = ref(false)
@@ -21,8 +20,9 @@ const params = reactive({
 })
 
 const [
+  tableRef,
   { tableState, updateSearchMap }
-] = useProPageTable<TableRecord<MockTableRecord>, SearchConfig>(tableRef, {
+] = useProPageTable<TableRecord<MockTableRecord>, SearchConfig>({
   state: {
     rowKey: 'id',
     options: false,

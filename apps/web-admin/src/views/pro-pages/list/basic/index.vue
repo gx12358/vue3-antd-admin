@@ -7,11 +7,11 @@ import { deleteList, getList } from '@/services/demo'
 import OperateModal from './components/OperateModal.vue'
 
 const operate = useTemplateRef<InstanceType<typeof OperateModal>>('operate')
-const tableRef = ref()
 
 const [
+  tableRef,
   { reload, tableState }
-] = useProPageTable<TableRow, SearchState>(tableRef, {
+] = useProPageTable<TableRow, SearchState>({
   state: {
     headerTitle: '基本列表',
     params: {

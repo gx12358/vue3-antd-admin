@@ -1,5 +1,7 @@
 import type { OssUploadProps } from './use-oss'
 import type { ClientDetails, OssMapKey, OssState } from '@/store/modules/oss'
+import { requestClient } from '@/services/base'
+import { getFilePresignedUrl } from '@/services/system'
 import { useOss } from './use-oss'
 
 export interface OssResponse {
@@ -49,6 +51,35 @@ export type OssUpload = (options: UploadConfig) => Promise<OssResponse>
 
 export function useUpload() {
   const { createClient, getOssUploadName } = useOss()
+
+  async function simpleUpload(props: UploadConfig) {
+    try {
+      const result = await getFilePresignedUrl<{
+        configId: number; // 文件配置编号
+        uploadUrl: string; // 文件上传 URL
+        url: string; // 文件 URL
+        path: string; // 文件路径
+      }>(props.file.name)
+      // 1.3 上传文件
+      return requestClient
+        .put(result.uploadUrl, {
+          data: props.file,
+          carryToken: false,
+          responseReturn: 'raw',
+          headers: {
+            'Content-Type': props.file.type,
+          },
+        })
+        .then(() => {
+          return {
+            code: 200,
+            url: result.url,
+            name: result.path,
+            previewUrl: result.url
+          }
+        })
+    } catch {}
+  }
 
   function quickUpload({
     name,
@@ -204,6 +235,7 @@ export function useUpload() {
 
   return {
     upload,
+    simpleUpload,
     quickUpload,
     resumeUpload
   }

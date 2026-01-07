@@ -1,4 +1,5 @@
 export * from './use-auth'
+export * from './use-dept'
 export * from './use-dict'
 export * from './use-list-upload'
 export * from './use-oss'

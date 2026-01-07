@@ -14,33 +14,39 @@ const GAdminUpload = defineComponent({
     change: (_urls: string[], _data: MaterialListItem[]) => true,
   },
   setup(props, { slots }) {
-    const { upload } = useUpload()
+    const { simpleUpload } = useUpload()
 
     const dataExtraInfo = ref<ExtraMaterialListItem[]>([])
 
-    const uploadHttps = async (file, id) => {
+    const uploadHttps = async (file, row: MaterialListItem) => {
       props.uploadBefore && await props.uploadBefore?.()
 
-      const response = await upload({
-        file,
-        progressCallback: props.progress ? (progress) => {
-          dataExtraInfo.value.push({ id, progress })
-        } : undefined
-      })
+      let response
+
+      if (props.request) {
+        response = await props.request(file, row)
+      } else {
+        response = await simpleUpload({
+          file,
+          progressCallback: props.progress ? (progress) => {
+            dataExtraInfo.value.push({ id: row.id, progress })
+          } : undefined
+        })
+      }
 
       let previewUrl = response.previewUrl
 
       if (response.code === 200) {
-        if (id) {
-          if (dataExtraInfo.value.some(item => item.id === id)) {
+        if (row.id) {
+          if (dataExtraInfo.value.some(item => item.id === row.id)) {
             dataExtraInfo.value = dataExtraInfo.value.map((item) => {
-              if (item.id === id) {
+              if (item.id === row.id) {
                 return { ...item, ossObjectName: response.name }
               }
               return item
             })
           } else {
-            dataExtraInfo.value.push({ id, ossObjectName: response.name })
+            dataExtraInfo.value.push({ id: row.id, ossObjectName: response.name })
           }
           if (props.previewPathFn) {
             previewUrl = await props.previewPathFn(response.name || '')
@@ -62,7 +68,7 @@ const GAdminUpload = defineComponent({
         <GUpload
           {...props}
           dataExtraInfo={dataExtraInfo.value}
-          request={uploadHttps}
+          request={props.request === false ? false : uploadHttps}
           v-slots={slots}
         />
       )

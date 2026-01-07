@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { AuthApi } from '@/services/user'
+import type { SystemTenantApi } from '@/services/system/tenant'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { app } from '@gx-config'
 import { cn, isDev } from '@gx-core/shared/utils'
 import { useProForm } from '@gx-design-vue/pro-provider'
 import { h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getTenantByWebsite, getTenantSimpleList } from '@/services/tenant'
+import { getTenantByWebsite, getTenantList } from '@/services/system/tenant'
 import { storage } from '@/utils/storage'
 
 defineOptions({ name: 'SocialLogin' })
@@ -54,7 +54,7 @@ const loading = ref(false)
 const autoLogin = ref(true)
 const redirect = ref('/')
 /** 获取租户列表，并默认选中 */
-const tenantList = ref<AuthApi.TenantResult[]>([]) // 租户列表
+const tenantList = ref<SystemTenantApi.TenantTableRecord[]>([]) // 租户列表
 
 const loginType = reactive({
   options: [
@@ -99,7 +99,7 @@ async function fetchTenantList() {
   try {
     // 获取租户列表、域名对应租户
     const websiteTenantPromise = getTenantByWebsite(window.location.hostname)
-    tenantList.value = await getTenantSimpleList()
+    tenantList.value = await getTenantList()
 
     // 选中租户：域名 > store 中的租户 > 首个租户
     let tenantId: undefined | number
@@ -118,6 +118,10 @@ async function fetchTenantList() {
 
     // 设置选中的租户编号
     permission.setState({ tenantId })
+    storage.setStorage({
+      key: 'tenantId',
+      value: tenantId,
+    })
 
     userForm.tenantId = tenantId
   } catch (error) {

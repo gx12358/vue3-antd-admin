@@ -1,40 +1,26 @@
 <script setup lang="ts">
-import { ThemeContext } from '@gx-design-vue/context'
-import { GProAppPage } from '@gx-design-vue/pro-layout'
-import { GProConfigProvider } from '@gx-design-vue/pro-provider'
-import { StyleGlobalContext } from '@gx/design'
-import zhCN from 'ant-design-vue/es/locale/zh_CN'
-import globalStyles from '@/design/global-style'
-import { useScrollRoot } from '@/hooks/web'
-import { useStore } from '@/store'
-
-const route = useRoute()
-const scrollRoot = useScrollRoot()
-
-const { theme, global } = useStore()
+import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <GProConfigProvider
-    :locale="zhCN"
-    :token="theme.token"
-    :css-var="theme.cssVar"
-    :dark="theme.isDark"
-    :get-popup-container="() => scrollRoot"
-  >
-    <ThemeContext v-model:theme="theme.theme">
-      <StyleGlobalContext :modules="globalStyles" />
-      <GProAppPage
-        :spinning="{
-          loading: global.pageLoading && route.fullPath === '/',
-        }"
-      >
-        <router-view />
-      </GProAppPage>
-    </ThemeContext>
-  </GProConfigProvider>
+  <div>
+    <a href="https://vite.dev" target="_blank" />
+    <a href="https://vuejs.org/" target="_blank" />
+  </div>
+  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped lang="less">
-
+<style scoped>
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vue:hover {
+  filter: drop-shadow(0 0 2em #42b883aa);
+}
 </style>

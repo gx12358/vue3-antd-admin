@@ -1,4 +1,4 @@
-import type { LimitDeepPartial } from '@gx-design-vue/pro-utils'
+import type { LimitDeepPartial, WithIfDefault } from '@gx-design-vue/pro-utils'
 import type { CancelOptions, RequestOptions } from '@gx/request'
 import type { ComputedRef, MaybeRef, Reactive, WatchSource } from 'vue'
 import { useReactiveState, useState } from '@gx-design-vue/pro-hooks'
@@ -11,14 +11,8 @@ import { onBeforeRouteLeave } from 'vue-router'
  * 使用请求的自定义 Hook
  * @template T - 返回data数据的类型
  * @template P - 请求参数的类型，默认为 Record<any, any>
- * @param {object} options - 配置选项
- * @param {object} options.params - 请求参数，类型为 SearchParams<P>
- * @param {boolean} [options.manual] - 是否需要手动触发首次请求，默认值为 false
- * @param {object} [options.cancel] - 用于控制请求取消行为的配置对象
- * @param {boolean} [options.cancel.level] - 若为 true，表示离开页面时取消上一次请求；若为 false 则不启用此功能
- * @param {boolean} [options.cancel.next] - 若为 true，表示下次请求时取消上次请求；若为 false 则不启用此功能
  */
-export function useRequest<T, P extends object = Record<any, any>>(
+export function useRequest<T, P extends object = Record<any, any>, R = undefined>(
   service: any,
   props: {
     params?: MaybeRef<P> | ComputedRef<P> | Reactive<P>;
@@ -33,7 +27,7 @@ export function useRequest<T, P extends object = Record<any, any>>(
     defaultLoading?: boolean;
     manual?: MaybeRef<boolean>;
     onBefore?: (params: P) => LimitDeepPartial<P> | undefined | void;
-    onSuccess?: (data: T) => T | unknown;
+    onSuccess?: (data: WithIfDefault<T, R>) => T | unknown;
     onError?: (e: any) => void;
     onFinal?: () => void;
     debounceInterval?: number;
@@ -99,7 +93,7 @@ export function useRequest<T, P extends object = Record<any, any>>(
 
       update(requestKey, () => {
         if (props.onSuccess) {
-          const newData = props.onSuccess(response)
+          const newData = props.onSuccess(response as any)
           if (newData) data.value = cloneDeep(newData)
         } else {
           data.value = cloneDeep(response)

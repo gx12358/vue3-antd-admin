@@ -59,7 +59,7 @@ const hideLoading = () => {
         <iframe
           ref="frameRef"
           :src="frameSrc"
-          :class="[`${prefixCls}-main`]"
+          class="w-full border-0"
           :style="frameStyle"
           @load="hideLoading"
         />

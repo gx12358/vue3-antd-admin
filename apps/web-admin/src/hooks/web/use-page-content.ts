@@ -6,17 +6,20 @@ export function usePageContent(h: number = 0) {
 
   const height = computed(() => {
     const headerHeight = (token.value?.layout?.header?.heightLayoutHeader || layoutConfig.headerHeight) ?? 48
-    const marginBlockPageContainerContent = token.value?.layout?.pageContainer?.marginBlockPageContainerContent ?? 20
-    const paddingBlockPageContainerContent = token.value?.layout?.pageContainer?.paddingBlockPageContainerContent || 0
-    const contentOutNumber = paddingBlockPageContainerContent * 2 + marginBlockPageContainerContent * 2
+    const margin = token.value?.layout?.pageContainer?.margin || ''
+    const padding = token.value?.layout?.pageContainer?.padding || ''
+    const blockMarginStr = `(${margin?.split(' ')?.[0] || unit(0)} * 2)`
+    const blockPaddingStr = `(${padding?.split(' ')?.[0] || unit(0)} * 2)`
 
     const parts = [
       headerHeight,
       layoutConfig.showTabsBar ? 40 : 0,
-      contentOutNumber,
+      blockMarginStr,
+      blockPaddingStr,
       h
     ].filter(str => str).map(item => unit(item))
 
+    console.log(`calc(100vh - ${parts.join(' - ')})`)
     return `calc(100vh - ${parts.join(' - ')})`
   })
 

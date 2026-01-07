@@ -22,6 +22,7 @@ const components = {
   user: defineAsyncComponent(() => import('./User')),
   roleBinding: defineAsyncComponent(() => import('./RoleBinding')),
   menu: defineAsyncComponent(() => import('./Menus')),
+  house: defineAsyncComponent(() => import('./House')),
   inboxUser: defineAsyncComponent(() => import('./InboxUser')),
   articleUser: defineAsyncComponent(() => import('./ArticleUser')),
   book: defineAsyncComponent(() => import('./Book')),
@@ -30,14 +31,15 @@ const components = {
   mail: defineAsyncComponent(() => import('./Mail')),
   mailbox: defineAsyncComponent(() => import('./Mailbox')),
   mailAsterisk: defineAsyncComponent(() => import('./MailAsterisk')),
-  // TODO
+  lines: defineAsyncComponent(() => import('./Lines')),
+  houseUser: defineAsyncComponent(() => import('./HouseUser')),
   eventNote: defineAsyncComponent(() => import('./EventNote')),
   location: defineAsyncComponent(() => import('./Location')),
   devices: defineAsyncComponent(() => import('./Devices')),
   terminal: defineAsyncComponent(() => import('./Terminal')),
   post: defineAsyncComponent(() => import('./Post')),
   folder: defineAsyncComponent(() => import('./Folder')),
-  calendarClock: defineAsyncComponent(() => import('./CalendarClock')),
+  calendarClock: defineAsyncComponent(() => import('./CalendarClock'))
 }
 
 export type MenuIconType = keyof typeof components

@@ -15,7 +15,6 @@ const emits = defineEmits([ 'changePageCard' ])
 
 useDict([ 'common_status' ])
 
-const tableRef = ref()
 const operationRef = useTemplateRef<InstanceType<typeof OperationModal>>('operation')
 const scrollModalRef = useTemplateRef<InstanceType<typeof ScrollModal>>('scroll-modal')
 const scrollBreakpointModalRef = useTemplateRef<InstanceType<typeof ScrollBreakpointModal >>('scroll-breakpoint-modal')
@@ -33,9 +32,9 @@ const state = reactive({
 })
 
 const [
+  tableRef,
   { tableState, reload, updateSearchMap }
 ] = useProPageTable<MockTableRecord, SearchConfig>(
-  tableRef,
   {
     state: {
       polling: 2000,

@@ -76,7 +76,7 @@ export function useUploadData(state: {
     }
   }
 
-  function setDataValue(list) {
+  function setDataValue(list: MaterialListItem[]) {
     listValue.value = cloneDeep(list)
   }
 
@@ -96,7 +96,7 @@ export function useUploadData(state: {
     })
   }
 
-  function batchChangeDataValue(list) {
+  function batchChangeDataValue(list: (Partial<MaterialListItem>)[]) {
     list.map((item) => {
       listValue.value = listValue.value.map((el) => {
         if (el.id === item.id) {
@@ -123,7 +123,7 @@ export function useUploadData(state: {
     })
   }
 
-  function deleteDataValue(id) {
+  function deleteDataValue(id: MaterialListItem['id']) {
     listValue.value = listValue.value.filter(item => item.id !== id)
   }
 

@@ -1,5 +1,6 @@
 import { useReactiveState } from '@gx-design-vue/pro-hooks'
 import { defineStore } from 'pinia'
+import { storage } from '@/utils/storage'
 
 export interface PermissionState {
   roles: string[] | undefined
@@ -18,7 +19,7 @@ export const useStorePermission = defineStore('permission', () => {
   const [ state, setState, clear ] = useReactiveState<PermissionState>({
     roles: undefined,
     auths: undefined,
-    tenantId: null,
+    tenantId: storage.getStorage({ key: 'tenantId' }),
     visitTenantId: null
   })
 

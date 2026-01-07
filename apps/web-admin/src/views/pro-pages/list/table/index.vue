@@ -11,14 +11,14 @@ const { token } = useProConfigContext()
 
 const operate = ref()
 const preview = ref()
-const tableRef = ref()
 
 const [
+  tableRef,
   { selectedKeys, reload, tableState },
   actions
-] = useProPageTable<MockTableRecord>(tableRef, {
+] = useProPageTable<MockTableRecord>({
   state: {
-    options: true,
+    fitPage: true,
     headerTitle: '查询表格',
     columns,
     rowKey: 'id',
@@ -47,7 +47,7 @@ onActivated(() => {
 </script>
 
 <template>
-  <g-pro-page-container>
+  <g-pro-page-container height="fit">
     <g-pro-table ref="tableRef" v-bind="tableState">
       <template #actions>
         <a-button type="primary" @click="operate?.open('add')">
@@ -96,13 +96,17 @@ onActivated(() => {
         </template>
         <template v-if="column.dataIndex === 'action'">
           <div class="gx-pro-actions">
-            <span key="config" @click="operate?.open('update', record)">配置</span>
+            <div key="config" class="gx-pro-actions-item" @click="operate?.open('update', record)">
+              配置
+            </div>
             <a-popconfirm title="确定要删除吗?" @confirm="actions.remove([record.id])">
-              <span key="delete" class="danger">删除</span>
+              <div key="delete" class="gx-pro-actions-item danger">
+                删除
+              </div>
             </a-popconfirm>
-            <span key="subscribeAlert" href="https://procomponents.ant.design/" target="_blank">
+            <a key="subscribeAlert" class="gx-pro-actions-item" href="https://procomponents.ant.design/" target="_blank">
               订阅警报
-            </span>
+            </a>
           </div>
         </template>
       </template>

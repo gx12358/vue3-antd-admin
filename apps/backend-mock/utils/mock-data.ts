@@ -17,11 +17,11 @@ export interface TenantInfo {
   /**
    * 创建时间
    */
-  createTime: Date;
+  createTime: any;
   /**
    * 过期时间
    */
-  expireTime: Date;
+  expireTime: any;
   /**
    * 租户编号
    */
@@ -42,6 +42,7 @@ export interface TenantInfo {
    * 绑定域名数组
    */
   websites?: string[];
+
   [property: string]: any;
 }
 
@@ -51,9 +52,13 @@ export interface TimezoneOption {
 }
 
 export interface UserDatabase extends UserInfo {
-  password: string;
-  tenantId: number;
+  mobile: string;
+  status: number;
+  createTime: number;
+  postIds: number[] | null;
   roleId: number[];
+  tenantId?: number;
+  password?: string;
 }
 
 export interface RoleDatabase {
@@ -112,45 +117,52 @@ export interface DeptDatabase {
    * 父部门 ID
    */
   parentId: number;
+
   [property: string]: any;
 }
 
 export const TENANT_LIST: TenantInfo[] = [
   {
     'id': 1,
-    'name': 'Super',
-    'contactName': null,
-    'contactMobile': null,
-    'status': null,
-    'websites': null,
-    'packageId': null,
-    'expireTime': null,
-    'accountCount': null,
-    'createTime': null
+    'name': '智耳科技',
+    'contactName': 'admin',
+    'contactMobile': '18356517524',
+    'status': 0,
+    'websites': [
+      'http://gx12358.cn',
+    ],
+    'packageId': 111,
+    'expireTime': 1651161600000,
+    'accountCount': 50,
+    'createTime': 1646660278000
   },
   {
-    'id': 121,
-    'name': 'Admin',
-    'contactName': null,
-    'contactMobile': null,
-    'status': null,
-    'websites': null,
-    'packageId': null,
-    'expireTime': null,
-    'accountCount': null,
-    'createTime': null
+    'id': 2,
+    'name': '小租户',
+    'contactName': 'admin',
+    'contactMobile': '18356517524',
+    'status': 0,
+    'websites': [
+      'http://gx12358.cn',
+    ],
+    'packageId': 111,
+    'expireTime': 1783612800000,
+    'accountCount': 30,
+    'createTime': 1645462574000
   },
   {
-    'id': 122,
-    'name': 'User',
-    'contactName': null,
-    'contactMobile': null,
-    'status': null,
-    'websites': null,
-    'packageId': null,
-    'expireTime': null,
-    'accountCount': null,
-    'createTime': null
+    'id': 3,
+    'name': '测试租户',
+    'contactName': 'admin',
+    'contactMobile': '18356517524',
+    'status': 0,
+    'websites': [
+      'http://gx12358.cn',
+    ],
+    'packageId': 0,
+    'expireTime': 4075175656000,
+    'accountCount': 9999,
+    'createTime': 1609837427000
   }
 ]
 
@@ -161,32 +173,44 @@ export const MOCK_USERS: UserDatabase[] = [
     'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 103,
     'username': 'admin',
+    'mobile': '18356517288',
     'email': 'gx12358@gmail.com',
+    'status': 0,
     'tenantId': 1,
+    'postIds': [ 1, 2 ],
     'password': 'admin123',
-    'roleId': [1, 2]
+    'roleId': [ 1, 2 ],
+    'createTime': 1609837428000
   },
   {
     'id': 143,
     'nickname': 'jack',
     'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 110,
+    'status': 0,
+    'mobile': '18356517288',
     'username': 'jack',
-    'email': 'gx12358@gmail.com',
+    'email': 'xxx@gmail.com',
     'tenantId': 121,
     'password': '123456',
-    'roleId': [109]
+    'roleId': [ 109 ],
+    'postIds': [ 1 ],
+    'createTime': 1609837428000
   },
   {
     'id': 144,
     'nickname': 'gx12358',
     'avatar': 'https://oss-zerkj.oss-cn-beijing.aliyuncs.com/20251211/my_1765430972904.png',
     'deptId': 110,
+    'status': 0,
+    'mobile': '18356517288',
     'username': 'gx12358',
-    'email': 'gx12358@gmail.com',
+    'email': 'xxx@gmail.com',
     'tenantId': 122,
     'password': '123456',
-    'roleId': [111]
+    'roleId': [ 111 ],
+    'postIds': null,
+    'createTime': 1609837428000
   }
 ]
 
@@ -216,37 +240,6 @@ export const MOCK_ROLES: Record<any, RoleDatabase[]> = {
       'dataScopeDeptIds': null,
       'createTime': 1609837428000
     },
-    {
-      'id': 3,
-      'name': 'CRM 管理员',
-      'code': 'crm_admin',
-      'sort': 2,
-      'status': 0,
-      'type': 1,
-      'remark': 'CRM 专属角色',
-      'dataScope': 1,
-      'dataScopeDeptIds': null,
-      'createTime': 1708743073000
-    },
-    {
-      'id': 155,
-      'name': '测试数据权限',
-      'code': 'test-dp',
-      'sort': 3,
-      'status': 0,
-      'type': 2,
-      'remark': '',
-      'dataScope': 2,
-      'dataScopeDeptIds': [
-        100,
-        102,
-        103,
-        104,
-        105,
-        108
-      ],
-      'createTime': 1743404286000
-    }
   ],
   121: [
     {
@@ -275,7 +268,7 @@ export const MOCK_ROLES: Record<any, RoleDatabase[]> = {
       'dataScopeDeptIds': [],
       'createTime': 1743404286000
     }
-  ],
+  ]
 }
 
 export const MOCK_DEPT: Record<any, DeptDatabase[]> = {
@@ -283,52 +276,134 @@ export const MOCK_DEPT: Record<any, DeptDatabase[]> = {
     {
       'id': 100,
       'name': '芋道源码',
-      'parentId': 0
+      'parentId': 0,
+      'sort': 0,
+      'leaderUserId': 1,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 101,
       'name': '深圳总公司',
-      'parentId': 100
+      'parentId': 100,
+      'sort': 1,
+      'leaderUserId': 1,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 103,
       'name': '研发部门',
-      'parentId': 101
+      'parentId': 101,
+      'sort': 1,
+      'leaderUserId': 1,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 108,
       'name': '市场部门',
-      'parentId': 102
+      'parentId': 102,
+      'sort': 1,
+      'leaderUserId': null,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 102,
       'name': '长沙分公司',
-      'parentId': 100
+      'parentId': 100,
+      'sort': 2,
+      'leaderUserId': null,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 104,
       'name': '市场部门',
-      'parentId': 101
+      'parentId': 101,
+      'sort': 2,
+      'leaderUserId': null,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 109,
       'name': '财务部门',
-      'parentId': 102
+      'parentId': 102,
+      'sort': 2,
+      'leaderUserId': null,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 105,
       'name': '测试部门',
-      'parentId': 101
+      'parentId': 101,
+      'sort': 3,
+      'leaderUserId': null,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
+    },
+    {
+      'id': 113,
+      'name': '支持部门',
+      'parentId': 102,
+      'sort': 3,
+      'leaderUserId': 1,
+      'phone': null,
+      'email': null,
+      'status': 1,
+      'createTime': 1701481658000
     },
     {
       'id': 106,
       'name': '财务部门',
-      'parentId': 101
+      'parentId': 101,
+      'sort': 4,
+      'leaderUserId': 1,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
     },
     {
       'id': 107,
       'name': '运维部门',
-      'parentId': 101
+      'parentId': 101,
+      'sort': 5,
+      'leaderUserId': 1,
+      'phone': '15888888888',
+      'email': 'ry@qq.com',
+      'status': 0,
+      'createTime': 1609837427000
+    },
+    {
+      'id': 112,
+      'name': '产品部门',
+      'parentId': 101,
+      'sort': 100,
+      'leaderUserId': 1,
+      'phone': null,
+      'email': null,
+      'status': 1,
+      'createTime': 1701481513000
     }
   ],
   121: [
@@ -359,115 +434,45 @@ export const MOCK_DEPT: Record<any, DeptDatabase[]> = {
   ]
 }
 
-export const MOCK_MENUS: Record<any, any> = {
+export const MOCK_POST: Record<any, any> = {
   1: [
     {
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      icon: 'setting',
-      menuId: 1,
-      path: 'system',
-      redirect: '/system/user',
-      name: '系统管理',
-      componentName: 'System',
-      menuType: 'M',
-      sort: 6,
-      parentId: 0,
-      children: [
-        {
-          component: 'system/user/index',
-          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          icon: 'user',
-          menuId: 2,
-          path: 'user',
-          name: '用户管理',
-          componentName: 'SystemUser',
-          menuType: 'C',
-          sort: 1,
-          parentId: 1,
-        },
-        {
-          component: 'system/role/index',
-          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          icon: 'roleBinding',
-          menuId: 3,
-          path: 'role',
-          name: '角色管理',
-          componentName: 'SystemRole',
-          menuType: 'C',
-          sort: 2,
-          parentId: 1,
-        },
-        {
-          component: 'system/menu/index',
-          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          icon: 'menu',
-          menuId: 4,
-          path: 'menu',
-          name: '菜单管理',
-          componentName: 'SystemMenu',
-          menuType: 'C',
-          sort: 3,
-          parentId: 1,
-        },
-      ]
-    }
-  ],
-  2: [
+      'id': 5,
+      'name': '人力资源',
+      'code': 'HR',
+      'sort': 5,
+      'status': 0,
+      'remark': '`',
+      'createTime': 1711284340000
+    },
     {
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      icon: 'setting',
-      menuId: 1,
-      path: 'system',
-      redirect: '/system/user',
-      name: '系统管理',
-      componentName: 'System',
-      menuType: 'M',
-      sort: 6,
-      parentId: 0,
-      children: [
-        {
-          component: 'system/user/index',
-          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          icon: 'user',
-          menuId: 2,
-          path: 'user',
-          name: '用户管理',
-          componentName: 'SystemUser',
-          menuType: 'C',
-          sort: 1,
-          parentId: 1,
-        },
-      ]
-    }
-  ],
-  3: [
+      'id': 4,
+      'name': '普通员工',
+      'code': 'user',
+      'sort': 4,
+      'status': 0,
+      'remark': '111222',
+      'createTime': 1609837428000
+    },
     {
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      icon: 'setting',
-      menuId: 1,
-      path: 'system',
-      redirect: '/system/user',
-      name: '系统管理',
-      componentName: 'System',
-      menuType: 'M',
-      sort: 6,
-      parentId: 0,
-      children: [
-        {
-          component: 'system/user/index',
-          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          icon: 'user',
-          menuId: 2,
-          path: 'user',
-          name: '用户管理',
-          componentName: 'SystemUser',
-          menuType: 'C',
-          sort: 1,
-          parentId: 1,
-        },
-      ]
+      'id': 2,
+      'name': '项目经理',
+      'code': 'se',
+      'sort': 2,
+      'status': 0,
+      'remark': '',
+      'createTime': 1609837428000
+    },
+    {
+      'id': 1,
+      'name': '董事长',
+      'code': 'ceo',
+      'sort': 1,
+      'status': 0,
+      'remark': '',
+      'createTime': 1609923828000
     }
-  ],
+  ]
 }
 
 /**
@@ -479,22 +484,22 @@ export const MOCK_MENUS: Record<any, any> = {
 export const TIME_ZONE_OPTIONS: TimezoneOption[] = [
   {
     offset: -5,
-    timezone: 'America/New_York',
+    timezone: 'America/New_York'
   },
   {
     offset: 0,
-    timezone: 'Europe/London',
+    timezone: 'Europe/London'
   },
   {
     offset: 8,
-    timezone: 'Asia/Shanghai',
+    timezone: 'Asia/Shanghai'
   },
   {
     offset: 9,
-    timezone: 'Asia/Tokyo',
+    timezone: 'Asia/Tokyo'
   },
   {
     offset: 9,
-    timezone: 'Asia/Seoul',
-  },
+    timezone: 'Asia/Seoul'
+  }
 ]

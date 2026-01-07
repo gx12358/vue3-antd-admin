@@ -2,7 +2,6 @@ import type { AxiosError } from 'axios'
 import type { HttpResponse, RequestInstance, RequestOptions, RequestResponse } from '../typings'
 import { cloneDeep, deepMerge, isFunction } from '@gx-design-vue/pro-utils'
 import axios from 'axios'
-import qs from 'qs'
 import { ContentType, RequestEnum } from '../typings'
 import { AxiosCanceler } from './cancel'
 
@@ -74,24 +73,41 @@ export class CreateClient {
     const headers = config.headers || this.options.headers
     const contentType = headers?.['Content-Type'] || headers?.['content-type']
 
-    const hasBody = Reflect.has(config, 'data') || Reflect.has(config, 'body')
+    const body: any = config.data ?? config.body
 
-    if (contentType !== ContentType.form || !hasBody || config.method?.toUpperCase() === RequestEnum.GET) {
+    if (contentType !== ContentType.form || !body || config.method?.toUpperCase() === RequestEnum.GET) {
       return config
     }
 
-    const body = config.data ?? config.body
+    if (contentType === ContentType.upload && config.method?.toUpperCase() === RequestEnum.POST) {
+      const formData = new FormData()
+
+      Object.entries(body).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            item !== undefined && formData.append(`${key}[${index}]`, item)
+          })
+        } else {
+          value !== undefined && formData.append(key, value as any)
+        }
+      })
+
+      return {
+        ...config,
+        data: formData
+      }
+    }
 
     return {
       ...config,
-      data: qs.stringify(body, { arrayFormat: 'brackets' })
+      data: body
     }
   }
 
   request<T, R = undefined>(options: Partial<RequestOptions> = {}): Promise<HttpResponse<T, R>> {
     let requestConfig = cloneDeep(options) as RequestOptions
 
-    requestConfig.originOptions = cloneDeep(requestConfig)
+    requestConfig.originOptions = cloneDeep(options)
 
     const axiosConfig = deepMerge(this.options, requestConfig)
 

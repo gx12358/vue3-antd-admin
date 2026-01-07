@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'vue'
 import { useProAppContext } from '@gx-design-vue/pro-app'
+import { isArray } from '@gx-design-vue/pro-utils'
 import { Spin } from 'ant-design-vue'
 import { spinProps } from 'ant-design-vue/es/spin'
 import { omit } from 'lodash-es'
@@ -16,7 +17,8 @@ const GSpin = defineComponent({
     const { indicator } = useProAppContext()
 
     return () => {
-      const indicatorRender = indicator?.value ? h(indicator?.value as any, {
+      const indicatorChildren: any = isArray(indicator.value) ? indicator.value[0] : indicator.value
+      const indicatorRender = indicator?.value ? h(indicatorChildren, {
         style: props.iconStyle
       }) : undefined
       return (

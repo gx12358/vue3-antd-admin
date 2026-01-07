@@ -5,6 +5,7 @@ import { GProModal } from '@gx-design-vue/pro-modal'
 import { GImage, GImagePreview } from '@gx-design-vue/image'
 import { GMediaView, GIcon } from '@gx/design'
 import Upload from '@/components/layout/upload'
+import TableActions from '@/components/layout/table-actions'
 import GSpin from '@/components/layout/spin'
 import GEmpty from '@/components/layout/empty/index.vue'
 import GAdminImage from '@/components/layout/image'
@@ -16,6 +17,7 @@ declare module '@vue/runtime-core' {
     GEmpty: typeof GEmpty
     GIcon: typeof GIcon
     GAdminUpload: typeof Upload
+    GTableActions: typeof TableActions
     GAdminImage: typeof GAdminImage
     GProTable: typeof GProTable
     GProModal: typeof GProModal

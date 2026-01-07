@@ -17,12 +17,6 @@ export interface LoginResult {
   expiresTime: number;
 }
 
-/** 租户信息返回值 */
-export interface TenantResult {
-  id: number;
-  name: string;
-}
-
 /** 手机验证码获取接口参数 */
 export interface SmsCodeParams {
   mobile: string;

@@ -1,6 +1,6 @@
 import type { EventHandlerRequest, H3Event } from 'h3'
 
-import { deleteCookie, getCookie, setCookie } from 'h3'
+import { deleteCookie, getCookie, getHeader, setCookie } from 'h3'
 
 export function clearRefreshTokenCookie(event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'Authorization', {
@@ -48,6 +48,6 @@ export function setTenantCookie(
 }
 
 export function getTenantCookie(event: H3Event<EventHandlerRequest>) {
-  const refreshToken = getCookie(event, 'tenant-id')
-  return refreshToken
+  const tenandId = getHeader(event, 'tenant-id')
+  return tenandId
 }

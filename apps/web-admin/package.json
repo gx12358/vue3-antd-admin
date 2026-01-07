@@ -1,7 +1,7 @@
 {
   "name": "@gx/web-admin",
   "type": "module",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": {
     "name": "gx12358",
     "email": "gx12358@gmail.com",
@@ -62,13 +62,16 @@
     "nprogress": "catalog:",
     "pinia": "catalog:",
     "pinyin-pro": "catalog:",
+    "qs": "catalog:",
     "vue": "catalog:",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@gx/types": "workspace:*",
     "@gx/unocss-config": "workspace:*",
     "@types/lodash-es": "catalog:",
+    "@types/qs": "catalog:",
     "unocss": "catalog:"
   }
 }

@@ -1,9 +1,15 @@
+import { resolve } from 'node:path'
+import { config } from 'dotenv'
 import errorHandler from './error'
+
+// 手动加载 .env.local
+config({ path: resolve(__dirname, '.env.local') })
 
 process.env.COMPATIBILITY_DATE = new Date().toISOString()
 export default defineNitroConfig({
   devErrorHandler: errorHandler,
   errorHandler: '~/error',
+  baseURL: '/api',
   routeRules: {
     '/api/**': {
       cors: true,

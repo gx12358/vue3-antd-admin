@@ -12,11 +12,10 @@ const props = withDefaults(defineProps<{
   request: undefined
 })
 
-const tableRef = ref()
-
 const [
+  tableRef,
   { reload, tableState }
-] = useProPageTable<MockTableRecord>(tableRef, {
+] = useProPageTable<MockTableRecord>({
   state: computed(() => {
     return {
       columns,
@@ -26,7 +25,7 @@ const [
       pagination: { pageSize: 5 }
     }
   }),
-  request: props.request
+  request: props.request as any
 })
 
 defineExpose({

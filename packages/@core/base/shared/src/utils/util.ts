@@ -8,6 +8,14 @@ export interface NumberToShow {
   joinStr: string;
 }
 
+interface DownloadOptions<T = string> {
+  fileName?: string;
+  source: T;
+  target?: string;
+}
+
+const DEFAULT_FILENAME = 'downloaded_file'
+
 export async function asyncRunSafe<T = any>(fn: Promise<T>): Promise<[Error] | [null, T]> {
   try {
     return [null, await fn]
@@ -80,10 +88,10 @@ export function trim(str: string, isGlobal?: boolean) {
 }
 
 /**
- * @author gx12358 2539306317@qq.com
+ * @Author      gx12358
+ * @DateTime    2021/11/3
+ * @lastTime    2021/11/3
  * @description 将url请求参数转为json格式
- * @param url
- * @returns {{}|any}
  */
 export function paramObj(url) {
   const search = url.split('?')[1]
@@ -324,18 +332,35 @@ export function disabledDate(current: Dayjs) {
   return (current && current <= dayjs().subtract(1, 'day').endOf('day'))
 }
 
-export function downloadFile(fileUrl, fileName?: string) {
-  // 如果浏览器支持 HTML5 的下载功能（即存在 download 属性）
-  const link = document.createElement('a')
+/**
+ * 通用下载触发函数
+ * @param href - 文件下载的 URL
+ * @param fileName - 下载文件的名称，如果未提供则自动识别
+ * @param revokeDelay - 清理 URL 的延迟时间 (毫秒)
+ */
+export function triggerDownload(
+  href: string,
+  fileName: string | undefined,
+  revokeDelay: number = 100,
+): void {
+  const defaultFileName = 'downloaded_file'
+  const finalFileName = fileName || defaultFileName
 
-  // 设置文件的 URL 和文件名
-  link.href = fileUrl
-  if (fileName) {
-    link.download = fileName
+  const link = document.createElement('a')
+  link.href = href
+  link.download = finalFileName
+  link.style.display = 'none'
+
+  if (link.download === undefined) {
+    link.setAttribute('target', '_blank')
   }
 
-  // 模拟点击链接以开始下载
+  document.body.append(link)
   link.click()
+  link.remove()
+
+  // 清理临时 URL 以释放内存
+  setTimeout(() => URL.revokeObjectURL(href), revokeDelay)
 }
 
 export function amountUnit(str: string | number | undefined, {
@@ -353,4 +378,22 @@ export function amountUnit(str: string | number | undefined, {
 
 export function handleRandomImage(width = 50, height = 50) {
   return `https://picsum.photos/${width}/${height}?random=${getRandomNumber().uuid(10)}`
+}
+
+/**
+ * 下载文件，支持 Blob、字符串和其他 BlobPart 类型
+ */
+export function downloadFileFromBlobPart({
+  fileName = DEFAULT_FILENAME,
+  source,
+}: DownloadOptions<BlobPart>): void {
+  // 如果 data 不是 Blob，则转换为 Blob
+  const blob
+    = source instanceof Blob
+      ? source
+      : new Blob([source], { type: 'application/octet-stream' })
+
+  // 创建对象 URL 并触发下载
+  const url = URL.createObjectURL(blob)
+  triggerDownload(url, fileName)
 }

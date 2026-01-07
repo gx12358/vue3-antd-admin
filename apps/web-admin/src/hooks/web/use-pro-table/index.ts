@@ -10,8 +10,10 @@ import type { Fn } from '@gx/types'
 import type { PageResult } from '@gx/types/request'
 import type { MaybeRef, Ref } from 'vue'
 import { useTable } from '@gx-design-vue/pro-table'
-import { deepMerge } from '@gx-design-vue/pro-utils'
+import { cloneDeep, deepMerge, isArray } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
+import { omit } from 'lodash-es'
+import { computed, isRef, ref } from 'vue'
 import { table } from '@/common'
 import { globalConfirm } from '@/components/layout/confirm'
 
@@ -27,7 +29,10 @@ export function useProTable<T extends object = RecordType, R extends object = Re
   return useTable<T, R>(tableRef, {
     state: computed(() => {
       if (options?.state) {
-        return deepMerge(defaultProps, options.state && isRef(options.state) ? options.state.value : options.state)
+        return deepMerge(
+          defaultProps,
+          options.state && isRef(options.state) ? options.state.value : options.state
+        )
       }
       return defaultProps as BaseTableState<T, R>
     }),
@@ -36,9 +41,8 @@ export function useProTable<T extends object = RecordType, R extends object = Re
 }
 
 export function useProPageTable<T extends object = RecordType, R extends object = RecordType>(
-  tableRef: Ref<ProTableRef<T> | undefined>,
   options: {
-    request: (params: SystemPageState<R>) => Promise<PageResult<T>>;
+    request: (params: SystemPageState<R>) => Promise<any>;
     state?: MaybeRef<BaseTableState<T, R>>;
     onBefore?: (props: RequestConfig<R>) => Promise<R> | R;
     onSuccess?: (result: PageResult<T>, props: RequestConfig<R>) => void;
@@ -54,20 +58,29 @@ export function useProPageTable<T extends object = RecordType, R extends object 
     },
   }
 ): [
+  tableRef: Ref<any>,
   UseTableReturn<T, R>,
   {
-    remove: (params: any[], props?: { title?: string; confirm?: boolean }) => void
+    getForm: () => SystemPageState<R>;
+    remove: (params: any, props?: { title?: string; confirm?: boolean }) => void
     change: (
       params?: Partial<T>,
       props?: { title?: string; confirm?: boolean; callback?: Fn }
     ) => void
   }
 ] {
+  const formSearch = ref<SystemPageState<R>>()
+  const tableRef = ref()
+
   return [
+    tableRef,
     useTable<T, R>(tableRef, {
       state: computed(() => {
         if (options.state) {
-          return deepMerge(defaultProps, options.state && isRef(options.state) ? options.state.value : options.state)
+          return deepMerge(
+            defaultProps,
+            options.state && isRef(options.state) ? options.state.value : options.state
+          )
         }
         return defaultProps as BaseTableState<T, R>
       }),
@@ -76,11 +89,15 @@ export function useProPageTable<T extends object = RecordType, R extends object 
         const newProps = deepMerge(props, {
           params: newParams || props.params
         })
-        const { list = [], total = 0 }: PageResult<T> = await options.request({
-          ...(newParams || {}),
+
+        const requestParams = {
+          ...omit(newProps.params, ['current']),
           pageNo: newProps.params.current,
-          pageSize: newProps.params.pageSize,
-        } as SystemPageState<R>)
+        } as SystemPageState<R>
+        formSearch.value = cloneDeep(requestParams)
+        const result = await options.request(requestParams)
+        const list = result.list || result
+        const total = result.total || list.length
         options.onSuccess && options.onSuccess({ list, total }, newProps)
         return {
           data: list,
@@ -90,6 +107,7 @@ export function useProPageTable<T extends object = RecordType, R extends object 
       }
     }),
     {
+      getForm: () => formSearch.value as SystemPageState<R>,
       remove: (params, props) => {
         const action = tableRef.value?.actionRef()
         if (!options.deleteProps || !action) return
@@ -98,7 +116,7 @@ export function useProPageTable<T extends object = RecordType, R extends object 
         const fetch = async () => {
           action.setLoading(true)
           try {
-            await requestFn({ ids: params.join() })
+            await requestFn(isArray(params) ? { ids: params.join() } : { id: params })
             message.success('操作成功')
             action.rowsSelection?.clear()
             await action.reload({ immediate: true, removeKeys: params })

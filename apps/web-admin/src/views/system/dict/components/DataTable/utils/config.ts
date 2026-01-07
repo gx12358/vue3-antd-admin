@@ -1,0 +1,15 @@
+export const colorOptions = [
+  { value: '', label: '无' },
+  { value: 'processing', label: '主要' },
+  { value: 'success', label: '成功' },
+  { value: 'default', label: '默认' },
+  { value: 'warning', label: '警告' },
+  { value: 'error', label: '危险' },
+  { value: 'pink', label: 'pink' },
+  { value: 'red', label: 'red' },
+  { value: 'orange', label: 'orange' },
+  { value: 'green', label: 'green' },
+  { value: 'cyan', label: 'cyan' },
+  { value: 'blue', label: 'blue' },
+  { value: 'purple', label: 'purple' },
+]

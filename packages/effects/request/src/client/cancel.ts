@@ -2,11 +2,19 @@ import type { Canceler } from 'axios'
 import type { RequestOptions } from '../typings'
 import { isFunction } from '@gx-design-vue/pro-utils'
 import axios from 'axios'
+import { getParamsSerializer } from '../client'
 
 export const getPendingUrl = (
   config: RequestOptions,
   key?: string
-) => key || config.cancelKey || [ config.method, config.url ].join('&')
+) => key
+  || config.cancelKey
+  || [
+    config.method,
+    config.url,
+    getParamsSerializer(config.params),
+    getParamsSerializer(config.data)
+  ].filter(str => str).join('&')
 
 export class AxiosCanceler {
   ignoreCancelToken: boolean

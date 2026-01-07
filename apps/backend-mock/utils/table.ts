@@ -116,4 +116,4 @@ function generateMockDataList(count: number) {
   return dataList
 }
 
-export const tableMockData = generateMockDataList(100)
+export const tableMockData = generateMockDataList(85)

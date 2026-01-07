@@ -1,7 +1,7 @@
 {
   "name": "@gx/vite-config",
   "type": "module",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
   "license": "MIT",
   "homepage": "https://github.com/gx12358/pro-components-vue",
@@ -42,7 +42,7 @@
     "@vitejs/plugin-legacy": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitejs/plugin-vue-jsx": "catalog:",
-    "autoprefixer": "^10.4.5",
+    "autoprefixer": "catalog:conflicts_autoprefixer_h10_4_5",
     "bundle-import": "catalog:",
     "chokidar": "catalog:",
     "dotenv": "catalog:",
