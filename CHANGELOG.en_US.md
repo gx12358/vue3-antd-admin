@@ -1,3 +1,32 @@
+## 4.0.1 (2025-01-07)
+
+### Upgrade Notes
+
+### ✨ CHORE
+
+- **Dependency Upgrades**
+  - Upgrade project dependencies to the latest stable versions
+  - Optimize monorepo package management configuration
+
+### ✨ REFACTOR
+
+- **Table System Refactor**
+  - Refactor Table-related hooks to improve type inference and code reusability
+  - Optimize Table Actions component encapsulation and unify button interaction standards
+- **System Management Module**
+  - Enhance functionality and interaction experience for all pages in the system management module
+  - Improve form validation logic and data processing workflow
+  - Unify list page layout and operation standards
+
+### ✨ FIX
+
+- **Build Optimization**
+  - Fix build issues in the monorepo architecture
+  - Optimize Turbo cache strategy
+- **Type Definitions**
+  - Improve TypeScript type declarations
+  - Fix issues with type inference in certain cases
+
 ## 4.0.0 (2025-11-01)
 
 ## Upgrade Instructions

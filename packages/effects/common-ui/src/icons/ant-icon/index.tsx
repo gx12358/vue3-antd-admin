@@ -10,7 +10,7 @@ export type IconType = IconBaseType | MenuIconType
 // @ts-ignore
 const modules = import.meta.glob('./src/**/index.ts', { eager: true })
 
-const components = {} as Record<IconType, any>
+export const components = {} as Record<IconType, any>
 
 Object.keys(modules).forEach((key) => {
   const mod = (modules[key] as any).default || {}

@@ -1,31 +1,31 @@
 ## 4.0.1 (2025-01-07)
 
-## 升级说明
+### Upgrade Notes
 
 ### ✨ CHORE
 
-- **依赖升级**
-  - 升级项目依赖到最新稳定版本
-  - 优化 monorepo 包管理配置
+- **Dependency Upgrades**
+  - Upgrade project dependencies to the latest stable versions
+  - Optimize monorepo package management configuration
 
 ### ✨ REFACTOR
 
-- **Table 系统重构**
-  - 重构 Table 相关 hooks 方法，提升类型推导和代码复用性
-  - 优化 Table Actions 组件封装，统一操作按钮交互规范
-- **系统管理模块**
-  - 完善系统管理所有页面功能和交互体验
-  - 优化表单验证逻辑和数据处理流程
-  - 统一列表页面布局和操作规范
+- **Table System Refactor**
+  - Refactor Table-related hooks to improve type inference and code reusability
+  - Optimize Table Actions component encapsulation and unify button interaction standards
+- **System Management Module**
+  - Enhance functionality and interaction experience for all pages in the system management module
+  - Improve form validation logic and data processing workflow
+  - Unify list page layout and operation standards
 
 ### ✨ FIX
 
-- **构建优化**
-  - 修复 monorepo 架构下的构建问题
-  - 优化 turbo 缓存策略
-- **类型定义**
-  - 完善 TypeScript 类型声明
-  - 修复部分类型推导问题
+- **Build Optimization**
+  - Fix build issues in the monorepo architecture
+  - Optimize Turbo cache strategy
+- **Type Definitions**
+  - Improve TypeScript type declarations
+  - Fix issues with type inference in certain cases
 
 ## 4.0.0 (2025-11-01)
 

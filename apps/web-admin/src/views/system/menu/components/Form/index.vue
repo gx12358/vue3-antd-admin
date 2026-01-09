@@ -2,15 +2,19 @@
 import type { ProModalProps } from '@gx-design-vue/pro-modal'
 import type { SelectOption } from '@gx/types'
 import { isHttpUrl } from '@gx-core/shared/utils'
-import { cloneDeep, forInObject, handleEmptyField, treeData } from '@gx-design-vue/pro-utils'
+import { cloneDeep, forInObject, handleEmptyField, isImg, isUrl, treeData } from '@gx-design-vue/pro-utils'
 import { message } from 'ant-design-vue'
 import { reactive } from 'vue'
 import { z } from 'zod'
 import { useForm, useModalState } from '@/hooks/state'
 import { createMenu, getMenu, getMenuList, updateMenu } from '@/services/system/menu'
 import { antOptionsValue, treeAntDataNode } from '@/utils/util'
+import IconSelect from '../IconSelect'
 
-type FormState = PartialFields<SystemMenuItem, 'id'>
+type FormState = PartialFields<SystemMenuItem, 'id'> & {
+  iconUrl?: string
+  iconType?: 'system' | 'image'
+}
 
 const emits = defineEmits<{
   (e: 'ok'): void
@@ -26,7 +30,7 @@ const { state, resetState } = useModalState({
 
 const modalState = reactive<ProModalProps>({
   width: 600,
-  open: false
+  open: true
 })
 
 const {
@@ -42,7 +46,9 @@ const {
     parentId: undefined,
     name: '',
     type: 1,
+    iconType: 'system',
     icon: '',
+    iconUrl: '',
     path: '',
     component: '',
     permission: '',
@@ -60,6 +66,16 @@ const {
     },
     sort: {
       zod: z.number({ message: '请输入显示顺序' }),
+    },
+    iconUrl: {
+      required: false,
+      show: values => values.type ? [1, 2].includes(values.type) : false,
+      zod: z
+        .string()
+        .optional()
+        .refine(url => !url || isImg(url || '') || isUrl(url), {
+          message: '请输入正确的图片地址',
+        })
     },
     path: {
       show: values => values.type ? [1, 2].includes(values.type) : true,
@@ -93,7 +109,13 @@ async function onOk(values: FormState) {
   // 提交表单
   try {
     loading.value = true
-    await (values.id ? updateMenu(values) : createMenu(values))
+    const params = {
+      ...cloneDeep(values),
+      icon: formState.iconType === 'system' ? formState.icon : formState.iconUrl
+    }
+    delete params.iconUrl
+    delete params.iconType
+    await (values.id ? updateMenu(params) : createMenu(params))
     emits('ok')
     onClose()
     message.success('操作成功')
@@ -141,11 +163,19 @@ defineExpose({
             case 'type':
               formState[key] = result[key] ?? 1
               break
+            case 'iconType':
+              formState[key] = result[key] ?? 'system'
+              break
             default:
               formState[key] = handleEmptyField(result[key], '').value
               break
           }
         })
+        if (isImg(formState.icon) || isUrl(formState.icon)) {
+          formState.iconType = 'image'
+          formState.iconUrl = formState.icon
+        }
+        console.log(formState.iconType)
       } catch {}
       loading.value = false
     }
@@ -188,9 +218,25 @@ defineExpose({
           :options="antOptionsValue(dict.system_menu_type.data)"
         />
       </a-form-item>
-      <a-form-item v-if="formState.type && [1, 2].includes(formState.type)" v-bind="register('icon')" label="菜单图标">
-        <a-input v-model:value="formState.icon" placeholder="请输入菜单图标" allow-clear />
+      <a-form-item v-if="formState.type && [1, 2].includes(formState.type)" label="图标类型">
+        <a-radio-group
+          v-model:value="formState.iconType"
+          button-style="solid"
+          option-type="button"
+          :options="[
+            { label: '系统', value: 'system' },
+            { label: '图片', value: 'image' },
+          ]"
+        />
       </a-form-item>
+      <template v-if="formState.type && [1, 2].includes(formState.type)">
+        <a-form-item v-if="formState.iconType === 'system'" v-bind="register('icon')" label="菜单图标">
+          <IconSelect v-model:value="formState.icon" placeholder="请输入菜单图标" />
+        </a-form-item>
+        <a-form-item v-if="formState.iconType === 'image'" v-bind="register('iconUrl')" label="菜单图标">
+          <a-input v-model:value="formState.iconUrl" placeholder="请输入菜单图标" allow-clear />
+        </a-form-item>
+      </template>
       <a-form-item v-if="formState.type && [1, 2].includes(formState.type)" v-bind="register('path')">
         <template #label>
           <span class="mr-4px">路由地址</span>
