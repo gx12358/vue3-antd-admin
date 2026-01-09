@@ -24,6 +24,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gx-core/shared": "workspace:*",
+    "@gx-design-vue/pro-utils": "catalog:",
+    "@gx/access": "workspace:*",
+    "@gx/design": "workspace:*",
+    "@gx/hooks": "workspace:*",
+    "@gx/request": "workspace:*",
+    "@gx/styles": "workspace:*",
+    "ant-design-vue": "catalog:",
+    "cropperjs": "catalog:",
     "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@gx/types": "workspace:*",
+    "@gx/unocss-config": "workspace:*",
+    "unocss": "catalog:"
   }
 }

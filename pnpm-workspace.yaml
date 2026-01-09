@@ -24,6 +24,16 @@ catalogs:
     autoprefixer: ^10.4.5
   conflicts_conflicts_autoprefixer_h10_4_5_h10_4_21:
     autoprefixer: ^10.4.21
+  conflicts_vue-advanced-cropper_:
+    vue-advanced-cropper: ""
+  conflicts_vue-advanced-cropper_h2_8_9:
+    vue-advanced-cropper: ^2.8.9
+  conflicts_cropperjs_:
+    cropperjs: ""
+  conflicts_cropperjs_h2_1_0:
+    cropperjs: ^2.1.0
+  conflicts_ant-design-vue_ca:
+    ant-design-vue: ca
 catalog:
   "@alicloud/credentials": ^2.4.4
   "@ant-design/icons-vue": ^7.0.1
@@ -54,6 +64,8 @@ catalog:
   "@manypkg/get-packages": ^3.1.0
   "@multiavatar/multiavatar": ^1.0.7
   "@pnpm/workspace.read-manifest": ^1000.2.5
+  "@pqina/pintura": ^8.95.3
+  "@pqina/vue-pintura": ^9.0.2
   "@types/ali-oss": ^6.16.13
   "@types/archiver": ^6.0.4
   "@types/jsonwebtoken": ^9.0.10
@@ -85,6 +97,9 @@ catalog:
   color: ^5.0.2
   commitlint-plugin-function-rules: ^4.1.1
   consola: ^3.4.2
+  Cropper.js: ^2.8.9
+  "Cropper.js\n": ^2.8.9
+  cropperjs: ^2.1.0
   cross-env: ^10.1.0
   crypto-js: ^4.2.0
   cz-git: ^1.12.0
@@ -139,6 +154,7 @@ catalog:
   vite-plugin-vue-devtools: ^8.0.3
   vitest: ^4.0.8
   vue: ^3.5.25
+  vue-advanced-cropper: ^8.95.3
   vue-router: ^4.6.3
   vue-tsc: ^3.1.3
   zod: ^4.3.4

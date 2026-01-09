@@ -1,7 +1,17 @@
-import vue from '@vitejs/plugin-vue'
-import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from '@gx/vite-config'
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [vue()],
+export default defineConfig(async () => {
+  return {
+    application: {
+      nitroMock: false
+    },
+    vite: {
+      resolve: {
+        alias: {
+          '@': fileURLToPath(new URL('./src', import.meta.url)),
+        }
+      },
+    },
+  }
 })

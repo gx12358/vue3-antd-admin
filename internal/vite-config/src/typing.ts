@@ -1,3 +1,4 @@
+import type { ViteEnv } from '@gx/types'
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer'
 import type { ConfigEnv, PluginOption, UserConfig } from 'vite'
 import type { PluginOptions } from 'vite-plugin-dts'
