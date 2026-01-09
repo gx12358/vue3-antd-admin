@@ -30,7 +30,7 @@ const { state, resetState } = useModalState({
 
 const modalState = reactive<ProModalProps>({
   width: 600,
-  open: true
+  open: false
 })
 
 const {
