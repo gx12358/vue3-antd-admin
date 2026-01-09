@@ -72,6 +72,8 @@ export default async function ({
       client.refreshTokenQueue = []
       expiredToken?.()
       return Promise.reject(e)
+    } finally {
+      client.isRefreshing = false
     }
   }
 

@@ -20,14 +20,17 @@ export function apiUrl(url: string) {
 
 async function authRefreshToken() {
   const storeUser = useStoreUser()
+  const storePermission = useStorePermission()
   const { refreshToken } = accessToken.getAccessToken()
 
   const url = apiUrl(`/system/auth/refresh-token?refreshToken=${refreshToken}`)
   const [error, ret] = await fetchWithRetry(globalThis.fetch(url, {
     method: RequestEnum.POST,
     headers: {
-      'Content-Type': ContentType.json
-    },
+      'Content-Type': ContentType.json,
+      'tenant-id': storePermission.tenantId,
+      'visit-tenant-id': storePermission.visitTenantId,
+    } as any,
   }))
   if (error) {
     return Promise.reject(error)

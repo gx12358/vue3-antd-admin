@@ -45,7 +45,9 @@ const [
       }
     }
   },
-  onSuccess: ({ list }) => onExpand(list),
+  onSuccess: ({ list }) => {
+    if (tableState.expandedRowKeys?.length === 0) onExpand(list)
+  },
   request: getMenuList,
   deleteProps: {
     requestFn: deleteMenu

@@ -4,6 +4,7 @@ import { isArray, isBoolean, isNumber } from '@gx-design-vue/pro-utils'
 import { getDictDataPage } from '@/services/system/dict'
 
 export const colorTypeMap: any = {
+  'info': 'default',
   'primary': 'processing',
   'danger': 'error',
 }

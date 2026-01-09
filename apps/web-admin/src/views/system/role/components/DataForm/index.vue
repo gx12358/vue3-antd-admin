@@ -13,7 +13,7 @@ import { useForm, useModalState } from '@/hooks/state'
 import { getDeptList } from '@/services/system/dept'
 import { assignRoleDataScope } from '@/services/system/permission'
 import { getRole } from '@/services/system/role'
-import { antOptionsValue, treeAntDataNode } from '@/utils/util'
+import { antOptionsValue, buildTreeMaps, cleanInvalidParents, fillParentKeys, treeAntDataNode } from '@/utils/util'
 
 type FormState = PartialFields<SystemPermissionApi.AssignRoleDataScopeReqVO, 'roleId' | 'dataScope'>
 
@@ -26,12 +26,12 @@ const { dict } = useStore()
 const { state, resetState } = useModalState({
   expand: false,
   selectAll: false,
-  isCheckStrictly: true,
   searchValue: '',
   autoExpandParent: false,
   expandedKeys: [] as number[],
   levelDepts: [] as SystemDeptApi.Dept[],
-  rowSelect: null as SystemRoleApi.RoleTableRecord | null
+  deptsTreeMap: null as Map<number, number[]> | null,
+  rowSelect: null as SystemRoleApi.UpdateRoleTableRecord | null
 })
 
 const { run, data: deptList } = useRequest<AntDataNode[], any, SystemDeptApi.Dept[]>(
@@ -41,13 +41,17 @@ const { run, data: deptList } = useRequest<AntDataNode[], any, SystemDeptApi.Dep
     manual: false,
     onSuccess: (data) => {
       state.levelDepts = cloneDeep(data)
-      const trees = treeData(cloneDeep(data || []), {
-        emptyChildren: false,
-        children: 'children'
-      })
-      return treeAntDataNode<SystemDeptApi.Dept, AntDataNode>(trees, {
-        label: 'name'
-      })
+      const antTrees = treeAntDataNode<SystemDeptApi.Dept, AntDataNode>(
+        treeData(cloneDeep(data || []), {
+          emptyChildren: false,
+          children: 'children'
+        }),
+        {
+          label: 'name'
+        }
+      )
+      state.deptsTreeMap = buildTreeMaps(antTrees)
+      return antTrees
     }
   }
 )
@@ -141,6 +145,11 @@ async function onOk(values: FormState) {
   // 提交表单
   try {
     loading.value = true
+    values.dataScopeDeptIds = Array.from(fillParentKeys(
+      new Set(values.dataScopeDeptIds),
+      deptList.value,
+      state.deptsTreeMap as Map<number, number[]>
+    ))
     await assignRoleDataScope({
       ...values,
       dataScopeDeptIds: values.dataScope === 2 ? values.dataScopeDeptIds : []
@@ -180,6 +189,13 @@ defineExpose({
         }
       })
       formState.roleId = row.id
+      if (state.deptsTreeMap) {
+        formState.dataScopeDeptIds = Array.from(cleanInvalidParents(
+          new Set(formState.dataScopeDeptIds),
+          deptList.value,
+          state.deptsTreeMap
+        ))
+      }
       state.selectAll = formState.dataScopeDeptIds.length === state.levelDepts.length
     } catch {}
     loading.value = false
@@ -218,9 +234,6 @@ defineExpose({
               <a-checkbox v-model:checked="state.expand" @change="onExpandAll as any">
                 <span class="text-primary">{{ state.expand ? '收起' : '展开' }}</span>
               </a-checkbox>
-              <a-checkbox v-model:checked="state.isCheckStrictly">
-                <span class="text-primary">父子联动</span>
-              </a-checkbox>
             </div>
           </div>
           <div class="p-4px">
@@ -233,7 +246,6 @@ defineExpose({
               :checked-keys="formState.dataScopeDeptIds"
               block-node
               checkable
-              :check-strictly="!state.isCheckStrictly"
               :tree-data="deptList"
               @check="onCheck"
               @expand="onExpand"

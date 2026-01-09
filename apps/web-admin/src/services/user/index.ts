@@ -17,7 +17,7 @@ export function refreshTokenApi(refreshToken: string) {
 }
 
 export function logoutApi() {
-  return requestClient.get('/system/auth/logout')
+  return requestClient.post('/system/auth/logout')
 }
 
 export function registerApi(data) {
